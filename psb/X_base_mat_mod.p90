@@ -1077,7 +1077,10 @@ contains
     class(psb_@X@_coo_sparse_mat), intent(inout) :: a
     
     call a%transp() 
-    a%val(:) = @CONJG@(a%val(:))
+    ! This will morph into conjg() for C and Z
+    ! and into a no-op for S and D, so a conditional
+    ! on a constant ought to take it out completely. 
+    if (psb_@X@_is_complex_) a%val(:) = @CONJG@(a%val(:))
 
   end subroutine @X@_coo_transc_1mat
 
