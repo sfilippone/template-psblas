@@ -2,6 +2,7 @@ s/@X@/d/g
 s/@CONJG@//g
 s/@TYPE@/real/g
 s/@FKIND@/psb_dpk_/g
+s/@RT@/d/g
 
 s/@SIZET@/psb_sizeof_dp/g 
 

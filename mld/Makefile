@@ -55,9 +55,9 @@ Xmlprec_bld.p90 X_move_alloc_mod.p90: X_prec_type.p90
 
 
 $(FSRC1): mld_$(ARITH)%.f90 : X%.p90
-	sed -f $(ARITH).sed $< >$@
+	sed -f ../$(ARITH).sed $< >$@
 $(FSRC2): mld_$(ARITH)%.F90 : X%.P90 
-	sed -f $(ARITH).sed $< >$@
+	sed -f ../$(ARITH).sed $< >$@
 
 clean:
 	/bin/rm -f *.f90 *.F90 *.o

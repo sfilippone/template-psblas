@@ -20,3 +20,6 @@ s/@RONE@/done/g
 6. Names of the basic BLAS routines for the specific type. 
 s/@DOT@/zdotc/g
 s/@NRM2@/dznrm2/g
+
+7. The "sister" real type, i.e. S,C: S,  D,Z: D
+s/@RT@/d/g

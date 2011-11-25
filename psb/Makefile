@@ -26,16 +26,6 @@ LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
-all:  single double complex dcompl
-
-single:
-	$(MAKE) lib ARITH=s
-double:
-	$(MAKE) lib ARITH=d
-complex:
-	$(MAKE) lib ARITH=c
-dcompl:
-	$(MAKE) lib ARITH=z
 
 src: ssingle sdouble scomplex sdcompl
 ssingle:
@@ -46,6 +36,17 @@ scomplex:
 	$(MAKE) bsrc ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
+
+all:  single double complex dcompl
+
+single:
+	$(MAKE) lib ARITH=s
+double:
+	$(MAKE) lib ARITH=d
+complex:
+	$(MAKE) lib ARITH=c
+dcompl:
+	$(MAKE) lib ARITH=z
 
 bsrc: $(FSRC)
 
@@ -68,11 +69,11 @@ X_mat_mod.p90: X_base_mat_mod.p90 X_csc_mat_mod.p90 X_csr_mat_mod.p90
 	touch $@
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
-	sed -f $(ARITH).sed $< >$@
+	sed -f ../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
-	sed -f $(ARITH).sed $< >$@
+	sed -f ../$(ARITH).sed $< >$@
 
 clean:
-	/bin/rm -f *.f90 *.F90 *.o
+	/bin/rm -f *.f90 *.F90 *.o 
 
 

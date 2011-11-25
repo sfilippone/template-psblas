@@ -3,6 +3,7 @@ s/@CONJG@/conjg/g
 s/@TYPE@/complex/g
 s/@FKIND@/psb_spk_/g
 s/@SIZET@/(2*psb_sizeof_sp)/g 
+s/@RT@/s/g
 
 s/@XZERO@/czero/g
 s/@XONE@/cone/g
