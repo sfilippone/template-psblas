@@ -1,4 +1,4 @@
-include ../../Make.inc
+#include ../../Make.inc
 
 BASIC_MODS=
 UTIL_MODS =
@@ -29,13 +29,25 @@ FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 all:  single double complex dcompl
 
 single:
-	(make lib ARITH=s)
+	$(MAKE) lib ARITH=s
 double:
-	(make lib ARITH=d)
+	$(MAKE) lib ARITH=d
 complex:
-	(make lib ARITH=c)
+	$(MAKE) lib ARITH=c
 dcompl:
-	(make lib ARITH=z)
+	$(MAKE) lib ARITH=z
+
+src: ssingle sdouble scomplex sdcompl
+ssingle:
+	$(MAKE) bsrc ARITH=s
+sdouble:
+	$(MAKE) bsrc ARITH=d
+scomplex:
+	$(MAKE) bsrc ARITH=c
+sdcompl:
+	$(MAKE) bsrc ARITH=z
+
+bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
@@ -57,12 +69,10 @@ X_mat_mod.p90: X_base_mat_mod.p90 X_csc_mat_mod.p90 X_csr_mat_mod.p90
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(ARITH).sed $< >$@
 
-# clean:
-        # /bin/rm -f $(MODULES) $(OBJS) $(MPFOBJS) *$(.mod)
+clean:
+	/bin/rm -f *.f90 *.F90 *.o
 
-veryclean: clean
-	/bin/rm -f $(SRCS)
 
