@@ -52,10 +52,10 @@
 !  - deallocating the preconditioner data structure.  
 !
 
-module mld_d_prec_type
+module mld_@X@_prec_type
 
   use mld_base_prec_type
-  use psb_base_mod, only : psb_d_vect_type, psb_d_base_vect_type
+  use psb_base_mod, only : psb_@X@_vect_type, psb_@X@_base_vect_type
   !
   ! Type: mld_Tprec_type.
   !
@@ -186,103 +186,103 @@ module mld_d_prec_type
   !
   !
 
-  type mld_d_base_solver_type
+  type mld_@X@_base_solver_type
   contains
-    procedure, pass(sv) :: check => d_base_solver_check
-    procedure, pass(sv) :: dump  => d_base_solver_dmp
-    procedure, pass(sv) :: build => d_base_solver_bld
-    procedure, pass(sv) :: apply_v => d_base_solver_apply_vect
-    procedure, pass(sv) :: apply_a => d_base_solver_apply
+    procedure, pass(sv) :: check => @X@_base_solver_check
+    procedure, pass(sv) :: dump  => @X@_base_solver_dmp
+    procedure, pass(sv) :: build => @X@_base_solver_bld
+    procedure, pass(sv) :: apply_v => @X@_base_solver_apply_vect
+    procedure, pass(sv) :: apply_a => @X@_base_solver_apply
     generic, public     :: apply => apply_a, apply_v
-    procedure, pass(sv) :: free  => d_base_solver_free
-    procedure, pass(sv) :: seti  => d_base_solver_seti
-    procedure, pass(sv) :: setc  => d_base_solver_setc
-    procedure, pass(sv) :: setr  => d_base_solver_setr
+    procedure, pass(sv) :: free  => @X@_base_solver_free
+    procedure, pass(sv) :: seti  => @X@_base_solver_seti
+    procedure, pass(sv) :: setc  => @X@_base_solver_setc
+    procedure, pass(sv) :: setr  => @X@_base_solver_setr
     generic, public     :: set   => seti, setc, setr
-    procedure, pass(sv) :: default => d_base_solver_default
-    procedure, pass(sv) :: descr   => d_base_solver_descr
-    procedure, pass(sv) :: sizeof  => d_base_solver_sizeof
-    procedure, pass(sv) :: get_nzeros => d_base_solver_get_nzeros
-  end type mld_d_base_solver_type
+    procedure, pass(sv) :: default => @X@_base_solver_default
+    procedure, pass(sv) :: descr   => @X@_base_solver_descr
+    procedure, pass(sv) :: sizeof  => @X@_base_solver_sizeof
+    procedure, pass(sv) :: get_nzeros => @X@_base_solver_get_nzeros
+  end type mld_@X@_base_solver_type
 
-  type  mld_d_base_smoother_type
-    class(mld_d_base_solver_type), allocatable :: sv
+  type  mld_@X@_base_smoother_type
+    class(mld_@X@_base_solver_type), allocatable :: sv
   contains
-    procedure, pass(sm) :: check => d_base_smoother_check
-    procedure, pass(sm) :: dump  => d_base_smoother_dmp
-    procedure, pass(sm) :: build => d_base_smoother_bld
-    procedure, pass(sm) :: apply_v => d_base_smoother_apply_vect
-    procedure, pass(sm) :: apply_a => d_base_smoother_apply
+    procedure, pass(sm) :: check => @X@_base_smoother_check
+    procedure, pass(sm) :: dump  => @X@_base_smoother_dmp
+    procedure, pass(sm) :: build => @X@_base_smoother_bld
+    procedure, pass(sm) :: apply_v => @X@_base_smoother_apply_vect
+    procedure, pass(sm) :: apply_a => @X@_base_smoother_apply
     generic, public     :: apply => apply_a, apply_v
-    procedure, pass(sm) :: free  => d_base_smoother_free
-    procedure, pass(sm) :: seti  => d_base_smoother_seti
-    procedure, pass(sm) :: setc  => d_base_smoother_setc
-    procedure, pass(sm) :: setr  => d_base_smoother_setr
+    procedure, pass(sm) :: free  => @X@_base_smoother_free
+    procedure, pass(sm) :: seti  => @X@_base_smoother_seti
+    procedure, pass(sm) :: setc  => @X@_base_smoother_setc
+    procedure, pass(sm) :: setr  => @X@_base_smoother_setr
     generic, public     :: set   => seti, setc, setr
-    procedure, pass(sm) :: default => d_base_smoother_default
-    procedure, pass(sm) :: descr =>   d_base_smoother_descr
-    procedure, pass(sm) :: sizeof =>  d_base_smoother_sizeof
-    procedure, pass(sm) :: get_nzeros => d_base_smoother_get_nzeros
-  end type mld_d_base_smoother_type
+    procedure, pass(sm) :: default => @X@_base_smoother_default
+    procedure, pass(sm) :: descr =>   @X@_base_smoother_descr
+    procedure, pass(sm) :: sizeof =>  @X@_base_smoother_sizeof
+    procedure, pass(sm) :: get_nzeros => @X@_base_smoother_get_nzeros
+  end type mld_@X@_base_smoother_type
 
-  type mld_donelev_type
-    class(mld_d_base_smoother_type), allocatable :: sm
-    type(mld_dml_parms)             :: parms 
-    type(psb_dspmat_type)           :: ac
+  type mld_@X@onelev_type
+    class(mld_@X@_base_smoother_type), allocatable :: sm
+    type(mld_@RT@ml_parms)             :: parms 
+    type(psb_@X@spmat_type)           :: ac
     type(psb_desc_type)             :: desc_ac
-    type(psb_dspmat_type), pointer  :: base_a    => null() 
+    type(psb_@X@spmat_type), pointer  :: base_a    => null() 
     type(psb_desc_type), pointer    :: base_desc => null() 
-    type(psb_dlinmap_type)          :: map
+    type(psb_@X@linmap_type)          :: map
   contains
-    procedure, pass(lv) :: descr   => d_base_onelev_descr
-    procedure, pass(lv) :: default => d_base_onelev_default
-    procedure, pass(lv) :: free    => d_base_onelev_free
-    procedure, pass(lv) :: nullify => d_base_onelev_nullify
-    procedure, pass(lv) :: check => d_base_onelev_check
-    procedure, pass(lv) :: dump  => d_base_onelev_dump
-    procedure, pass(lv) :: seti  => d_base_onelev_seti
-    procedure, pass(lv) :: setr  => d_base_onelev_setr
-    procedure, pass(lv) :: setc  => d_base_onelev_setc
+    procedure, pass(lv) :: descr   => @X@_base_onelev_descr
+    procedure, pass(lv) :: default => @X@_base_onelev_default
+    procedure, pass(lv) :: free    => @X@_base_onelev_free
+    procedure, pass(lv) :: nullify => @X@_base_onelev_nullify
+    procedure, pass(lv) :: check => @X@_base_onelev_check
+    procedure, pass(lv) :: dump  => @X@_base_onelev_dump
+    procedure, pass(lv) :: seti  => @X@_base_onelev_seti
+    procedure, pass(lv) :: setr  => @X@_base_onelev_setr
+    procedure, pass(lv) :: setc  => @X@_base_onelev_setc
     generic, public     :: set   => seti, setr, setc
-    procedure, pass(lv) :: sizeof => d_base_onelev_sizeof
-    procedure, pass(lv) :: get_nzeros => d_base_onelev_get_nzeros
-  end type mld_donelev_type
+    procedure, pass(lv) :: sizeof => @X@_base_onelev_sizeof
+    procedure, pass(lv) :: get_nzeros => @X@_base_onelev_get_nzeros
+  end type mld_@X@onelev_type
 
-  type, extends(psb_dprec_type)         :: mld_dprec_type
+  type, extends(psb_@X@prec_type)         :: mld_@X@prec_type
     integer                             :: ictxt
-    real(psb_dpk_)                      :: op_complexity=dzero
-    type(mld_donelev_type), allocatable :: precv(:) 
+    @TYPE@(@FKIND@)                      :: op_complexity=dzero
+    type(mld_@X@onelev_type), allocatable :: precv(:) 
   contains
-    procedure, pass(prec)               :: d_apply2_vect => mld_d_apply2_vect
-    procedure, pass(prec)               :: d_apply2v => mld_d_apply2v
-    procedure, pass(prec)               :: d_apply1v => mld_d_apply1v
-    procedure, pass(prec)               :: dump      => mld_d_dump
-    procedure, pass(prec)               :: get_complexity => mld_d_get_compl
-    procedure, pass(prec)               :: cmp_complexity => mld_d_cmp_compl
-    procedure, pass(prec)               :: get_nzeros => mld_d_get_nzeros
-  end type mld_dprec_type
+    procedure, pass(prec)               :: @X@_apply2_vect => mld_@X@_apply2_vect
+    procedure, pass(prec)               :: @X@_apply2v => mld_@X@_apply2v
+    procedure, pass(prec)               :: @X@_apply1v => mld_@X@_apply1v
+    procedure, pass(prec)               :: dump      => mld_@X@_dump
+    procedure, pass(prec)               :: get_complexity => mld_@X@_get_compl
+    procedure, pass(prec)               :: cmp_complexity => mld_@X@_cmp_compl
+    procedure, pass(prec)               :: get_nzeros => mld_@X@_get_nzeros
+  end type mld_@X@prec_type
 
-  private :: d_base_solver_bld,  d_base_solver_apply, &
-       &  d_base_solver_free,    d_base_solver_seti, &
-       &  d_base_solver_setc,    d_base_solver_setr, &
-       &  d_base_solver_descr,   d_base_solver_sizeof, &
-       &  d_base_solver_default, d_base_solver_check,&
-       &  d_base_solver_dmp, d_base_solver_apply_vect, &
-       &  d_base_smoother_bld,   d_base_smoother_apply, &
-       &  d_base_smoother_free,  d_base_smoother_seti, &
-       &  d_base_smoother_setc,  d_base_smoother_setr,&
-       &  d_base_smoother_descr, d_base_smoother_sizeof, &
-       &  d_base_smoother_default, d_base_smoother_check, &
-       &  d_base_smoother_dmp, d_base_smoother_apply_vect, &
-       &  d_base_onelev_seti, d_base_onelev_setc, &
-       &  d_base_onelev_setr, d_base_onelev_check, &
-       &  d_base_onelev_default, d_base_onelev_dump, &
-       &  d_base_onelev_descr,  d_base_onelev_sizeof, &
-       &  d_base_onelev_free,  d_base_onelev_nullify,&
-       &  mld_d_dump, &
-       &  mld_d_get_compl,  mld_d_cmp_compl,&
-       &  mld_d_get_nzeros, d_base_onelev_get_nzeros, &
-       &  d_base_smoother_get_nzeros, d_base_solver_get_nzeros
+  private :: @X@_base_solver_bld,  @X@_base_solver_apply, &
+       &  @X@_base_solver_free,    @X@_base_solver_seti, &
+       &  @X@_base_solver_setc,    @X@_base_solver_setr, &
+       &  @X@_base_solver_descr,   @X@_base_solver_sizeof, &
+       &  @X@_base_solver_default, @X@_base_solver_check,&
+       &  @X@_base_solver_dmp, @X@_base_solver_apply_vect, &
+       &  @X@_base_smoother_bld,   @X@_base_smoother_apply, &
+       &  @X@_base_smoother_free,  @X@_base_smoother_seti, &
+       &  @X@_base_smoother_setc,  @X@_base_smoother_setr,&
+       &  @X@_base_smoother_descr, @X@_base_smoother_sizeof, &
+       &  @X@_base_smoother_default, @X@_base_smoother_check, &
+       &  @X@_base_smoother_dmp, @X@_base_smoother_apply_vect, &
+       &  @X@_base_onelev_seti, @X@_base_onelev_setc, &
+       &  @X@_base_onelev_setr, @X@_base_onelev_check, &
+       &  @X@_base_onelev_default, @X@_base_onelev_dump, &
+       &  @X@_base_onelev_descr,  @X@_base_onelev_sizeof, &
+       &  @X@_base_onelev_free,  @X@_base_onelev_nullify,&
+       &  mld_@X@_dump, &
+       &  mld_@X@_get_compl,  mld_@X@_cmp_compl,&
+       &  mld_@X@_get_nzeros, @X@_base_onelev_get_nzeros, &
+       &  @X@_base_smoother_get_nzeros, @X@_base_solver_get_nzeros
 
 
   !
@@ -291,7 +291,7 @@ module mld_d_prec_type
   !
 
   interface mld_precfree
-    module procedure mld_dprec_free
+    module procedure mld_@X@prec_free
   end interface
 
   interface mld_nullify_onelevprec
@@ -299,46 +299,46 @@ module mld_d_prec_type
   end interface
 
   interface mld_precdescr
-    module procedure mld_dfile_prec_descr
+    module procedure mld_@X@file_prec_descr
   end interface
 
   interface mld_sizeof
-    module procedure mld_dprec_sizeof
+    module procedure mld_@X@prec_sizeof
   end interface
 
   interface mld_precaply
-    subroutine mld_dprecaply_vect(prec,x,y,desc_data,info,trans,work)
-      use psb_base_mod, only : psb_dspmat_type, psb_desc_type, &
-           & psb_dpk_, psb_d_vect_type
-      import mld_dprec_type
+    subroutine mld_@X@precaply_vect(prec,x,y,desc_data,info,trans,work)
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, &
+           & @FKIND@, psb_@X@_vect_type
+      import mld_@X@prec_type
       type(psb_desc_type),intent(in)      :: desc_data
-      type(mld_dprec_type), intent(inout) :: prec
-      type(psb_d_vect_type),intent(inout) :: x
-      type(psb_d_vect_type),intent(inout) :: y
+      type(mld_@X@prec_type), intent(inout) :: prec
+      type(psb_@X@_vect_type),intent(inout) :: x
+      type(psb_@X@_vect_type),intent(inout) :: y
       integer, intent(out)                :: info
       character(len=1), optional          :: trans
-      real(psb_dpk_),intent(inout), optional, target :: work(:)
-    end subroutine mld_dprecaply_vect
-    subroutine mld_dprecaply(prec,x,y,desc_data,info,trans,work)
-      use psb_base_mod, only : psb_dspmat_type, psb_desc_type, psb_dpk_
-      import mld_dprec_type
+      @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
+    end subroutine mld_@X@precaply_vect
+    subroutine mld_@X@precaply(prec,x,y,desc_data,info,trans,work)
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      import mld_@X@prec_type
       type(psb_desc_type),intent(in)   :: desc_data
-      type(mld_dprec_type), intent(in) :: prec
-      real(psb_dpk_),intent(in)        :: x(:)
-      real(psb_dpk_),intent(inout)     :: y(:)
+      type(mld_@X@prec_type), intent(in) :: prec
+      @TYPE@(@FKIND@),intent(in)        :: x(:)
+      @TYPE@(@FKIND@),intent(inout)     :: y(:)
       integer, intent(out)             :: info
       character(len=1), optional       :: trans
-      real(psb_dpk_),intent(inout), optional, target :: work(:)
-    end subroutine mld_dprecaply
-    subroutine mld_dprecaply1(prec,x,desc_data,info,trans)
-      use psb_base_mod, only : psb_dspmat_type, psb_desc_type, psb_dpk_
-      import mld_dprec_type
+      @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
+    end subroutine mld_@X@precaply
+    subroutine mld_@X@precaply1(prec,x,desc_data,info,trans)
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      import mld_@X@prec_type
       type(psb_desc_type),intent(in)   :: desc_data
-      type(mld_dprec_type), intent(in) :: prec
-      real(psb_dpk_),intent(inout)     :: x(:)
+      type(mld_@X@prec_type), intent(in) :: prec
+      @TYPE@(@FKIND@),intent(inout)     :: x(:)
       integer, intent(out)             :: info
       character(len=1), optional       :: trans
-    end subroutine mld_dprecaply1
+    end subroutine mld_@X@precaply1
   end interface
 
 contains
@@ -347,37 +347,37 @@ contains
   ! in bytes or in number of nonzeros of the operator(s) involved. 
   !
 
-  function d_base_solver_get_nzeros(sv) result(val)
+  function @X@_base_solver_get_nzeros(sv) result(val)
     implicit none 
-    class(mld_d_base_solver_type), intent(in) :: sv
+    class(mld_@X@_base_solver_type), intent(in) :: sv
     integer(psb_long_int_k_) :: val
     integer             :: i
     val = 0
-  end function d_base_solver_get_nzeros
+  end function @X@_base_solver_get_nzeros
 
-  function d_base_smoother_get_nzeros(sm) result(val)
+  function @X@_base_smoother_get_nzeros(sm) result(val)
     implicit none 
-    class(mld_d_base_smoother_type), intent(in) :: sm
+    class(mld_@X@_base_smoother_type), intent(in) :: sm
     integer(psb_long_int_k_) :: val
     integer             :: i
     val = 0
     if (allocated(sm%sv)) &
          &  val =  sm%sv%get_nzeros()
-  end function d_base_smoother_get_nzeros
+  end function @X@_base_smoother_get_nzeros
 
-  function d_base_onelev_get_nzeros(lv) result(val)
+  function @X@_base_onelev_get_nzeros(lv) result(val)
     implicit none 
-    class(mld_donelev_type), intent(in) :: lv
+    class(mld_@X@onelev_type), intent(in) :: lv
     integer(psb_long_int_k_) :: val
     integer             :: i
     val = 0
     if (allocated(lv%sm)) &
          &  val =  lv%sm%get_nzeros()
-  end function d_base_onelev_get_nzeros
+  end function @X@_base_onelev_get_nzeros
 
-  function mld_d_get_nzeros(prec) result(val)
+  function mld_@X@_get_nzeros(prec) result(val)
     implicit none 
-    class(mld_dprec_type), intent(in) :: prec
+    class(mld_@X@prec_type), intent(in) :: prec
     integer(psb_long_int_k_) :: val
     integer             :: i
     val = 0
@@ -386,12 +386,12 @@ contains
         val = val + prec%precv(i)%get_nzeros()
       end do
     end if
-  end function mld_d_get_nzeros
+  end function mld_@X@_get_nzeros
 
 
-  function mld_dprec_sizeof(prec) result(val)
+  function mld_@X@prec_sizeof(prec) result(val)
     implicit none 
-    type(mld_dprec_type), intent(in) :: prec
+    type(mld_@X@prec_type), intent(in) :: prec
     integer(psb_long_int_k_) :: val
     integer             :: i
     val = 0
@@ -401,11 +401,11 @@ contains
         val = val + prec%precv(i)%sizeof()
       end do
     end if
-  end function mld_dprec_sizeof
+  end function mld_@X@prec_sizeof
 
-  function d_base_onelev_sizeof(lv) result(val)
+  function @X@_base_onelev_sizeof(lv) result(val)
     implicit none 
-    class(mld_donelev_type), intent(in) :: lv
+    class(mld_@X@onelev_type), intent(in) :: lv
     integer(psb_long_int_k_) :: val
     integer             :: i
     
@@ -414,7 +414,7 @@ contains
     val = val + lv%ac%sizeof()
     val = val + lv%map%sizeof() 
     if (allocated(lv%sm))  val = val + lv%sm%sizeof()
-  end function d_base_onelev_sizeof
+  end function @X@_base_onelev_sizeof
 
 
   !
@@ -424,21 +424,21 @@ contains
   ! (original matrix)
   !
   
-  function mld_d_get_compl(prec) result(val)
+  function mld_@X@_get_compl(prec) result(val)
     implicit none 
-    class(mld_dprec_type), intent(in) :: prec
-    real(psb_dpk_)  :: val
+    class(mld_@X@prec_type), intent(in) :: prec
+    @TYPE@(@FKIND@)  :: val
     
     val = prec%op_complexity
 
-  end function mld_d_get_compl
+  end function mld_@X@_get_compl
   
-  subroutine mld_d_cmp_compl(prec) 
+  subroutine mld_@X@_cmp_compl(prec) 
     use psb_base_mod, only : psb_min, psb_sum
     implicit none 
-    class(mld_dprec_type), intent(inout) :: prec
+    class(mld_@X@prec_type), intent(inout) :: prec
     
-    real(psb_dpk_) :: num,den
+    @TYPE@(@FKIND@) :: num,den
     integer  :: ictxt, il 
 
     num = -done
@@ -462,11 +462,11 @@ contains
       call psb_sum(ictxt,den)
     end if
     prec%op_complexity = num/den
-  end subroutine mld_d_cmp_compl
+  end subroutine mld_@X@_cmp_compl
   
   !
   ! Subroutine: mld_file_prec_descr
-  ! Version: real
+  ! Version: @TYPE@
   !
   !  This routine prints a description of the preconditioner to the standard 
   !  output or to a file. It must be called after the preconditioner has been
@@ -482,10 +482,10 @@ contains
   !             will be printed. If iout is not present, then the standard
   !             output is condidered.
   !
-  subroutine mld_dfile_prec_descr(p,info,iout)
+  subroutine mld_@X@file_prec_descr(p,info,iout)
     implicit none 
     ! Arguments
-    type(mld_dprec_type), intent(in) :: p
+    type(mld_@X@prec_type), intent(in) :: p
     integer, intent(out)             :: info
     integer, intent(in), optional    :: iout
 
@@ -570,16 +570,16 @@ contains
     endif
     
 
-  end subroutine mld_dfile_prec_descr
+  end subroutine mld_@X@file_prec_descr
 
-  subroutine d_base_onelev_descr(lv,il,nl,info,iout)
+  subroutine @X@_base_onelev_descr(lv,il,nl,info,iout)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(in) :: lv
+    class(mld_@X@onelev_type), intent(in) :: lv
     integer, intent(in)                 :: il,nl
     integer, intent(out)                :: info
     integer, intent(in), optional       :: iout
@@ -587,7 +587,7 @@ contains
     ! Local variables
     integer      :: err_act
     integer      :: ictxt, me, np
-    character(len=20), parameter :: name='mld_d_base_onelev_descr'
+    character(len=20), parameter :: name='mld_@X@_base_onelev_descr'
     integer      :: iout_
     logical      :: coarse
 
@@ -639,12 +639,12 @@ contains
       return
     end if
     return
-  end subroutine d_base_onelev_descr
+  end subroutine @X@_base_onelev_descr
 
 
   !
   ! Subroutines: mld_Tbase_precfree, mld_T_onelev_precfree, mld_Tprec_free
-  ! Version: real/complex
+  ! Version: @TYPE@
   !
   !  These routines deallocate the mld_Tbaseprec_type, mld_Tonelev_type and
   !  mld_Tprec_type data structures.
@@ -655,11 +655,11 @@ contains
   !  info    -  integer, output.
   !             error code.
   !
-  subroutine d_base_onelev_free(lv,info)
+  subroutine @X@_base_onelev_free(lv,info)
     use psb_base_mod
     implicit none 
 
-    class(mld_donelev_type), intent(inout) :: lv
+    class(mld_@X@onelev_type), intent(inout) :: lv
     integer, intent(out)                :: info
     integer :: i
 
@@ -687,38 +687,38 @@ contains
     
     call lv%nullify()
 
-  end subroutine d_base_onelev_free
+  end subroutine @X@_base_onelev_free
 
 
-  subroutine d_base_onelev_nullify(lv)
+  subroutine @X@_base_onelev_nullify(lv)
     implicit none 
 
-    class(mld_donelev_type), intent(inout) :: lv
+    class(mld_@X@onelev_type), intent(inout) :: lv
 
     nullify(lv%base_a) 
     nullify(lv%base_desc) 
 
-  end subroutine d_base_onelev_nullify
+  end subroutine @X@_base_onelev_nullify
 
 
   subroutine mld_nullify_d_onelevprec(p)
     implicit none 
 
-    type(mld_donelev_type), intent(inout) :: p
+    type(mld_@X@onelev_type), intent(inout) :: p
 
     nullify(p%base_a) 
     nullify(p%base_desc) 
 
   end subroutine mld_nullify_d_onelevprec
 
-  subroutine mld_dprec_free(p,info)
+  subroutine mld_@X@prec_free(p,info)
   
     use psb_base_mod
     
     implicit none
     
     ! Arguments
-    type(mld_dprec_type), intent(inout) :: p
+    type(mld_@X@prec_type), intent(inout) :: p
     integer, intent(out)                :: info
     
     ! Local variables
@@ -727,7 +727,7 @@ contains
     
     if(psb_get_errstatus().ne.0) return 
     info=psb_success_
-    name = 'mld_dprecfree'
+    name = 'mld_@X@precfree'
     call psb_erractionsave(err_act)
     
     me=-1
@@ -749,7 +749,7 @@ contains
     end if
     return
     
-  end subroutine mld_dprec_free
+  end subroutine mld_@X@prec_free
 
   
   !
@@ -764,16 +764,16 @@ contains
   ! is. 
   !
 
-  subroutine d_base_smoother_apply(alpha,sm,x,beta,y,desc_data,trans,sweeps,work,info)
+  subroutine @X@_base_smoother_apply(alpha,sm,x,beta,y,desc_data,trans,sweeps,work,info)
     use psb_base_mod
     type(psb_desc_type), intent(in)             :: desc_data
-    class(mld_d_base_smoother_type), intent(in) :: sm
-    real(psb_dpk_),intent(inout)                :: x(:)
-    real(psb_dpk_),intent(inout)                :: y(:)
-    real(psb_dpk_),intent(in)                   :: alpha,beta
+    class(mld_@X@_base_smoother_type), intent(in) :: sm
+    @TYPE@(@FKIND@),intent(inout)                :: x(:)
+    @TYPE@(@FKIND@),intent(inout)                :: y(:)
+    @TYPE@(@FKIND@),intent(in)                   :: alpha,beta
     character(len=1),intent(in)                 :: trans
     integer, intent(in)                         :: sweeps
-    real(psb_dpk_),target, intent(inout)        :: work(:)
+    @TYPE@(@FKIND@),target, intent(inout)        :: work(:)
     integer, intent(out)                        :: info
     
     Integer           :: err_act
@@ -802,19 +802,19 @@ contains
     end if
     return
     
-  end subroutine d_base_smoother_apply
+  end subroutine @X@_base_smoother_apply
 
-  subroutine d_base_smoother_apply_vect(alpha,sm,x,beta,y,desc_data,&
+  subroutine @X@_base_smoother_apply_vect(alpha,sm,x,beta,y,desc_data,&
        &  trans,sweeps,work,info)
     use psb_base_mod
     type(psb_desc_type), intent(in)                :: desc_data
-    class(mld_d_base_smoother_type), intent(inout) :: sm
-    type(psb_d_vect_type),intent(inout)            :: x
-    type(psb_d_vect_type),intent(inout)            :: y
-    real(psb_dpk_),intent(in)                      :: alpha,beta
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm
+    type(psb_@X@_vect_type),intent(inout)            :: x
+    type(psb_@X@_vect_type),intent(inout)            :: y
+    @TYPE@(@FKIND@),intent(in)                      :: alpha,beta
     character(len=1),intent(in)                    :: trans
     integer, intent(in)                            :: sweeps
-    real(psb_dpk_),target, intent(inout)           :: work(:)
+    @TYPE@(@FKIND@),target, intent(inout)           :: work(:)
     integer, intent(out)                           :: info
     
     Integer           :: err_act
@@ -843,7 +843,7 @@ contains
     end if
     return
     
-  end subroutine d_base_smoother_apply_vect
+  end subroutine @X@_base_smoother_apply_vect
 
   !
   ! Check:
@@ -851,14 +851,14 @@ contains
   ! 2. Call its check method
   !
 
-  subroutine d_base_smoother_check(sm,info)
+  subroutine @X@_base_smoother_check(sm,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm 
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     integer, intent(out)                   :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_smoother_check'
@@ -886,7 +886,7 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_check
+  end subroutine @X@_base_smoother_check
 
   !
   ! Set methods: the come in multiple versions according
@@ -899,14 +899,14 @@ contains
   ! we just pass everything to the solver object. 
   !
 
-  subroutine d_base_smoother_seti(sm,what,val,info)
+  subroutine @X@_base_smoother_seti(sm,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm 
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     integer, intent(in)                            :: what 
     integer, intent(in)                            :: val
     integer, intent(out)                           :: info
@@ -930,16 +930,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_seti
+  end subroutine @X@_base_smoother_seti
 
-  subroutine d_base_smoother_setc(sm,what,val,info)
+  subroutine @X@_base_smoother_setc(sm,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm 
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     integer, intent(in)                            :: what 
     character(len=*), intent(in)                   :: val
     integer, intent(out)                           :: info
@@ -965,18 +965,18 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_setc
+  end subroutine @X@_base_smoother_setc
   
-  subroutine d_base_smoother_setr(sm,what,val,info)
+  subroutine @X@_base_smoother_setr(sm,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm 
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     integer, intent(in)                            :: what 
-    real(psb_dpk_), intent(in)                     :: val
+    @TYPE@(@FKIND@), intent(in)                     :: val
     integer, intent(out)                           :: info
     Integer :: err_act
     character(len=20)  :: name='d_base_smoother_setr'
@@ -1001,7 +1001,7 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_setr
+  end subroutine @X@_base_smoother_setr
 
 
 
@@ -1012,20 +1012,20 @@ contains
   ! to be stored in a given format. This is essential e.g.
   ! when dealing  with GPUs. 
   !
-  subroutine d_base_smoother_bld(a,desc_a,sm,upd,info,amold,vmold)
+  subroutine @X@_base_smoother_bld(a,desc_a,sm,upd,info,amold,vmold)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    type(psb_dspmat_type), intent(in), target      :: a
+    type(psb_@X@spmat_type), intent(in), target      :: a
     Type(psb_desc_type), Intent(in)                :: desc_a 
-    class(mld_d_base_smoother_type), intent(inout) :: sm 
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     character, intent(in)                          :: upd
     integer, intent(out)                           :: info
-    class(psb_d_base_sparse_mat), intent(in), optional :: amold
-    class(psb_d_base_vect_type), intent(in), optional  :: vmold
+    class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
+    class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
     Integer           :: err_act
     character(len=20) :: name='d_base_smoother_bld'
 
@@ -1050,7 +1050,7 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_bld
+  end subroutine @X@_base_smoother_bld
 
   !
   ! Free method (aka destructor).
@@ -1062,14 +1062,14 @@ contains
   ! subroutines were supported, which is not the case
   ! in GNU Fortran up to 4.7. 
   !
-  subroutine d_base_smoother_free(sm,info)
+  subroutine @X@_base_smoother_free(sm,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm
     integer, intent(out)                           :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_smoother_free'
@@ -1096,20 +1096,20 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_free
+  end subroutine @X@_base_smoother_free
 
   !
   ! Print a description
   !
 
-  subroutine d_base_smoother_descr(sm,info,iout,coarse)
+  subroutine @X@_base_smoother_descr(sm,info,iout,coarse)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(in) :: sm
+    class(mld_@X@_base_smoother_type), intent(in) :: sm
     integer, intent(out)                        :: info
     integer, intent(in), optional               :: iout
     logical, intent(in), optional               :: coarse
@@ -1117,7 +1117,7 @@ contains
     ! Local variables
     integer      :: err_act
     integer      :: ictxt, me, np
-    character(len=20), parameter :: name='mld_d_base_smoother_descr'
+    character(len=20), parameter :: name='mld_@X@_base_smoother_descr'
     integer :: iout_
     logical      :: coarse_
 
@@ -1156,16 +1156,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_smoother_descr
+  end subroutine @X@_base_smoother_descr
 
   !
   ! Dump 
   ! to file, for debugging purposes.
   !
-  subroutine d_base_smoother_dmp(sm,ictxt,level,info,prefix,head,smoother,solver)
+  subroutine @X@_base_smoother_dmp(sm,ictxt,level,info,prefix,head,smoother,solver)
     use psb_base_mod
     implicit none 
-    class(mld_d_base_smoother_type), intent(in) :: sm
+    class(mld_@X@_base_smoother_type), intent(in) :: sm
     integer, intent(in)              :: ictxt,level
     integer, intent(out)             :: info
     character(len=*), intent(in), optional :: prefix, head
@@ -1201,12 +1201,12 @@ contains
     if (allocated(sm%sv)) &
          & call sm%sv%dump(ictxt,level,info,solver=solver)
 
-  end subroutine d_base_smoother_dmp
+  end subroutine @X@_base_smoother_dmp
 
-  function d_base_smoother_sizeof(sm) result(val)
+  function @X@_base_smoother_sizeof(sm) result(val)
     implicit none 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(in) :: sm
+    class(mld_@X@_base_smoother_type), intent(in) :: sm
     integer(psb_long_int_k_)                    :: val
     integer             :: i
     
@@ -1216,23 +1216,23 @@ contains
     end if
 
     return
-  end function d_base_smoother_sizeof
+  end function @X@_base_smoother_sizeof
 
 
   !
   ! Set sensible defaults.
   ! To be called immediately after allocation
   !
-  subroutine d_base_smoother_default(sm) 
+  subroutine @X@_base_smoother_default(sm) 
     implicit none 
     ! Arguments
-    class(mld_d_base_smoother_type), intent(inout) :: sm
+    class(mld_@X@_base_smoother_type), intent(inout) :: sm
     ! Do nothing for base version
 
     if (allocated(sm%sv)) call sm%sv%default()
 
     return
-  end subroutine d_base_smoother_default
+  end subroutine @X@_base_smoother_default
 
   
   !
@@ -1250,15 +1250,15 @@ contains
   ! 
 
 
-  subroutine d_base_solver_apply(alpha,sv,x,beta,y,desc_data,trans,work,info)
+  subroutine @X@_base_solver_apply(alpha,sv,x,beta,y,desc_data,trans,work,info)
     use psb_base_mod
     type(psb_desc_type), intent(in)           :: desc_data
-    class(mld_d_base_solver_type), intent(in) :: sv
-    real(psb_dpk_),intent(inout)              :: x(:)
-    real(psb_dpk_),intent(inout)              :: y(:)
-    real(psb_dpk_),intent(in)                 :: alpha,beta
+    class(mld_@X@_base_solver_type), intent(in) :: sv
+    @TYPE@(@FKIND@),intent(inout)              :: x(:)
+    @TYPE@(@FKIND@),intent(inout)              :: y(:)
+    @TYPE@(@FKIND@),intent(in)                 :: alpha,beta
     character(len=1),intent(in)               :: trans
-    real(psb_dpk_),target, intent(inout)      :: work(:)
+    @TYPE@(@FKIND@),target, intent(inout)      :: work(:)
     integer, intent(out)                      :: info
     
     Integer :: err_act
@@ -1281,17 +1281,17 @@ contains
     end if
     return
     
-  end subroutine d_base_solver_apply
+  end subroutine @X@_base_solver_apply
 
-  subroutine d_base_solver_apply_vect(alpha,sv,x,beta,y,desc_data,trans,work,info)
+  subroutine @X@_base_solver_apply_vect(alpha,sv,x,beta,y,desc_data,trans,work,info)
     use psb_base_mod
     type(psb_desc_type), intent(in)              :: desc_data
-    class(mld_d_base_solver_type), intent(inout) :: sv
-    type(psb_d_vect_type),intent(inout)          :: x
-    type(psb_d_vect_type),intent(inout)          :: y
-    real(psb_dpk_),intent(in)                    :: alpha,beta
+    class(mld_@X@_base_solver_type), intent(inout) :: sv
+    type(psb_@X@_vect_type),intent(inout)          :: x
+    type(psb_@X@_vect_type),intent(inout)          :: y
+    @TYPE@(@FKIND@),intent(in)                    :: alpha,beta
     character(len=1),intent(in)                  :: trans
-    real(psb_dpk_),target, intent(inout)         :: work(:)
+    @TYPE@(@FKIND@),target, intent(inout)         :: work(:)
     integer, intent(out)                         :: info
     
     Integer :: err_act
@@ -1314,7 +1314,7 @@ contains
     end if
     return
     
-  end subroutine d_base_solver_apply_vect
+  end subroutine @X@_base_solver_apply_vect
 
 
   !
@@ -1322,21 +1322,21 @@ contains
   ! The base version throws an error, since it means that no explicit
   ! choice was made. 
   !
-  subroutine d_base_solver_bld(a,desc_a,sv,upd,info,b,amold,vmold)
+  subroutine @X@_base_solver_bld(a,desc_a,sv,upd,info,b,amold,vmold)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    type(psb_dspmat_type), intent(in), target           :: a
+    type(psb_@X@spmat_type), intent(in), target           :: a
     Type(psb_desc_type), Intent(in)                     :: desc_a 
-    class(mld_d_base_solver_type), intent(inout)        :: sv
+    class(mld_@X@_base_solver_type), intent(inout)        :: sv
     character, intent(in)                               :: upd
     integer, intent(out)                                :: info
-    type(psb_dspmat_type), intent(in), target, optional :: b
-    class(psb_d_base_sparse_mat), intent(in), optional  :: amold
-    class(psb_d_base_vect_type), intent(in), optional   :: vmold
+    type(psb_@X@spmat_type), intent(in), target, optional :: b
+    class(psb_@X@_base_sparse_mat), intent(in), optional  :: amold
+    class(psb_@X@_base_vect_type), intent(in), optional   :: vmold
 
     Integer :: err_act
     character(len=20)  :: name='d_base_solver_bld'
@@ -1357,16 +1357,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_solver_bld
+  end subroutine @X@_base_solver_bld
 
-  subroutine d_base_solver_check(sv,info)
+  subroutine @X@_base_solver_check(sv,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv
+    class(mld_@X@_base_solver_type), intent(inout) :: sv
     integer, intent(out)                   :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_solver_check'
@@ -1387,16 +1387,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_solver_check
+  end subroutine @X@_base_solver_check
 
-  subroutine d_base_solver_seti(sv,what,val,info)
+  subroutine @X@_base_solver_seti(sv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv 
+    class(mld_@X@_base_solver_type), intent(inout) :: sv 
     integer, intent(in)                          :: what 
     integer, intent(in)                          :: val
     integer, intent(out)                         :: info
@@ -1407,16 +1407,16 @@ contains
     info = 0
     
     return
-  end subroutine d_base_solver_seti
+  end subroutine @X@_base_solver_seti
 
-  subroutine d_base_solver_setc(sv,what,val,info)
+  subroutine @X@_base_solver_setc(sv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv
+    class(mld_@X@_base_solver_type), intent(inout) :: sv
     integer, intent(in)                          :: what 
     character(len=*), intent(in)                 :: val
     integer, intent(out)                         :: info
@@ -1443,18 +1443,18 @@ contains
       return
     end if
     return
-  end subroutine d_base_solver_setc
+  end subroutine @X@_base_solver_setc
   
-  subroutine d_base_solver_setr(sv,what,val,info)
+  subroutine @X@_base_solver_setr(sv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv 
+    class(mld_@X@_base_solver_type), intent(inout) :: sv 
     integer, intent(in)                          :: what 
-    real(psb_dpk_), intent(in)                   :: val
+    @TYPE@(@FKIND@), intent(in)                   :: val
     integer, intent(out)                         :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_solver_setr'
@@ -1464,7 +1464,7 @@ contains
     info = 0
     
     return
-  end subroutine d_base_solver_setr
+  end subroutine @X@_base_solver_setr
 
   !
   ! Free
@@ -1473,14 +1473,14 @@ contains
   ! to be silent here, to cover reallocation. 
   !
 
-  subroutine d_base_solver_free(sv,info)
+  subroutine @X@_base_solver_free(sv,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv
+    class(mld_@X@_base_solver_type), intent(inout) :: sv
     integer, intent(out)                         :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_solver_free'
@@ -1501,16 +1501,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_solver_free
+  end subroutine @X@_base_solver_free
 
-  subroutine d_base_solver_descr(sv,info,iout,coarse)
+  subroutine @X@_base_solver_descr(sv,info,iout,coarse)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_d_base_solver_type), intent(in) :: sv
+    class(mld_@X@_base_solver_type), intent(in) :: sv
     integer, intent(out)                      :: info
     integer, intent(in), optional             :: iout
     logical, intent(in), optional             :: coarse
@@ -1518,7 +1518,7 @@ contains
     ! Local variables
     integer      :: err_act
     integer      :: ictxt, me, np
-    character(len=20), parameter :: name='mld_d_base_solver_descr'
+    character(len=20), parameter :: name='mld_@X@_base_solver_descr'
     integer      :: iout_
 
 
@@ -1538,12 +1538,12 @@ contains
       return
     end if
     return
-  end subroutine d_base_solver_descr
+  end subroutine @X@_base_solver_descr
 
-  subroutine d_base_solver_dmp(sv,ictxt,level,info,prefix,head,solver)
+  subroutine @X@_base_solver_dmp(sv,ictxt,level,info,prefix,head,solver)
     use psb_base_mod
     implicit none 
-    class(mld_d_base_solver_type), intent(in) :: sv
+    class(mld_@X@_base_solver_type), intent(in) :: sv
     integer, intent(in)              :: ictxt,level
     integer, intent(out)             :: info
     character(len=*), intent(in), optional :: prefix, head
@@ -1577,27 +1577,27 @@ contains
 
     ! At base level do nothing for the solver
 
-  end subroutine d_base_solver_dmp
+  end subroutine @X@_base_solver_dmp
 
-  function d_base_solver_sizeof(sv) result(val)
+  function @X@_base_solver_sizeof(sv) result(val)
     implicit none 
     ! Arguments
-    class(mld_d_base_solver_type), intent(in) :: sv
+    class(mld_@X@_base_solver_type), intent(in) :: sv
     integer(psb_long_int_k_)                  :: val
     integer             :: i
     val = 0
 
     return
-  end function d_base_solver_sizeof
+  end function @X@_base_solver_sizeof
 
-  subroutine d_base_solver_default(sv) 
+  subroutine @X@_base_solver_default(sv) 
     implicit none 
     ! Arguments
-    class(mld_d_base_solver_type), intent(inout) :: sv
+    class(mld_@X@_base_solver_type), intent(inout) :: sv
     ! Do nothing for base version
 
     return
-  end subroutine d_base_solver_default
+  end subroutine @X@_base_solver_default
 
   !
   ! Onelevel checks. 
@@ -1606,14 +1606,14 @@ contains
   ! a smoother and you can choose to apply it any number
   ! of times you like. 
   !
-  subroutine d_base_onelev_check(lv,info)
+  subroutine @X@_base_onelev_check(lv,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(inout) :: lv 
+    class(mld_@X@onelev_type), intent(inout) :: lv 
     integer, intent(out)                   :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_onelev_check'
@@ -1649,7 +1649,7 @@ contains
       return
     end if
     return
-  end subroutine d_base_onelev_check
+  end subroutine @X@_base_onelev_check
 
   !
   ! Multilevel defaults: 
@@ -1661,14 +1661,14 @@ contains
   !  two-sided smoothing (i.e. V-cycle) with 1 smoothing sweep;
   !
 
-  subroutine d_base_onelev_default(lv)
+  subroutine @X@_base_onelev_default(lv)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(inout) :: lv 
+    class(mld_@X@onelev_type), intent(inout) :: lv 
 
     lv%parms%sweeps          = 1
     lv%parms%sweeps_pre      = 1
@@ -1688,7 +1688,7 @@ contains
 
     return
 
-  end subroutine d_base_onelev_default
+  end subroutine @X@_base_onelev_default
 
   ! 
   ! Set routines:
@@ -1700,14 +1700,14 @@ contains
   !    for checks on solver vs. smoother nomenclature
   !    reconciliation. 
   ! 
-  subroutine d_base_onelev_seti(lv,what,val,info)
+  subroutine @X@_base_onelev_seti(lv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(inout) :: lv 
+    class(mld_@X@onelev_type), intent(inout) :: lv 
     integer, intent(in)                          :: what 
     integer, intent(in)                          :: val
     integer, intent(out)                         :: info
@@ -1773,16 +1773,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_onelev_seti
+  end subroutine @X@_base_onelev_seti
 
-  subroutine d_base_onelev_setc(lv,what,val,info)
+  subroutine @X@_base_onelev_setc(lv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(inout) :: lv 
+    class(mld_@X@onelev_type), intent(inout) :: lv 
     integer, intent(in)                            :: what 
     character(len=*), intent(in)                   :: val
     integer, intent(out)                           :: info
@@ -1809,18 +1809,18 @@ contains
       return
     end if
     return
-  end subroutine d_base_onelev_setc
+  end subroutine @X@_base_onelev_setc
   
-  subroutine d_base_onelev_setr(lv,what,val,info)
+  subroutine @X@_base_onelev_setr(lv,what,val,info)
 
     use psb_base_mod
 
     Implicit None
 
     ! Arguments
-    class(mld_donelev_type), intent(inout) :: lv 
+    class(mld_@X@onelev_type), intent(inout) :: lv 
     integer, intent(in)                            :: what 
-    real(psb_dpk_), intent(in)                     :: val
+    @TYPE@(@FKIND@), intent(in)                     :: val
     integer, intent(out)                           :: info
     Integer :: err_act
     character(len=20)  :: name='d_base_onelev_setr'
@@ -1855,16 +1855,16 @@ contains
       return
     end if
     return
-  end subroutine d_base_onelev_setr
+  end subroutine @X@_base_onelev_setr
 
   !
   ! Dump on file: can be fine-tuned to include the (aggregated) matrix
   ! as well as smoother and solver. 
   !
-  subroutine d_base_onelev_dump(lv,level,info,prefix,head,ac,rp,smoother,solver)
+  subroutine @X@_base_onelev_dump(lv,level,info,prefix,head,ac,rp,smoother,solver)
     use psb_base_mod
     implicit none 
-    class(mld_donelev_type), intent(in) :: lv
+    class(mld_@X@onelev_type), intent(in) :: lv
     integer, intent(in)              :: level
     integer, intent(out)             :: info
     character(len=*), intent(in), optional :: prefix, head
@@ -1924,28 +1924,28 @@ contains
     if (allocated(lv%sm)) &
          & call lv%sm%dump(icontxt,level,info,smoother=smoother,solver=solver)
 
-  end subroutine d_base_onelev_dump
+  end subroutine @X@_base_onelev_dump
 
 
   !
   ! Top level methods. 
   !
-  subroutine mld_d_apply2_vect(prec,x,y,desc_data,info,trans,work)
+  subroutine mld_@X@_apply2_vect(prec,x,y,desc_data,info,trans,work)
     use psb_base_mod
     type(psb_desc_type),intent(in)        :: desc_data
-    class(mld_dprec_type), intent(inout)  :: prec
-    type(psb_d_vect_type),intent(inout)   :: x
-    type(psb_d_vect_type),intent(inout)   :: y
+    class(mld_@X@prec_type), intent(inout)  :: prec
+    type(psb_@X@_vect_type),intent(inout)   :: x
+    type(psb_@X@_vect_type),intent(inout)   :: y
     integer, intent(out)                  :: info
     character(len=1), optional            :: trans
-    real(psb_dpk_),intent(inout), optional, target :: work(:)
+    @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
     Integer           :: err_act
     character(len=20) :: name='d_prec_apply'
 
     call psb_erractionsave(err_act)
 
     select type(prec) 
-    type is (mld_dprec_type)
+    type is (mld_@X@prec_type)
       call mld_precaply(prec,x,y,desc_data,info,trans,work)
     class default
       info = psb_err_missing_override_method_
@@ -1964,25 +1964,25 @@ contains
     end if
     return
 
-  end subroutine mld_d_apply2_vect
+  end subroutine mld_@X@_apply2_vect
 
 
-  subroutine mld_d_apply2v(prec,x,y,desc_data,info,trans,work)
+  subroutine mld_@X@_apply2v(prec,x,y,desc_data,info,trans,work)
     use psb_base_mod
     type(psb_desc_type),intent(in)    :: desc_data
-    class(mld_dprec_type), intent(in) :: prec
-    real(psb_dpk_),intent(inout)      :: x(:)
-    real(psb_dpk_),intent(inout)      :: y(:)
+    class(mld_@X@prec_type), intent(in) :: prec
+    @TYPE@(@FKIND@),intent(inout)      :: x(:)
+    @TYPE@(@FKIND@),intent(inout)      :: y(:)
     integer, intent(out)              :: info
     character(len=1), optional        :: trans
-    real(psb_dpk_),intent(inout), optional, target :: work(:)
+    @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
     Integer           :: err_act
     character(len=20) :: name='d_prec_apply'
 
     call psb_erractionsave(err_act)
 
     select type(prec) 
-    type is (mld_dprec_type)
+    type is (mld_@X@prec_type)
       call mld_precaply(prec,x,y,desc_data,info,trans,work)
     class default
       info = psb_err_missing_override_method_
@@ -2001,13 +2001,13 @@ contains
     end if
     return
 
-  end subroutine mld_d_apply2v
+  end subroutine mld_@X@_apply2v
 
-  subroutine mld_d_apply1v(prec,x,desc_data,info,trans)
+  subroutine mld_@X@_apply1v(prec,x,desc_data,info,trans)
     use psb_base_mod
     type(psb_desc_type),intent(in)    :: desc_data
-    class(mld_dprec_type), intent(in) :: prec
-    real(psb_dpk_),intent(inout)      :: x(:)
+    class(mld_@X@prec_type), intent(in) :: prec
+    @TYPE@(@FKIND@),intent(inout)      :: x(:)
     integer, intent(out)              :: info
     character(len=1), optional        :: trans
     Integer           :: err_act
@@ -2016,7 +2016,7 @@ contains
     call psb_erractionsave(err_act)
 
     select type(prec) 
-    type is (mld_dprec_type)
+    type is (mld_@X@prec_type)
       call mld_precaply(prec,x,desc_data,info,trans)
     class default
       info = psb_err_missing_override_method_
@@ -2035,13 +2035,13 @@ contains
     end if
     return
 
-  end subroutine mld_d_apply1v
+  end subroutine mld_@X@_apply1v
 
 
-  subroutine mld_d_dump(prec,info,istart,iend,prefix,head,ac,rp,smoother,solver)
+  subroutine mld_@X@_dump(prec,info,istart,iend,prefix,head,ac,rp,smoother,solver)
     use psb_base_mod
     implicit none 
-    class(mld_dprec_type), intent(in) :: prec
+    class(mld_@X@prec_type), intent(in) :: prec
     integer, intent(out)             :: info
     integer, intent(in), optional    :: istart, iend
     character(len=*), intent(in), optional :: prefix, head
@@ -2069,8 +2069,8 @@ contains
            & ac=ac,smoother=smoother,solver=solver,rp=rp)
     end do
 
-  end subroutine mld_d_dump
+  end subroutine mld_@X@_dump
   
 
 
-end module mld_d_prec_type
+end module mld_@X@_prec_type

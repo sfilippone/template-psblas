@@ -1,0 +1,26 @@
+This documents the logic of the substitution. Shows Z to be clear
+1. The single letter distinguishing the various basic types S/D/C/Z
+s/@X@/z/g
+
+2. The type REAL COMPLEX and the kind PSB_SPK_ PSB_DPK_
+s/@TYPE@/complex/g
+s/@FKIND@/psb_dpk_/g
+
+3. If COMPLEX then conjg else if REAL then ""
+s/@CONJG@/conjg/g
+
+4. ZERO and ONE constants in the desired type
+s/@XZERO@/szero/g
+s/@XONE@/sone/g
+
+5. ZERO and ONE constants in the NORM type, i.e always REAL, matching KIND
+s/@RZERO@/dzero/g
+s/@RONE@/done/g
+
+6. Names of the basic BLAS routines for the specific type. 
+s/@DOT@/zdotc/g
+s/@NRM2@/dznrm2/g
+
+
+7. The "sister" real type, i.e. S,C: S,  D,Z: D
+s/@RT@/d/g
