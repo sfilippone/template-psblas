@@ -41,7 +41,7 @@
 ! Module: mld_@X@_prec_type
 !
 !  This module defines: 
-!  - the mld_@X@prec_type data structure containing the preconditioner and related
+!  - the mld_@X@_prec_type data structure containing the preconditioner and related
 !    data structures;
 !
 !  It contains routines for
@@ -249,7 +249,7 @@ module mld_@X@_prec_type
 
   type, extends(psb_@X@prec_type)         :: mld_@X@prec_type
     integer                             :: ictxt
-    @TYPE@(@FKIND@)                      :: op_complexity=dzero
+    real(@FKIND@)                      :: op_complexity=@RZERO@
     type(mld_@X@onelev_type), allocatable :: precv(:) 
   contains
     procedure, pass(prec)               :: @X@_apply2_vect => mld_@X@_apply2_vect
@@ -437,7 +437,7 @@ contains
     implicit none 
     class(mld_@X@prec_type), intent(inout) :: prec
     
-    @TYPE@(@FKIND@) :: num,den
+    real(@FKIND@) :: num,den
     integer  :: ictxt, il 
 
     num = -done
@@ -446,7 +446,7 @@ contains
     if (allocated(prec%precv)) then 
       il  = 1
       num = prec%precv(il)%base_a%get_nzeros()
-      if (num >= dzero) then
+      if (num >= @RZERO@) then
         den = num 
         do il=2,size(prec%precv)
           num = num + max(0,prec%precv(il)%base_a%get_nzeros())
@@ -454,7 +454,7 @@ contains
       end if
     end if
     call psb_min(ictxt,num) 
-    if (num < dzero) then 
+    if (num < @RZERO@) then 
       den = done
     else
       call psb_sum(ictxt,num)
@@ -975,7 +975,7 @@ contains
     ! Arguments
     class(mld_@X@_base_smoother_type), intent(inout) :: sm 
     integer, intent(in)                            :: what 
-    @TYPE@(@FKIND@), intent(in)                     :: val
+    real(@FKIND@), intent(in)                     :: val
     integer, intent(out)                           :: info
     Integer :: err_act
     character(len=20)  :: name='d_base_smoother_setr'
@@ -1453,7 +1453,7 @@ contains
     ! Arguments
     class(mld_@X@_base_solver_type), intent(inout) :: sv 
     integer, intent(in)                          :: what 
-    @TYPE@(@FKIND@), intent(in)                   :: val
+    real(@FKIND@), intent(in)                   :: val
     integer, intent(out)                         :: info
     Integer           :: err_act
     character(len=20) :: name='d_base_solver_setr'
@@ -1680,8 +1680,8 @@ contains
     lv%parms%aggr_omega_alg  = mld_eig_est_
     lv%parms%aggr_eig        = mld_max_norm_
     lv%parms%aggr_filter     = mld_no_filter_mat_
-    lv%parms%aggr_omega_val  = dzero
-    lv%parms%aggr_thresh     = dzero
+    lv%parms%aggr_omega_val  = @RZERO@
+    lv%parms%aggr_thresh     = @RZERO@
     
     if (allocated(lv%sm)) call lv%sm%default()
 
@@ -1819,7 +1819,7 @@ contains
     ! Arguments
     class(mld_@X@onelev_type), intent(inout) :: lv 
     integer, intent(in)                            :: what 
-    @TYPE@(@FKIND@), intent(in)                     :: val
+    real(@FKIND@), intent(in)                     :: val
     integer, intent(out)                           :: info
     Integer :: err_act
     character(len=20)  :: name='d_base_onelev_setr'
