@@ -1,0 +1,535 @@
+!!$ 
+!!$              Parallel Sparse BLAS  version 3.0
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+!!$  
+!
+! package: psb_@X@_csc_mat_mod
+!
+! This module contains the definition of the psb_@X@_csc_sparse_mat type
+! which implements an actual storage format (the CSC in this case) for
+! a sparse matrix as well as the related methods (those who are
+! specific to the type and could not be defined higher in the
+! hierarchy). We are at the bottom level of the inheritance chain.
+! 
+module psb_@X@_csc_mat_mod
+
+  use psb_@X@_base_mat_mod
+
+  type, extends(psb_@X@_base_sparse_mat) :: psb_@X@_csc_sparse_mat
+
+    integer, allocatable :: icp(:), ia(:)
+    @TYPE@(@FKIND@), allocatable :: val(:)
+
+  contains
+    procedure, pass(a) :: get_size     => @X@_csc_get_size
+    procedure, pass(a) :: get_nzeros   => @X@_csc_get_nzeros
+    procedure, nopass  :: get_fmt      => @X@_csc_get_fmt
+    procedure, pass(a) :: sizeof       => @X@_csc_sizeof
+    procedure, pass(a) :: @X@_csmm       => psb_@X@_csc_csmm
+    procedure, pass(a) :: @X@_csmv       => psb_@X@_csc_csmv
+    procedure, pass(a) :: @X@_inner_cssm => psb_@X@_csc_cssm
+    procedure, pass(a) :: @X@_inner_cssv => psb_@X@_csc_cssv
+    procedure, pass(a) :: @X@_scals      => psb_@X@_csc_scals
+    procedure, pass(a) :: @X@_scal       => psb_@X@_csc_scal
+    procedure, pass(a) :: maxval       => psb_@X@_csc_maxval
+    procedure, pass(a) :: csnmi        => psb_@X@_csc_csnmi
+    procedure, pass(a) :: csnm1        => psb_@X@_csc_csnm1
+    procedure, pass(a) :: rowsum       => psb_@X@_csc_rowsum
+    procedure, pass(a) :: arwsum       => psb_@X@_csc_arwsum
+    procedure, pass(a) :: colsum       => psb_@X@_csc_colsum
+    procedure, pass(a) :: aclsum       => psb_@X@_csc_aclsum
+    procedure, pass(a) :: reallocate_nz => psb_@X@_csc_reallocate_nz
+    procedure, pass(a) :: allocate_mnnz => psb_@X@_csc_allocate_mnnz
+    procedure, pass(a) :: cp_to_coo    => psb_@X@_cp_csc_to_coo
+    procedure, pass(a) :: cp_from_coo  => psb_@X@_cp_csc_from_coo
+    procedure, pass(a) :: cp_to_fmt    => psb_@X@_cp_csc_to_fmt
+    procedure, pass(a) :: cp_from_fmt  => psb_@X@_cp_csc_from_fmt
+    procedure, pass(a) :: mv_to_coo    => psb_@X@_mv_csc_to_coo
+    procedure, pass(a) :: mv_from_coo  => psb_@X@_mv_csc_from_coo
+    procedure, pass(a) :: mv_to_fmt    => psb_@X@_mv_csc_to_fmt
+    procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_csc_from_fmt
+    procedure, pass(a) :: csput        => psb_@X@_csc_csput
+    procedure, pass(a) :: get_diag     => psb_@X@_csc_get_diag
+    procedure, pass(a) :: csgetptn     => psb_@X@_csc_csgetptn
+    procedure, pass(a) :: @X@_csgetrow   => psb_@X@_csc_csgetrow
+    procedure, pass(a) :: get_nz_col   => @X@_csc_get_nz_col
+    procedure, pass(a) :: reinit       => psb_@X@_csc_reinit
+    procedure, pass(a) :: trim         => psb_@X@_csc_trim
+    procedure, pass(a) :: print        => psb_@X@_csc_print
+    procedure, pass(a) :: free         => @X@_csc_free
+    procedure, pass(a) :: mold         => psb_@X@_csc_mold
+    procedure, pass(a) :: psb_@X@_csc_cp_from
+    generic, public    :: cp_from => psb_@X@_csc_cp_from
+    procedure, pass(a) :: psb_@X@_csc_mv_from
+    generic, public    :: mv_from => psb_@X@_csc_mv_from
+
+  end type psb_@X@_csc_sparse_mat
+
+ private :: @X@_csc_get_nzeros, @X@_csc_free,  @X@_csc_get_fmt, &
+       & @X@_csc_get_size, @X@_csc_sizeof, @X@_csc_get_nz_col
+
+  interface
+    subroutine  psb_@X@_csc_reallocate_nz(nz,a) 
+      import :: psb_@X@_csc_sparse_mat
+      integer, intent(in) :: nz
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+    end subroutine psb_@X@_csc_reallocate_nz
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_reinit(a,clear)
+      import :: psb_@X@_csc_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a   
+      logical, intent(in), optional :: clear
+    end subroutine psb_@X@_csc_reinit
+  end interface
+  
+  interface
+    subroutine  psb_@X@_csc_trim(a)
+      import :: psb_@X@_csc_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+    end subroutine psb_@X@_csc_trim
+  end interface
+  
+  interface
+    subroutine  psb_@X@_csc_allocate_mnnz(m,n,a,nz) 
+      import :: psb_@X@_csc_sparse_mat
+      integer, intent(in) :: m,n
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      integer, intent(in), optional :: nz
+    end subroutine psb_@X@_csc_allocate_mnnz
+  end interface
+
+  interface 
+    subroutine psb_@X@_csc_mold(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_base_sparse_mat, psb_long_int_k_
+      class(psb_@X@_csc_sparse_mat), intent(in)               :: a
+      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
+      integer, intent(out)                                 :: info
+    end subroutine psb_@X@_csc_mold
+  end interface
+
+  interface
+    subroutine psb_@X@_csc_print(iout,a,iv,eirs,eics,head,ivr,ivc)
+      import :: psb_@X@_csc_sparse_mat
+      integer, intent(in)               :: iout
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a   
+      integer, intent(in), optional     :: iv(:)
+      integer, intent(in), optional     :: eirs,eics
+      character(len=*), optional        :: head
+      integer, intent(in), optional     :: ivr(:), ivc(:)
+    end subroutine psb_@X@_csc_print
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_csc_to_coo(a,b,info) 
+      import :: psb_@X@_coo_sparse_mat, psb_@X@_csc_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+      integer, intent(out)            :: info
+    end subroutine psb_@X@_cp_csc_to_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_csc_from_coo(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_coo_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(in)    :: b
+      integer, intent(out)                        :: info
+    end subroutine psb_@X@_cp_csc_from_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_csc_to_fmt(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_base_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(in)   :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer, intent(out)                       :: info
+    end subroutine psb_@X@_cp_csc_to_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_csc_from_fmt(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_base_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(in)   :: b
+      integer, intent(out)                        :: info
+    end subroutine psb_@X@_cp_csc_from_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csc_to_coo(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_coo_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout)   :: b
+      integer, intent(out)            :: info
+    end subroutine psb_@X@_mv_csc_to_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csc_from_coo(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_coo_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+      integer, intent(out)                        :: info
+    end subroutine psb_@X@_mv_csc_from_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csc_to_fmt(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_base_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout)  :: b
+      integer, intent(out)                        :: info
+    end subroutine psb_@X@_mv_csc_to_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csc_from_fmt(a,b,info) 
+      import :: psb_@X@_csc_sparse_mat, psb_@X@_base_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(inout)  :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer, intent(out)                         :: info
+    end subroutine psb_@X@_mv_csc_from_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_cp_from(a,b)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      type(psb_@X@_csc_sparse_mat), intent(in)   :: b
+    end subroutine psb_@X@_csc_cp_from
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_mv_from(a,b)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(inout)  :: a
+      type(psb_@X@_csc_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_csc_mv_from
+  end interface
+  
+  
+  interface 
+    subroutine psb_@X@_csc_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: val(:)
+      integer, intent(in)             :: nz,ia(:), ja(:),&
+           &  imin,imax,jmin,jmax
+      integer, intent(out)            :: info
+      integer, intent(in), optional   :: gtl(:)
+    end subroutine psb_@X@_csc_csput
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_csgetptn(imin,imax,a,nz,ia,ja,info,&
+         & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      integer, intent(in)                  :: imin,imax
+      integer, intent(out)                 :: nz
+      integer, allocatable, intent(inout)  :: ia(:), ja(:)
+      integer,intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer, intent(in), optional        :: iren(:)
+      integer, intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csc_csgetptn
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
+         & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      integer, intent(in)                  :: imin,imax
+      integer, intent(out)                 :: nz
+      integer, allocatable, intent(inout)  :: ia(:), ja(:)
+      @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
+      integer,intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer, intent(in), optional        :: iren(:)
+      integer, intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csc_csgetrow
+  end interface
+
+  interface 
+    subroutine psb_@X@_csc_csgetblk(imin,imax,a,b,info,&
+       & jmin,jmax,iren,append,rscale,cscale)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@, psb_@X@_coo_sparse_mat
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+      integer, intent(in)                  :: imin,imax
+      integer,intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer, intent(in), optional        :: iren(:)
+      integer, intent(in), optional        :: jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csc_csgetblk
+  end interface
+    
+  interface 
+    subroutine psb_@X@_csc_cssv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:)
+      @TYPE@(@FKIND@), intent(inout)       :: y(:)
+      integer, intent(out)                :: info
+      character, optional, intent(in)     :: trans
+    end subroutine psb_@X@_csc_cssv
+    subroutine psb_@X@_csc_cssm(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:,:)
+      @TYPE@(@FKIND@), intent(inout)       :: y(:,:)
+      integer, intent(out)                :: info
+      character, optional, intent(in)     :: trans
+    end subroutine psb_@X@_csc_cssm
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_csmv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:)
+      @TYPE@(@FKIND@), intent(inout)       :: y(:)
+      integer, intent(out)                :: info
+      character, optional, intent(in)     :: trans
+    end subroutine psb_@X@_csc_csmv
+    subroutine psb_@X@_csc_csmm(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:,:)
+      @TYPE@(@FKIND@), intent(inout)       :: y(:,:)
+      integer, intent(out)                :: info
+      character, optional, intent(in)     :: trans
+    end subroutine psb_@X@_csc_csmm
+  end interface
+  
+  
+  interface 
+    function psb_@X@_csc_maxval(a) result(res)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      real(@FKIND@)         :: res
+    end function psb_@X@_csc_maxval
+  end interface
+  
+  interface 
+    function psb_@X@_csc_csnmi(a) result(res)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      real(@FKIND@)         :: res
+    end function psb_@X@_csc_csnmi
+  end interface
+  
+  interface 
+    function psb_@X@_csc_csnm1(a) result(res)
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      real(@FKIND@)         :: res
+    end function psb_@X@_csc_csnm1
+  end interface
+
+  interface 
+    subroutine psb_@X@_csc_rowsum(d,a) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@X@_csc_rowsum
+  end interface
+
+  interface 
+    subroutine psb_@X@_csc_arwsum(d,a) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      real(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@X@_csc_arwsum
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_colsum(d,a) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@X@_csc_colsum
+  end interface
+
+  interface 
+    subroutine psb_@X@_csc_aclsum(d,a) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      real(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@X@_csc_aclsum
+  end interface
+    
+  interface 
+    subroutine psb_@X@_csc_get_diag(a,d,info) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)     :: d(:)
+      integer, intent(out)            :: info
+    end subroutine psb_@X@_csc_get_diag
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csc_scal(d,a,info) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: d(:)
+      integer, intent(out)            :: info
+    end subroutine psb_@X@_csc_scal
+  end interface
+  
+  interface
+    subroutine psb_@X@_csc_scals(d,a,info) 
+      import :: psb_@X@_csc_sparse_mat, @FKIND@
+      class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: d
+      integer, intent(out)            :: info
+    end subroutine psb_@X@_csc_scals
+  end interface
+  
+
+contains 
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Getters 
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+  
+  function @X@_csc_sizeof(a) result(res)
+    implicit none 
+    class(psb_@X@_csc_sparse_mat), intent(in) :: a
+    integer(psb_long_int_k_) :: res
+    res = 8 
+    res = res + @SIZET@  * size(a%val)
+    res = res + psb_sizeof_int * size(a%icp)
+    res = res + psb_sizeof_int * size(a%ia)
+      
+  end function @X@_csc_sizeof
+
+  function @X@_csc_get_fmt() result(res)
+    implicit none 
+    character(len=5) :: res
+    res = 'CSC'
+  end function @X@_csc_get_fmt
+  
+  function @X@_csc_get_nzeros(a) result(res)
+    implicit none 
+    class(psb_@X@_csc_sparse_mat), intent(in) :: a
+    integer :: res
+    res = a%icp(a%get_ncols()+1)-1
+  end function @X@_csc_get_nzeros
+
+  function @X@_csc_get_size(a) result(res)
+    implicit none 
+    class(psb_@X@_csc_sparse_mat), intent(in) :: a
+    integer :: res
+
+    res = 0
+    
+    if (allocated(a%ia)) then 
+      if (res >= 0) then 
+        res = min(res,size(a%ia))
+      else 
+        res = size(a%ia)
+      end if
+    end if
+    if (allocated(a%val)) then 
+      if (res >= 0) then 
+        res = min(res,size(a%val))
+      else 
+        res = size(a%val)
+      end if
+    end if
+
+  end function @X@_csc_get_size
+
+
+
+  function  @X@_csc_get_nz_col(idx,a) result(res)
+    use psb_const_mod
+    implicit none
+    
+    class(psb_@X@_csc_sparse_mat), intent(in) :: a
+    integer, intent(in)                  :: idx
+    integer                              :: res
+    
+    res = 0 
+ 
+    if ((1<=idx).and.(idx<=a%get_ncols())) then 
+      res = a%icp(idx+1)-a%icp(idx)
+    end if
+    
+  end function @X@_csc_get_nz_col
+
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Data management
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================  
+
+
+  subroutine  @X@_csc_free(a) 
+    implicit none 
+
+    class(psb_@X@_csc_sparse_mat), intent(inout) :: a
+
+    if (allocated(a%icp)) deallocate(a%icp)
+    if (allocated(a%ia)) deallocate(a%ia)
+    if (allocated(a%val)) deallocate(a%val)
+    call a%set_null()
+    call a%set_nrows(0)
+    call a%set_ncols(0)
+    
+    return
+
+  end subroutine @X@_csc_free
+
+end module psb_@X@_csc_mat_mod
