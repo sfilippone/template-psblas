@@ -53,6 +53,11 @@ module psb_base_linmap_mod
     procedure, pass(map)  :: set_kind => base_set_kind
   end type psb_base_linmap_type
 
+
+  interface psb_move_alloc
+    module procedure  psb_base_linmap_transfer
+  end interface
+
   private :: base_map_sizeof, base_is_ok, base_is_asb,&
        & base_get_kind, base_set_kind
 
@@ -129,5 +134,27 @@ contains
 
   end function base_map_sizeof
   
+  subroutine  psb_base_linmap_transfer(mapin,mapout,info)
+    use psb_realloc_mod
+    use psb_descriptor_type
+    use psb_mat_mod, only : psb_move_alloc
+    implicit none 
+    type(psb_base_linmap_type) :: mapin,mapout
+    integer, intent(out)       :: info 
+    
+    mapout%kind = mapin%kind
+    call psb_move_alloc(mapin%iaggr,mapout%iaggr,info)
+    call psb_move_alloc(mapin%naggr,mapout%naggr,info)
+    mapout%p_desc_X => mapin%p_desc_X 
+    mapin%p_desc_X  => null()
+    mapout%p_desc_Y => mapin%p_desc_Y
+    mapin%p_desc_Y  => null()
+    call psb_move_alloc(mapin%desc_X,mapout%desc_X,info)
+    call psb_move_alloc(mapin%desc_Y,mapout%desc_Y,info)
+
+  end subroutine psb_base_linmap_transfer
+  
+
+
 end module psb_base_linmap_mod
 
