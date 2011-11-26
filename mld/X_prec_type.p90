@@ -673,7 +673,7 @@ contains
     call lv%ac%free()
     if (psb_is_ok_desc(lv%desc_ac)) &
          & call psb_cdfree(lv%desc_ac,info)
-
+    call lv%map%free(info)
 
     ! This is a pointer to something else, must not free it here. 
     nullify(lv%base_a) 
