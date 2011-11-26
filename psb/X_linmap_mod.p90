@@ -48,6 +48,7 @@ module psb_@X@_linmap_mod
   contains
     procedure, pass(map)  :: sizeof   => @X@_map_sizeof
     procedure, pass(map)  :: is_asb   => @X@_is_asb
+    procedure, pass(map)  :: free     => @X@_free
   end type psb_@X@linmap_type
 
 
@@ -127,7 +128,7 @@ module psb_@X@_linmap_mod
     end function psb_@X@_linmap
   end interface
 
-  private :: @X@_map_sizeof, @X@_is_asb
+  private :: @X@_map_sizeof, @X@_is_asb, @X@_free
 
 
 
@@ -201,6 +202,19 @@ contains
     call psb_move_alloc(mapin%map_Y2X,mapout%map_Y2X,info)
 
   end subroutine psb_@X@linmap_transfer
+
+  subroutine  @X@_free(map,info)
+    use psb_descriptor_type
+    implicit none 
+    class(psb_@X@linmap_type) :: map
+    integer, intent(out)      :: info 
+    
+    call map%psb_base_linmap_type%free(info)
+    
+    call map%map_X2Y%free()
+    call map%map_Y2X%free()
+
+  end subroutine @X@_free
   
 
 end module psb_@X@_linmap_mod

@@ -421,7 +421,6 @@ function psb_@X@_linmap(map_kind,desc_X, desc_Y, map_X2Y, map_Y2X,iaggr,naggr) &
 
   if (info == psb_success_) call psb_clone(map_X2Y,this%map_X2Y,info)
   if (info == psb_success_) call psb_clone(map_Y2X,this%map_Y2X,info)
-  if (info == psb_success_) call psb_realloc(psb_itd_data_size_,this%itd_data,info) 
   if (info == psb_success_) then
     call this%set_kind(map_kind)
   end if
