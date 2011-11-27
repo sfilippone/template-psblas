@@ -4,16 +4,16 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: sbase stools
+src: smodules stools
 
 
-sbase:
-	cd base && $(MAKE) src
+smodules:
+	cd modules && $(MAKE) src
 stools:
 	cd tools && $(MAKE) src
 
 clean:
-	cd base && $(MAKE) clean
+	cd modules && $(MAKE) clean
 	cd tools && $(MAKE) clean
 
 
