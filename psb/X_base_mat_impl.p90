@@ -295,6 +295,11 @@ end subroutine psb_@X@_base_csgetrow
 
 
 
+!
+! Here we have the base implementation of getblk and clip:
+! this is just based on the getrow.
+! If performance is critical it can be overridden.
+!
 subroutine psb_@X@_base_csgetblk(imin,imax,a,b,info,&
      & jmin,jmax,iren,append,rscale,cscale)
   ! Output is always in  COO format 
