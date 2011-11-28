@@ -7,6 +7,7 @@ module psb_@X@_base_vect_mod
     @TYPE@(@FKIND@), allocatable :: v(:)
   contains
     procedure, pass(x) :: get_nrows => @X@_base_get_nrows
+    procedure, pass(x) :: sizeof   => @X@_base_sizeof
     procedure, pass(x) :: dot_v    => @X@_base_dot_v
     procedure, pass(x) :: dot_a    => @X@_base_dot_a
     generic, public    :: dot      => dot_v, dot_a
@@ -144,9 +145,20 @@ contains
     implicit none 
     class(psb_@X@_base_vect_type), intent(in) :: x
     integer :: res
-    res = -1
+
+    res = 0
     if (allocated(x%v)) res = size(x%v)
+
   end function @X@_base_get_nrows
+
+  function @X@_base_sizeof(x) result(res)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    integer(psb_long_int_k_) :: res
+
+    res = 1_psb_long_int_k_ * @SIZET@ * x%get_nrows()
+
+  end function @X@_base_sizeof
 
   function @X@_base_dot_v(n,x,y) result(res)
     implicit none 
@@ -320,7 +332,7 @@ contains
     end if
   end subroutine @X@_base_mlt_a_2
 
-  subroutine @X@_base_mlt_v_2(alpha,x,y,beta,z,info)
+  subroutine @X@_base_mlt_v_2(alpha,x,y,beta,z,info,conjgx,conjgy)
     use psi_serial_mod
     implicit none 
     @TYPE@(@FKIND@), intent(in)        :: alpha,beta
@@ -328,11 +340,19 @@ contains
     class(psb_@X@_base_vect_type), intent(inout)  :: y
     class(psb_@X@_base_vect_type), intent(inout)  :: z
     integer, intent(out)              :: info    
+    logical, intent(in), optional     :: conjgx, conjgy
     integer :: i, n
+    logical :: conjgx_, conjgy_
 
     info = 0
-    
-    call z%mlt(alpha,x%v,y%v,beta,info)
+    if (.not.psb_@X@_is_complex) then
+      call z%mlt(alpha,x%v,y%v,beta,info)
+    else 
+      conjgx_=.false.
+      if (present(conjgx)) conjgx_=.true.
+      conjgx_=.false.
+      if (present(conjgx)) conjgx_=.true.
+
 
   end subroutine @X@_base_mlt_v_2
 
