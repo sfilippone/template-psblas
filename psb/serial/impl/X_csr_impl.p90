@@ -1561,7 +1561,7 @@ subroutine psb_@X@_csr_get_diag(a,d,info)
     end do
   end if
   do i=mnm+1,size(d) 
-    d(i) = czero
+    d(i) = @XZERO@
   end do
 
   call psb_erractionrestore(err_act)

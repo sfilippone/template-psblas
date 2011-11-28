@@ -59,7 +59,6 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: get_nzeros  => psb_@X@_get_nzeros
     procedure, pass(a) :: get_nz_row  => psb_@X@_get_nz_row
     procedure, pass(a) :: get_size    => psb_@X@_get_size
-    procedure, pass(a) :: get_state   => psb_@X@_get_state
     procedure, pass(a) :: get_dupl    => psb_@X@_get_dupl
     procedure, pass(a) :: is_null     => psb_@X@_is_null
     procedure, pass(a) :: is_bld      => psb_@X@_is_bld
@@ -77,7 +76,6 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: set_nrows    => psb_@X@_set_nrows
     procedure, pass(a) :: set_ncols    => psb_@X@_set_ncols
     procedure, pass(a) :: set_dupl     => psb_@X@_set_dupl
-    procedure, pass(a) :: set_state    => psb_@X@_set_state
     procedure, pass(a) :: set_null     => psb_@X@_set_null
     procedure, pass(a) :: set_bld      => psb_@X@_set_bld
     procedure, pass(a) :: set_upd      => psb_@X@_set_upd
@@ -109,6 +107,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: @X@_cscnv_ip    => psb_@X@_cscnv_ip
     procedure, pass(a) :: @X@_cscnv_base  => psb_@X@_cscnv_base
     generic, public    :: cscnv         => @X@_cscnv, @X@_cscnv_ip, @X@_cscnv_base
+    procedure, pass(a) :: clone         => psb_@X@spmat_clone
     procedure, pass(a) :: reinit        => psb_@X@_reinit
     procedure, pass(a) :: print_i       => psb_@X@_sparse_print
     procedure, pass(a) :: print_n       => psb_@X@_n_sparse_print
@@ -153,7 +152,7 @@ module psb_@X@_mat_mod
   end type psb_@X@spmat_type
 
   private :: psb_@X@_get_nrows, psb_@X@_get_ncols, psb_@X@_get_nzeros, psb_@X@_get_size, &
-       & psb_@X@_get_state, psb_@X@_get_dupl, psb_@X@_is_null, psb_@X@_is_bld, &
+       & psb_@X@_get_dupl, psb_@X@_is_null, psb_@X@_is_bld, &
        & psb_@X@_is_upd, psb_@X@_is_asb, psb_@X@_is_sorted, psb_@X@_is_upper, &
        & psb_@X@_is_lower, psb_@X@_is_triangle, psb_@X@_get_nz_row
 
@@ -190,14 +189,6 @@ module psb_@X@_mat_mod
       class(psb_@X@spmat_type), intent(inout) :: a
       integer, intent(in) :: n
     end subroutine psb_@X@_set_ncols
-  end interface
-  
-  interface 
-    subroutine  psb_@X@_set_state(n,a) 
-      import :: psb_@X@spmat_type
-      class(psb_@X@spmat_type), intent(inout) :: a
-      integer, intent(in) :: n
-    end subroutine psb_@X@_set_state
   end interface
   
   interface 
@@ -521,12 +512,12 @@ module psb_@X@_mat_mod
   end interface
   
   interface psb_clone
-    subroutine psb_@X@spmat_type_clone(a,b,info)
+    subroutine psb_@X@spmat_clone(a,b,info)
       import :: psb_@X@spmat_type
       class(psb_@X@spmat_type), intent(in)  :: a
       class(psb_@X@spmat_type), intent(out) :: b
       integer, intent(out)                 :: info
-    end subroutine psb_@X@spmat_type_clone
+    end subroutine psb_@X@spmat_clone
   end interface
 
   interface 
@@ -792,19 +783,6 @@ contains
       res = psb_invalid_
     end if
   end function psb_@X@_get_dupl
-
-
-  function psb_@X@_get_state(a) result(res)
-    implicit none 
-    class(psb_@X@spmat_type), intent(in) :: a
-    integer :: res
-
-    if (allocated(a%a)) then 
-      res = a%a%get_state()
-    else
-      res = psb_spmat_null_
-    end if
-  end function psb_@X@_get_state
 
   function psb_@X@_get_nrows(a) result(res)
     implicit none 
