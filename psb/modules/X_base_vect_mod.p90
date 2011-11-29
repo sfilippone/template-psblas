@@ -353,18 +353,18 @@ contains
     logical :: conjgx_, conjgy_
 
     info = 0
-    if (.not.psb_@X@_is_complex) then
+    if (.not.psb_@X@_is_complex_) then
       call z%mlt(alpha,x%v,y%v,beta,info)
     else 
       conjgx_=.false.
       if (present(conjgx)) conjgx_ = (psb_toupper(conjgx)=='C')
       conjgy_=.false.
       if (present(conjgy)) conjgy_ = (psb_toupper(conjgy)=='C')
-      if (conjgx_) x%v=conjg(x%v)
-      if (conjgy_) y%v=conjg(y%v)
+      if (conjgx_) x%v=@CONJG@(x%v)
+      if (conjgy_) y%v=@CONJG@(y%v)
       call z%mlt(alpha,x%v,y%v,beta,info)
-      if (conjgx_) x%v=conjg(x%v)
-      if (conjgy_) y%v=conjg(y%v)
+      if (conjgx_) x%v=@CONJG@(x%v)
+      if (conjgy_) y%v=@CONJG@(y%v)
     end if
   end subroutine @X@_base_mlt_v_2
 
