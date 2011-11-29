@@ -6,7 +6,7 @@ UTIL_MODS =
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=X_base_vect_mod.p90 X_base_mat_mod.p90 X_csc_mat_mod.p90 \
-    X_csr_mat_mod.p90  X_mat_mod.p90  X_linmap_mod.p90
+    X_csr_mat_mod.p90  X_mat_mod.p90  X_linmap_mod.p90 X_vect_mod.p90
 
 
 
@@ -55,6 +55,8 @@ X_map.p90:  X_linmap_mod.p90
 X_linmap_mod.p90:  X_mat_mod.p90 X_base_vect_mod.p90
 	touch $@
 X_base_mat_mod.p90: X_base_vect_mod.p90
+	touch $@
+X_vect_mod.p90: X_base_vect_mod.p90
 	touch $@
 X_csc_mat_mod.p90 X_csr_mat_mod.p90: X_base_mat_mod.p90 
 	touch $@
