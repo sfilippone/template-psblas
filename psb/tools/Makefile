@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_map.p90
+SRC=X_map.p90 Xsphalo.P90
 
 
 
@@ -49,23 +49,6 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
-X_linmap_mod.p90:  X_mat_mod.p90 X_base_vect_mod.p90
-	touch $@
-X_mat_impl.P90:  X_mat_mod.p90 
-	touch $@
-X_base_mat_mod.p90: X_base_vect_mod.p90
-	touch $@
-X_csc_mat_mod.p90 X_csr_mat_mod.p90: X_base_mat_mod.p90 
-	touch $@
-X_base_mat_impl.p90 X_coo_impl.p90: X_base_mat_mod.p90
-	touch $@
-X_csr_impl.p90: X_csr_mat_mod.p90
-	touch $@
-
-X_csc_impl.p90: X_csc_mat_mod.p90
-	touch $@
-X_mat_mod.p90: X_base_mat_mod.p90 X_csc_mat_mod.p90 X_csr_mat_mod.p90 
-	touch $@
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../$(ARITH).sed $< >$@

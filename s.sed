@@ -14,3 +14,5 @@ s/@RONE@/sone/g
 
 s/@DOT@/sdot/g
 s/@NRM2@/snrm2/g
+
+s/@MPI_TYPE@/mpi_real/g

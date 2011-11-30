@@ -13,3 +13,5 @@ s/@RONE@/done/g
 
 s/@DOT@/zdotc/g
 s/@NRM2@/dznrm2/g
+
+s/@MPI_TYPE@/mpi_double_complex/g

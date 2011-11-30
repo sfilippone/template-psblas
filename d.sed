@@ -14,3 +14,5 @@ s/@RONE@/done/g
 
 s/@DOT@/ddot/g
 s/@NRM2@/dnrm2/g
+
+s/@MPI_TYPE@/mpi_double_precision/g

@@ -13,3 +13,5 @@ s/@RONE@/sone/g
 
 s/@DOT@/cdotc/g
 s/@NRM2@/scnrm2/g
+
+s/@MPI_TYPE@/mpi_complex/g
