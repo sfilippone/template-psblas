@@ -133,7 +133,7 @@ module mld_@X@_prec_type
       import mld_@X@prec_type
       type(psb_desc_type),intent(in)   :: desc_data
       type(mld_@X@prec_type), intent(in) :: prec
-      @TYPE@(@FKIND@),intent(in)        :: x(:)
+      @TYPE@(@FKIND@),intent(inout)     :: x(:)
       @TYPE@(@FKIND@),intent(inout)     :: y(:)
       integer, intent(out)             :: info
       character(len=1), optional       :: trans
