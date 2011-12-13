@@ -54,7 +54,7 @@
 module mld_@X@_base_solver_mod
 
   use mld_base_prec_type
-  use psb_base_mod, only : psb_@X@_vect_type, psb_@X@_base_vect_type
+  use psb_base_mod, only : psb_@X@spmat_type, psb_@X@_vect_type, psb_@X@_base_vect_type
   !
   ! 
   ! Type: mld_T_base_solver_type.
