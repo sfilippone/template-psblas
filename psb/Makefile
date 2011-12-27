@@ -4,15 +4,17 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: smodules stools sser
+src: smodules stools sser sinter
 
 
-stools sser: smodules
+sinter stools sser: smodules
 
 smodules:
 	cd modules && $(MAKE) src
 stools:
 	cd tools && $(MAKE) src
+sinter:
+	cd internals && $(MAKE) src
 
 sser: 
 	cd serial && $(MAKE) src
