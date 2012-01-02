@@ -5,8 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_prec_type.p90 X_move_alloc_mod.p90 \
-  X_base_solver_mod.p90 X_base_smoother_mod.p90 X_onelev_mod.p90
+SRC=Xmlprec_bld.p90 X_base_solver_impl.p90 X_base_smoother_impl.p90 X_onelev_impl.p90
 
 
 
@@ -25,7 +24,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl simpl
+src: ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -34,15 +33,6 @@ scomplex:
 	$(MAKE) bsrc ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
-
-
-simpl:
-	cd impl && $(MAKE) src
-
-iclean:
-	cd impl && $(MAKE) clean
-
-
 
 all:  single double complex dcompl
 
@@ -61,23 +51,13 @@ bsrc: $(FSRC)
 lib: $(FOBJS)
 
 
-X_prec_type.p90: X_onelev_mod.p90
-	touch $@
-X_onelev_mod.p90: X_base_smoother_mod.p90
-	touch $@
-X_base_smoother_mod.p90: X_base_solver_mod.p90
-	touch $@
-
-X_move_alloc_mod.p90: X_prec_type.p90 
-	touch $@
-
 
 $(FSRC1): mld_$(ARITH)%.f90 : X%.p90
-	sed -f ../$(ARITH).sed $< >$@
+	sed -f ../../$(ARITH).sed $< >$@
 $(FSRC2): mld_$(ARITH)%.F90 : X%.P90 
-	sed -f ../$(ARITH).sed $< >$@
+	sed -f ../../$(ARITH).sed $< >$@
 
-clean: iclean
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
 
 
