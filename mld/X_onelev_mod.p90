@@ -159,16 +159,16 @@ module mld_@X@_onelev_mod
     end subroutine mld_@X@_base_onelev_descr
   end interface mld_@X@_base_onelev_descr
   
-  interface mld@X@_base_onelev_free
-    subroutine mld@X@_base_onelev_free(lv,info)
+  interface mld_@X@_base_onelev_free
+    subroutine mld_@X@_base_onelev_free(lv,info)
       import :: psb_@X@spmat_type, psb_@X@_vect_type, psb_@X@_base_vect_type, &
            & psb_@X@linmap_type, @FKIND@, mld_@X@onelev_type, psb_long_int_k_, psb_desc_type
       implicit none 
       
       class(mld_@X@onelev_type), intent(inout) :: lv
       integer, intent(out)                :: info
-    end subroutine mld@X@_base_onelev_free
-  end interface mld@X@_base_onelev_free
+    end subroutine mld_@X@_base_onelev_free
+  end interface mld_@X@_base_onelev_free
   
   interface mld_@X@_base_onelev_check
     subroutine mld_@X@_base_onelev_check(lv,info)
