@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_prec_type.p90 X_move_alloc_mod.p90 Xmlprec_bld.p90 X_base_solver_mod.p90 X_base_smoother_mod.p90 X_onelev_mod.p90
+SRC=X_prec_type.p90 X_move_alloc_mod.p90 Xmlprec_bld.p90 X_base_solver_mod.p90 X_base_smoother_mod.p90 X_onelev_mod.p90\
+  X_base_solver_impl.p90 X_base_smoother_impl.p90
 
 
 
