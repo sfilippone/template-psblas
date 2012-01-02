@@ -57,10 +57,10 @@
 !
 subroutine mld_@X@_base_onelev_descr(lv,il,nl,info,iout)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_descr
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_descr
   Implicit None
   ! Arguments
-  class(mld_@X@onelev_type), intent(in) :: lv
+  class(mld_@X@_onelev_type), intent(in) :: lv
   integer, intent(in)                 :: il,nl
   integer, intent(out)                :: info
   integer, intent(in), optional       :: iout
@@ -137,10 +137,10 @@ end subroutine mld_@X@_base_onelev_descr
 !
 subroutine mld_@X@_base_onelev_free(lv,info)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name =>:  mld_T_onelev_precfree
+  use mld_@X@_onelev_mod, mld_protect_name =>  mld_@X@_base_onelev_free
   implicit none 
 
-  class(mld_@X@onelev_type), intent(inout) :: lv
+  class(mld_@X@_onelev_type), intent(inout) :: lv
   integer, intent(out)                :: info
   integer :: i
 
@@ -175,12 +175,12 @@ end subroutine mld_@X@_base_onelev_free
 !
 subroutine mld_@X@_base_onelev_check(lv,info)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_check
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_check
 
   Implicit None
 
   ! Arguments
-  class(mld_@X@onelev_type), intent(inout) :: lv 
+  class(mld_@X@_onelev_type), intent(inout) :: lv 
   integer, intent(out)                   :: info
   Integer           :: err_act
   character(len=20) :: name='@X@_base_onelev_check'
@@ -231,12 +231,12 @@ end subroutine mld_@X@_base_onelev_check
 ! 
 subroutine mld_@X@_base_onelev_seti(lv,what,val,info)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_seti
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_seti
 
   Implicit None
 
   ! Arguments
-  class(mld_@X@onelev_type), intent(inout) :: lv 
+  class(mld_@X@_onelev_type), intent(inout) :: lv 
   integer, intent(in)                          :: what 
   integer, intent(in)                          :: val
   integer, intent(out)                         :: info
@@ -306,12 +306,12 @@ end subroutine mld_@X@_base_onelev_seti
 
 subroutine mld_@X@_base_onelev_setc(lv,what,val,info)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_setc
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_setc
 
   Implicit None
 
   ! Arguments
-  class(mld_@X@onelev_type), intent(inout) :: lv 
+  class(mld_@X@_onelev_type), intent(inout) :: lv 
   integer, intent(in)                            :: what 
   character(len=*), intent(in)                   :: val
   integer, intent(out)                           :: info
@@ -342,12 +342,12 @@ end subroutine mld_@X@_base_onelev_setc
 
 subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_setr
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_setr
 
   Implicit None
 
   ! Arguments
-  class(mld_@X@onelev_type), intent(inout) :: lv 
+  class(mld_@X@_onelev_type), intent(inout) :: lv 
   integer, intent(in)                            :: what 
   real(@FKIND@), intent(in)                     :: val
   integer, intent(out)                           :: info
@@ -392,9 +392,9 @@ end subroutine mld_@X@_base_onelev_setr
 !
 subroutine mld_@X@_base_onelev_dump(lv,level,info,prefix,head,ac,rp,smoother,solver)
   use psb_base_mod
-  use mld_@X@onelev_mod, mld_protect_name => mld_@X@_base_onelev_dump
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_dump
   implicit none 
-  class(mld_@X@onelev_type), intent(in) :: lv
+  class(mld_@X@_onelev_type), intent(in) :: lv
   integer, intent(in)              :: level
   integer, intent(out)             :: info
   character(len=*), intent(in), optional :: prefix, head

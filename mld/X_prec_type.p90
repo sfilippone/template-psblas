@@ -82,7 +82,7 @@ module mld_@X@_prec_type
   type, extends(psb_@X@prec_type)         :: mld_@X@prec_type
     integer                             :: ictxt
     real(@FKIND@)                      :: op_complexity=@RZERO@
-    type(mld_@X@onelev_type), allocatable :: precv(:) 
+    type(mld_@X@_onelev_type), allocatable :: precv(:) 
   contains
     procedure, pass(prec)               :: @X@_apply2_vect => mld_@X@_apply2_vect
     procedure, pass(prec)               :: @X@_apply2v => mld_@X@_apply2v

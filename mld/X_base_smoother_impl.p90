@@ -341,7 +341,7 @@ end subroutine mld_@X@_base_smoother_bld
 !
 subroutine mld_@X@_base_smoother_free(sm,info)
   use psb_base_mod
-  use mld_@X@_base_smoother_mod, mld_protect_name => s
+  use mld_@X@_base_smoother_mod, mld_protect_name => mld_@X@_base_smoother_free
   Implicit None
 
   ! Arguments
