@@ -6,7 +6,7 @@ UTIL_MODS =
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=Xmlprec_bld.p90 X_base_solver_impl.p90 X_base_smoother_impl.p90 X_onelev_impl.p90\
-	X_as_smoother_impl.p90 X_jac_smoother_impl.p90
+	X_as_smoother_impl.p90 X_jac_smoother_impl.p90 X_diag_solver_impl.p90
 
 
 
