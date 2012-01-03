@@ -78,12 +78,12 @@ subroutine mld_@X@_diag_solver_apply_vect(alpha,sv,x,beta,y,desc_data,trans,work
   n_col = desc_data%get_local_cols()
   if (x%get_nrows() < n_row) then 
     info = 36
-    call psb_errpush(info,name,i_err=(/2,nrow,0,0,0/))
+    call psb_errpush(info,name,i_err=(/2,n_row,0,0,0/))
     goto 9999
   end if
   if (y%get_nrows() < n_row) then 
     info = 36
-    call psb_errpush(info,name,i_err=(/3,nrow,0,0,0/))
+    call psb_errpush(info,name,i_err=(/3,n_row,0,0,0/))
     goto 9999
   end if
   if (.not.allocated(sv%dv)) then
@@ -97,7 +97,7 @@ subroutine mld_@X@_diag_solver_apply_vect(alpha,sv,x,beta,y,desc_data,trans,work
     goto 9999
   end if
 
-  call y%mlt(alpha,sv%dv,x,beta,info,trans=trans_)
+  call y%mlt(alpha,sv%dv,x,beta,info,conjgx=trans_)
 
   if (info /= psb_success_) then 
     call psb_errpush(psb_err_from_subroutine_,name,a_err='vect%mlt')
