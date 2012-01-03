@@ -1,0 +1,95 @@
+!!$ 
+!!$              Parallel Sparse BLAS  version 3.0
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+!!$  
+
+module psb_@X@_prec_mod
+  use psb_@X@_prec_type
+  use psb_@X@_base_prec_mod
+
+  interface psb_precbld
+    subroutine psb_@X@precbld(a,desc_a,prec,info,upd,amold,afmt,vmold)
+      import :: psb_desc_type, psb_@X@spmat_type,&
+           & psb_@X@_base_sparse_mat, @FKIND@, psb_@X@_base_vect_type, &
+           & psb_@X@prec_type
+      implicit none
+      type(psb_@X@spmat_type), intent(in), target  :: a
+      type(psb_desc_type), intent(in), target    :: desc_a
+      type(psb_@X@prec_type), intent(inout)        :: prec
+      integer, intent(out)                       :: info
+      character, intent(in),optional             :: upd
+      character(len=*), intent(in), optional     :: afmt
+      class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
+      class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
+    end subroutine psb_@X@precbld
+  end interface
+
+  interface psb_precinit
+    subroutine psb_@X@precinit(prec,ptype,info)
+      import :: psb_desc_type, psb_@X@spmat_type, @FKIND@, psb_@X@prec_type
+      implicit none
+      type(psb_@X@prec_type), intent(inout)    :: prec
+      character(len=*), intent(in)           :: ptype
+      integer, intent(out)                   :: info
+    end subroutine psb_@X@precinit
+  end interface
+
+  interface psb_precset
+    subroutine psb_@X@precseti(prec,what,val,info)
+      import :: psb_desc_type, psb_@X@spmat_type, @FKIND@, psb_@X@prec_type
+      implicit none
+      type(psb_@X@prec_type), intent(inout)    :: prec
+      integer                                :: what, val 
+      integer, intent(out)                   :: info
+    end subroutine psb_@X@precseti
+    subroutine psb_@X@precsetr(prec,what,val,info)
+      import :: psb_desc_type, psb_@X@spmat_type, @FKIND@, psb_@X@prec_type
+      implicit none
+      type(psb_@X@prec_type), intent(inout)    :: prec
+      integer                                :: what
+      real(@FKIND@)                       :: val 
+      integer, intent(out)                   :: info
+    end subroutine psb_@X@precsetr
+  end interface
+
+  interface psb_ilu_fct
+    subroutine psb_@X@ilu_fct(a,l,u,d,info,blck)
+      import :: psb_desc_type, psb_@X@spmat_type, &
+           & psb_@X@_csr_sparse_mat, @FKIND@
+      integer, intent(out)                ::     info
+      type(psb_@X@spmat_type),intent(in)    :: a
+      type(psb_@X@_csr_sparse_mat),intent(inout) :: l,u
+      type(psb_@X@spmat_type),intent(in), optional, target :: blck
+      @TYPE@(@FKIND@), intent(inout)     ::  d(:)
+    end subroutine psb_@X@ilu_fct
+  end interface
+
+
+end module psb_@X@_prec_mod

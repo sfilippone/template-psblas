@@ -74,6 +74,13 @@ module psb_@X@_base_vect_mod
     ! version is only a placeholder. 
     !
     procedure, pass(x) :: sync     => @X@_base_sync
+    procedure, pass(x) :: is_host  => @X@_base_is_host
+    procedure, pass(x) :: is_dev   => @X@_base_is_dev
+    procedure, pass(x) :: is_sync  => @X@_base_is_sync
+    procedure, pass(x) :: set_host => @X@_base_set_host
+    procedure, pass(x) :: set_dev  => @X@_base_set_dev
+    procedure, pass(x) :: set_sync => @X@_base_set_sync
+
     !
     ! Basic info
     procedure, pass(x) :: get_nrows => @X@_base_get_nrows
@@ -312,15 +319,58 @@ contains
   
 
   !
-  ! The base version of SYNC does nothing, it's just
+  ! The base version of SYNC & friends does nothing, it's just
   ! a placeholder.
   ! 
   subroutine @X@_base_sync(x)
     implicit none 
     class(psb_@X@_base_vect_type), intent(inout) :: x
     
-    
   end subroutine @X@_base_sync
+
+
+  subroutine @X@_base_set_host(x)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    
+  end subroutine @X@_base_set_host
+
+  subroutine @X@_base_set_dev(x)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    
+  end subroutine @X@_base_set_dev
+
+  subroutine @X@_base_set_sync(x)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    
+  end subroutine @X@_base_set_sync
+
+  function @X@_base_is_dev(x) result(res)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+  
+    res = .false.
+  end function @X@_base_is_dev
+  
+  function @X@_base_is_host(x) result(res)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+
+    res = .true.
+  end function @X@_base_is_host
+
+  function @X@_base_is_sync(x) result(res)
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+
+    res = .true.
+  end function @X@_base_is_sync
+
 
   !
   ! Size info. 
@@ -739,6 +789,7 @@ contains
     
     call y%sync()
     call psi_sct(n,idx,x,beta,y%v)
+    call y%set_host()
 
   end subroutine @X@_base_sctb
 

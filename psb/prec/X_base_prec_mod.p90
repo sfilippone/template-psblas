@@ -1,0 +1,439 @@
+!!$ 
+!!$              Parallel Sparse BLAS  version 3.0
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+!!$  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!	Module to   define PREC_DATA,           !!
+!!      structure for preconditioning.          !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+module psb_@X@_base_prec_mod
+
+  ! Reduces size of .mod file.
+  use psb_base_mod, only : @FKIND@, psb_long_int_k_,&
+       & psb_desc_type, psb_sizeof, psb_free, psb_cdfree, psb_errpush, psb_act_abort_,&
+       & psb_erractionsave, psb_erractionrestore, psb_error, psb_get_errstatus,&
+       & psb_@X@_base_sparse_mat, psb_@X@spmat_type, psb_@X@_csr_sparse_mat,& 
+       & psb_@X@_base_vect_type, psb_@X@_vect_type
+
+  use psb_prec_const_mod
+
+  type psb_@X@_base_prec_type
+    integer :: ictxt
+  contains
+    procedure, pass(prec) :: set_ctxt  => psb_@X@_base_set_ctxt
+    procedure, pass(prec) :: get_ctxt  => psb_@X@_base_get_ctxt
+    procedure, pass(prec) :: @X@_apply_v => psb_@X@_base_apply_vect
+    procedure, pass(prec) :: @X@_apply   => psb_@X@_base_apply
+    generic, public       :: apply     => @X@_apply, @X@_apply_v
+    procedure, pass(prec) :: precbld   => psb_@X@_base_precbld
+    procedure, pass(prec) :: precseti  => psb_@X@_base_precseti
+    procedure, pass(prec) :: precsetr  => psb_@X@_base_precsetr
+    procedure, pass(prec) :: precsetc  => psb_@X@_base_precsetc
+    procedure, pass(prec) :: sizeof    => psb_@X@_base_sizeof
+    generic, public       :: precset   => precseti, precsetr, precsetc
+    procedure, pass(prec) :: precinit  => psb_@X@_base_precinit
+    procedure, pass(prec) :: precfree  => psb_@X@_base_precfree
+    procedure, pass(prec) :: precdescr => psb_@X@_base_precdescr
+    procedure, pass(prec) :: dump      => psb_@X@_base_precdump
+    procedure, pass(prec) :: get_nzeros => psb_@X@_base_get_nzeros
+  end type psb_@X@_base_prec_type
+  
+  private :: psb_@X@_base_apply, psb_@X@_base_precbld, psb_@X@_base_precseti,&
+       & psb_@X@_base_precsetr, psb_@X@_base_precsetc, psb_@X@_base_sizeof,&
+       & psb_@X@_base_precinit, psb_@X@_base_precfree, psb_@X@_base_precdescr,&
+       & psb_@X@_base_precdump, psb_@X@_base_set_ctxt, psb_@X@_base_get_ctxt, &
+       & psb_@X@_base_apply_vect, psb_@X@_base_get_nzeros
+  
+contains
+
+  subroutine psb_@X@_base_apply_vect(alpha,prec,x,beta,y,desc_data,info,trans,work)
+    implicit none 
+    type(psb_desc_type),intent(in)        :: desc_data
+    class(psb_@X@_base_prec_type), intent(inout)  :: prec
+    @TYPE@(@FKIND@),intent(in)          :: alpha, beta
+    type(psb_@X@_vect_type),intent(inout)   :: x
+    type(psb_@X@_vect_type),intent(inout)   :: y
+    integer, intent(out)                  :: info
+    character(len=1), optional            :: trans
+    @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_prec_apply'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+
+  end subroutine psb_@X@_base_apply_vect
+
+  subroutine psb_@X@_base_apply(alpha,prec,x,beta,y,desc_data,info,trans,work)
+    implicit none 
+    type(psb_desc_type),intent(in)       :: desc_data
+    class(psb_@X@_base_prec_type), intent(in)  :: prec
+    @TYPE@(@FKIND@),intent(in)         :: alpha, beta
+    @TYPE@(@FKIND@),intent(inout)      :: x(:)
+    @TYPE@(@FKIND@),intent(inout)      :: y(:)
+    integer, intent(out)                 :: info
+    character(len=1), optional           :: trans
+    @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_prec_apply'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+
+  end subroutine psb_@X@_base_apply
+
+  subroutine psb_@X@_base_precinit(prec,info)
+    Implicit None
+   
+    class(psb_@X@_base_prec_type),intent(inout) :: prec
+    integer, intent(out)                     :: info
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precinit'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+  end subroutine psb_@X@_base_precinit
+
+  subroutine psb_@X@_base_precbld(a,desc_a,prec,info,upd,amold,afmt,vmold)
+    Implicit None
+    
+    type(psb_@X@spmat_type), intent(in), target :: a
+    type(psb_desc_type), intent(in), target   :: desc_a
+    class(psb_@X@_base_prec_type),intent(inout) :: prec
+    integer, intent(out)                      :: info
+    character, intent(in), optional           :: upd
+    character(len=*), intent(in), optional    :: afmt
+    class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
+    class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precbld'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+  end subroutine psb_@X@_base_precbld
+
+  subroutine psb_@X@_base_precseti(prec,what,val,info)
+    Implicit None
+    
+    class(psb_@X@_base_prec_type),intent(inout) :: prec
+    integer, intent(in)                      :: what 
+    integer, intent(in)                      :: val 
+    integer, intent(out)                     :: info
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precseti'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+  end subroutine psb_@X@_base_precseti
+
+  subroutine psb_@X@_base_precsetr(prec,what,val,info)
+    Implicit None
+    
+    class(psb_@X@_base_prec_type),intent(inout) :: prec
+    integer, intent(in)                      :: what 
+    real(@FKIND@), intent(in)               :: val 
+    integer, intent(out)                     :: info
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precsetr'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+  end subroutine psb_@X@_base_precsetr
+
+  subroutine psb_@X@_base_precsetc(prec,what,val,info)
+    Implicit None
+    
+    class(psb_@X@_base_prec_type),intent(inout) :: prec
+    integer, intent(in)                      :: what 
+    character(len=*), intent(in)             :: val
+    integer, intent(out)                     :: info
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precsetc'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+  end subroutine psb_@X@_base_precsetc
+
+  subroutine psb_@X@_base_precfree(prec,info)
+    Implicit None
+
+    class(psb_@X@_base_prec_type), intent(inout) :: prec
+    integer, intent(out)                :: info
+    
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precfree'
+    
+    call psb_erractionsave(err_act)
+    
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+    
+  end subroutine psb_@X@_base_precfree
+  
+
+  subroutine psb_@X@_base_precdescr(prec,iout)
+    Implicit None
+
+    class(psb_@X@_base_prec_type), intent(in) :: prec
+    integer, intent(in), optional    :: iout
+
+    Integer :: err_act, nrow, info
+    character(len=20)  :: name='@X@_base_precdescr'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+    
+  end subroutine psb_@X@_base_precdescr
+  
+  subroutine psb_@X@_base_precdump(prec,info,prefix,head)
+    implicit none 
+    class(psb_@X@_base_prec_type), intent(in) :: prec
+    integer, intent(out)             :: info
+    character(len=*), intent(in), optional :: prefix,head
+    Integer :: err_act, nrow
+    character(len=20)  :: name='@X@_base_precdump'
+
+    call psb_erractionsave(err_act)
+
+    !
+    ! This is the base version and we should throw an error. 
+    ! Or should it be the NULL preonditioner???
+    !
+    info = 700
+    call psb_errpush(info,name)
+    goto 9999 
+    
+    call psb_erractionrestore(err_act)
+    return
+
+9999 continue
+    call psb_erractionrestore(err_act)
+    if (err_act == psb_act_abort_) then
+      call psb_error()
+      return
+    end if
+    return
+    
+  end subroutine psb_@X@_base_precdump
+
+  subroutine psb_@X@_base_set_ctxt(prec,ictxt)
+    implicit none 
+    class(psb_@X@_base_prec_type), intent(inout) :: prec
+    integer, intent(in)  :: ictxt
+
+    prec%ictxt = ictxt
+
+  end subroutine psb_@X@_base_set_ctxt
+
+  function psb_@X@_base_sizeof(prec) result(val)
+    class(psb_@X@_base_prec_type), intent(in) :: prec
+    integer(psb_long_int_k_) :: val
+    
+    val = 0
+    return
+  end function psb_@X@_base_sizeof
+
+  function psb_@X@_base_get_ctxt(prec) result(val)
+    class(psb_@X@_base_prec_type), intent(in) :: prec
+    integer :: val
+    
+    val = prec%ictxt
+    return
+  end function psb_@X@_base_get_ctxt
+
+  function psb_@X@_base_get_nzeros(prec) result(res)
+    class(psb_@X@_base_prec_type), intent(in) :: prec
+    integer(psb_long_int_k_) :: res
+    
+    res = 0
+
+  end function psb_@X@_base_get_nzeros
+
+end module psb_@X@_base_prec_mod

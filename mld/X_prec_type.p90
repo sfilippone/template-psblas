@@ -117,9 +117,8 @@ module mld_@X@_prec_type
 
   interface mld_precaply
     subroutine mld_@X@precaply_vect(prec,x,y,desc_data,info,trans,work)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, &
-           & @FKIND@, psb_@X@_vect_type
-      import mld_@X@prec_type
+      import :: psb_@X@spmat_type, psb_desc_type, &
+           & @FKIND@, psb_@X@_vect_type, mld_@X@prec_type
       type(psb_desc_type),intent(in)      :: desc_data
       type(mld_@X@prec_type), intent(inout) :: prec
       type(psb_@X@_vect_type),intent(inout) :: x
@@ -129,8 +128,7 @@ module mld_@X@_prec_type
       @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
     end subroutine mld_@X@precaply_vect
     subroutine mld_@X@precaply(prec,x,y,desc_data,info,trans,work)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
-      import mld_@X@prec_type
+      import :: psb_@X@spmat_type, psb_desc_type, @FKIND@, mld_@X@prec_type
       type(psb_desc_type),intent(in)   :: desc_data
       type(mld_@X@prec_type), intent(in) :: prec
       @TYPE@(@FKIND@),intent(inout)     :: x(:)
@@ -140,8 +138,7 @@ module mld_@X@_prec_type
       @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
     end subroutine mld_@X@precaply
     subroutine mld_@X@precaply1(prec,x,desc_data,info,trans)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
-      import mld_@X@prec_type
+      import :: psb_@X@spmat_type, psb_desc_type, @FKIND@, mld_@X@prec_type
       type(psb_desc_type),intent(in)   :: desc_data
       type(mld_@X@prec_type), intent(in) :: prec
       @TYPE@(@FKIND@),intent(inout)     :: x(:)
