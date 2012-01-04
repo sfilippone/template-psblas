@@ -5,7 +5,7 @@ module psb_@X@_bjacprec
   type, extends(psb_@X@_base_prec_type)   :: psb_@X@_bjac_prec_type
     integer, allocatable                :: iprcparm(:)
     type(psb_@X@spmat_type), allocatable  :: av(:)
-    @TYPE@(@FKIND@), allocatable      :: d(:)
+!!$    @TYPE@(@FKIND@), allocatable      :: d(:)
     type(psb_@X@_vect_type), allocatable  :: dv
   contains
     procedure, pass(prec) :: @X@_apply_v => psb_@X@_bjac_apply_vect
