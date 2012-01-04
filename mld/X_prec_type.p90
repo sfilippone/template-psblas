@@ -207,7 +207,7 @@ contains
   end function mld_@X@_get_compl
   
   subroutine mld_@X@_cmp_compl(prec) 
-    use psb_base_mod, only : psb_min, psb_sum
+
     implicit none 
     class(mld_@X@prec_type), intent(inout) :: prec
     
@@ -360,8 +360,6 @@ contains
   !
   subroutine mld_@X@prec_free(p,info)
   
-    use psb_base_mod
-    
     implicit none
     
     ! Arguments
@@ -404,7 +402,7 @@ contains
   ! Top level methods. 
   !
   subroutine mld_@X@_apply2_vect(prec,x,y,desc_data,info,trans,work)
-    use psb_base_mod
+    implicit none 
     type(psb_desc_type),intent(in)        :: desc_data
     class(mld_@X@prec_type), intent(inout)  :: prec
     type(psb_@X@_vect_type),intent(inout)   :: x
@@ -440,7 +438,7 @@ contains
   end subroutine mld_@X@_apply2_vect
 
   subroutine mld_@X@_apply1_vect(prec,x,desc_data,info,trans,work)
-    use psb_base_mod
+    implicit none 
     type(psb_desc_type),intent(in)        :: desc_data
     class(mld_@X@prec_type), intent(inout)  :: prec
     type(psb_@X@_vect_type),intent(inout)   :: x
@@ -476,7 +474,7 @@ contains
 
 
   subroutine mld_@X@_apply2v(prec,x,y,desc_data,info,trans,work)
-    use psb_base_mod
+    implicit none 
     type(psb_desc_type),intent(in)    :: desc_data
     class(mld_@X@prec_type), intent(in) :: prec
     @TYPE@(@FKIND@),intent(inout)      :: x(:)
@@ -512,7 +510,7 @@ contains
   end subroutine mld_@X@_apply2v
 
   subroutine mld_@X@_apply1v(prec,x,desc_data,info,trans)
-    use psb_base_mod
+    implicit none 
     type(psb_desc_type),intent(in)    :: desc_data
     class(mld_@X@prec_type), intent(in) :: prec
     @TYPE@(@FKIND@),intent(inout)      :: x(:)
@@ -547,7 +545,7 @@ contains
 
 
   subroutine mld_@X@_dump(prec,info,istart,iend,prefix,head,ac,rp,smoother,solver)
-    use psb_base_mod
+    
     implicit none 
     class(mld_@X@prec_type), intent(in) :: prec
     integer, intent(out)             :: info
