@@ -21,7 +21,7 @@ module psb_@X@_nullprec
        & psb_@X@_null_precinit, psb_@X@_null_precfree, psb_@X@_null_precdescr
   
 
-  interface  psb_@X@_null_apply_vect
+  interface
     subroutine psb_@X@_null_apply_vect(alpha,prec,x,beta,y,desc_data,info,trans,work)
       import :: psb_desc_type, psb_@X@_null_prec_type, psb_@X@_vect_type, @FKIND@
       type(psb_desc_type),intent(in)       :: desc_data
@@ -32,11 +32,10 @@ module psb_@X@_nullprec
       integer, intent(out)                 :: info
       character(len=1), optional           :: trans
       @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
-
     end subroutine psb_@X@_null_apply_vect
-  end interface psb_@X@_null_apply_vect
+  end interface
   
-  interface  psb_@X@_null_apply
+  interface
     subroutine psb_@X@_null_apply(alpha,prec,x,beta,y,desc_data,info,trans,work)
       import :: psb_desc_type, psb_@X@_null_prec_type, @FKIND@
       type(psb_desc_type),intent(in)       :: desc_data
@@ -48,7 +47,7 @@ module psb_@X@_nullprec
       character(len=1), optional           :: trans
       @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
     end subroutine psb_@X@_null_apply
-  end interface psb_@X@_null_apply
+  end interface
   
   
 contains
