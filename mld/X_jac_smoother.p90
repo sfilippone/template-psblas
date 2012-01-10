@@ -73,7 +73,7 @@ module mld_@X@_jac_smoother
        &  @X@_jac_smoother_get_nzeros
 
 
-  interface mld_@X@_jac_smoother_apply_vect
+  interface 
     subroutine mld_@X@_jac_smoother_apply_vect(alpha,sm,x,beta,y,desc_data,trans,sweeps,work,info)
       import :: psb_desc_type, mld_@X@_jac_smoother_type, psb_@X@_vect_type, @FKIND@, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type
@@ -88,9 +88,9 @@ module mld_@X@_jac_smoother
       @TYPE@(@FKIND@),target, intent(inout)          :: work(:)
       integer, intent(out)                          :: info
     end subroutine mld_@X@_jac_smoother_apply_vect
-  end interface mld_@X@_jac_smoother_apply_vect
+  end interface
   
-  interface mld_@X@_jac_smoother_apply
+  interface 
     subroutine mld_@X@_jac_smoother_apply(alpha,sm,x,beta,y,desc_data,trans,sweeps,work,info)
       import :: psb_desc_type, mld_@X@_jac_smoother_type, psb_@X@_vect_type, @FKIND@, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type
@@ -104,9 +104,9 @@ module mld_@X@_jac_smoother
       @TYPE@(@FKIND@),target, intent(inout) :: work(:)
       integer, intent(out)                 :: info
     end subroutine mld_@X@_jac_smoother_apply
-  end interface mld_@X@_jac_smoother_apply
+  end interface
   
-  interface mld_@X@_jac_smoother_bld
+  interface 
     subroutine mld_@X@_jac_smoother_bld(a,desc_a,sm,upd,info,amold,vmold)
       import :: psb_desc_type, mld_@X@_jac_smoother_type, psb_@X@_vect_type, @FKIND@, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type
@@ -118,7 +118,7 @@ module mld_@X@_jac_smoother
       class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
       class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
     end subroutine mld_@X@_jac_smoother_bld
-  end interface mld_@X@_jac_smoother_bld
+  end interface
   
 contains
 
