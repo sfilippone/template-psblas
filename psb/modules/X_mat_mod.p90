@@ -296,24 +296,22 @@ module psb_@X@_mat_mod
   end interface
   
   interface 
-    subroutine psb_@X@_sparse_print(iout,a,iv,eirs,eics,head,ivr,ivc)
+    subroutine psb_@X@_sparse_print(iout,a,iv,head,ivr,ivc)
       import :: psb_@X@spmat_type
       integer, intent(in)               :: iout
       class(psb_@X@spmat_type), intent(in) :: a   
       integer, intent(in), optional     :: iv(:)
-      integer, intent(in), optional     :: eirs,eics
       character(len=*), optional        :: head
       integer, intent(in), optional     :: ivr(:), ivc(:)
     end subroutine psb_@X@_sparse_print
   end interface
 
   interface 
-    subroutine psb_@X@_n_sparse_print(fname,a,iv,eirs,eics,head,ivr,ivc)
+    subroutine psb_@X@_n_sparse_print(fname,a,iv,head,ivr,ivc)
       import :: psb_@X@spmat_type
       character(len=*), intent(in)      :: fname
       class(psb_@X@spmat_type), intent(in) :: a   
       integer, intent(in), optional     :: iv(:)
-      integer, intent(in), optional     :: eirs,eics
       character(len=*), optional        :: head
       integer, intent(in), optional     :: ivr(:), ivc(:)
     end subroutine psb_@X@_n_sparse_print
