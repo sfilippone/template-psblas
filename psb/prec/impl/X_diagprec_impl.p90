@@ -8,10 +8,10 @@ subroutine psb_@X@_diag_apply_vect(alpha,prec,x,beta,y,desc_data,info,trans,work
   type(psb_@X@_vect_type),intent(inout)   :: x
   @TYPE@(@FKIND@),intent(in)         :: alpha, beta
   type(psb_@X@_vect_type),intent(inout)   :: y
-  integer, intent(out)              :: info
+  integer(psb_ipk_), intent(out)              :: info
   character(len=1), optional        :: trans
   @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
-  Integer :: err_act, nrow
+  integer(psb_ipk_) :: err_act, nrow
   character(len=20)  :: name='@X@_diag_prec_apply'
   @TYPE@(@FKIND@), pointer :: ww(:)
   class(psb_@X@_base_vect_type), allocatable :: dw
@@ -92,10 +92,10 @@ subroutine psb_@X@_diag_apply(alpha,prec,x,beta,y,desc_data,info,trans,work)
   @TYPE@(@FKIND@),intent(inout)      :: x(:)
   @TYPE@(@FKIND@),intent(in)         :: alpha, beta
   @TYPE@(@FKIND@),intent(inout)      :: y(:)
-  integer, intent(out)              :: info
+  integer(psb_ipk_), intent(out)              :: info
   character(len=1), optional        :: trans
   @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
-  Integer :: err_act, nrow
+  integer(psb_ipk_) :: err_act, nrow
   character :: trans_
   character(len=20)  :: name='@X@_diag_prec_apply'
   @TYPE@(@FKIND@), pointer :: ww(:)
@@ -191,12 +191,12 @@ subroutine psb_@X@_diag_precbld(a,desc_a,prec,info,upd,amold,afmt,vmold)
   type(psb_@X@spmat_type), intent(in), target :: a
   type(psb_desc_type), intent(in), target   :: desc_a
   class(psb_@X@_diag_prec_type),intent(inout) :: prec
-  integer, intent(out)                      :: info
+  integer(psb_ipk_), intent(out)                      :: info
   character, intent(in), optional           :: upd
   character(len=*), intent(in), optional    :: afmt
   class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
   class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
-  Integer :: err_act, nrow,i
+  integer(psb_ipk_) :: err_act, nrow,i
   character(len=20)  :: name='@X@_diag_precbld'
 
   call psb_erractionsave(err_act)

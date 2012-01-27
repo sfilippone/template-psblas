@@ -39,13 +39,13 @@ subroutine psb_@X@_apply2_vect(prec,x,y,desc_data,info,trans,work)
   class(psb_@X@prec_type), intent(inout) :: prec
   type(psb_@X@_vect_type),intent(inout)  :: x
   type(psb_@X@_vect_type),intent(inout)  :: y
-  integer, intent(out)                 :: info
+  integer(psb_ipk_), intent(out)                 :: info
   character(len=1), optional           :: trans
   @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
 
   character     :: trans_ 
   @TYPE@(@FKIND@), pointer :: work_(:)
-  integer :: ictxt,np,me,err_act
+  integer(psb_ipk_) :: ictxt,np,me,err_act
   character(len=20)   :: name
 
   name = 'psb_@X@_apply2v'
@@ -112,14 +112,14 @@ subroutine psb_@X@_apply1_vect(prec,x,desc_data,info,trans,work)
   type(psb_desc_type),intent(in)       :: desc_data
   class(psb_@X@prec_type), intent(inout) :: prec
   type(psb_@X@_vect_type),intent(inout)  :: x
-  integer, intent(out)                 :: info
+  integer(psb_ipk_), intent(out)                 :: info
   character(len=1), optional           :: trans
   @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
 
   type(psb_@X@_vect_type)       :: ww
   character     :: trans_ 
   @TYPE@(@FKIND@), pointer :: work_(:)
-  integer :: ictxt,np,me,err_act
+  integer(psb_ipk_) :: ictxt,np,me,err_act
   character(len=20)   :: name
 
   name = 'psb_@X@_apply1v'
@@ -189,13 +189,13 @@ subroutine psb_@X@_apply2v(prec,x,y,desc_data,info,trans,work)
   class(psb_@X@prec_type), intent(in) :: prec
   @TYPE@(@FKIND@),intent(inout)   :: x(:)
   @TYPE@(@FKIND@),intent(inout)   :: y(:)
-  integer, intent(out)              :: info
+  integer(psb_ipk_), intent(out)              :: info
   character(len=1), optional        :: trans
   @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
 
   character     :: trans_ 
   @TYPE@(@FKIND@), pointer :: work_(:)
-  integer :: ictxt,np,me,err_act
+  integer(psb_ipk_) :: ictxt,np,me,err_act
   character(len=20)   :: name
 
   name='psb_@X@_apply2v'
@@ -259,11 +259,11 @@ subroutine psb_@X@_apply1v(prec,x,desc_data,info,trans)
   type(psb_desc_type),intent(in)    :: desc_data
   class(psb_@X@prec_type), intent(in) :: prec
   @TYPE@(@FKIND@),intent(inout)   :: x(:)
-  integer, intent(out)              :: info
+  integer(psb_ipk_), intent(out)              :: info
   character(len=1), optional        :: trans
 
   character     :: trans_
-  integer :: ictxt,np,me, err_act
+  integer(psb_ipk_) :: ictxt,np,me, err_act
   @TYPE@(@FKIND@), pointer :: WW(:), w1(:)
   character(len=20)   :: name
   name='psb_@X@_apply1v'

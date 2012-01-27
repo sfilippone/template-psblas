@@ -1,0 +1,375 @@
+!!$ 
+!!$              Parallel Sparse BLAS  version 3.0
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+!!$  
+module psb_@X@_psblas_mod
+  use psb_descriptor_type, only : psb_desc_type, @FKIND@, psb_ipk_
+  use psb_@X@_vect_mod, only : psb_@X@_vect_type
+  use psb_@X@_mat_mod, only : psb_@X@spmat_type
+
+  interface psb_gedot
+    function psb_@X@dot_vect(x, y, desc_a,info) result(res)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@)                    :: res
+      type(psb_@X@_vect_type), intent(inout) :: x, y
+      type(psb_desc_type), intent(in)      :: desc_a
+      integer(psb_ipk_), intent(out)                 :: info
+    end function psb_@X@dot_vect
+    function psb_@X@dotv(x, y, desc_a,info) 
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@)                :: psb_@X@dotv
+      @TYPE@(@FKIND@), intent(in)    :: x(:), y(:)
+      type(psb_desc_type), intent(in)    :: desc_a
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@dotv
+    function psb_@X@dot(x, y, desc_a, info, jx, jy) 
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@)                :: psb_@X@dot
+      @TYPE@(@FKIND@), intent(in)    :: x(:,:), y(:,:)
+      type(psb_desc_type), intent(in)    :: desc_a
+      integer(psb_ipk_), optional, intent(in)      :: jx, jy
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@dot
+  end interface
+
+
+  interface psb_gedots
+    subroutine  psb_@X@dotvs(res,x, y, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type 
+      @TYPE@(@FKIND@), intent(out)      :: res
+      @TYPE@(@FKIND@), intent(in)       :: x(:), y(:)
+      type(psb_desc_type), intent(in)    :: desc_a
+      integer(psb_ipk_), intent(out)               :: info
+    end subroutine psb_@X@dotvs
+    subroutine  psb_@X@mdots(res,x, y, desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type 
+      @TYPE@(@FKIND@), intent(out)      :: res(:)
+      @TYPE@(@FKIND@), intent(in)       :: x(:,:), y(:,:)
+      type(psb_desc_type), intent(in)    :: desc_a
+      integer(psb_ipk_), intent(out)               :: info
+    end subroutine psb_@X@mdots
+  end interface
+
+  interface psb_geaxpby
+    subroutine psb_@X@axpby_vect(alpha, x, beta, y,&
+         & desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_@X@_vect_type), intent (inout) :: y
+      @TYPE@(@FKIND@), intent (in)        :: alpha, beta
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)                  :: info
+    end subroutine psb_@X@axpby_vect
+    subroutine psb_@X@axpbyv(alpha, x, beta, y,&
+         & desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@), intent (in)       ::  x(:)
+      @TYPE@(@FKIND@), intent (inout)    ::  y(:)
+      @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@axpbyv
+    subroutine psb_@X@axpby(alpha, x, beta, y,&
+         & desc_a, info, n, jx, jy)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@), intent (in)       ::  x(:,:)
+      @TYPE@(@FKIND@), intent (inout)    ::  y(:,:)
+      @TYPE@(@FKIND@), intent (in)       ::  alpha, beta
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), optional, intent(in) :: n, jx, jy
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@axpby
+  end interface
+
+  interface psb_geamax
+    function psb_@X@amax(x, desc_a, info, jx)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)   psb_@X@amax
+      @TYPE@(@FKIND@), intent (in)       :: x(:,:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), optional, intent (in)      :: jx
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@amax
+    function psb_@X@amaxv(x, desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@) psb_@X@amaxv
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@amaxv
+    function psb_@X@amax_vect(x, desc_a, info) result(res)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)                        :: res
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)                  :: info
+    end function psb_@X@amax_vect
+  end interface
+
+  interface psb_geamaxs
+    subroutine  psb_@X@amaxvs(res,x,desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@), intent (out)      :: res
+      @TYPE@(@FKIND@), intent (in)    :: x(:)
+      type(psb_desc_type), intent (in)  :: desc_a
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@amaxvs
+    subroutine  psb_@X@mamaxs(res,x,desc_a,info,jx)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@), intent (out)       :: res(:)
+      @TYPE@(@FKIND@), intent (in)     :: x(:,:)
+      type(psb_desc_type), intent (in)   :: desc_a
+      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), optional, intent(in)      :: jx
+    end subroutine psb_@X@mamaxs
+  end interface
+
+  interface psb_geasum
+    function psb_@X@asum_vect(x, desc_a, info) result(res)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)                        :: res
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)                  :: info
+    end function psb_@X@asum_vect
+    function psb_@X@asum(x, desc_a, info, jx)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)   psb_@X@asum
+      @TYPE@(@FKIND@), intent (in)       :: x(:,:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), optional, intent (in)      :: jx
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@asum
+    function psb_@X@asumv(x, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@) psb_@X@asumv
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@asumv
+  end interface
+
+  interface psb_geasums
+    subroutine  psb_@X@asumvs(res,x,desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@), intent (out)      :: res
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@asumvs
+    subroutine  psb_@X@masum(res,x,desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@), intent (out)      :: res(:)
+      @TYPE@(@FKIND@), intent (in)       :: x(:,:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@masum
+  end interface
+
+
+  interface psb_genrm2
+    function psb_@X@nrm2(x, desc_a, info, jx)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)   psb_@X@nrm2
+      @TYPE@(@FKIND@), intent (in)       :: x(:,:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), optional, intent (in)      :: jx
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@nrm2
+    function psb_@X@nrm2v(x, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@) psb_@X@nrm2v
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@nrm2v
+    function psb_@X@nrm2_vect(x, desc_a, info) result(res)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)                      :: res
+      type(psb_@X@_vect_type), intent (inout)   :: x
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@nrm2_vect
+  end interface
+
+  interface psb_genrm2s
+    subroutine  psb_@X@nrm2vs(res,x,desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@), intent (out)      :: res
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@nrm2vs
+  end interface
+
+
+  interface psb_spnrmi
+    function psb_@X@nrmi(a, desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)                    :: psb_@X@nrmi
+      type(psb_@X@spmat_type), intent (in) :: a
+      type(psb_desc_type), intent (in)   :: desc_a
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@nrmi
+  end interface
+
+  interface psb_spnrm1
+    function psb_@X@spnrm1(a, desc_a,info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      real(@FKIND@)                      :: psb_@X@spnrm1
+      type(psb_@X@spmat_type), intent (in) :: a
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end function psb_@X@spnrm1
+  end interface
+
+  interface psb_spmm
+    subroutine psb_@X@spmm(alpha, a, x, beta, y, desc_a, info,&
+         &trans, k, jx, jy,work,doswap)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(in)        :: a
+      @TYPE@(@FKIND@), intent(inout), target :: x(:,:)
+      @TYPE@(@FKIND@), intent(inout), target :: y(:,:)
+      @TYPE@(@FKIND@), intent(in)            :: alpha, beta
+      type(psb_desc_type), intent(in)          :: desc_a
+      character, optional, intent(in)          :: trans
+      @TYPE@(@FKIND@), optional, intent(inout),target :: work(:)
+      integer(psb_ipk_), optional, intent(in)        :: k, jx, jy
+      logical, optional, intent(in)        :: doswap
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine psb_@X@spmm
+    subroutine psb_@X@spmv(alpha, a, x, beta, y,&
+         & desc_a, info, trans, work,doswap)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(in)        :: a
+      @TYPE@(@FKIND@), intent(inout), target :: x(:)
+      @TYPE@(@FKIND@), intent(inout), target :: y(:)
+      @TYPE@(@FKIND@), intent(in)            :: alpha, beta
+      type(psb_desc_type), intent(in)          :: desc_a
+      character, optional, intent(in)          :: trans
+      @TYPE@(@FKIND@), optional, intent(inout),target :: work(:)
+      logical, optional, intent(in)        :: doswap
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine psb_@X@spmv
+    subroutine psb_@X@spmv_vect(alpha, a, x, beta, y,&
+         & desc_a, info, trans, work,doswap)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(in)    :: a
+      type(psb_@X@_vect_type), intent(inout) :: x
+      type(psb_@X@_vect_type), intent(inout) :: y
+      @TYPE@(@FKIND@), intent(in)        :: alpha, beta
+      type(psb_desc_type), intent(in)      :: desc_a
+      character, optional, intent(in)      :: trans
+      @TYPE@(@FKIND@), optional, intent(inout),target :: work(:)
+      logical, optional, intent(in)        :: doswap
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine psb_@X@spmv_vect
+  end interface
+
+  interface psb_spsm
+    subroutine psb_@X@spsm(alpha, t, x, beta, y,&
+         & desc_a, info, trans, scale, choice,& 
+         & diag, n, jx, jy, work)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(in)        :: t
+      @TYPE@(@FKIND@), intent(in), target    :: x(:,:)
+      @TYPE@(@FKIND@), intent(inout), target :: y(:,:)
+      @TYPE@(@FKIND@), intent(in)            :: alpha, beta
+      type(psb_desc_type), intent(in)          :: desc_a
+      character, optional, intent(in)          :: trans, scale
+      integer(psb_ipk_), optional, intent(in)            :: n, jx, jy
+      integer(psb_ipk_), optional, intent(in)            :: choice
+      @TYPE@(@FKIND@), optional, intent(in), target :: diag(:)
+      @TYPE@(@FKIND@), optional, intent(inout), target :: work(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end subroutine psb_@X@spsm
+    subroutine psb_@X@spsv(alpha, t, x, beta, y,&
+         & desc_a, info, trans, scale, choice,& 
+         & diag, work)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(in)        :: t
+      @TYPE@(@FKIND@), intent(in), target    :: x(:)
+      @TYPE@(@FKIND@), intent(inout), target :: y(:)
+      @TYPE@(@FKIND@), intent(in)            :: alpha, beta
+      type(psb_desc_type), intent(in)          :: desc_a
+      character, optional, intent(in)          :: trans, scale
+      integer(psb_ipk_), optional, intent(in)            :: choice
+      @TYPE@(@FKIND@), optional, intent(in), target :: diag(:)
+      @TYPE@(@FKIND@), optional, intent(inout), target :: work(:)
+      integer(psb_ipk_), intent(out)                   :: info
+    end subroutine psb_@X@spsv
+    subroutine psb_@X@spsv_vect(alpha, t, x, beta, y,&
+         & desc_a, info, trans, scale, choice,& 
+         & diag, work)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@spmat_type), intent(inout)   :: t
+      type(psb_@X@_vect_type), intent(inout)   :: x
+      type(psb_@X@_vect_type), intent(inout)   :: y
+      @TYPE@(@FKIND@), intent(in)          :: alpha, beta
+      type(psb_desc_type), intent(in)        :: desc_a
+      character, optional, intent(in)        :: trans, scale
+      integer(psb_ipk_), optional, intent(in)          :: choice
+      type(psb_@X@_vect_type), intent(inout), optional :: diag
+      @TYPE@(@FKIND@), optional, intent(inout), target :: work(:)
+      integer(psb_ipk_), intent(out)                   :: info
+    end subroutine psb_@X@spsv_vect
+  end interface
+
+end module psb_@X@_psblas_mod
