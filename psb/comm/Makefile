@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=Xhalo.p90 Xovrl.p90
+SRC=Xhalo.p90 Xovrl.p90 Xspgather.P90 Xscatter.P90 Xgather.p90
 
 
 
