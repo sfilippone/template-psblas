@@ -1,7 +1,7 @@
 s/@X@/i/g
 s/@CONJG@//g
 s/@TYPE@/integer/g
-s/@FKIND@/psb_int_k_/g
+s/@FKIND@/psb_ipk_/g
 s/@RT@/d/g
 
 s/@SIZET@/psb_sizeof_int/g 
