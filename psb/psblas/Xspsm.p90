@@ -29,9 +29,9 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! File: psb_cspsm.f90
+! File: psb_@X@spsm.f90
 !
-! Subroutine: psb_cspsm
+! Subroutine: psb_@X@spsm
 !  Performs one of the distributed matrix-vector operations
 !
 !     sub( Y ) := alpha * Pr * A-1 * Pc *sub( X ) + beta * sub (Y ),   or
@@ -56,37 +56,37 @@
 !  vector and T is a M-by-M distributed triangular matrix.
 !
 ! Arguments:   
-!    alpha   -  complex.               The scalar alpha.
-!    a       -  type(psb_cspmat_type). The sparse matrix containing A.
-!    x(:,:)  -  complex                The input vector containing the entries of ( X ).
-!    beta    -  complex                The scalar beta.
-!    y(:,:)  -  complex                The input vector containing the entries of ( Y ).
+!    alpha   -  @TYPE@.               The scalar alpha.
+!    a       -  type(psb_@X@spmat_type). The sparse matrix containing A.
+!    x(:,:)  -  @TYPE@                The input vector containing the entries of ( X ).
+!    beta    -  @TYPE@                The scalar beta.
+!    y(:,:)  -  @TYPE@                The input vector containing the entries of ( Y ).
 !    desc_a  -  type(psb_desc_type).   The communication descriptor.
 !    info    -  integer.               Return code
 !    trans   -  character(optional).   Whether A or A'. If not present 'N' is assumed.
 !    scale   -  character(optional).   Specify some type of operation with
 !                                      the diagonal matrix D.
 !    choice  -  integer(optional).     The kind of update to perform on overlap elements.
-!    d(:)    -  complex, optional      Matrix for diagonal scaling.
+!    d(:)    -  @TYPE@, optional      Matrix for diagonal scaling.
 !    k       -  integer(optional).     The number of right-hand sides.
 !    jx      -  integer(optional).     The column offset for ( X ). Default: 1
 !    jy      -  integer(optional).     The column offset for ( Y ). Default: 1 
-!    work(:) -  complex, optional      Working area.
+!    work(:) -  @TYPE@, optional      Working area.
 ! 
-subroutine  psb_cspsm(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spsm(alpha,a,x,beta,y,desc_a,info,&
      & trans, scale, choice, diag, k, jx, jy, work)   
-  use psb_base_mod, psb_protect_name => psb_cspsm
+  use psb_base_mod, psb_protect_name => psb_@X@spsm
   use psi_mod
   implicit none
 
-  complex(psb_spk_), intent(in)              :: alpha, beta
-  complex(psb_spk_), intent(in), target      :: x(:,:)
-  complex(psb_spk_), intent(inout), target   :: y(:,:)
-  type (psb_cspmat_type), intent(in)        :: a
+  @TYPE@(@FKIND@), intent(in)              :: alpha, beta
+  @TYPE@(@FKIND@), intent(in), target      :: x(:,:)
+  @TYPE@(@FKIND@), intent(inout), target   :: y(:,:)
+  type (psb_@X@spmat_type), intent(in)        :: a
   type(psb_desc_type), intent(in)           :: desc_a
   integer(psb_ipk_), intent(out)                      :: info
-  complex(psb_spk_), intent(in), optional, target      :: diag(:)
-  complex(psb_spk_), optional, target, intent(inout)   :: work(:)
+  @TYPE@(@FKIND@), intent(in), optional, target      :: diag(:)
+  @TYPE@(@FKIND@), optional, target, intent(inout)   :: work(:)
   character, intent(in), optional           :: trans, scale
   integer(psb_ipk_), intent(in), optional             :: choice
   integer(psb_ipk_), intent(in), optional             :: k, jx, jy
@@ -98,13 +98,13 @@ subroutine  psb_cspsm(alpha,a,x,beta,y,desc_a,info,&
        & m, nrow, ncol, liwork, llwork, iiy, jjy, idx, ndm
 
   character                :: lscale
-  integer(psb_ipk_), parameter       :: nb=4
-  complex(psb_spk_),pointer :: iwork(:), xp(:,:), yp(:,:), id(:)
+  integer(psb_ipk_), parameter  :: nb=4
+  @TYPE@(@FKIND@),pointer :: iwork(:), xp(:,:), yp(:,:), id(:)
   character                :: itrans
   character(len=20)        :: name, ch_err
   logical                  :: aliw
 
-  name='psb_cspsm'
+  name='psb_@X@spsm'
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -220,9 +220,9 @@ subroutine  psb_cspsm(alpha,a,x,beta,y,desc_a,info,&
   call psb_chkmat(m,m,ia,ja,desc_a,info,iia,jja)
   ! checking for vectors correctness
   if (info == psb_success_) &
-       & call psb_chkvect(m,ik,size(x,1),ix,ijx,desc_a,info,iix,jjx)
+       & call psb_chkvect(m,ik,lldx,ix,ijx,desc_a,info,iix,jjx)
   if (info == psb_success_) &
-       & call psb_chkvect(m,ik,size(y,1),iy,ijy,desc_a,info,iiy,jjy)
+       & call psb_chkvect(m,ik,lldy,iy,ijy,desc_a,info,iiy,jjy)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect/mat'
@@ -261,7 +261,7 @@ subroutine  psb_cspsm(alpha,a,x,beta,y,desc_a,info,&
   if (choice_ > 0) then
 
     call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),ik,&
-         & cone,yp,desc_a,iwork,info,data=psb_comm_ovr_)
+         & @XONE@,yp,desc_a,iwork,info,data=psb_comm_ovr_)
 
     if (info == psb_success_) call psi_ovrl_upd(yp,desc_a,choice_,info)
     if (info /= psb_success_) then
@@ -284,7 +284,7 @@ subroutine  psb_cspsm(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspsm
+end subroutine psb_@X@spsm
      
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
@@ -318,7 +318,7 @@ end subroutine psb_cspsm
 !!$ 
 !!$
 !
-! Subroutine: psb_cspsv
+! Subroutine: psb_@X@spsv
 !  Performs one of the distributed matrix-vector operations
 !
 !     Y := alpha * Pr * A-1 * Pc * X + beta * Y,   or
@@ -338,34 +338,34 @@ end subroutine psb_cspsm
 !
 !
 ! Arguments:   
-!    alpha   -  complex.               The scalar alpha.
-!    a       -  type(psb_cspmat_type). The sparse matrix containing A.
-!    x(:)    -  complex                The input vector containing the entries of ( X ).
-!    beta    -  complex                The scalar beta.
-!    y(:)    -  complex                The input vector containing the entries of ( Y ).
+!    alpha   -  @TYPE@.               The scalar alpha.
+!    a       -  type(psb_@X@spmat_type). The sparse matrix containing A.
+!    x(:)    -  @TYPE@                The input vector containing the entries of ( X ).
+!    beta    -  @TYPE@                The scalar beta.
+!    y(:)    -  @TYPE@                The input vector containing the entries of ( Y ).
 !    desc_a  -  type(psb_desc_type).   The communication descriptor.
 !    info    -  integer.               Return code
 !    trans   -  character(optional).   Whether A or A'. If not present 'N' is assumed.
 !    scale   -  character(optional).   Specify some type of operation with
 !                                      the diagonal matrix D.
 !    choice  -  integer(optional).     The kind of update to perform on overlap elements.
-!    d(:)    -  complex, optional      Matrix for diagonal scaling.
-!    work(:) -  complex, optional      Working area.
+!    d(:)    -  @TYPE@, optional      Matrix for diagonal scaling.
+!    work(:) -  @TYPE@, optional      Working area.
 ! 
-subroutine  psb_cspsv(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spsv(alpha,a,x,beta,y,desc_a,info,&
      & trans, scale, choice, diag, work)   
-  use psb_base_mod, psb_protect_name => psb_cspsv
+  use psb_base_mod, psb_protect_name => psb_@X@spsv
   use psi_mod
   implicit none 
 
-  complex(psb_spk_), intent(in)              :: alpha, beta
-  complex(psb_spk_), intent(in), target      :: x(:)
-  complex(psb_spk_), intent(inout), target   :: y(:)
-  type(psb_cspmat_type), intent(in)         :: a
+  @TYPE@(@FKIND@), intent(in)              :: alpha, beta
+  @TYPE@(@FKIND@), intent(in), target      :: x(:)
+  @TYPE@(@FKIND@), intent(inout), target   :: y(:)
+  type(psb_@X@spmat_type), intent(in)         :: a
   type(psb_desc_type), intent(in)           :: desc_a
   integer(psb_ipk_), intent(out)                      :: info
-  complex(psb_spk_), intent(in), optional, target    :: diag(:)
-  complex(psb_spk_), optional, target, intent(inout) :: work(:)
+  @TYPE@(@FKIND@), intent(in), optional, target    :: diag(:)
+  @TYPE@(@FKIND@), optional, target, intent(inout) :: work(:)
   character, intent(in), optional           :: trans, scale
   integer(psb_ipk_), intent(in), optional             :: choice
 
@@ -377,12 +377,12 @@ subroutine  psb_cspsv(alpha,a,x,beta,y,desc_a,info,&
 
   character                :: lscale
   integer(psb_ipk_), parameter       :: nb=4
-  complex(psb_spk_),pointer :: iwork(:), xp(:), yp(:), id(:)
+  @TYPE@(@FKIND@),pointer :: iwork(:), xp(:), yp(:), id(:)
   character                :: itrans
   character(len=20)        :: name, ch_err
   logical                  :: aliw
 
-  name='psb_cspsv'
+  name='psb_@X@spsv'
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -483,9 +483,9 @@ subroutine  psb_cspsv(alpha,a,x,beta,y,desc_a,info,&
   call psb_chkmat(m,m,ia,ja,desc_a,info,iia,jja)
   ! checking for vectors correctness
   if (info == psb_success_) &
-       & call psb_chkvect(m,ik,size(x),ix,jx,desc_a,info,iix,jjx)
+       & call psb_chkvect(m,ik,lldx,ix,jx,desc_a,info,iix,jjx)
   if (info == psb_success_) &
-       & call psb_chkvect(m,ik,size(y),iy,jy,desc_a,info,iiy,jjy)
+       & call psb_chkvect(m,ik,lldy,iy,jy,desc_a,info,iiy,jjy)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect/mat'
@@ -523,7 +523,7 @@ subroutine  psb_cspsv(alpha,a,x,beta,y,desc_a,info,&
   ! update overlap elements
   if(choice_ > 0) then
     call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-         & cone,yp,desc_a,iwork,info,data=psb_comm_ovr_)
+         & @XONE@,yp,desc_a,iwork,info,data=psb_comm_ovr_)
 
 
     if (info == psb_success_) call psi_ovrl_upd(yp,desc_a,choice_,info)
@@ -547,23 +547,23 @@ subroutine  psb_cspsv(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspsv
+end subroutine psb_@X@spsv
      
      
-subroutine  psb_cspsv_vect(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spsv_vect(alpha,a,x,beta,y,desc_a,info,&
      & trans, scale, choice, diag, work)   
-  use psb_base_mod, psb_protect_name => psb_cspsv_vect
+  use psb_base_mod, psb_protect_name => psb_@X@spsv_vect
   use psi_mod
   implicit none 
 
-  complex(psb_spk_), intent(in)           :: alpha, beta
-  type(psb_c_vect_type), intent(inout)    :: x
-  type(psb_c_vect_type), intent(inout)    :: y
-  type(psb_cspmat_type), intent(inout)    :: a
+  @TYPE@(@FKIND@), intent(in)           :: alpha, beta
+  type(psb_@X@_vect_type), intent(inout)    :: x
+  type(psb_@X@_vect_type), intent(inout)    :: y
+  type(psb_@X@spmat_type), intent(inout)    :: a
   type(psb_desc_type), intent(in)         :: desc_a
   integer(psb_ipk_), intent(out)                    :: info
-  type(psb_c_vect_type), intent(inout), optional  :: diag
-  complex(psb_spk_), optional, target, intent(inout) :: work(:)
+  type(psb_@X@_vect_type), intent(inout), optional  :: diag
+  @TYPE@(@FKIND@), optional, target, intent(inout) :: work(:)
   character, intent(in), optional         :: trans, scale
   integer(psb_ipk_), intent(in), optional           :: choice
 
@@ -575,7 +575,7 @@ subroutine  psb_cspsv_vect(alpha,a,x,beta,y,desc_a,info,&
 
   character                :: lscale
   integer(psb_ipk_), parameter       :: nb=4
-  complex(psb_spk_),pointer :: iwork(:), xp(:), yp(:)
+  @TYPE@(@FKIND@),pointer :: iwork(:), xp(:), yp(:)
   character                :: itrans
   character(len=20)        :: name, ch_err
   logical                  :: aliw
@@ -684,9 +684,9 @@ subroutine  psb_cspsv_vect(alpha,a,x,beta,y,desc_a,info,&
   call psb_chkmat(m,m,ia,ja,desc_a,info,iia,jja)
   ! checking for vectors correctness
   if (info == psb_success_) &
-       & call psb_chkvect(m,ik,x%get_nrows(),ix,jx,desc_a,info,iix,jjx)
+       & call psb_chkvect(m,ik,lldx,ix,jx,desc_a,info,iix,jjx)
   if (info == psb_success_)&
-       & call psb_chkvect(m,ik,y%get_nrows(),iy,jy,desc_a,info,iiy,jjy)
+       & call psb_chkvect(m,ik,lldy,iy,jy,desc_a,info,iiy,jjy)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect/mat'
@@ -725,7 +725,7 @@ subroutine  psb_cspsv_vect(alpha,a,x,beta,y,desc_a,info,&
   ! update overlap elements
   if (choice_ > 0) then
     call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-         & cone,y%v,desc_a,iwork,info,data=psb_comm_ovr_)
+         & @XONE@,y%v,desc_a,iwork,info,data=psb_comm_ovr_)
 
 
     if (info == psb_success_) call psi_ovrl_upd(y%v,desc_a,choice_,info)
@@ -748,5 +748,5 @@ subroutine  psb_cspsv_vect(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspsv_vect
+end subroutine psb_@X@spsv_vect
      

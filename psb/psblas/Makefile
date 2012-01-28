@@ -6,7 +6,7 @@ UTIL_MODS =
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=Xamax.p90 Xasum.p90 Xaxpby.p90 Xdot.p90 Xnrm2.p90 \
-    Xnrmi.p90 Xspmm.p90 Xspsm.p90
+    Xnrmi.p90 Xspmm.p90 Xspsm.p90 Xspnrm1.p90
 
 
 

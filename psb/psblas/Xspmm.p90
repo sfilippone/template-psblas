@@ -29,9 +29,9 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! File: psb_cspmm.f90
+! File: psb_@X@spmm.f90
 !
-! Subroutine: psb_cspmm
+! Subroutine: psb_@X@spmm
 !     Performs one of the distributed matrix-vector operations
 !
 !     sub( Y ) := alpha * Pr * A * Pc * sub( X )  + beta * sub( Y ),  or
@@ -48,33 +48,33 @@
 !  vectors and A is a M-by-N distributed matrix.
 !
 ! Arguments:   
-!    alpha   -  complex                The scalar alpha.
-!    a       -  type(psb_cspmat_type). The sparse matrix containing A.
-!    x(:,:)  -  complex                The input vector containing the entries of ( X ).
-!    beta    -  complex                The scalar beta.
-!    y(:,:)  -  complex                The input vector containing the entries of ( Y ).
+!    alpha   -  @TYPE@                The scalar alpha.
+!    a       -  type(psb_@X@spmat_type). The sparse matrix containing A.
+!    x(:,:)  -  @TYPE@                The input vector containing the entries of ( X ).
+!    beta    -  @TYPE@                The scalar beta.
+!    y(:,:)  -  @TYPE@                The input vector containing the entries of ( Y ).
 !    desc_a  -  type(psb_desc_type).   The communication descriptor.
 !    info    -  integer.               Return code
 !    trans   -  character(optional).   Whether A or A'. Default: 'N' 
 !    k       -  integer(optional).     The number of right-hand sides.
 !    jx      -  integer(optional).     The column offset for ( X ). Default:  1
 !    jy      -  integer(optional).     The column offset for ( Y ). Default:  1
-!    work(:) -  complex,(optional).    Working area.
+!    work(:) -  @TYPE@,(optional).    Working area.
 !    doswap  -  logical(optional).     Whether to performe halo updates.
 ! 
-subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spmm(alpha,a,x,beta,y,desc_a,info,&
      & trans, k, jx, jy, work, doswap)   
-  use psb_base_mod, psb_protect_name => psb_cspmm
+  use psb_base_mod, psb_protect_name => psb_@X@spmm
   use psi_mod
   implicit none
 
-  complex(psb_spk_), intent(in)             :: alpha, beta
-  complex(psb_spk_), intent(inout), target  :: x(:,:)
-  complex(psb_spk_), intent(inout), target  :: y(:,:)
-  type(psb_cspmat_type), intent(in)        :: a
+  @TYPE@(@FKIND@), intent(in)             :: alpha, beta
+  @TYPE@(@FKIND@), intent(inout), target  :: x(:,:)
+  @TYPE@(@FKIND@), intent(inout), target  :: y(:,:)
+  type(psb_@X@spmat_type), intent(in)        :: a
   type(psb_desc_type), intent(in)          :: desc_a
   integer(psb_ipk_), intent(out)                     :: info
-  complex(psb_spk_), optional, target, intent(inout)  :: work(:)
+  @TYPE@(@FKIND@), optional, target, intent(inout)  :: work(:)
   character, intent(in), optional          :: trans
   integer(psb_ipk_), intent(in), optional            :: k, jx, jy
   logical, intent(in), optional            :: doswap
@@ -85,14 +85,14 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
        & m, nrow, ncol, lldx, lldy, liwork, iiy, jjy,&
        & i, ib, ib1, ip, idx
   integer(psb_ipk_), parameter               :: nb=4
-  complex(psb_spk_), pointer     :: xp(:,:), yp(:,:), iwork(:)
-  complex(psb_spk_), allocatable :: xvsave(:,:)
+  @TYPE@(@FKIND@), pointer     :: xp(:,:), yp(:,:), iwork(:)
+  @TYPE@(@FKIND@), allocatable :: xvsave(:,:)
   character                        :: trans_
   character(len=20)                :: name, ch_err
   logical                          :: aliw, doswap_
   integer(psb_ipk_) :: debug_level, debug_unit
 
-  name='psb_cspmm'
+  name='psb_@X@spmm'
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -183,7 +183,7 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
     iwork => work
   endif
 
-  iwork(1)=czero
+  iwork(1)=@XZERO@
 
   ! checking for matrix correctness
   call psb_chkmat(m,n,ia,ja,desc_a,info,iia,jja)
@@ -228,7 +228,7 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
       xp => x(iix:lldx,jjx:jjx+ib1-1)
       if (doswap_)&
            & call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & ib1,czero,xp,desc_a,iwork,info)
+           & ib1,@XZERO@,xp,desc_a,iwork,info)
 
 
       blk: do i=1, ik, nb
@@ -237,7 +237,7 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
         xp => x(iix:lldx,jjx+i-1+ib:jjx+i-1+ib+ib1-1)
         if ((ib1 > 0).and.(doswap_)) &
              & call psi_swapdata(psb_swap_send_,ib1,&
-             & czero,xp,desc_a,iwork,info)
+             & @XZERO@,xp,desc_a,iwork,info)
 
         if(info /= psb_success_) exit blk
 
@@ -249,14 +249,14 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
 
         if((ib1 > 0).and.(doswap_))&
              & call psi_swapdata(psb_swap_recv_,ib1,&
-             & czero,xp,desc_a,iwork,info)
+             & @XZERO@,xp,desc_a,iwork,info)
 
         if(info /= psb_success_) exit blk
       end do blk
     else
       if (doswap_)&
            & call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & ib1,czero,x(:,1:ik),desc_a,iwork,info)
+           & ib1,@XZERO@,x(:,1:ik),desc_a,iwork,info)
       if (info == psb_success_) call psb_csmm(alpha,a,x(:,1:ik),beta,y(:,1:ik),info)
     end if
     if(info /= psb_success_) then
@@ -302,9 +302,10 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
     ! 
     call psi_ovrl_save(x(:,1:ik),xvsave,desc_a,info)
     if (info == psb_success_) call psi_ovrl_upd(x,desc_a,psb_avg_,info)
-    y(nrow+1:ncol,1:ik)    = czero
+    y(nrow+1:ncol,1:ik)    = @XZERO@
 
-    if (info == psb_success_) call psb_csmm(alpha,a,x(:,1:ik),beta,y(:,1:ik),info,trans=trans_)
+    if (info == psb_success_) &
+         & call psb_csmm(alpha,a,x(:,1:ik),beta,y(:,1:ik),info,trans=trans_)
     if (debug_level >= psb_debug_comp_) &
          & write(debug_unit,*) me,' ',trim(name),' csmm ', info
     if (info /= psb_success_) then
@@ -317,9 +318,9 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
 
     if (doswap_)then 
       call psi_swaptran(ior(psb_swap_send_,psb_swap_recv_),&
-           & ik,cone,y(:,1:ik),desc_a,iwork,info)
+           & ik,@XONE@,y(:,1:ik),desc_a,iwork,info)
       if (info == psb_success_) call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & ik,cone,y(:,1:ik),desc_a,iwork,info,data=psb_comm_ovr_)
+           & ik,@XONE@,y(:,1:ik),desc_a,iwork,info,data=psb_comm_ovr_)
 
       if (debug_level >= psb_debug_comp_) &
            & write(debug_unit,*) me,' ',trim(name),' swaptran ', info
@@ -355,7 +356,7 @@ subroutine  psb_cspmm(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspmm
+end subroutine psb_@X@spmm
 
 
 
@@ -392,7 +393,7 @@ end subroutine psb_cspmm
 !!$ 
 !!$
 !
-! Subroutine: psb_cspmv
+! Subroutine: psb_@X@spmv
 !     Performs one of the distributed matrix-vector operations
 !
 !     Y := alpha * Pr * A * Pc * X  + beta * Y,  or
@@ -403,30 +404,30 @@ end subroutine psb_cspmm
 !  vectors and A is a M-by-N distributed matrix.
 !
 ! Arguments:   
-!    alpha   -  complex                The scalar alpha.
-!    a       -  type(psb_cspmat_type). The sparse matrix containing A.
-!    x(:)    -  complex                The input vector containing the entries of ( X ).
-!    beta    -  complex                The scalar beta.
-!    y(:)    -  complex                The input vector containing the entries of ( Y ).
+!    alpha   -  @TYPE@                The scalar alpha.
+!    a       -  type(psb_@X@spmat_type). The sparse matrix containing A.
+!    x(:)    -  @TYPE@                The input vector containing the entries of ( X ).
+!    beta    -  @TYPE@                The scalar beta.
+!    y(:)    -  @TYPE@                The input vector containing the entries of ( Y ).
 !    desc_a  -  type(psb_desc_type).   The communication descriptor.
 !    info    -  integer.               Return code
 !    trans   -  character(optional).   Whether A or A'. Default:  'N' 
-!    work(:) -  complex,(optional).    Working area.
+!    work(:) -  @TYPE@,(optional).    Working area.
 !    doswap  -  logical(optional).     Whether to performe halo updates.
 ! 
-subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spmv(alpha,a,x,beta,y,desc_a,info,&
      & trans, work, doswap)   
-  use psb_base_mod, psb_protect_name => psb_cspmv
+  use psb_base_mod, psb_protect_name => psb_@X@spmv
   use psi_mod
   implicit none
 
-  complex(psb_spk_), intent(in)             :: alpha, beta
-  complex(psb_spk_), intent(inout), target  :: x(:)
-  complex(psb_spk_), intent(inout), target  :: y(:)
-  type(psb_cspmat_type), intent(in)        :: a
+  @TYPE@(@FKIND@), intent(in)             :: alpha, beta
+  @TYPE@(@FKIND@), intent(inout), target  :: x(:)
+  @TYPE@(@FKIND@), intent(inout), target  :: y(:)
+  type(psb_@X@spmat_type), intent(in)        :: a
   type(psb_desc_type), intent(in)          :: desc_a
   integer(psb_ipk_), intent(out)                     :: info
-  complex(psb_spk_), optional, target, intent(inout) :: work(:)
+  @TYPE@(@FKIND@), optional, target, intent(inout) :: work(:)
   character, intent(in), optional          :: trans
   logical, intent(in), optional            :: doswap
 
@@ -436,14 +437,14 @@ subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
        & m, nrow, ncol, lldx, lldy, liwork, jx, jy, iiy, jjy,&
        & ib, ip, idx
   integer(psb_ipk_), parameter           :: nb=4
-  complex(psb_spk_), pointer :: iwork(:), xp(:), yp(:)
-  complex(psb_spk_), allocatable :: xvsave(:)  
+  @TYPE@(@FKIND@), pointer :: iwork(:), xp(:), yp(:)
+  @TYPE@(@FKIND@), allocatable :: xvsave(:)  
   character                    :: trans_
   character(len=20)            :: name, ch_err
   logical                      :: aliw, doswap_
   integer(psb_ipk_) :: debug_level, debug_unit
 
-  name='psb_cspmv'
+  name='psb_@X@spmv'
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -561,7 +562,7 @@ subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
 
     if (doswap_) then
       call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & czero,x,desc_a,iwork,info,data=psb_comm_halo_)
+           & @XZERO@,x,desc_a,iwork,info,data=psb_comm_halo_)
     end if
 
     call psb_csmm(alpha,a,x,beta,y,info)
@@ -610,7 +611,7 @@ subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
     ! 
     call psi_ovrl_save(x,xvsave,desc_a,info)
     if (info == psb_success_) call psi_ovrl_upd(x,desc_a,psb_avg_,info)
-    yp(nrow+1:ncol) = czero
+    yp(nrow+1:ncol) = @XZERO@
     
     !  local Matrix-vector product
     if (info == psb_success_) call psb_csmm(alpha,a,x,beta,y,info,trans=trans_)
@@ -628,9 +629,9 @@ subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
     
     if (doswap_) then
       call psi_swaptran(ior(psb_swap_send_,psb_swap_recv_),&
-           & cone,yp,desc_a,iwork,info)
+           & @XONE@,yp,desc_a,iwork,info)
       if (info == psb_success_) call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & cone,yp,desc_a,iwork,info,data=psb_comm_ovr_)
+           & @XONE@,yp,desc_a,iwork,info,data=psb_comm_ovr_)
       
       if (debug_level >= psb_debug_comp_) &
            & write(debug_unit,*) me,' ',trim(name),' swaptran ', info
@@ -671,23 +672,23 @@ subroutine  psb_cspmv(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspmv
+end subroutine psb_@X@spmv
 
 
 
-subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
+subroutine  psb_@X@spmv_vect(alpha,a,x,beta,y,desc_a,info,&
      & trans, work, doswap)   
-  use psb_base_mod, psb_protect_name => psb_cspmv_vect
+  use psb_base_mod, psb_protect_name => psb_@X@spmv_vect
   use psi_mod
   implicit none
 
-  complex(psb_spk_), intent(in)            :: alpha, beta
-  type(psb_c_vect_type), intent(inout)     :: x
-  type(psb_c_vect_type), intent(inout)     :: y
-  type(psb_cspmat_type), intent(in)        :: a
+  @TYPE@(@FKIND@), intent(in)            :: alpha, beta
+  type(psb_@X@_vect_type), intent(inout)     :: x
+  type(psb_@X@_vect_type), intent(inout)     :: y
+  type(psb_@X@spmat_type), intent(in)        :: a
   type(psb_desc_type), intent(in)          :: desc_a
   integer(psb_ipk_), intent(out)                     :: info
-  complex(psb_spk_), optional, target, intent(inout) :: work(:)
+  @TYPE@(@FKIND@), optional, target, intent(inout) :: work(:)
   character, intent(in), optional          :: trans
   logical, intent(in), optional            :: doswap
 
@@ -697,14 +698,14 @@ subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
        & m, nrow, ncol, lldx, lldy, liwork, jx, jy, iiy, jjy,&
        & ib, ip, idx
   integer(psb_ipk_), parameter       :: nb=4
-  complex(psb_spk_), pointer :: iwork(:), xp(:), yp(:)
-  complex(psb_spk_), allocatable :: xvsave(:)
+  @TYPE@(@FKIND@), pointer :: iwork(:), xp(:), yp(:)
+  @TYPE@(@FKIND@), allocatable :: xvsave(:)
   character                :: trans_
   character(len=20)        :: name, ch_err
   logical                  :: aliw, doswap_
   integer(psb_ipk_) :: debug_level, debug_unit
 
-  name='psb_cspmv'
+  name='psb_@X@spmv'
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -834,7 +835,7 @@ subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
 
     if (doswap_) then
       call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & czero,x%v,desc_a,iwork,info,data=psb_comm_halo_)
+           & @XZERO@,x%v,desc_a,iwork,info,data=psb_comm_halo_)
     end if
 
     call psb_csmm(alpha,a,x,beta,y,info)
@@ -881,8 +882,9 @@ subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
     ! 
     call psi_ovrl_save(x%v,xvsave,desc_a,info)
     if (info == psb_success_) call psi_ovrl_upd(x%v,desc_a,psb_avg_,info)
+
 !!! THIS SHOULD BE FIXED !!! But beta is almost never /= 0
-!!$    yp(nrow+1:ncol) = szero
+!!$    yp(nrow+1:ncol) = @XZERO@
     
     !  local Matrix-vector product
     if (info == psb_success_) call psb_csmm(alpha,a,x,beta,y,info,trans=trans_)
@@ -900,9 +902,9 @@ subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
     
     if (doswap_) then
       call psi_swaptran(ior(psb_swap_send_,psb_swap_recv_),&
-           & cone,y%v,desc_a,iwork,info)
+           & @XONE@,y%v,desc_a,iwork,info)
       if (info == psb_success_) call psi_swapdata(ior(psb_swap_send_,psb_swap_recv_),&
-           & cone,y%v,desc_a,iwork,info,data=psb_comm_ovr_)
+           & @XONE@,y%v,desc_a,iwork,info,data=psb_comm_ovr_)
       
       if (debug_level >= psb_debug_comp_) &
            & write(debug_unit,*) me,' ',trim(name),' swaptran ', info
@@ -943,4 +945,4 @@ subroutine  psb_cspmv_vect(alpha,a,x,beta,y,desc_a,info,&
     return
   end if
   return
-end subroutine psb_cspmv_vect
+end subroutine psb_@X@spmv_vect

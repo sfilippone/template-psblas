@@ -29,15 +29,15 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! File: psb_caxpby.f90
+! File: psb_@X@axpby.f90
 
-subroutine psb_caxpby_vect(alpha, x, beta, y,&
+subroutine psb_@X@axpby_vect(alpha, x, beta, y,&
      & desc_a, info)
-  use psb_base_mod, psb_protect_name => psb_caxpby_vect
+  use psb_base_mod, psb_protect_name => psb_@X@axpby_vect
   implicit none                    
-  type(psb_c_vect_type), intent (inout) ::  x
-  type(psb_c_vect_type), intent (inout) ::  y
-  complex(psb_spk_), intent (in)        :: alpha, beta
+  type(psb_@X@_vect_type), intent (inout) ::  x
+  type(psb_@X@_vect_type), intent (inout) ::  y
+  @TYPE@(@FKIND@), intent (in)        :: alpha, beta
   type(psb_desc_type), intent (in)      :: desc_a
   integer(psb_ipk_), intent(out)                  :: info
 
@@ -46,7 +46,7 @@ subroutine psb_caxpby_vect(alpha, x, beta, y,&
        & err_act, iix, jjx, ix, iy, m, iiy, jjy
   character(len=20)        :: name, ch_err
 
-  name='psb_cgeaxpby'
+  name='psb_@X@geaxpby'
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -114,10 +114,10 @@ subroutine psb_caxpby_vect(alpha, x, beta, y,&
   end if
   return
 
-end subroutine psb_caxpby_vect
+end subroutine psb_@X@axpby_vect
 
 !
-! Subroutine: psb_caxpby
+! Subroutine: psb_@X@axpby
 !    Adds one distributed matrix to another,
 !
 !    sub( Y ) := beta * sub( Y ) + alpha * sub( X )
@@ -127,30 +127,31 @@ end subroutine psb_caxpby_vect
 !    sub( Y ) denotes Y(:,JY).
 !
 ! Arguments:
-!    alpha  -  complex,input        The scalar used to multiply each component of X
-!    x(:,:) -  complex,input        The input vector containing the entries of X
-!    beta   -  real,input           The scalar used to multiply each component of Y
-!    y(:,:) -  real,inout           The input vector Y
+!    alpha  -  @TYPE@,input        The scalar used to multiply each component of X
+!    x(:,:) -  @TYPE@,input        The input vector containing the entries of X
+!    beta   -  @TYPE@,input        The scalar used to multiply each component of Y
+!    y(:,:) -  @TYPE@,inout        The input vector Y
 !    desc_a -  type(psb_desc_type)  The communication descriptor.
 !    info   -  integer              Return code
 !    jx     -  integer(optional)    The column offset for X 
 !    jy     -  integer(optional)    The column offset for Y 
 !
-subroutine  psb_caxpby(alpha, x, beta,y,desc_a,info, n, jx, jy)
-  use psb_base_mod, psb_protect_name => psb_caxpby
+subroutine  psb_@X@axpby(alpha, x, beta,y,desc_a,info, n, jx, jy)
+  use psb_base_mod, psb_protect_name => psb_@X@axpby
 
   implicit none                    
 
   integer(psb_ipk_), intent(in), optional   :: n, jx, jy
   integer(psb_ipk_), intent(out)            :: info
   type(psb_desc_type), intent(in) :: desc_a
-  complex(psb_spk_), intent(in)    :: alpha, beta
-  complex(psb_spk_), intent(in)    :: x(:,:)
-  complex(psb_spk_), intent(inout) :: y(:,:)
+  @TYPE@(@FKIND@), intent(in)    :: alpha, beta
+  @TYPE@(@FKIND@), intent(in)    :: x(:,:)
+  @TYPE@(@FKIND@), intent(inout) :: y(:,:)
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
-       & err_act, iix, jjx, ix, iy, ijx, ijy, m, iiy, in, jjy
+       & err_act, iix, jjx, ix, iy, ijx, ijy, m, iiy, in, jjy, &
+       & lldx, lldy
   character(len=20)        :: name, ch_err
 
   name='psb_geaxpby'
@@ -198,11 +199,12 @@ subroutine  psb_caxpby(alpha, x, beta,y,desc_a,info, n, jx, jy)
   end if
 
   m = desc_a%get_global_rows()
-
+  lldx = size(x,1)
+  lldy = size(y,1)
   ! check vector correctness
-  call psb_chkvect(m,ione,size(x,1),ix,ijx,desc_a,info,iix,jjx)
+  call psb_chkvect(m,ione,lldx,ix,ijx,desc_a,info,iix,jjx)
   if (info == psb_success_) &
-       & call psb_chkvect(m,ione,size(y,1),iy,ijy,desc_a,info,iiy,jjy)
+       & call psb_chkvect(m,ione,lldy,iy,ijy,desc_a,info,iiy,jjy)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect'
@@ -219,8 +221,8 @@ subroutine  psb_caxpby(alpha, x, beta,y,desc_a,info, n, jx, jy)
   if ((in /= 0)) then
     if(desc_a%get_local_rows() > 0) then
       call caxpby(desc_a%get_local_cols(),in,&
-           & alpha,x(iix:,jjx),size(x,1),beta,&
-           & y(iiy:,jjy),size(y,1),info)
+           & alpha,x(iix:,jjx),lldx,beta,&
+           & y(iiy:,jjy),lldy,info)
     end if
   end if
 
@@ -235,7 +237,7 @@ subroutine  psb_caxpby(alpha, x, beta,y,desc_a,info, n, jx, jy)
     return
   end if
   return
-end subroutine psb_caxpby
+end subroutine psb_@X@axpby
 
 
 
@@ -273,33 +275,34 @@ end subroutine psb_caxpby
 !!$ 
 !!$  
 !
-! Subroutine: psb_caxpbyv
+! Subroutine: psb_@X@axpbyv
 !    Adds one distributed matrix to another,
 !
 !    Y := beta * Y + alpha * X
 !
 ! Arguments:
-!    alpha  -  complex,input        The scalar used to multiply each component of X
-!    x(:)   -  complex,input        The input vector containing the entries of X
-!    beta   -  real,input           The scalar used to multiply each component of Y
-!    y(:)   -  real,inout           The input vector Y
+!    alpha  -  @TYPE@,input        The scalar used to multiply each component of X
+!    x(:)   -  @TYPE@,input        The input vector containing the entries of X
+!    beta   -  @TYPE@,input        The scalar used to multiply each component of Y
+!    y(:)   -  @TYPE@,inout        The input vector Y
 !    desc_a -  type(psb_desc_type)  The communication descriptor.
 !    info   -  integer              Return code
 !
 !
-subroutine  psb_caxpbyv(alpha, x, beta,y,desc_a,info)
-  use psb_base_mod, psb_protect_name => psb_caxpbyv
+subroutine  psb_@X@axpbyv(alpha, x, beta,y,desc_a,info)
+  use psb_base_mod, psb_protect_name => psb_@X@axpbyv
   implicit none                    
 
   integer(psb_ipk_), intent(out)            :: info
   type(psb_desc_type), intent(in) :: desc_a
-  complex(psb_spk_), intent(in)    :: alpha, beta
-  complex(psb_spk_), intent(in)    :: x(:)
-  complex(psb_spk_), intent(inout) :: y(:)
+  @TYPE@(@FKIND@), intent(in)    :: alpha, beta
+  @TYPE@(@FKIND@), intent(in)    :: x(:)
+  @TYPE@(@FKIND@), intent(inout) :: y(:)
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
-       & err_act, iix, jjx, ix, iy, m, iiy, jjy
+       & err_act, iix, jjx, ix, iy, m, iiy, jjy, &
+       & lldx, lldy
   character(len=20)        :: name, ch_err
   logical, parameter :: debug=.false.
 
@@ -321,16 +324,17 @@ subroutine  psb_caxpbyv(alpha, x, beta,y,desc_a,info)
   iy = ione
 
   m = desc_a%get_global_rows()
-
+  lldx = size(x,1)
+  lldy = size(y,1)
   ! check vector correctness
-  call psb_chkvect(m,ione,size(x),ix,ione,desc_a,info,iix,jjx)
+  call psb_chkvect(m,ione,lldx,ix,ione,desc_a,info,iix,jjx)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect 1'
     call psb_errpush(info,name,a_err=ch_err)
     goto 9999
   end if
-  call psb_chkvect(m,ione,size(y),iy,ione,desc_a,info,iiy,jjy)
+  call psb_chkvect(m,ione,lldy,iy,ione,desc_a,info,iiy,jjy)
   if(info /= psb_success_) then
     info=psb_err_from_subroutine_
     ch_err='psb_chkvect 2'
@@ -345,8 +349,8 @@ subroutine  psb_caxpbyv(alpha, x, beta,y,desc_a,info)
 
   if(desc_a%get_local_rows() > 0) then
     call caxpby(desc_a%get_local_cols(),ione,&
-         & alpha,x,size(x),beta,&
-         & y,size(y),info)
+         & alpha,x,lldx,beta,&
+         & y,lldy,info)
   end if
 
   call psb_erractionrestore(err_act)
@@ -360,4 +364,4 @@ subroutine  psb_caxpbyv(alpha, x, beta,y,desc_a,info)
     return
   end if
   return
-end subroutine psb_caxpbyv
+end subroutine psb_@X@axpbyv
