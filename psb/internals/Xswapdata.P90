@@ -184,8 +184,6 @@ subroutine psi_@X@swapidxm(iictxt,iicomm,flag,n,beta,y,idx,totxch,totsnd,totrcv,
   integer(psb_ipk_) :: nesd, nerv,&
        & err_act, i, idx_pt, totsnd_, totrcv_,&
        & snd_pt, rcv_pt, pnti
-!!$  integer(psb_ipk_), allocatable, dimension(:) :: bsdidx, brvidx,&
-!!$       & sdsz, rvsz, prcid, rvhd, sdhd
   integer(psb_ipk_) :: ierr(5)
   logical :: swap_mpi, swap_sync, swap_send, swap_recv,&
        & albf,do_send,do_recv
@@ -685,13 +683,6 @@ subroutine psi_@X@swapidxv(iictxt,iicomm,flag,beta,y,idx,totxch,totsnd,totrcv,wo
   integer(psb_ipk_) :: nesd, nerv,&
        & err_act, i, idx_pt, totsnd_, totrcv_,&
        & snd_pt, rcv_pt, pnti, n
-!!$  integer(psb_ipk_) :: np, me, nesd, nerv,&
-!!$       & proc_to_comm, p2ptag, p2pstat(mpi_status_size),&
-!!$       & iret, err_act,  i, totsnd_, totrcv_,&
-!!$       & idx_pt, snd_pt, rcv_pt, n, pnti, data_
-!!$
-!!$  integer(psb_ipk_), allocatable, dimension(:) :: bsdidx, brvidx,&
-!!$       & sdsz, rvsz, prcid, rvhd, sdhd
   integer(psb_ipk_) :: ierr(5)
   logical :: swap_mpi, swap_sync, swap_send, swap_recv,&
        & albf,do_send,do_recv
@@ -1129,13 +1120,6 @@ subroutine psi_@X@swapidx_vect(iictxt,iicomm,flag,beta,y,idx,totxch,totsnd,totrc
   integer(psb_ipk_) :: nesd, nerv,&
        & err_act, i, idx_pt, totsnd_, totrcv_,&
        & snd_pt, rcv_pt, pnti, n
-!!$  integer(psb_ipk_) :: np, me, nesd, nerv,&
-!!$       & proc_to_comm, p2ptag, p2pstat(mpi_status_size),&
-!!$       & iret, err_act,  i, totsnd_, totrcv_,&
-!!$       & idx_pt, snd_pt, rcv_pt, n, pnti, data_
-!!$
-!!$  integer(psb_ipk_), allocatable, dimension(:) :: bsdidx, brvidx,&
-!!$       & sdsz, rvsz, prcid, rvhd, sdhd
   integer(psb_ipk_) :: ierr(5)
   logical :: swap_mpi, swap_sync, swap_send, swap_recv,&
        & albf,do_send,do_recv
