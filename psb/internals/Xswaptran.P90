@@ -1149,12 +1149,6 @@ subroutine psi_@X@tranidx_vect(iictxt,iicomm,flag,beta,y,idx,&
   integer(psb_ipk_) :: nesd, nerv,&
        & err_act, i, idx_pt, totsnd_, totrcv_,&
        & snd_pt, rcv_pt, pnti, n
-!!$  integer(psb_ipk_) :: np, me, nesd, nerv,&
-!!$       & proc_to_comm, p2ptag, p2pstat(mpi_status_size),&
-!!$       & iret, err_act, i, idx_pt, totsnd_, totrcv_,&
-!!$       & snd_pt, rcv_pt, pnti, data_, n 
-!!$  integer(psb_ipk_), allocatable, dimension(:) :: bsdidx, brvidx,&
-!!$       & sdsz, rvsz, prcid, rvhd, sdhd
   integer(psb_ipk_) :: ierr(5)
   logical :: swap_mpi, swap_sync, swap_send, swap_recv,&
        & albf,do_send,do_recv
