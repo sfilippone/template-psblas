@@ -57,7 +57,7 @@ function psb_@X@dot_vect(x, y, desc_a,info) result(res)
   use psb_@X@_vect_mod
   use psb_@X@_psblas_mod, psb_protect_name => psb_@X@dot_vect
   implicit none 
-  complex(psb_spk_)                    :: res
+  @TYPE@(@FKIND@)                    :: res
   type(psb_@X@_vect_type), intent(inout) :: x, y
   type(psb_desc_type), intent(in)      :: desc_a
   integer(psb_ipk_), intent(out)       :: info
@@ -68,7 +68,7 @@ function psb_@X@dot_vect(x, y, desc_a,info) result(res)
   character(len=20)      :: name, ch_err
 
   name='psb_sdot'
-  res = szero
+  res = @XZERO@
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
@@ -152,17 +152,17 @@ function psb_@X@dot(x, y,desc_a, info, jx, jy)  result(res)
   use psb_base_mod, psb_protect_name => psb_@X@dot
   implicit none
 
-  complex(psb_spk_), intent(in)    :: x(:,:), y(:,:)
+  @TYPE@(@FKIND@), intent(in)    :: x(:,:), y(:,:)
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(in), optional    :: jx, jy
   integer(psb_ipk_), intent(out)   :: info
-  complex(psb_spk_)              :: res
+  @TYPE@(@FKIND@)              :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me, idx, ndm,&
        & err_act, iix, jjx, ix, ijx, iy, ijy, iiy, jjy, i, m, nr, &
        & lldx, lldy
-  complex(psb_spk_)        :: @DOT@
+  @TYPE@(@FKIND@)        :: @DOT@
   character(len=20)        :: name, ch_err
 
   name='psb_@X@dot'
@@ -289,8 +289,8 @@ end function psb_@X@dot
 !    dot := X**C * Y
 !
 ! Arguments:
-!    x(:)   -  complex               The input vector containing the entries of X.
-!    y(:)   -  complex               The input vector containing the entries of Y.
+!    x(:)   -  @TYPE@               The input vector containing the entries of X.
+!    y(:)   -  @TYPE@               The input vector containing the entries of Y.
 !    desc_a -  type(psb_desc_type).  The communication descriptor.
 !    info   -  integer.              Return code
 !
@@ -298,16 +298,16 @@ function psb_@X@dotv(x, y,desc_a, info)  result(res)
   use psb_base_mod, psb_protect_name => psb_@X@dotv
   implicit none
 
-  complex(psb_spk_), intent(in)   :: x(:), y(:)
+  @TYPE@(@FKIND@), intent(in)   :: x(:), y(:)
   type(psb_desc_type), intent(in) :: desc_a
   integer(psb_ipk_), intent(out)  :: info
-  complex(psb_spk_)              :: res
+  @TYPE@(@FKIND@)              :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me, idx, ndm,&
        & err_act, iix, jjx, ix, jx, iy, jy, iiy, jjy, i, m, nr, &
        & lldx, lldy
-  complex(psb_spk_)         :: @DOT@
+  @TYPE@(@FKIND@)         :: @DOT@
   character(len=20)        :: name, ch_err
 
   name='psb_@X@dot'
@@ -418,9 +418,9 @@ end function psb_@X@dotv
 !    res := X**C * Y
 !
 ! Arguments:
-!    res    -  complex.             The result.
-!    x(:)   -  complex              The input vector containing the entries of X.
-!    y(:)   -  complex              The input vector containing the entries of Y.
+!    res    -  @TYPE@.             The result.
+!    x(:)   -  @TYPE@              The input vector containing the entries of X.
+!    y(:)   -  @TYPE@              The input vector containing the entries of Y.
 !    desc_a -  type(psb_desc_type). The communication descriptor.
 !    info   -  integer.             Return code
 !
@@ -428,8 +428,8 @@ subroutine psb_@X@dotvs(res, x, y,desc_a, info)
   use psb_base_mod, psb_protect_name => psb_@X@dotvs
   implicit none
 
-  complex(psb_spk_), intent(in)    :: x(:), y(:)
-  complex(psb_spk_), intent(out)   :: res
+  @TYPE@(@FKIND@), intent(in)    :: x(:), y(:)
+  @TYPE@(@FKIND@), intent(out)   :: res
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(out)   :: info
 
@@ -437,7 +437,7 @@ subroutine psb_@X@dotvs(res, x, y,desc_a, info)
   integer(psb_ipk_) :: ictxt, np, me, idx, ndm,&
        & err_act, iix, jjx, ix, iy, iiy, jjy, i, m,nr, &
        & lldx, lldy
-  complex(psb_spk_)        :: @DOT@
+  @TYPE@(@FKIND@)        :: @DOT@
   character(len=20)        :: name, ch_err
 
   name='psb_@X@dot'
@@ -546,9 +546,9 @@ end subroutine psb_@X@dotvs
 !    res(i) := ( X(:,i) )**C * ( Y(:,i) )
 !
 ! Arguments:
-!    res(:) -  complex.             The result.
-!    x(:)   -  complex              The input vector containing the entries of sub( X ).
-!    y(:)   -  complex              The input vector containing the entries of sub( Y ).
+!    res(:) -  @TYPE@.             The result.
+!    x(:)   -  @TYPE@              The input vector containing the entries of sub( X ).
+!    y(:)   -  @TYPE@              The input vector containing the entries of sub( Y ).
 !    desc_a -  type(psb_desc_type). The communication descriptor.
 !    info   -  integer.             Return code
 !
@@ -556,8 +556,8 @@ subroutine psb_@X@mdots(res, x, y, desc_a, info)
   use psb_base_mod, psb_protect_name => psb_@X@mdots
   implicit none
 
-  complex(psb_spk_), intent(in)    :: x(:,:), y(:,:)
-  complex(psb_spk_), intent(out)   :: res(:)
+  @TYPE@(@FKIND@), intent(in)    :: x(:,:), y(:,:)
+  @TYPE@(@FKIND@), intent(out)   :: res(:)
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(out)   :: info
 
@@ -565,7 +565,7 @@ subroutine psb_@X@mdots(res, x, y, desc_a, info)
   integer(psb_ipk_) :: ictxt, np, me, idx, ndm,&
        & err_act, iix, jjx, ix, iy, iiy, jjy, i, m, j, k, nr, &
        & lldx, lldy
-  complex(psb_spk_)        :: @DOT@
+  @TYPE@(@FKIND@)        :: @DOT@
   character(len=20)        :: name, ch_err
 
   name='psb_@X@mdots'
