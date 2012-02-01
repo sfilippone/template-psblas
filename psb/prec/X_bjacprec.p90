@@ -100,33 +100,6 @@ module psb_@X@_bjacprec
     end subroutine psb_@X@_bjac_precseti
   end interface
   
-!!$  interface
-!!$    subroutine psb_@X@_bjac_precsetr(prec,what,val,info)
-!!$      import :: psb_ipk_, psb_desc_type, psb_@X@_bjac_prec_type, psb_@X@_vect_type, @FKIND@
-!!$      class(psb_@X@_bjac_prec_type),intent(inout) :: prec
-!!$      integer(psb_ipk_), intent(in)                      :: what 
-!!$      real(@FKIND@), intent(in)               :: val 
-!!$      integer(psb_ipk_), intent(out)                     :: info
-!!$    end subroutine psb_@X@_bjac_precsetr
-!!$  end interface
-!!$  
-!!$  interface
-!!$    subroutine psb_@X@_bjac_precsetc(prec,what,val,info)
-!!$      import :: psb_ipk_, psb_desc_type, psb_@X@_bjac_prec_type, psb_@X@_vect_type, @FKIND@
-!!$      class(psb_@X@_bjac_prec_type),intent(inout) :: prec
-!!$      integer(psb_ipk_), intent(in)                      :: what 
-!!$      character(len=*), intent(in)             :: val
-!!$      integer(psb_ipk_), intent(out)                     :: info
-!!$    end subroutine psb_@X@_bjac_precsetc
-!!$  end interface
-!!$  
-!!$  interface 
-!!$    subroutine psb_@X@_bjac_precfree(prec,info)
-!!$      import :: psb_ipk_, psb_desc_type, psb_@X@_bjac_prec_type, psb_@X@_vect_type, @FKIND@
-!!$      class(psb_@X@_bjac_prec_type), intent(inout) :: prec
-!!$      integer(psb_ipk_), intent(out)                :: info
-!!$    end subroutine psb_@X@_bjac_precfree
-!!$  end interface 
 
 contains
 
