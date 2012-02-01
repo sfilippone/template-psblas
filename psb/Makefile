@@ -4,10 +4,10 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: smodules stools sser sinter scomm sprec
+src: smodules stools sser sinter scomm sprec spsb
 
 
-scomm sinter stools sser: smodules
+spsb scomm sinter stools sser: smodules
 
 smodules:
 	cd modules && $(MAKE) src
@@ -17,6 +17,8 @@ sinter:
 	cd internals && $(MAKE) src
 scomm:
 	cd comm && $(MAKE) src
+spsb:
+	cd psblas && $(MAKE) src
 sprec:
 	cd prec && $(MAKE) src
 
@@ -27,6 +29,7 @@ clean:
 	cd tools && $(MAKE) clean
 	cd serial && $(MAKE) clean
 	cd internals && $(MAKE) clean
+	cd psblas && $(MAKE) clean
 	cd comm && $(MAKE) clean
 	cd prec && $(MAKE) clean
 
