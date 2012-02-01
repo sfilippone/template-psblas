@@ -5,7 +5,9 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspins.p90
+SRC= X_base_mat_impl.p90 \
+    X_coo_impl.p90 X_csr_impl.p90  X_csc_impl.p90 \
+    X_mat_impl.P90 
 
 
 
@@ -51,9 +53,9 @@ lib: $(FOBJS)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
-	sed -f ../../$(ARITH).sed $< >$@
+	sed -f ../../../../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
-	sed -f ../../$(ARITH).sed $< >$@
+	sed -f ../../../../$(ARITH).sed $< >$@
 
 clean:
 	/bin/rm -f *.f90 *.F90 *.o 

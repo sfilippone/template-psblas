@@ -37,9 +37,9 @@ iclean:
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
-	sed -f ../../$(ARITH).sed $< >$@
+	sed -f ../../../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
-	sed -f ../../$(ARITH).sed $< >$@
+	sed -f ../../../$(ARITH).sed $< >$@
 
 clean: iclean
 	/bin/rm -f *.f90 *.F90 *.o 
