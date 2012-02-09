@@ -47,6 +47,7 @@ module psb_@X@_prec_type
     procedure, pass(prec)               :: psb_@X@_apply1v
     generic, public                     :: apply => psb_@X@_apply2v, psb_@X@_apply1v,&
          & psb_@X@_apply1_vect, psb_@X@_apply2_vect
+    procedure, pass(prec)               :: sizeof => psb_@X@prec_sizeof
   end type psb_@X@prec_type
 
   interface psb_precfree
@@ -195,9 +196,9 @@ contains
     type(psb_@X@prec_type), intent(inout) :: p
 
   end subroutine psb_nullify_cprec
-
+  
   function psb_@X@prec_sizeof(prec) result(val)
-    type(psb_@X@prec_type), intent(in) :: prec
+    class(psb_@X@prec_type), intent(in) :: prec
     integer(psb_long_int_k_) :: val
     integer(psb_ipk_) :: i
     

@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_inner_krylov_mod.p90
+SRC=X_krylov_conv_mod.p90 Xcg.p90 Xbicg.p90 Xcgs.p90 \
+    Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90
 
 
 
@@ -24,7 +25,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl simpl
+src: ssingle sdouble scomplex sdcompl 
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -34,12 +35,6 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-
-simpl:
-	cd impl && $(MAKE) src
-
-iclean:
-	cd impl && $(MAKE) clean
 
 
 
@@ -66,7 +61,7 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: iclean
+clean: 
 	/bin/rm -f *.f90 *.F90 *.o
 
 
