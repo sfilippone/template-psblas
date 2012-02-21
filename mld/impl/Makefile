@@ -8,9 +8,8 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 SRC=Xmlprec_bld.p90 Xmlprec_aply.p90 \
 	X_base_solver_impl.p90 X_base_smoother_impl.p90 X_onelev_impl.p90\
 	X_as_smoother_impl.p90 X_jac_smoother_impl.p90 X_diag_solver_impl.p90 \
-	X_id_solver_impl.p90 X_ilu_solver_impl.p90
-
-
+	X_id_solver_impl.p90 X_ilu_solver_impl.p90 Xaggrmat_asb.p90 \
+        Xaggrmat_nosmth_asb.P90 Xaggrmat_smth_asb.P90 Xaggrmat_minnrg_asb.P90 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, mld_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, mld_$(ARITH), $(filter %.P90, $(SRC))))
