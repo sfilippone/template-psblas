@@ -15,5 +15,5 @@ s/@RONE@/ione/g
 s/@DOT@//g
 s/@NRM2@//g
 
-s/@MPI_TYPE@/psb_mpi_integer/g
+s/@MPI_TYPE@/psb_mpi_ipk_integer/g
 s/@PSB_SWAP_TAG@/psb_int_swap_tag/g
