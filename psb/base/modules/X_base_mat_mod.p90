@@ -38,7 +38,7 @@ module psb_@X@_base_mat_mod
 
 
   !> \namespace  psb_base_mod  \class  psb_@X@_base_sparse_mat
-  !! \extends psb_base_mod::psb_base_sparse_mat
+  !! \extends psb_base_mat_mod::psb_base_sparse_mat
   !! The psb_@X@_base_sparse_mat type, extending psb_base_sparse_mat,
   !! defines a middle level  @TYPE@(@FKIND@) sparse matrix object.
   !! This class object itself does not have any additional members
@@ -115,8 +115,8 @@ module psb_@X@_base_mat_mod
   private :: @X@_base_cp_from, @X@_base_mv_from
   
   
-  !> \namespace  psb_base_mod  \class  psb_@X@_base_sparse_mat
-  !! \extends psb_base_mod::psb_base_sparse_mat
+  !> \namespace  psb_base_mod  \class  psb_@X@_coo_sparse_mat
+  !! \extends psb_@X@_base_mat_mod::psb_@X@_base_sparse_mat
   !! 
   !! psb_@X@_coo_sparse_mat type and the related methods. This is the
   !! reference type for all the format transitions, copies and mv unless
