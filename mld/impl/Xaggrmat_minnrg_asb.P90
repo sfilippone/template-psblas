@@ -280,7 +280,7 @@ subroutine mld_@X@aggrmat_minnrg_asb(a,desc_a,ilaggr,nlaggr,p,info)
 
   call am3%mv_to(acsr3)
   ! Compute omega_int
-  ommx = cmplx(szero,szero)
+  ommx = cmplx(@RZERO@,@RZERO@)
   do i=1, ncol
     omi(i) = omp(ilaggr(i))
     if(abs(omi(i)) .gt. abs(ommx)) ommx = omi(i)
@@ -458,7 +458,7 @@ subroutine mld_@X@aggrmat_minnrg_asb(a,desc_a,ilaggr,nlaggr,p,info)
   omp = omp/oden
   ! !$  write(0,*) 'Check on output restrictor',omp(1:min(size(omp),10))
   ! Compute omega_int
-  ommx = cmplx(szero,szero)
+  ommx = cmplx(@RZERO@,@RZERO@)
   do i=1, ncol
     omi(i) = omp(ilaggr(i))
     if(abs(omi(i)) .gt. abs(ommx)) ommx = omi(i)

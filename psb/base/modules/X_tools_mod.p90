@@ -167,7 +167,7 @@ Module psb_@X@_tools_mod
 
 
   interface psb_geins
-    subroutine psb_@X@insi(m,irw,val, x, desc_a,info,dupl)
+    subroutine psb_@X@insi(m,irw,val, x, desc_a,info,dupl,local)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_base_vect_type, psb_@X@_vect_type, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat
@@ -178,8 +178,9 @@ Module psb_@X@_tools_mod
       @TYPE@(@FKIND@), intent(in)  ::  val(:,:)
       integer(psb_ipk_), intent(out)             ::  info
       integer(psb_ipk_), optional, intent(in)    ::  dupl
+      logical, intent(in), optional        :: local
     end subroutine psb_@X@insi
-    subroutine psb_@X@insvi(m, irw,val, x,desc_a,info,dupl)
+    subroutine psb_@X@insvi(m, irw,val, x,desc_a,info,dupl,local)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_base_vect_type, psb_@X@_vect_type, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat
@@ -190,8 +191,9 @@ Module psb_@X@_tools_mod
       @TYPE@(@FKIND@), intent(in)  ::  val(:)
       integer(psb_ipk_), intent(out)             ::  info
       integer(psb_ipk_), optional, intent(in)    ::  dupl
+      logical, intent(in), optional        :: local
     end subroutine psb_@X@insvi
-    subroutine psb_@X@ins_vect(m,irw,val,x,desc_a,info,dupl)
+    subroutine psb_@X@ins_vect(m,irw,val,x,desc_a,info,dupl,local)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_base_vect_type, psb_@X@_vect_type, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat
@@ -202,8 +204,9 @@ Module psb_@X@_tools_mod
       @TYPE@(@FKIND@), intent(in)    :: val(:)
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), optional, intent(in)    :: dupl
+      logical, intent(in), optional        :: local
     end subroutine psb_@X@ins_vect
-    subroutine psb_@X@ins_vect_r2(m,irw,val,x,desc_a,info,dupl)
+    subroutine psb_@X@ins_vect_r2(m,irw,val,x,desc_a,info,dupl,local)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_base_vect_type, psb_@X@_vect_type, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat
@@ -214,6 +217,7 @@ Module psb_@X@_tools_mod
       @TYPE@(@FKIND@), intent(in)    :: val(:,:)
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), optional, intent(in)    :: dupl
+      logical, intent(in), optional        :: local
     end subroutine psb_@X@ins_vect_r2
   end interface
 
@@ -270,7 +274,7 @@ Module psb_@X@_tools_mod
 
 
   interface psb_spins
-    subroutine psb_@X@spins(nz,ia,ja,val,a,desc_a,info,rebuild)
+    subroutine psb_@X@spins(nz,ia,ja,val,a,desc_a,info,rebuild,local)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_base_vect_type, psb_@X@_vect_type, &
            & psb_@X@spmat_type, psb_@X@_base_sparse_mat
@@ -280,6 +284,7 @@ Module psb_@X@_tools_mod
       @TYPE@(@FKIND@), intent(in)      :: val(:)
       integer(psb_ipk_), intent(out)                 :: info
       logical, intent(in), optional        :: rebuild
+      logical, intent(in), optional        :: local
     end subroutine psb_@X@spins
     subroutine psb_@X@spins_2desc(nz,ia,ja,val,a,desc_ar,desc_ac,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
