@@ -257,6 +257,9 @@ contains
       call prec%dv%free(info)
       if (info == 0) deallocate(prec%dv,stat=info)
     end if
+    if (allocated(prec%iprcparm)) then 
+      deallocate(prec%iprcparm,stat=info)
+    end if
     call psb_erractionrestore(err_act)
     return
 
