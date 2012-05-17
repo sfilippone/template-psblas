@@ -1,6 +1,6 @@
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -53,7 +53,7 @@ function psb_@X@amax(x,desc_a, info, jx) result(res)
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(out)             :: info
   integer(psb_ipk_), optional, intent(in)    :: jx
-  real(@FKIND@)                   :: res
+  @RTYPE@(@FKIND@)                   :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
@@ -127,7 +127,7 @@ end function psb_@X@amax
 
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -175,7 +175,7 @@ function psb_@X@amaxv (x,desc_a, info) result(res)
   @TYPE@(@FKIND@), intent(in)   :: x(:)
   type(psb_desc_type), intent(in) :: desc_a
   integer(psb_ipk_), intent(out)  :: info
-  real(@FKIND@)                  :: res
+  @RTYPE@(@FKIND@)                  :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
@@ -251,7 +251,7 @@ function psb_@X@amax_vect(x, desc_a, info) result(res)
   use psb_@X@_vect_mod
   implicit none
 
-  real(@FKIND@)                        :: res
+  @RTYPE@(@FKIND@)                        :: res
   type(psb_@X@_vect_type), intent (inout) :: x
   type(psb_desc_type), intent (in)      :: desc_a
   integer(psb_ipk_), intent(out)         :: info
@@ -326,7 +326,7 @@ end function psb_@X@amax_vect
 
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -378,7 +378,7 @@ subroutine psb_@X@amaxvs(res,x,desc_a, info)
   @TYPE@(@FKIND@), intent(in)   :: x(:)
   type(psb_desc_type), intent(in) :: desc_a
   integer(psb_ipk_), intent(out)  :: info
-  real(@FKIND@), intent(out)      :: res
+  @RTYPE@(@FKIND@), intent(out)      :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
@@ -445,7 +445,7 @@ end subroutine psb_@X@amaxvs
 
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -495,7 +495,7 @@ subroutine psb_@X@mamaxs(res,x,desc_a, info,jx)
   type(psb_desc_type), intent(in) :: desc_a
   integer(psb_ipk_), intent(out)            :: info
   integer(psb_ipk_), optional, intent(in)   :: jx
-  real(@FKIND@), intent(out)     :: res(:)
+  @RTYPE@(@FKIND@), intent(out)     :: res(:)
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&

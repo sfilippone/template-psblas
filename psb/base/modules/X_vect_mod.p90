@@ -1,6 +1,6 @@
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -364,7 +364,7 @@ contains
     implicit none 
     class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
-    real(@FKIND@)                :: res
+    @RTYPE@(@FKIND@)                :: res
     
     if (allocated(x%v)) then 
       res = x%v%nrm2(n)
@@ -378,7 +378,7 @@ contains
     implicit none 
     class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
-    real(@FKIND@)                :: res
+    @RTYPE@(@FKIND@)                :: res
 
     if (allocated(x%v)) then 
       res = x%v%amax(n)
@@ -392,7 +392,7 @@ contains
     implicit none 
     class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
-    real(@FKIND@)                :: res
+    @RTYPE@(@FKIND@)                :: res
 
     if (allocated(x%v)) then 
       res = x%v%asum(n)

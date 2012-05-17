@@ -1,6 +1,6 @@
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -120,7 +120,7 @@ module psb_@X@_psblas_mod
     function psb_@X@amax(x, desc_a, info, jx)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)   psb_@X@amax
+      @RTYPE@(@FKIND@)   psb_@X@amax
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
@@ -129,7 +129,7 @@ module psb_@X@_psblas_mod
     function psb_@X@amaxv(x, desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@) psb_@X@amaxv
+      @RTYPE@(@FKIND@) psb_@X@amaxv
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -137,7 +137,7 @@ module psb_@X@_psblas_mod
     function psb_@X@amax_vect(x, desc_a, info) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)                        :: res
+      @RTYPE@(@FKIND@)                        :: res
       type(psb_@X@_vect_type), intent (inout) :: x
       type(psb_desc_type), intent (in)      :: desc_a
       integer(psb_ipk_), intent(out)                  :: info
@@ -148,7 +148,7 @@ module psb_@X@_psblas_mod
     subroutine  psb_@X@amaxvs(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@), intent (out)      :: res
+      @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)    :: x(:)
       type(psb_desc_type), intent (in)  :: desc_a
       integer(psb_ipk_), intent(out)              :: info
@@ -156,7 +156,7 @@ module psb_@X@_psblas_mod
     subroutine  psb_@X@mamaxs(res,x,desc_a,info,jx)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@), intent (out)       :: res(:)
+      @RTYPE@(@FKIND@), intent (out)       :: res(:)
       @TYPE@(@FKIND@), intent (in)     :: x(:,:)
       type(psb_desc_type), intent (in)   :: desc_a
       integer(psb_ipk_), intent(out)               :: info
@@ -168,7 +168,7 @@ module psb_@X@_psblas_mod
     function psb_@X@asum_vect(x, desc_a, info) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)                        :: res
+      @RTYPE@(@FKIND@)                        :: res
       type(psb_@X@_vect_type), intent (inout) :: x
       type(psb_desc_type), intent (in)      :: desc_a
       integer(psb_ipk_), intent(out)                  :: info
@@ -176,7 +176,7 @@ module psb_@X@_psblas_mod
     function psb_@X@asum(x, desc_a, info, jx)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)   psb_@X@asum
+      @RTYPE@(@FKIND@)   psb_@X@asum
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
@@ -185,7 +185,7 @@ module psb_@X@_psblas_mod
     function psb_@X@asumv(x, desc_a, info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@) psb_@X@asumv
+      @RTYPE@(@FKIND@) psb_@X@asumv
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -196,7 +196,7 @@ module psb_@X@_psblas_mod
     subroutine  psb_@X@asumvs(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@), intent (out)      :: res
+      @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -204,7 +204,7 @@ module psb_@X@_psblas_mod
     subroutine  psb_@X@masum(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@), intent (out)      :: res(:)
+      @RTYPE@(@FKIND@), intent (out)      :: res(:)
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -216,7 +216,7 @@ module psb_@X@_psblas_mod
     function psb_@X@nrm2(x, desc_a, info, jx)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)   psb_@X@nrm2
+      @RTYPE@(@FKIND@)   psb_@X@nrm2
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
@@ -225,7 +225,7 @@ module psb_@X@_psblas_mod
     function psb_@X@nrm2v(x, desc_a, info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@) psb_@X@nrm2v
+      @RTYPE@(@FKIND@) psb_@X@nrm2v
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -233,7 +233,7 @@ module psb_@X@_psblas_mod
     function psb_@X@nrm2_vect(x, desc_a, info) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)                      :: res
+      @RTYPE@(@FKIND@)                      :: res
       type(psb_@X@_vect_type), intent (inout)   :: x
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -244,7 +244,7 @@ module psb_@X@_psblas_mod
     subroutine  psb_@X@nrm2vs(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@), intent (out)      :: res
+      @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
@@ -256,7 +256,7 @@ module psb_@X@_psblas_mod
     function psb_@X@nrmi(a, desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)                    :: psb_@X@nrmi
+      @RTYPE@(@FKIND@)                    :: psb_@X@nrmi
       type(psb_@X@spmat_type), intent (in) :: a
       type(psb_desc_type), intent (in)   :: desc_a
       integer(psb_ipk_), intent(out)               :: info
@@ -267,7 +267,7 @@ module psb_@X@_psblas_mod
     function psb_@X@spnrm1(a, desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      real(@FKIND@)                      :: psb_@X@spnrm1
+      @RTYPE@(@FKIND@)                      :: psb_@X@spnrm1
       type(psb_@X@spmat_type), intent (in) :: a
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info

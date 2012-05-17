@@ -1,6 +1,6 @@
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -408,7 +408,7 @@ module psb_@X@_csc_mat_mod
     function psb_@X@_csc_maxval(a) result(res)
       import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
-      real(@FKIND@)         :: res
+      @RTYPE@(@FKIND@)         :: res
     end function psb_@X@_csc_maxval
   end interface
   
@@ -418,7 +418,7 @@ module psb_@X@_csc_mat_mod
     function psb_@X@_csc_csnmi(a) result(res)
       import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
-      real(@FKIND@)         :: res
+      @RTYPE@(@FKIND@)         :: res
     end function psb_@X@_csc_csnmi
   end interface
   
@@ -428,7 +428,7 @@ module psb_@X@_csc_mat_mod
     function psb_@X@_csc_csnm1(a) result(res)
       import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
-      real(@FKIND@)         :: res
+      @RTYPE@(@FKIND@)         :: res
     end function psb_@X@_csc_csnm1
   end interface
 
@@ -448,7 +448,7 @@ module psb_@X@_csc_mat_mod
     subroutine psb_@X@_csc_arwsum(d,a) 
       import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
-      real(@FKIND@), intent(out)              :: d(:)
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
     end subroutine psb_@X@_csc_arwsum
   end interface
   
@@ -468,7 +468,7 @@ module psb_@X@_csc_mat_mod
     subroutine psb_@X@_csc_aclsum(d,a) 
       import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
-      real(@FKIND@), intent(out)              :: d(:)
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
     end subroutine psb_@X@_csc_aclsum
   end interface
     

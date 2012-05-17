@@ -1,6 +1,6 @@
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -55,12 +55,12 @@ function psb_@X@nrm2(x, desc_a, info, jx)  result(res)
   type(psb_desc_type), intent(in)   :: desc_a
   integer(psb_ipk_), intent(in), optional     :: jx
   integer(psb_ipk_), intent(out)              :: info
-  real(@FKIND@)                  :: res
+  @RTYPE@(@FKIND@)                  :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
        & err_act, iix, jjx, ndim, ix, ijx, i, m, id, idx, ndm, ldx
-  real(@FKIND@)         :: @NRM2@, dd
+  @RTYPE@(@FKIND@)         :: @NRM2@, dd
   character(len=20)      :: name, ch_err
 
   name='psb_@X@nrm2'
@@ -108,7 +108,7 @@ function psb_@X@nrm2(x, desc_a, info, jx)  result(res)
       idx = desc_a%ovrlap_elem(i,1)
       ndm = desc_a%ovrlap_elem(i,2)
       dd  = real(ndm-1)/real(ndm)
-      res = res * sqrt(sone - dd*(abs(x(idx,jjx))/res)**2) 
+      res = res * sqrt(@RONE@ - dd*(abs(x(idx,jjx))/res)**2) 
     end do
   else 	    
     res = @RZERO@
@@ -133,7 +133,7 @@ end function psb_@X@nrm2
 
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -183,12 +183,12 @@ function psb_@X@nrm2v(x, desc_a, info)  result(res)
   @TYPE@(@FKIND@), intent(in)    :: x(:)
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(out)   :: info
-  real(@FKIND@)                   :: res
+  @RTYPE@(@FKIND@)                   :: res
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
        & err_act, iix, jjx, ndim, ix, jx, i, m, id, idx, ndm, ldx
-  real(@FKIND@)         :: @NRM2@, dd
+  @RTYPE@(@FKIND@)         :: @NRM2@, dd
 
 !!$  external scombnrm2
   character(len=20)        :: name, ch_err
@@ -232,7 +232,7 @@ function psb_@X@nrm2v(x, desc_a, info)  result(res)
       idx = desc_a%ovrlap_elem(i,1)
       ndm = desc_a%ovrlap_elem(i,2)
       dd  = real(ndm-1)/real(ndm)
-      res = res * sqrt(sone - dd*(abs(x(idx))/res)**2) 
+      res = res * sqrt(@RONE@ - dd*(abs(x(idx))/res)**2) 
     end do
   else 	    
     res = @RZERO@
@@ -264,7 +264,7 @@ function psb_@X@nrm2_vect(x, desc_a, info)  result(res)
   use psb_@X@_vect_mod
   implicit none
 
-  real(@FKIND@)                        :: res
+  @RTYPE@(@FKIND@)                        :: res
   type(psb_@X@_vect_type), intent (inout) :: x
   type(psb_desc_type), intent(in)       :: desc_a
   integer(psb_ipk_), intent(out)        :: info
@@ -272,7 +272,7 @@ function psb_@X@nrm2_vect(x, desc_a, info)  result(res)
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
        & err_act, iix, jjx, ndim, ix, jx, i, m, id, idx, ndm, ldx
-  real(@FKIND@)         :: snrm2, dd
+  @RTYPE@(@FKIND@)         :: snrm2, dd
 !!$  external dcombnrm2
   character(len=20)      :: name, ch_err
 
@@ -347,7 +347,7 @@ end function psb_@X@nrm2_vect
 
 !!$ 
 !!$              Parallel Sparse BLAS  version 3.0
-!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010
+!!$    (C) Copyright 2006, 2007, 2008, 2009, 2010, 2012
 !!$                       Salvatore Filippone    University of Rome Tor Vergata
 !!$                       Alfredo Buttari        CNRS-IRIT, Toulouse
 !!$ 
@@ -396,14 +396,14 @@ subroutine psb_@X@nrm2vs(res, x, desc_a, info)
   implicit none
 
   @TYPE@(@FKIND@), intent(in)    :: x(:)
-  real(@FKIND@), intent(out)      :: res
+  @RTYPE@(@FKIND@), intent(out)      :: res
   type(psb_desc_type), intent(in)  :: desc_a
   integer(psb_ipk_), intent(out)   :: info
 
   ! locals
   integer(psb_ipk_) :: ictxt, np, me,&
        & err_act, iix, jjx, ndim, ix, jx, i, m, id, idx, ndm, ldx
-  real(@FKIND@)         :: nrm2, @NRM2@, dd
+  @RTYPE@(@FKIND@)         :: nrm2, @NRM2@, dd
 
 !!$  external scombnrm2
   character(len=20)        :: name, ch_err
@@ -448,7 +448,7 @@ subroutine psb_@X@nrm2vs(res, x, desc_a, info)
       idx = desc_a%ovrlap_elem(i,1)
       ndm = desc_a%ovrlap_elem(i,2)
       dd  = real(ndm-1)/real(ndm)
-      res = res * sqrt(sone - dd*(abs(x(idx))/res)**2) 
+      res = res * sqrt(@RONE@ - dd*(abs(x(idx))/res)**2) 
     end do
   else 	    
     res = @RZERO@
