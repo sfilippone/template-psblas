@@ -1,6 +1,7 @@
 s/@X@/c/g
 s/@CONJG@/conjg/g
 s/@TYPE@/complex/g
+s/@RTYPE@/real/g
 s/@FKIND@/psb_spk_/g
 s/@SIZET@/(2*psb_sizeof_sp)/g 
 s/@RT@/s/g

@@ -1,6 +1,7 @@
 s/@X@/d/g
 s/@CONJG@//g
 s/@TYPE@/real/g
+s/@RTYPE@/real/g
 s/@FKIND@/psb_dpk_/g
 s/@RT@/d/g
 
