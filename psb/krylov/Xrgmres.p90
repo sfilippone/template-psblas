@@ -506,7 +506,7 @@ subroutine psb_@X@rgmres_vect(a,prec,b,x,eps,desc_a,info,&
   character(len=*), parameter :: methdname='RGMRES'
 
   info = psb_success_
-  name = 'psb_sgmres'
+  name = 'psb_@X@gmres'
   call psb_erractionsave(err_act)
   debug_unit  = psb_get_debug_unit()
   debug_level = psb_get_debug_level()
@@ -717,17 +717,17 @@ subroutine psb_@X@rgmres_vect(a,prec,b,x,eps,desc_a,info,&
       scal=@XONE@/h(i+1,i)
       call psb_geaxpby(scal,w,@XZERO@,v(i+1),desc_a,info)
       do k=2,i
-        call @X@rot(1,h(k-1,i),1,h(k,i),1,real(c(k-1)),s(k-1))
+        call @X@rot(1,h(k-1,i),1,h(k,i),1,real(c(k-1),kind=@FKIND@),s(k-1))
       enddo
 
 
       rti  = h(i,i)
       rti1 = h(i+1,i) 
       call @X@rotg(rti,rti1,tmp,s(i))
-      c(i) = cmplx(tmp,szero)
-      call @X@rot(1,h(i,i),1,h(i+1,i),1,real(c(i)),s(i))
+      c(i) = cmplx(tmp,@RZERO@)
+      call @X@rot(1,h(i,i),1,h(i+1,i),1,real(c(i),kind=@FKIND@),s(i))
       h(i+1,i) = @XZERO@
-      call @X@rot(1,rs(i),1,rs(i+1),1,real(c(i)),s(i))
+      call @X@rot(1,rs(i),1,rs(i+1),1,real(c(i),kind=@FKIND@),s(i))
       
       if (istop_ == 1) then 
         !
