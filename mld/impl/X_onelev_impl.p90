@@ -453,7 +453,8 @@ subroutine mld_@X@_base_onelev_dump(lv,level,info,prefix,head,ac,rp,smoother,sol
     end if
   end if
   if (allocated(lv%sm)) &
-       & call lv%sm%dump(icontxt,level,info,smoother=smoother,solver=solver)
+       & call lv%sm%dump(icontxt,level,info,smoother=smoother, &
+       & solver=solver,prefix=prefix)
 
 end subroutine mld_@X@_base_onelev_dump
 
