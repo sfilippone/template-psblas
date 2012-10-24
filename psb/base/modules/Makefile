@@ -8,7 +8,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 VSRC=X_base_vect_mod.p90  X_vect_mod.P90  X_comm_mod.p90
 SRC=X_base_mat_mod.p90 X_csc_mat_mod.p90 \
     X_csr_mat_mod.p90  X_mat_mod.p90  X_linmap_mod.p90\
-    X_tools_mod.p90 X_psblas_mod.p90
+    X_tools_mod.p90 X_psblas_mod.p90 X_serial_mod.p90
 
 
 
