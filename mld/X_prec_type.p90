@@ -80,7 +80,7 @@ module mld_@X@_prec_type
   !
 
   type, extends(psb_@X@prec_type)         :: mld_@X@prec_type
-    integer                             :: ictxt
+    integer(psb_mpik_)                 :: ictxt
     integer(psb_ipk_)                  :: coarse_aggr_size
     real(@FKIND@)                      :: op_complexity=@RZERO@
     type(mld_@X@_onelev_type), allocatable :: precv(:) 

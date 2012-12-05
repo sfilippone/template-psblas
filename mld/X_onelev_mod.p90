@@ -185,7 +185,7 @@ module mld_@X@_onelev_mod
       Implicit None
       ! Arguments
       class(mld_@X@_onelev_type), intent(inout) :: lv 
-      integer(psb_ipk_), intent(out)                   :: info
+      integer(psb_ipk_), intent(out)            :: info
     end subroutine mld_@X@_base_onelev_check
   end interface
   
@@ -198,9 +198,9 @@ module mld_@X@_onelev_mod
       
       ! Arguments
       class(mld_@X@_onelev_type), intent(inout) :: lv 
-      integer(psb_ipk_), intent(in)                          :: what 
-      integer(psb_ipk_), intent(in)                          :: val
-      integer(psb_ipk_), intent(out)                         :: info
+      integer(psb_ipk_), intent(in)             :: what 
+      integer(psb_ipk_), intent(in)             :: val
+      integer(psb_ipk_), intent(out)            :: info
     end subroutine mld_@X@_base_onelev_seti
   end interface
   
@@ -212,9 +212,9 @@ module mld_@X@_onelev_mod
       Implicit None
       ! Arguments
       class(mld_@X@_onelev_type), intent(inout) :: lv 
-      integer(psb_ipk_), intent(in)                            :: what 
-      character(len=*), intent(in)                   :: val
-      integer(psb_ipk_), intent(out)                           :: info
+      integer(psb_ipk_), intent(in)             :: what 
+      character(len=*), intent(in)              :: val
+      integer(psb_ipk_), intent(out)            :: info
     end subroutine mld_@X@_base_onelev_setc
   end interface
   
@@ -226,9 +226,9 @@ module mld_@X@_onelev_mod
       Implicit None
       
       class(mld_@X@_onelev_type), intent(inout) :: lv 
-      integer(psb_ipk_), intent(in)                            :: what 
-      real(@FKIND@), intent(in)                     :: val
-      integer(psb_ipk_), intent(out)                           :: info
+      integer(psb_ipk_), intent(in)             :: what 
+      real(@FKIND@), intent(in)                 :: val
+      integer(psb_ipk_), intent(out)            :: info
     end subroutine mld_@X@_base_onelev_setr
   end interface
 
@@ -239,8 +239,8 @@ module mld_@X@_onelev_mod
            & psb_ipk_, psb_long_int_k_, psb_desc_type
       implicit none 
       class(mld_@X@_onelev_type), intent(in) :: lv
-      integer(psb_ipk_), intent(in)              :: level
-      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(in)          :: level
+      integer(psb_ipk_), intent(out)         :: info
       character(len=*), intent(in), optional :: prefix, head
       logical, optional, intent(in)    :: ac, rp, smoother, solver
     end subroutine mld_@X@_base_onelev_dump
@@ -260,7 +260,7 @@ contains
     implicit none 
     class(mld_@X@_onelev_type), intent(in) :: lv
     integer(psb_long_int_k_) :: val
-    integer(psb_ipk_)             :: i
+    integer(psb_ipk_)        :: i
     val = 0
     if (allocated(lv%sm)) &
          &  val =  lv%sm%get_nzeros()
@@ -270,7 +270,7 @@ contains
     implicit none 
     class(mld_@X@_onelev_type), intent(in) :: lv
     integer(psb_long_int_k_) :: val
-    integer(psb_ipk_)             :: i
+    integer(psb_ipk_)        :: i
     
     val = 0
     val = val + lv%desc_ac%sizeof()

@@ -50,13 +50,13 @@ module mld_@X@_inner_mod
   interface mld_mlprec_bld
     subroutine mld_@X@mlprec_bld(a,desc_a,prec,info, amold, vmold)
       use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, &
-           & @FKIND@, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type
+           & @FKIND@, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@prec_type
       implicit none
       type(psb_@X@spmat_type), intent(in), target          :: a
-      type(psb_desc_type), intent(in), target            :: desc_a
+      type(psb_desc_type), intent(in), target              :: desc_a
       type(mld_@X@prec_type), intent(inout), target        :: prec
-      integer, intent(out)                               :: info
+      integer(psb_ipk_), intent(out)                       :: info
       class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
       class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
 !!$      character, intent(in),optional             :: upd
@@ -66,78 +66,84 @@ module mld_@X@_inner_mod
 
   interface mld_mlprec_aply
     subroutine mld_@X@mlprec_aply(alpha,p,x,beta,y,desc_data,trans,work,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@prec_type
-      type(psb_desc_type),intent(in)    :: desc_data
-      type(mld_@X@prec_type), intent(in)  :: p
+      implicit none 
+      type(psb_desc_type),intent(in)     :: desc_data
+      type(mld_@X@prec_type), intent(in) :: p
       @TYPE@(@FKIND@),intent(in)         :: alpha,beta
       @TYPE@(@FKIND@),intent(inout)      :: x(:)
       @TYPE@(@FKIND@),intent(inout)      :: y(:)
-      character,intent(in)              :: trans
+      character,intent(in)               :: trans
       @TYPE@(@FKIND@),target             :: work(:)
-      integer, intent(out)              :: info
+      integer(psb_ipk_), intent(out)     :: info
     end subroutine mld_@X@mlprec_aply
     subroutine mld_@X@mlprec_aply_vect(alpha,p,x,beta,y,desc_data,trans,work,info)
       use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, &
-           & @FKIND@, psb_@X@_vect_type
+           & @FKIND@, psb_@X@_vect_type, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@prec_type
-      type(psb_desc_type),intent(in)      :: desc_data
+      implicit none 
+      type(psb_desc_type),intent(in)        :: desc_data
       type(mld_@X@prec_type), intent(inout) :: p
-      @TYPE@(@FKIND@),intent(in)           :: alpha,beta
+      @TYPE@(@FKIND@),intent(in)            :: alpha,beta
       type(psb_@X@_vect_type),intent(inout) :: x
       type(psb_@X@_vect_type),intent(inout) :: y
-      character,intent(in)                :: trans
-      @TYPE@(@FKIND@),target               :: work(:)
-      integer, intent(out)                :: info
+      character,intent(in)                  :: trans
+      @TYPE@(@FKIND@),target                :: work(:)
+      integer(psb_ipk_), intent(out)        :: info
     end subroutine mld_@X@mlprec_aply_vect
   end interface mld_mlprec_aply
 
 
   interface mld_coarse_bld
     subroutine mld_@X@coarse_bld(a,desc_a,p,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@_onelev_type
-      type(psb_@X@spmat_type), intent(in), target     :: a
-      type(psb_desc_type), intent(in), target       :: desc_a
+      implicit none 
+      type(psb_@X@spmat_type), intent(in), target      :: a
+      type(psb_desc_type), intent(in), target          :: desc_a
       type(mld_@X@_onelev_type), intent(inout), target :: p
-      integer, intent(out)                          :: info
+      integer(psb_ipk_), intent(out)                   :: info
     end subroutine mld_@X@coarse_bld
   end interface mld_coarse_bld
 
   interface mld_aggrmap_bld
     subroutine mld_@X@aggrmap_bld(aggr_type,theta,a,desc_a,ilaggr,nlaggr,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
-      integer, intent(in)               :: aggr_type
-      real(@FKIND@), intent(in)        :: theta
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
+      implicit none 
+      integer(psb_ipk_), intent(in)       :: aggr_type
+      real(@FKIND@), intent(in)           :: theta
       type(psb_@X@spmat_type), intent(in) :: a
-      type(psb_desc_type), intent(in)   :: desc_a
-      integer, allocatable, intent(out) :: ilaggr(:),nlaggr(:)
-      integer, intent(out)              :: info
+      type(psb_desc_type), intent(in)     :: desc_a
+      integer(psb_ipk_), allocatable, intent(out) :: ilaggr(:),nlaggr(:)
+      integer(psb_ipk_), intent(out)      :: info
     end subroutine mld_@X@aggrmap_bld
   end interface mld_aggrmap_bld
 
 
   interface  mld_dec_map_bld
     subroutine mld_@X@_dec_map_bld(theta,a,desc_a,nlaggr,ilaggr,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
+      implicit none 
       type(psb_@X@spmat_type), intent(in) :: a
       type(psb_desc_type), intent(in)    :: desc_a
       real(@FKIND@), intent(in)         :: theta
-      integer, allocatable, intent(out)  :: ilaggr(:),nlaggr(:)
-      integer, intent(out)               :: info
+      integer(psb_ipk_), allocatable, intent(out)  :: ilaggr(:),nlaggr(:)
+      integer(psb_ipk_), intent(out)               :: info
     end subroutine mld_@X@_dec_map_bld
   end interface mld_dec_map_bld
 
 
   interface mld_aggrmat_asb
     subroutine mld_@X@aggrmat_asb(a,desc_a,ilaggr,nlaggr,p,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@_onelev_type
+      implicit none 
       type(psb_@X@spmat_type), intent(in)              :: a
-      type(psb_desc_type), intent(in)                :: desc_a
-      integer, intent(inout)                         :: ilaggr(:), nlaggr(:)
+      type(psb_desc_type), intent(in)                  :: desc_a
+      integer(psb_ipk_), intent(inout)                 :: ilaggr(:), nlaggr(:)
       type(mld_@X@_onelev_type), intent(inout), target :: p
-      integer, intent(out)                           :: info
+      integer(psb_ipk_), intent(out)                   :: info
     end subroutine mld_@X@aggrmat_asb
   end interface mld_aggrmat_asb
 
@@ -145,14 +151,15 @@ module mld_@X@_inner_mod
 
   abstract interface
     subroutine mld_@X@aggrmat_var_asb(a,desc_a,ilaggr,nlaggr,parms,ac,op_prol,op_restr,info)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, @FKIND@, psb_ipk_
       use mld_@X@_prec_type, only :  mld_@X@_onelev_type, mld_@RT@ml_parms
+      implicit none 
       type(psb_@X@spmat_type), intent(in)           :: a
-      type(psb_desc_type), intent(in)             :: desc_a
-      integer, intent(inout)                      :: ilaggr(:), nlaggr(:)
-      type(mld_@RT@ml_parms), intent(inout)          :: parms 
+      type(psb_desc_type), intent(in)               :: desc_a
+      integer(psb_ipk_), intent(inout)              :: ilaggr(:), nlaggr(:)
+      type(mld_@RT@ml_parms), intent(inout)         :: parms 
       type(psb_@X@spmat_type), intent(out)          :: ac,op_prol,op_restr
-      integer, intent(out)                        :: info
+      integer(psb_ipk_), intent(out)                :: info
     end subroutine mld_@X@aggrmat_var_asb
   end interface
 
