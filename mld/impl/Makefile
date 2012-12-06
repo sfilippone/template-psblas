@@ -6,8 +6,9 @@ UTIL_MODS =
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=Xmlprec_bld.p90 Xmlprec_aply.p90 \
-	Xaggrmat_asb.p90 \
-        Xaggrmat_nosmth_asb.p90 Xaggrmat_smth_asb.p90 Xaggrmat_minnrg_asb.p90 Xaggrmat_biz_asb.p90 
+    Xprecbld.p90 \
+    Xaggrmat_asb.p90  Xaggrmat_nosmth_asb.p90 \
+    Xaggrmat_smth_asb.p90 Xaggrmat_minnrg_asb.p90 Xaggrmat_biz_asb.p90 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, mld_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, mld_$(ARITH), $(filter %.P90, $(SRC))))
