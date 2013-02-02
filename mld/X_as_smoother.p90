@@ -64,6 +64,9 @@ module mld_@X@_as_smoother
     procedure, pass(sm) :: seti    => mld_@X@_as_smoother_seti
     procedure, pass(sm) :: setc    => mld_@X@_as_smoother_setc
     procedure, pass(sm) :: setr    => mld_@X@_as_smoother_setr
+    procedure, pass(sm) :: cseti   => mld_@X@_as_smoother_cseti
+    procedure, pass(sm) :: csetc   => mld_@X@_as_smoother_csetc
+    procedure, pass(sm) :: csetr   => mld_@X@_as_smoother_csetr
     procedure, pass(sm) :: descr   => @X@_as_smoother_descr
     procedure, pass(sm) :: sizeof  => @X@_as_smoother_sizeof
     procedure, pass(sm) :: default => @X@_as_smoother_default
@@ -174,6 +177,42 @@ module mld_@X@_as_smoother
       real(@FKIND@), intent(in)                      :: val
       integer(psb_ipk_), intent(out)                 :: info
     end subroutine mld_@X@_as_smoother_setr
+  end interface
+  
+  interface 
+    subroutine mld_@X@_as_smoother_cseti(sm,what,val,info)
+      import :: psb_@X@spmat_type, psb_@X@_vect_type, psb_@X@_base_vect_type, &
+           & @FKIND@, mld_@X@_as_smoother_type, psb_long_int_k_, psb_desc_type, psb_ipk_
+      implicit none 
+      class(mld_@X@_as_smoother_type), intent(inout) :: sm 
+      character(len=*), intent(in)                   :: what 
+      integer(psb_ipk_), intent(in)                  :: val
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine mld_@X@_as_smoother_cseti
+  end interface
+  
+  interface 
+    subroutine mld_@X@_as_smoother_csetc(sm,what,val,info)
+      import :: psb_@X@spmat_type, psb_@X@_vect_type, psb_@X@_base_vect_type, &
+           & @FKIND@, mld_@X@_as_smoother_type, psb_long_int_k_, psb_desc_type, psb_ipk_
+      implicit none 
+      class(mld_@X@_as_smoother_type), intent(inout) :: sm
+      character(len=*), intent(in)                   :: what 
+      character(len=*), intent(in)                   :: val
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine mld_@X@_as_smoother_csetc
+  end interface
+  
+  interface 
+    subroutine mld_@X@_as_smoother_csetr(sm,what,val,info)
+      import :: psb_@X@spmat_type, psb_@X@_vect_type, psb_@X@_base_vect_type, &
+           & @FKIND@, mld_@X@_as_smoother_type, psb_long_int_k_, psb_desc_type, psb_ipk_
+      implicit none 
+      class(mld_@X@_as_smoother_type), intent(inout) :: sm 
+      character(len=*), intent(in)                   :: what 
+      real(@FKIND@), intent(in)                      :: val
+      integer(psb_ipk_), intent(out)                 :: info
+    end subroutine mld_@X@_as_smoother_csetr
   end interface
   
   interface 

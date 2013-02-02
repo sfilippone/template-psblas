@@ -36,40 +36,69 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$
-subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
+subroutine mld_@X@_base_onelev_cseti(lv,what,val,info)
   
   use psb_base_mod
-  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_setr
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_cseti
 
   Implicit None
 
   ! Arguments
   class(mld_@X@_onelev_type), intent(inout) :: lv 
-  integer(psb_ipk_), intent(in)             :: what 
-  real(@FKIND@), intent(in)                 :: val
+  character(len=*), intent(in)              :: what 
+  integer(psb_ipk_), intent(in)             :: val
   integer(psb_ipk_), intent(out)            :: info
-  integer(psb_ipk_) :: err_act
-  character(len=20) :: name='@X@_base_onelev_setr'
+  Integer(Psb_ipk_)           :: err_act
+  character(len=20) :: name='@X@_base_onelev_cseti'
 
   call psb_erractionsave(err_act)
-
-
   info = psb_success_
 
   select case (what) 
 
-  case (mld_aggr_omega_val_)
-    lv%parms%aggr_omega_val= val
+  case ('SMOOTHER_SWEEPS')
+    lv%parms%sweeps      = val
+    lv%parms%sweeps_pre  = val
+    lv%parms%sweeps_post = val
 
-  case (mld_aggr_thresh_)
-    lv%parms%aggr_thresh   = val
+  case ('SMOOTHER_SWEEPS_PRE')
+    lv%parms%sweeps_pre  = val
+
+  case ('SMOOTHER_SWEEPS_POST')
+    lv%parms%sweeps_post = val
+
+  case ('ML_TYPE')
+    lv%parms%ml_type       = val
+
+  case ('AGGR_ALG')
+    lv%parms%aggr_alg      = val
+
+  case ('AGGR_KIND')
+    lv%parms%aggr_kind     = val
+
+  case ('COARSE_MAT')
+    lv%parms%coarse_mat    = val
+
+  case ('SMOOTHER_POS')
+    lv%parms%smoother_pos  = val
+
+  case ('AGGR_OMEGA_ALG')
+    lv%parms%aggr_omega_alg= val
+
+  case ('AGGR_EIG')
+    lv%parms%aggr_eig      = val
+
+  case ('AGGR_FILTER')
+    lv%parms%aggr_filter   = val
+
+  case ('COARSE_SOLVE')
+    lv%parms%coarse_solve    = val
 
   case default
     if (allocated(lv%sm)) then 
       call lv%sm%set(what,val,info)
     end if
   end select
-
   if (info /= psb_success_) goto 9999
   call psb_erractionrestore(err_act)
   return
@@ -81,4 +110,4 @@ subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
     return
   end if
   return
-end subroutine mld_@X@_base_onelev_setr
+end subroutine mld_@X@_base_onelev_cseti

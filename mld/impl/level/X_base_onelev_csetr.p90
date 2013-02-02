@@ -36,20 +36,20 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$
-subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
+subroutine mld_@X@_base_onelev_csetr(lv,what,val,info)
   
   use psb_base_mod
-  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_setr
+  use mld_@X@_onelev_mod, mld_protect_name => mld_@X@_base_onelev_csetr
 
   Implicit None
 
   ! Arguments
   class(mld_@X@_onelev_type), intent(inout) :: lv 
-  integer(psb_ipk_), intent(in)             :: what 
+  character(len=*), intent(in)              :: what 
   real(@FKIND@), intent(in)                 :: val
   integer(psb_ipk_), intent(out)            :: info
   integer(psb_ipk_) :: err_act
-  character(len=20) :: name='@X@_base_onelev_setr'
+  character(len=20) :: name='@X@_base_onelev_csetr'
 
   call psb_erractionsave(err_act)
 
@@ -58,10 +58,10 @@ subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
 
   select case (what) 
 
-  case (mld_aggr_omega_val_)
+  case ('AGGR_OMEGA_VAL')
     lv%parms%aggr_omega_val= val
 
-  case (mld_aggr_thresh_)
+  case ('AGGR_THRESH')
     lv%parms%aggr_thresh   = val
 
   case default
@@ -81,4 +81,4 @@ subroutine mld_@X@_base_onelev_setr(lv,what,val,info)
     return
   end if
   return
-end subroutine mld_@X@_base_onelev_setr
+end subroutine mld_@X@_base_onelev_csetr

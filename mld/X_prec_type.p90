@@ -99,7 +99,11 @@ module mld_@X@_prec_type
     procedure, pass(prec)               :: seti   => mld_@X@precseti
     procedure, pass(prec)               :: setc   => mld_@X@precsetc
     procedure, pass(prec)               :: setr   => mld_@X@precsetr
-    generic, public                     :: set => seti, setc, setr, setsm, setsv
+    procedure, pass(prec)               :: cseti  => mld_@X@cprecseti
+    procedure, pass(prec)               :: csetc  => mld_@X@cprecsetc
+    procedure, pass(prec)               :: csetr  => mld_@X@cprecsetr
+    generic, public                     :: set => seti, setc, setr, & 
+         &       cseti, csetc, csetr, setsm, setsv 
   end type mld_@X@prec_type
 
   private :: mld_@X@_dump, mld_@X@_get_compl,  mld_@X@_cmp_compl,&
@@ -210,6 +214,33 @@ module mld_@X@_prec_type
       integer(psb_ipk_), intent(out)           :: info
       integer(psb_ipk_), optional, intent(in)  :: ilev
     end subroutine mld_@X@precsetc
+    subroutine mld_@X@cprecseti(prec,what,val,info,ilev)
+      import :: psb_@X@spmat_type, psb_desc_type, @FKIND@, &
+           & mld_@X@prec_type, psb_ipk_
+      class(mld_@X@prec_type), intent(inout)   :: prec
+      character(len=*), intent(in)             :: what 
+      integer(psb_ipk_), intent(in)            :: val
+      integer(psb_ipk_), intent(out)           :: info
+      integer(psb_ipk_), optional, intent(in)  :: ilev
+    end subroutine mld_@X@cprecseti
+    subroutine mld_@X@cprecsetr(prec,what,val,info,ilev)
+      import :: psb_@X@spmat_type, psb_desc_type, @FKIND@, &
+           & mld_@X@prec_type, psb_ipk_
+      class(mld_@X@prec_type), intent(inout)   :: prec
+      character(len=*), intent(in)             :: what 
+      real(@FKIND@), intent(in)                :: val
+      integer(psb_ipk_), intent(out)           :: info
+      integer(psb_ipk_), optional, intent(in)  :: ilev
+    end subroutine mld_@X@cprecsetr
+    subroutine mld_@X@cprecsetc(prec,what,string,info,ilev)
+      import :: psb_@X@spmat_type, psb_desc_type, @FKIND@, &
+           & mld_@X@prec_type, psb_ipk_
+      class(mld_@X@prec_type), intent(inout)   :: prec
+      character(len=*), intent(in)             :: what 
+      character(len=*), intent(in)             :: string
+      integer(psb_ipk_), intent(out)           :: info
+      integer(psb_ipk_), optional, intent(in)  :: ilev
+    end subroutine mld_@X@cprecsetc
   end interface
 
 

@@ -10,6 +10,7 @@ SRC=X_base_solver_apply.p90 X_base_solver_apply_vect.p90 \
     X_base_solver_descr.p90 X_base_solver_dmp.p90 \
     X_base_solver_free.p90 X_base_solver_setc.p90 \
     X_base_solver_seti.p90 X_base_solver_setr.p90 \
+    X_base_solver_csetc.p90 X_base_solver_cseti.p90 X_base_solver_csetr.p90 \
     X_diag_solver_apply.p90 X_diag_solver_apply_vect.p90 \
     X_diag_solver_bld.p90 X_id_solver_apply.p90 \
     X_id_solver_apply_vect.p90 X_ilu_solver_apply.p90 \
