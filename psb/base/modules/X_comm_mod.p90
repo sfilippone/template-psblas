@@ -33,7 +33,7 @@ module psb_@X@_comm_mod
 
   interface psb_ovrl
     subroutine  psb_@X@ovrlm(x,desc_a,info,jx,ik,work,update,mode)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(inout), target   :: x(:,:)
       type(psb_desc_type), intent(in)            :: desc_a
       integer(psb_ipk_), intent(out)                       :: info
@@ -41,7 +41,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional              :: update,jx,ik,mode
     end subroutine psb_@X@ovrlm
     subroutine  psb_@X@ovrlv(x,desc_a,info,work,update,mode)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(inout), target   :: x(:)
       type(psb_desc_type), intent(in)            :: desc_a
       integer(psb_ipk_), intent(out)                       :: info
@@ -49,7 +49,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional              :: update,mode
     end subroutine psb_@X@ovrlv
     subroutine  psb_@X@ovrl_vect(x,desc_a,info,work,update,mode)
-      use psb_descriptor_type
+      use psb_desc_mod
       use psb_@X@_vect_mod
       type(psb_@X@_vect_type), intent(inout)    :: x
       type(psb_desc_type), intent(in)         :: desc_a
@@ -61,7 +61,7 @@ module psb_@X@_comm_mod
 
   interface psb_halo
     subroutine  psb_@X@halom(x,desc_a,info,alpha,jx,ik,work,tran,mode,data)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(inout), target :: x(:,:)
       type(psb_desc_type), intent(in)          :: desc_a
       integer(psb_ipk_), intent(out)                     :: info
@@ -71,7 +71,7 @@ module psb_@X@_comm_mod
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halom
     subroutine  psb_@X@halov(x,desc_a,info,alpha,work,tran,mode,data)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(inout)        :: x(:)
       type(psb_desc_type), intent(in)         :: desc_a
       integer(psb_ipk_), intent(out)                    :: info
@@ -81,7 +81,7 @@ module psb_@X@_comm_mod
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halov
     subroutine  psb_@X@halo_vect(x,desc_a,info,alpha,work,tran,mode,data)
-      use psb_descriptor_type
+      use psb_desc_mod
       use psb_@X@_vect_mod
       type(psb_@X@_vect_type), intent(inout)   :: x
       type(psb_desc_type), intent(in)         :: desc_a
@@ -96,7 +96,7 @@ module psb_@X@_comm_mod
 
   interface psb_scatter
     subroutine  psb_@X@scatterm(globx, locx, desc_a, info, root)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(out) :: locx(:,:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
@@ -104,7 +104,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@scatterm
     subroutine  psb_@X@scatterv(globx, locx, desc_a, info, root)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(out) :: locx(:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:)
       type(psb_desc_type), intent(in)  :: desc_a
@@ -115,7 +115,7 @@ module psb_@X@_comm_mod
 
   interface psb_gather
     subroutine  psb_@X@sp_allgather(globa, loca, desc_a, info, root, dupl,keepnum,keeploc)
-      use psb_descriptor_type
+      use psb_desc_mod
       use psb_mat_mod
       implicit none
       type(psb_@X@spmat_type), intent(inout) :: loca
@@ -126,7 +126,7 @@ module psb_@X@_comm_mod
       logical, intent(in), optional   :: keepnum,keeploc
     end subroutine psb_@X@sp_allgather
     subroutine psb_@X@gatherm(globx, locx, desc_a, info, root)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(in)  :: locx(:,:)
       @TYPE@(@FKIND@), intent(out), allocatable  :: globx(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
@@ -134,7 +134,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@gatherm
     subroutine  psb_@X@gatherv(globx, locx, desc_a, info, root)
-      use psb_descriptor_type
+      use psb_desc_mod
       @TYPE@(@FKIND@), intent(in)  :: locx(:)
       @TYPE@(@FKIND@), intent(out), allocatable  :: globx(:)
       type(psb_desc_type), intent(in)  :: desc_a
@@ -142,7 +142,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@gatherv
     subroutine  psb_@X@gather_vect(globx, locx, desc_a, info, root)
-      use psb_descriptor_type
+      use psb_desc_mod
       use psb_@X@_vect_mod
       type(psb_@X@_vect_type), intent(inout) :: locx
       @TYPE@(@FKIND@), intent(out), allocatable :: globx(:)

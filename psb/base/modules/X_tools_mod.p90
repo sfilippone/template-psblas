@@ -30,7 +30,7 @@
 !!$ 
 !!$  
 Module psb_@X@_tools_mod
-  use psb_descriptor_type, only : psb_desc_type, @FKIND@, psb_ipk_
+  use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_
   use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type
   use psb_@X@_mat_mod, only : psb_@X@spmat_type, psb_@X@_base_sparse_mat
 
