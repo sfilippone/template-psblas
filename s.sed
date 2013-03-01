@@ -18,3 +18,5 @@ s/@NRM2@/snrm2/g
 
 s/@MPI_TYPE@/mpi_real/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
+
+s/@CTYPE@/Float/g

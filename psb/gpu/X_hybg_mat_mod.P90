@@ -1,0 +1,281 @@
+module psb_@X@_hybg_mat_mod
+
+  use iso_c_binding
+  use psb_base_mod
+  use cusparse_mod
+
+  type, extends(psb_@X@_csr_sparse_mat) :: psb_@X@_hybg_sparse_mat
+    !
+    ! ITPACK/ELL format, extended.
+    ! We are adding here the routines to create a copy of the data
+    ! into the GPU. 
+    ! If HAVE_SPGPU is undefined this is just
+    ! a copy of CSR, indistinguishable.
+    ! 
+#ifdef HAVE_SPGPU
+    type(@X@_Hmat) :: deviceMat
+
+  contains
+    procedure, nopass  :: get_fmt       => @X@_hybg_get_fmt
+    procedure, pass(a) :: sizeof        => @X@_hybg_sizeof
+    procedure, pass(a) :: vect_mv       => psb_@X@_hybg_vect_mv
+    procedure, pass(a) :: in_vect_sv    => psb_@X@_hybg_inner_vect_sv
+    procedure, pass(a) :: csmm          => psb_@X@_hybg_csmm
+    procedure, pass(a) :: csmv          => psb_@X@_hybg_csmv
+    procedure, pass(a) :: scals         => psb_@X@_hybg_scals
+    procedure, pass(a) :: scalv         => psb_@X@_hybg_scal
+    procedure, pass(a) :: reallocate_nz => psb_@X@_hybg_reallocate_nz
+    procedure, pass(a) :: allocate_mnnz => psb_@X@_hybg_allocate_mnnz
+    procedure, pass(a) :: cp_from_coo   => psb_@X@_cp_hybg_from_coo
+    procedure, pass(a) :: cp_from_fmt   => psb_@X@_cp_hybg_from_fmt
+    procedure, pass(a) :: mv_from_coo   => psb_@X@_mv_hybg_from_coo
+    procedure, pass(a) :: mv_from_fmt   => psb_@X@_mv_hybg_from_fmt
+    procedure, pass(a) :: free          => @X@_hybg_free
+    procedure, pass(a) :: mold          => psb_@X@_hybg_mold
+    procedure, pass(a) :: psb_@X@_hybg_cp_from
+    generic, public    :: cp_from => psb_@X@_hybg_cp_from
+    procedure, pass(a) :: psb_@X@_hybg_mv_from
+    generic, public    :: mv_from => psb_@X@_hybg_mv_from
+    procedure, pass(a) :: to_gpu  => psb_@X@_hybg_to_gpu
+#else 
+  contains
+    procedure, pass(a) :: mold    => psb_@X@_hybg_mold
+#endif
+  end type psb_@X@_hybg_sparse_mat
+
+#ifdef HAVE_SPGPU
+  private :: @X@_hybg_get_nzeros, @X@_hybg_free,  @X@_hybg_get_fmt, &
+       & @X@_hybg_get_size, @X@_hybg_sizeof, @X@_hybg_get_nz_row
+
+
+  interface 
+    subroutine psb_@X@_hybg_inner_vect_sv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_@X@_base_vect_type, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in)   :: a
+      @TYPE@(@FKIND@), intent(in)                 :: alpha, beta
+      class(psb_@X@_base_vect_type), intent(inout) :: x
+      class(psb_@X@_base_vect_type), intent(inout) :: y
+      integer(psb_ipk_), intent(out)             :: info
+      character, optional, intent(in)            :: trans
+    end subroutine psb_@X@_hybg_inner_vect_sv
+  end interface
+
+  interface 
+    subroutine psb_@X@_hybg_vect_mv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_@X@_base_vect_type, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in)   :: a
+      @TYPE@(@FKIND@), intent(in)                 :: alpha, beta
+      class(psb_@X@_base_vect_type), intent(inout) :: x
+      class(psb_@X@_base_vect_type), intent(inout) :: y
+      integer(psb_ipk_), intent(out)             :: info
+      character, optional, intent(in)            :: trans
+    end subroutine psb_@X@_hybg_vect_mv
+  end interface
+
+  interface
+    subroutine  psb_@X@_hybg_reallocate_nz(nz,a) 
+      import :: psb_@X@_hybg_sparse_mat, psb_ipk_
+      integer(psb_ipk_), intent(in)               :: nz
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+    end subroutine psb_@X@_hybg_reallocate_nz
+  end interface
+
+  interface
+    subroutine  psb_@X@_hybg_allocate_mnnz(m,n,a,nz) 
+      import :: psb_@X@_hybg_sparse_mat, psb_ipk_
+      integer(psb_ipk_), intent(in)               :: m,n
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(in), optional     :: nz
+    end subroutine psb_@X@_hybg_allocate_mnnz
+  end interface
+
+  interface 
+    subroutine psb_@X@_hybg_mold(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in)               :: a
+      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
+      integer(psb_ipk_), intent(out)                         :: info
+    end subroutine psb_@X@_hybg_mold
+  end interface
+
+  interface 
+    subroutine psb_@X@_hybg_to_gpu(a,info, nzrm) 
+      import :: psb_@X@_hybg_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)              :: info
+      integer(psb_ipk_), intent(in), optional     :: nzrm
+    end subroutine psb_@X@_hybg_to_gpu
+  end interface
+
+  interface 
+    subroutine psb_@X@_cp_hybg_from_coo(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(in)     :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_cp_hybg_from_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_hybg_from_fmt(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(in)    :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_cp_hybg_from_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_hybg_from_coo(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout)  :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_hybg_from_coo
+  end interface
+
+  interface 
+    subroutine psb_@X@_mv_hybg_from_fmt(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_hybg_from_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_hybg_cp_from(a,b)
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      type(psb_@X@_hybg_sparse_mat), intent(in)     :: b
+    end subroutine psb_@X@_hybg_cp_from
+  end interface
+  
+  interface 
+    subroutine psb_@X@_hybg_mv_from(a,b)
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      type(psb_@X@_hybg_sparse_mat), intent(inout)  :: b
+    end subroutine psb_@X@_hybg_mv_from
+  end interface
+  
+  interface 
+    subroutine psb_@X@_hybg_csmv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)               :: alpha, beta, x(:)
+      @TYPE@(@FKIND@), intent(inout)            :: y(:)
+      integer(psb_ipk_), intent(out)           :: info
+      character, optional, intent(in)          :: trans
+    end subroutine psb_@X@_hybg_csmv
+  end interface
+  interface 
+    subroutine psb_@X@_hybg_csmm(alpha,a,x,beta,y,info,trans) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)               :: alpha, beta, x(:,:)
+      @TYPE@(@FKIND@), intent(inout)            :: y(:,:)
+      integer(psb_ipk_), intent(out)           :: info
+      character, optional, intent(in)          :: trans
+    end subroutine psb_@X@_hybg_csmm
+  end interface
+  
+  interface 
+    subroutine psb_@X@_hybg_scal(d,a,info,side) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)                  :: d(:)
+      integer(psb_ipk_), intent(out)              :: info
+      character, intent(in), optional             :: side
+    end subroutine psb_@X@_hybg_scal
+  end interface
+  
+  interface
+    subroutine psb_@X@_hybg_scals(d,a,info) 
+      import :: psb_@X@_hybg_sparse_mat, @FKIND@, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)                  :: d
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_hybg_scals 
+  end interface
+  
+
+contains 
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Getters 
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+  
+  function @X@_hybg_sizeof(a) result(res)
+    implicit none 
+    class(psb_@X@_hybg_sparse_mat), intent(in) :: a
+    integer(psb_long_int_k_)                 :: res
+    res = 8 
+    res = res + @SIZET@  * size(a%val)
+    res = res + psb_sizeof_int * size(a%irp)
+    res = res + psb_sizeof_int * size(a%ja)
+    ! Should we account for the shadow data structure
+    ! on the GPU device side? 
+    ! res = 2*res
+      
+  end function @X@_hybg_sizeof
+
+  function @X@_hybg_get_fmt() result(res)
+    implicit none 
+    character(len=5) :: res
+    res = 'HYBG'
+  end function @X@_hybg_get_fmt
+  
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Data management
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================  
+
+  subroutine  @X@_hybg_free(a) 
+    use cusparse_mod
+    implicit none 
+    integer(psb_ipk_)                           :: info
+    class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+
+    if (allocated(a%irp)) deallocate(a%irp)
+    if (allocated(a%ja))  deallocate(a%ja)
+    if (allocated(a%val)) deallocate(a%val)
+    call a%set_null()
+    call a%set_nrows(0)
+    call a%set_ncols(0)
+    info = HYBGDeviceFree(a%deviceMat)
+    
+    return
+
+  end subroutine @X@_hybg_free
+#else 
+  interface 
+    subroutine psb_@X@_hybg_mold(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_long_int_k_
+      class(psb_@X@_hybg_sparse_mat), intent(in)               :: a
+      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
+      integer(psb_ipk_), intent(out)                         :: info
+    end subroutine psb_@X@_hybg_mold
+  end interface
+
+#endif
+
+end module psb_@X@_hybg_mat_mod
