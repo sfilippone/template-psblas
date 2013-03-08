@@ -63,10 +63,8 @@ module mld_@X@_as_smoother
     procedure, pass(sm) :: free    => mld_@X@_as_smoother_free
     procedure, pass(sm) :: seti    => mld_@X@_as_smoother_seti
     procedure, pass(sm) :: setc    => mld_@X@_as_smoother_setc
-    procedure, pass(sm) :: setr    => mld_@X@_as_smoother_setr
     procedure, pass(sm) :: cseti   => mld_@X@_as_smoother_cseti
     procedure, pass(sm) :: csetc   => mld_@X@_as_smoother_csetc
-    procedure, pass(sm) :: csetr   => mld_@X@_as_smoother_csetr
     procedure, pass(sm) :: descr   => @X@_as_smoother_descr
     procedure, pass(sm) :: sizeof  => @X@_as_smoother_sizeof
     procedure, pass(sm) :: default => @X@_as_smoother_default
