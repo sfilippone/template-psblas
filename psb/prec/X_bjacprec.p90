@@ -34,7 +34,7 @@ module psb_@X@_bjacprec
   use psb_@X@_base_prec_mod
   
   type, extends(psb_@X@_base_prec_type)   :: psb_@X@_bjac_prec_type
-    integer(psb_ipk_), allocatable                :: iprcparm(:)
+    integer(psb_ipk_), allocatable      :: iprcparm(:)
     type(psb_@X@spmat_type), allocatable  :: av(:)
     type(psb_@X@_vect_type), allocatable  :: dv
   contains
