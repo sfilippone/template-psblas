@@ -205,10 +205,12 @@ contains
 
 
   subroutine psb_@X@_null_dump(prec,info,prefix,head)
+    use psb_base_mod, only : psb_info
+    implicit none 
     class(psb_@X@_null_prec_type), intent(in) :: prec
     integer(psb_ipk_), intent(out)          :: info
     character(len=*), intent(in), optional  :: prefix,head
-    integer :: iout
+    integer(psb_ipk_) :: iout, iam, np, ictxt, lname
     logical :: isopen
     character(len=80)  :: prefix_
     character(len=120) :: fname ! len should be at least 20 more than
