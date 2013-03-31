@@ -48,15 +48,13 @@ module psb_@X@_prec_type
     generic, public                     :: apply => psb_@X@_apply2v, psb_@X@_apply1v,&
          & psb_@X@_apply1_vect, psb_@X@_apply2_vect
     procedure, pass(prec)               :: sizeof => psb_@X@prec_sizeof
+    procedure, pass(prec)               :: clone  => psb_@X@_prec_clone
   end type psb_@X@prec_type
 
   interface psb_precfree
     module procedure psb_@X@_precfree
   end interface
 
-  interface psb_nullify_prec
-    module procedure psb_nullify_cprec
-  end interface
 
   interface psb_precdescr
     module procedure psb_@X@file_prec_descr
@@ -192,11 +190,6 @@ contains
     return
   end subroutine psb_@X@_precfree
 
-  subroutine psb_nullify_cprec(p)
-    type(psb_@X@prec_type), intent(inout) :: p
-
-  end subroutine psb_nullify_cprec
-  
   function psb_@X@prec_sizeof(prec) result(val)
     class(psb_@X@prec_type), intent(in) :: prec
     integer(psb_long_int_k_) :: val
@@ -208,5 +201,19 @@ contains
     end if
     
   end function psb_@X@prec_sizeof
+
+  subroutine psb_@X@_prec_clone(prec,precout,info)
+    implicit none 
+    class(psb_@X@prec_type), intent(inout) :: prec
+    class(psb_@X@prec_type), intent(out)   :: precout
+    integer(psb_ipk_), intent(out)             :: info
+
+    info = psb_success_
+    
+    if (allocated(prec%prec)) then 
+      call prec%prec%clone(precout%prec,info)
+    end if
+    
+  end subroutine psb_@X@_prec_clone
 
 end module psb_@X@_prec_type
