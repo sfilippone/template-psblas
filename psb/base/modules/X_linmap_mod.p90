@@ -46,10 +46,10 @@ module psb_@X@_linmap_mod
   type, extends(psb_base_linmap_type) ::  psb_@X@linmap_type 
     type(psb_@X@spmat_type) :: map_X2Y, map_Y2X
   contains
-    procedure, pass(map)   :: sizeof   => @X@_map_sizeof
-    procedure, pass(map)   :: is_asb   => @X@_is_asb
-    procedure, pass(map)   :: free     => @X@_free
-    procedure, pass(mapin) :: clone    => @X@_clone
+    procedure, pass(map) :: sizeof   => @X@_map_sizeof
+    procedure, pass(map) :: is_asb   => @X@_is_asb
+    procedure, pass(map) :: free     => @X@_free
+    procedure, pass(map) :: clone    => @X@_clone
   end type psb_@X@linmap_type
 
 
@@ -214,16 +214,17 @@ contains
   end subroutine @X@_free
   
 
-  subroutine  @X@_clone(mapin,mapout)
+  subroutine  @X@_clone(map,mapout,info)
     use psb_desc_mod
     implicit none 
-    class(psb_@X@linmap_type), intent(inout) :: mapin
+    class(psb_@X@linmap_type), intent(inout) :: map
     class(psb_@X@linmap_type), intent(out)   :: mapout
     integer(psb_ipk_)     :: info 
     
     ! Base clone!    
-    call mapin%map_X2Y%clone(mapout%map_X2Y,info)
-    call mapin%map_Y2X%clone(mapout%map_Y2X,info)
+    call map%psb_base_linmap_type%clone(mapout%psb_base_linmap_type,info)
+    call map%map_X2Y%clone(mapout%map_X2Y,info)
+    call map%map_Y2X%clone(mapout%map_Y2X,info)
 
   end subroutine @X@_clone
   
