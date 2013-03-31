@@ -612,9 +612,9 @@ module psb_@X@_mat_mod
   interface 
     subroutine psb_@X@spmat_clone(a,b,info)
       import :: psb_ipk_, psb_@X@spmat_type
-      class(psb_@X@spmat_type), intent(in)  :: a
-      class(psb_@X@spmat_type), intent(out) :: b
-      integer(psb_ipk_), intent(out)                 :: info
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@spmat_type), intent(out)   :: b
+      integer(psb_ipk_), intent(out)        :: info
     end subroutine psb_@X@spmat_clone
   end interface
 

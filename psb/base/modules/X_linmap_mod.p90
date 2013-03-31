@@ -46,9 +46,10 @@ module psb_@X@_linmap_mod
   type, extends(psb_base_linmap_type) ::  psb_@X@linmap_type 
     type(psb_@X@spmat_type) :: map_X2Y, map_Y2X
   contains
-    procedure, pass(map)  :: sizeof   => @X@_map_sizeof
-    procedure, pass(map)  :: is_asb   => @X@_is_asb
-    procedure, pass(map)  :: free     => @X@_free
+    procedure, pass(map)   :: sizeof   => @X@_map_sizeof
+    procedure, pass(map)   :: is_asb   => @X@_is_asb
+    procedure, pass(map)   :: free     => @X@_free
+    procedure, pass(mapin) :: clone    => @X@_clone
   end type psb_@X@linmap_type
 
 
@@ -116,11 +117,11 @@ module psb_@X@_linmap_mod
       use psb_@X@_mat_mod, only : psb_@X@spmat_type
       import :: psb_ipk_, psb_@X@linmap_type, psb_desc_type
       implicit none 
-      type(psb_@X@linmap_type)            :: psb_@X@_linmap    
-      type(psb_desc_type), target       :: desc_X, desc_Y
-      type(psb_@X@spmat_type), intent(in) :: map_X2Y, map_Y2X
-      integer(psb_ipk_), intent(in)               :: map_kind
-      integer(psb_ipk_), intent(in), optional     :: iaggr(:), naggr(:)
+      type(psb_@X@linmap_type)                  :: psb_@X@_linmap    
+      type(psb_desc_type), target             :: desc_X, desc_Y
+      type(psb_@X@spmat_type), intent(inout)    :: map_X2Y, map_Y2X
+      integer(psb_ipk_), intent(in)           :: map_kind
+      integer(psb_ipk_), intent(in), optional :: iaggr(:), naggr(:)
     end function psb_@X@_linmap
   end interface
 
@@ -176,11 +177,11 @@ contains
        & map_X2Y, map_Y2X,iaggr,naggr)
     use psb_@X@_mat_mod
     implicit none 
-    type(psb_@X@linmap_type), intent(out) :: out_map    
-    type(psb_desc_type), target       :: desc_X, desc_Y
-    type(psb_@X@spmat_type), intent(in) :: map_X2Y, map_Y2X
-    integer(psb_ipk_), intent(in)               :: map_kind
-    integer(psb_ipk_), intent(in), optional     :: iaggr(:), naggr(:)
+    type(psb_@X@linmap_type), intent(out)     :: out_map    
+    type(psb_desc_type), target             :: desc_X, desc_Y
+    type(psb_@X@spmat_type), intent(inout)    :: map_X2Y, map_Y2X
+    integer(psb_ipk_), intent(in)           :: map_kind
+    integer(psb_ipk_), intent(in), optional :: iaggr(:), naggr(:)
     out_map = psb_linmap(map_kind,desc_X,desc_Y,map_X2Y,map_Y2X,iaggr,naggr)
   end subroutine psb_@X@_linmap_sub
 
@@ -211,6 +212,20 @@ contains
     call map%map_Y2X%free()
 
   end subroutine @X@_free
+  
+
+  subroutine  @X@_clone(mapin,mapout)
+    use psb_desc_mod
+    implicit none 
+    class(psb_@X@linmap_type), intent(inout) :: mapin
+    class(psb_@X@linmap_type), intent(out)   :: mapout
+    integer(psb_ipk_)     :: info 
+    
+    ! Base clone!    
+    call mapin%map_X2Y%clone(mapout%map_X2Y,info)
+    call mapin%map_Y2X%clone(mapout%map_Y2X,info)
+
+  end subroutine @X@_clone
   
 
 end module psb_@X@_linmap_mod
