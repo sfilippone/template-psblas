@@ -727,6 +727,17 @@ contains
   subroutine mld_@X@_clone(prec,precout,info)
 
     implicit none 
+    class(mld_@X@prec_type), intent(inout) :: prec
+    class(psb_@X@prec_type), intent(out)   :: precout
+    integer(psb_ipk_), intent(out)       :: info
+    
+    call mld_@X@_inner_clone(prec,precout,info) 
+
+  end subroutine mld_@X@_clone
+
+  subroutine mld_@X@_inner_clone(prec,precout,info)
+
+    implicit none 
     class(mld_@X@prec_type), intent(inout)       :: prec
     class(psb_@X@prec_type), target, intent(out) :: precout
     integer(psb_ipk_), intent(out)             :: info
@@ -763,7 +774,7 @@ contains
       info = psb_err_invalid_input_
     end select
 9999 continue
-  end subroutine mld_@X@_clone
+  end subroutine mld_@X@_inner_clone
 
   subroutine mld_@X@prec_move_alloc(a, b,info)
     use psb_base_mod
