@@ -89,7 +89,8 @@ module mld_@X@_prec_type
     procedure, pass(prec)               :: psb_@X@_apply1_vect => mld_@X@_apply1_vect
     procedure, pass(prec)               :: psb_@X@_apply2v => mld_@X@_apply2v
     procedure, pass(prec)               :: psb_@X@_apply1v => mld_@X@_apply1v
-    procedure, pass(prec)               :: dump      => mld_@X@_dump
+    procedure, pass(prec)               :: dump           => mld_@X@_dump
+    procedure, pass(prec)               :: clone          => mld_@X@_clone
     procedure, pass(prec)               :: get_complexity => mld_@X@_get_compl
     procedure, pass(prec)               :: cmp_complexity => mld_@X@_cmp_compl
     procedure, pass(prec)               :: get_nzeros => mld_@X@_get_nzeros
@@ -721,6 +722,48 @@ contains
     end do
 
   end subroutine mld_@X@_dump
+
+
+  subroutine mld_@X@_clone(prec,precout,info)
+
+    implicit none 
+    class(mld_@X@prec_type), intent(inout)       :: prec
+    class(psb_@X@prec_type), target, intent(out) :: precout
+    integer(psb_ipk_), intent(out)             :: info
+    ! Local vars
+    integer(psb_ipk_)  :: i, j, il1, ln, lname, lev
+    integer(psb_ipk_)  :: icontxt,iam, np
+
+    info = psb_success_
+    select type(pout => precout)
+    class is (mld_@X@prec_type)
+      pout%ictxt            = prec%ictxt
+      pout%coarse_aggr_size = prec%coarse_aggr_size
+      pout%op_complexity    = prec%op_complexity
+      if (allocated(prec%precv)) then 
+        ln = size(prec%precv) 
+        allocate(pout%precv(ln),stat=info)
+        if (info /= psb_success_) goto 9999
+        if (ln > 1) then 
+          call prec%precv(1)%clone(pout%precv(1),info)
+        end if
+        do lev=2, ln
+          if (info /= psb_success_) exit
+          call prec%precv(lev)%clone(pout%precv(lev),info)
+          if (info == psb_success_) then 
+            pout%precv(lev)%base_a       => pout%precv(lev)%ac
+            pout%precv(lev)%base_desc    => pout%precv(lev)%desc_ac
+            pout%precv(lev)%map%p_desc_X => pout%precv(lev-1)%base_desc
+            pout%precv(lev)%map%p_desc_Y => pout%precv(lev)%base_desc
+          end if
+        end do
+      end if
+    class default 
+      write(0,*) 'Error: wrong out type'
+      info = psb_err_invalid_input_
+    end select
+9999 continue
+  end subroutine mld_@X@_clone
 
   subroutine mld_@X@prec_move_alloc(a, b,info)
     use psb_base_mod

@@ -205,7 +205,7 @@ contains
   subroutine psb_@X@_prec_clone(prec,precout,info)
     implicit none 
     class(psb_@X@prec_type), intent(inout) :: prec
-    class(psb_@X@prec_type), intent(out)   :: precout
+    class(psb_@X@prec_type), target, intent(out)   :: precout
     integer(psb_ipk_), intent(out)             :: info
 
     info = psb_success_
