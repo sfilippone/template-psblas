@@ -71,6 +71,7 @@ module mld_@X@_ilu_solver
     procedure, pass(sv) :: default => @X@_ilu_solver_default
     procedure, pass(sv) :: sizeof  => @X@_ilu_solver_sizeof
     procedure, pass(sv) :: get_nzeros => @X@_ilu_solver_get_nzeros
+    procedure, nopass   :: get_fmt    => @X@_ilu_solver_get_fmt
   end type mld_@X@_ilu_solver_type
 
 
@@ -79,7 +80,8 @@ module mld_@X@_ilu_solver
        &  @X@_ilu_solver_setc,   @X@_ilu_solver_setr,&
        &  @X@_ilu_solver_descr,  @X@_ilu_solver_sizeof, &
        &  @X@_ilu_solver_default, @X@_ilu_solver_dmp, &
-       &  @X@_ilu_solver_apply_vect, @X@_ilu_solver_get_nzeros
+       &  @X@_ilu_solver_apply_vect, @X@_ilu_solver_get_nzeros, &
+       &  @X@_ilu_solver_get_fmt
 
 
   character(len=15), parameter, private :: &
@@ -162,9 +164,9 @@ module mld_@X@_ilu_solver
       Implicit None
       
       ! Arguments
-      class(mld_@X@_ilu_solver_type), intent(inout) :: sv
-      class(mld_@X@_base_solver_type), allocatable, intent(out) :: svout
-      integer(psb_ipk_), intent(out)                 :: info
+      class(mld_@X@_ilu_solver_type), intent(inout)               :: sv
+      class(mld_@X@_base_solver_type), allocatable, intent(inout) :: svout
+      integer(psb_ipk_), intent(out)              :: info
     end subroutine mld_@X@_ilu_solver_clone
   end interface
 
@@ -555,5 +557,12 @@ contains
 
     return
   end function @X@_ilu_solver_sizeof
+
+  function @X@_ilu_solver_get_fmt() result(val)
+    implicit none 
+    character(len=32)  :: val
+
+    val = "ILU solver"
+  end function @X@_ilu_solver_get_fmt
 
 end module mld_@X@_ilu_solver

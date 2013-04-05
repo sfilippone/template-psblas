@@ -755,7 +755,7 @@ contains
         ln = size(prec%precv) 
         allocate(pout%precv(ln),stat=info)
         if (info /= psb_success_) goto 9999
-        if (ln > 1) then 
+        if (ln >= 1) then 
           call prec%precv(1)%clone(pout%precv(1),info)
         end if
         do lev=2, ln
