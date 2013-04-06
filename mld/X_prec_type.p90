@@ -79,10 +79,10 @@ module mld_@X@_prec_type
   !
   !
 
-  type, extends(psb_@X@prec_type)         :: mld_@X@prec_type
-    integer(psb_ipk_)                 :: ictxt
+  type, extends(psb_@X@prec_type)        :: mld_@X@prec_type
+    integer(psb_ipk_)                  :: ictxt
     integer(psb_ipk_)                  :: coarse_aggr_size
-    real(@FKIND@)                      :: op_complexity=@RZERO@
+    real(@FKIND@)                        :: op_complexity=@RZERO@
     type(mld_@X@_onelev_type), allocatable :: precv(:) 
   contains
     procedure, pass(prec)               :: psb_@X@_apply2_vect => mld_@X@_apply2_vect
