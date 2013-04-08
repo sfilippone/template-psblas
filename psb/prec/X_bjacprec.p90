@@ -45,10 +45,10 @@ module psb_@X@_bjacprec
     procedure, pass(prec) :: precseti  => psb_@X@_bjac_precseti
 !!$    procedure, pass(prec) :: precsetr  => psb_@X@_bjac_precsetr
 !!$    procedure, pass(prec) :: precsetc  => psb_@X@_bjac_precsetc
-    procedure, pass(prec) :: precfree  => psb_@X@_bjac_precfree
     procedure, pass(prec) :: precdescr => psb_@X@_bjac_precdescr
     procedure, pass(prec) :: dump      => psb_@X@_bjac_dump
     procedure, pass(prec) :: clone     => psb_@X@_bjac_clone
+    procedure, pass(prec) :: free      => psb_@X@_bjac_precfree
     procedure, pass(prec) :: sizeof    => psb_@X@_bjac_sizeof
     procedure, pass(prec) :: get_nzeros => psb_@X@_bjac_get_nzeros
   end type psb_@X@_bjac_prec_type
