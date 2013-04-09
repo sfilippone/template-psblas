@@ -755,18 +755,19 @@ contains
 
     implicit none 
     class(mld_@X@prec_type), intent(inout) :: prec
-    class(psb_@X@prec_type), intent(out)   :: precout
+    class(psb_@X@prec_type), intent(inout) :: precout
     integer(psb_ipk_), intent(out)       :: info
     
-    call mld_@X@_inner_clone(prec,precout,info) 
+    call precout%free(info)
+    if (info == 0) call mld_@X@_inner_clone(prec,precout,info) 
 
   end subroutine mld_@X@_clone
 
   subroutine mld_@X@_inner_clone(prec,precout,info)
 
     implicit none 
-    class(mld_@X@prec_type), intent(inout)       :: prec
-    class(psb_@X@prec_type), target, intent(out) :: precout
+    class(mld_@X@prec_type), intent(inout)         :: prec
+    class(psb_@X@prec_type), target, intent(inout) :: precout
     integer(psb_ipk_), intent(out)             :: info
     ! Local vars
     integer(psb_ipk_)  :: i, j, il1, ln, lname, lev
