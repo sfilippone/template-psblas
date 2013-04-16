@@ -39,11 +39,11 @@ module psb_@X@_csrg_mat_mod
 
   type, extends(psb_@X@_csr_sparse_mat) :: psb_@X@_csrg_sparse_mat
     !
-    ! ITPACK/ELL format, extended.
-    ! We are adding here the routines to create a copy of the data
-    ! into the GPU. 
-    ! If HAVE_SPGPU is undefined this is just
-    ! a copy of ELL, indistinguishable.
+    ! cuSPARSE 4.0 CSR format.
+    ! 
+    ! 
+    ! 
+    ! 
     ! 
 #ifdef HAVE_SPGPU
     type(@X@_Cmat) :: deviceMat
@@ -65,11 +65,8 @@ module psb_@X@_csrg_mat_mod
     procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_csrg_from_fmt
     procedure, pass(a) :: free         => @X@_csrg_free
     procedure, pass(a) :: mold         => psb_@X@_csrg_mold
-    procedure, pass(a) :: psb_@X@_csrg_cp_from
-    generic, public    :: cp_from => psb_@X@_csrg_cp_from
-    procedure, pass(a) :: psb_@X@_csrg_mv_from
-    generic, public    :: mv_from => psb_@X@_csrg_mv_from
-    procedure, pass(a) :: to_gpu  => psb_@X@_csrg_to_gpu
+    procedure, pass(a) :: copy         => psb_@X@_csrg_copy
+    procedure, pass(a) :: to_gpu       => psb_@X@_csrg_to_gpu
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_csrg_mold
@@ -122,14 +119,22 @@ module psb_@X@_csrg_mat_mod
       integer(psb_ipk_), intent(in), optional :: nz
     end subroutine psb_@X@_csrg_allocate_mnnz
   end interface
-
   interface 
     subroutine psb_@X@_csrg_mold(a,b,info) 
       import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(in)               :: a
-      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
-      integer(psb_ipk_), intent(out)                         :: info
+      class(psb_@X@_csrg_sparse_mat), intent(in)                 :: a
+      class(psb_@X@_base_sparse_mat), intent(inout), allocatable :: b
+      integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_csrg_mold
+  end interface
+
+  interface 
+    subroutine psb_@X@_csrg_copy(a,b,info) 
+      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_csrg_sparse_mat), intent(in)  :: a
+      class(psb_@X@_base_sparse_mat), intent(out) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@X@_csrg_copy
   end interface
 
   interface 
@@ -168,7 +173,6 @@ module psb_@X@_csrg_mat_mod
     end subroutine psb_@X@_mv_csrg_from_coo
   end interface
   
-
   interface 
     subroutine psb_@X@_mv_csrg_from_fmt(a,b,info) 
       import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
@@ -176,22 +180,6 @@ module psb_@X@_csrg_mat_mod
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psb_@X@_mv_csrg_from_fmt
-  end interface
-  
-  interface 
-    subroutine psb_@X@_csrg_cp_from(a,b)
-      import :: psb_@X@_csrg_sparse_mat, @FKIND@
-      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
-      type(psb_@X@_csrg_sparse_mat), intent(in)     :: b
-    end subroutine psb_@X@_csrg_cp_from
-  end interface
-  
-  interface 
-    subroutine psb_@X@_csrg_mv_from(a,b)
-      import :: psb_@X@_csrg_sparse_mat, @FKIND@
-      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
-      type(psb_@X@_csrg_sparse_mat), intent(inout)  :: b
-    end subroutine psb_@X@_csrg_mv_from
   end interface
   
   interface 
