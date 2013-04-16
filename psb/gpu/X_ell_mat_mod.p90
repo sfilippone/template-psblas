@@ -92,10 +92,7 @@ module psb_@X@_ell_mat_mod
     procedure, pass(a) :: print        => psb_@X@_ell_print
     procedure, pass(a) :: free         => @X@_ell_free
     procedure, pass(a) :: mold         => psb_@X@_ell_mold
-    procedure, pass(a) :: psb_@X@_ell_cp_from
-    generic, public    :: cp_from => psb_@X@_ell_cp_from
-    procedure, pass(a) :: psb_@X@_ell_mv_from
-    generic, public    :: mv_from => psb_@X@_ell_mv_from
+    procedure, pass(a) :: copy         => psb_@X@_ell_copy
 
   end type psb_@X@_ell_sparse_mat
 
@@ -132,6 +129,15 @@ module psb_@X@_ell_mat_mod
       class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
       integer(psb_ipk_), intent(out)                         :: info
     end subroutine psb_@X@_ell_mold
+  end interface
+
+  interface 
+    subroutine psb_@X@_ell_copy(a,b,info) 
+      import :: psb_@X@_ell_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_ell_sparse_mat), intent(in)  :: a
+      class(psb_@X@_base_sparse_mat), intent(out) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@X@_ell_copy
   end interface
 
   interface
@@ -225,23 +231,6 @@ module psb_@X@_ell_mat_mod
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psb_@X@_mv_ell_from_fmt
   end interface
-  
-  interface 
-    subroutine psb_@X@_ell_cp_from(a,b)
-      import :: psb_@X@_ell_sparse_mat, @FKIND@
-      class(psb_@X@_ell_sparse_mat), intent(inout) :: a
-      type(psb_@X@_ell_sparse_mat), intent(in)     :: b
-    end subroutine psb_@X@_ell_cp_from
-  end interface
-  
-  interface 
-    subroutine psb_@X@_ell_mv_from(a,b)
-      import :: psb_@X@_ell_sparse_mat, @FKIND@
-      class(psb_@X@_ell_sparse_mat), intent(inout) :: a
-      type(psb_@X@_ell_sparse_mat), intent(inout)  :: b
-    end subroutine psb_@X@_ell_mv_from
-  end interface
-  
   
   interface 
     subroutine psb_@X@_ell_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
