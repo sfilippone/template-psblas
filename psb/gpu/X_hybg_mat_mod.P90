@@ -1,3 +1,35 @@
+!!$              Parallel Sparse BLAS   GPU plugin 
+!!$    (C) Copyright 2012
+!!$
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alessandro Fanfarillo  University of Rome Tor Vergata
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+  
+
 module psb_@X@_hybg_mat_mod
 
   use iso_c_binding
@@ -6,11 +38,11 @@ module psb_@X@_hybg_mat_mod
 
   type, extends(psb_@X@_csr_sparse_mat) :: psb_@X@_hybg_sparse_mat
     !
-    ! ITPACK/ELL format, extended.
-    ! We are adding here the routines to create a copy of the data
-    ! into the GPU. 
-    ! If HAVE_SPGPU is undefined this is just
-    ! a copy of CSR, indistinguishable.
+    ! HYBG. An interface to the cuSPARSE HYB
+    ! On the CPU side we keep a CSR storage. 
+    ! 
+    ! 
+    ! 
     ! 
 #ifdef HAVE_SPGPU
     type(@X@_Hmat) :: deviceMat
@@ -30,9 +62,12 @@ module psb_@X@_hybg_mat_mod
     procedure, pass(a) :: cp_from_fmt   => psb_@X@_cp_hybg_from_fmt
     procedure, pass(a) :: mv_from_coo   => psb_@X@_mv_hybg_from_coo
     procedure, pass(a) :: mv_from_fmt   => psb_@X@_mv_hybg_from_fmt
+    procedure, pass(a) :: cp_to_coo     => psb_@X@_cp_hybg_to_coo
+    procedure, pass(a) :: cp_to_fmt     => psb_@X@_cp_hybg_to_fmt
+    procedure, pass(a) :: mv_to_coo     => psb_@X@_mv_hybg_to_coo
+    procedure, pass(a) :: mv_to_fmt     => psb_@X@_mv_hybg_to_fmt
     procedure, pass(a) :: free          => @X@_hybg_free
     procedure, pass(a) :: mold          => psb_@X@_hybg_mold
-    procedure, pass(a) :: copy          => psb_@X@_hybg_copy
     procedure, pass(a) :: to_gpu        => psb_@X@_hybg_to_gpu
 #else 
   contains
@@ -96,15 +131,6 @@ module psb_@X@_hybg_mat_mod
   end interface
 
   interface 
-    subroutine psb_@X@_hybg_copy(a,b,info) 
-      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_hybg_sparse_mat), intent(in)  :: a
-      class(psb_@X@_base_sparse_mat), intent(out) :: b
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@_hybg_copy
-  end interface
-
-  interface 
     subroutine psb_@X@_hybg_to_gpu(a,info, nzrm) 
       import :: psb_@X@_hybg_sparse_mat, psb_ipk_
       class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
@@ -147,6 +173,42 @@ module psb_@X@_hybg_mat_mod
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psb_@X@_mv_hybg_from_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_hybg_to_coo(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in)   :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)             :: info
+    end subroutine psb_@X@_cp_hybg_to_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_hybg_to_fmt(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(in)    :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_cp_hybg_to_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_hybg_to_coo(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout)  :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_hybg_to_coo
+  end interface
+
+  interface 
+    subroutine psb_@X@_mv_hybg_to_fmt(a,b,info) 
+      import :: psb_@X@_hybg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_hybg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_hybg_to_fmt
   end interface
   
   interface 

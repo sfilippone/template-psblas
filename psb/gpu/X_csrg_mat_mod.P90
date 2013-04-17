@@ -59,14 +59,17 @@ module psb_@X@_csrg_mat_mod
     procedure, pass(a) :: scalv         => psb_@X@_csrg_scal
     procedure, pass(a) :: reallocate_nz => psb_@X@_csrg_reallocate_nz
     procedure, pass(a) :: allocate_mnnz => psb_@X@_csrg_allocate_mnnz
-    procedure, pass(a) :: cp_from_coo  => psb_@X@_cp_csrg_from_coo
-    procedure, pass(a) :: cp_from_fmt  => psb_@X@_cp_csrg_from_fmt
-    procedure, pass(a) :: mv_from_coo  => psb_@X@_mv_csrg_from_coo
-    procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_csrg_from_fmt
-    procedure, pass(a) :: free         => @X@_csrg_free
-    procedure, pass(a) :: mold         => psb_@X@_csrg_mold
-    procedure, pass(a) :: copy         => psb_@X@_csrg_copy
-    procedure, pass(a) :: to_gpu       => psb_@X@_csrg_to_gpu
+    procedure, pass(a) :: cp_from_coo   => psb_@X@_cp_csrg_from_coo
+    procedure, pass(a) :: cp_from_fmt   => psb_@X@_cp_csrg_from_fmt
+    procedure, pass(a) :: mv_from_coo   => psb_@X@_mv_csrg_from_coo
+    procedure, pass(a) :: mv_from_fmt   => psb_@X@_mv_csrg_from_fmt
+    procedure, pass(a) :: cp_to_coo     => psb_@X@_cp_csrg_to_coo
+    procedure, pass(a) :: cp_to_fmt     => psb_@X@_cp_csrg_to_fmt
+    procedure, pass(a) :: mv_to_coo     => psb_@X@_mv_csrg_to_coo
+    procedure, pass(a) :: mv_to_fmt     => psb_@X@_mv_csrg_to_fmt
+    procedure, pass(a) :: free          => @X@_csrg_free
+    procedure, pass(a) :: mold          => psb_@X@_csrg_mold
+    procedure, pass(a) :: to_gpu        => psb_@X@_csrg_to_gpu
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_csrg_mold
@@ -119,6 +122,7 @@ module psb_@X@_csrg_mat_mod
       integer(psb_ipk_), intent(in), optional :: nz
     end subroutine psb_@X@_csrg_allocate_mnnz
   end interface
+
   interface 
     subroutine psb_@X@_csrg_mold(a,b,info) 
       import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
@@ -126,15 +130,6 @@ module psb_@X@_csrg_mat_mod
       class(psb_@X@_base_sparse_mat), intent(inout), allocatable :: b
       integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_csrg_mold
-  end interface
-
-  interface 
-    subroutine psb_@X@_csrg_copy(a,b,info) 
-      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(in)  :: a
-      class(psb_@X@_base_sparse_mat), intent(out) :: b
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@_csrg_copy
   end interface
 
   interface 
@@ -180,6 +175,43 @@ module psb_@X@_csrg_mat_mod
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psb_@X@_mv_csrg_from_fmt
+  end interface
+  
+
+  interface 
+    subroutine psb_@X@_cp_csrg_to_coo(a,b,info) 
+      import :: psb_@X@_csrg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_csrg_sparse_mat), intent(in)   :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_cp_csrg_to_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_csrg_to_fmt(a,b,info) 
+      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_csrg_sparse_mat), intent(in)    :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_cp_csrg_to_fmt
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csrg_to_coo(a,b,info) 
+      import :: psb_@X@_csrg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
+      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_coo_sparse_mat), intent(inout)  :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_csrg_to_coo
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_csrg_to_fmt(a,b,info) 
+      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
+      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_mv_csrg_to_fmt
   end interface
   
   interface 

@@ -101,7 +101,6 @@ module psb_@X@_hll_mat_mod
     procedure, pass(a) :: print        => psb_@X@_hll_print
     procedure, pass(a) :: free         => @X@_hll_free
     procedure, pass(a) :: mold         => psb_@X@_hll_mold
-    procedure, pass(a) :: copy         => psb_@X@_hll_copy
 
   end type psb_@X@_hll_sparse_mat
 
@@ -138,15 +137,6 @@ module psb_@X@_hll_mat_mod
       class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
       integer(psb_ipk_), intent(out)                         :: info
     end subroutine psb_@X@_hll_mold
-  end interface
-
-  interface 
-    subroutine psb_@X@_hll_copy(a,b,info) 
-      import :: psb_@X@_hll_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_hll_sparse_mat), intent(in)  :: a
-      class(psb_@X@_base_sparse_mat), intent(out) :: b
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@_hll_copy
   end interface
 
   interface
