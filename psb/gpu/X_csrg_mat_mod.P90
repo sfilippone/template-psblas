@@ -59,14 +59,12 @@ module psb_@X@_csrg_mat_mod
     procedure, pass(a) :: scalv         => psb_@X@_csrg_scal
     procedure, pass(a) :: reallocate_nz => psb_@X@_csrg_reallocate_nz
     procedure, pass(a) :: allocate_mnnz => psb_@X@_csrg_allocate_mnnz
+    ! Note: we do *not* need the TO methods, because the parent type
+    ! methods will work. 
     procedure, pass(a) :: cp_from_coo   => psb_@X@_cp_csrg_from_coo
     procedure, pass(a) :: cp_from_fmt   => psb_@X@_cp_csrg_from_fmt
     procedure, pass(a) :: mv_from_coo   => psb_@X@_mv_csrg_from_coo
     procedure, pass(a) :: mv_from_fmt   => psb_@X@_mv_csrg_from_fmt
-    procedure, pass(a) :: cp_to_coo     => psb_@X@_cp_csrg_to_coo
-    procedure, pass(a) :: cp_to_fmt     => psb_@X@_cp_csrg_to_fmt
-    procedure, pass(a) :: mv_to_coo     => psb_@X@_mv_csrg_to_coo
-    procedure, pass(a) :: mv_to_fmt     => psb_@X@_mv_csrg_to_fmt
     procedure, pass(a) :: free          => @X@_csrg_free
     procedure, pass(a) :: mold          => psb_@X@_csrg_mold
     procedure, pass(a) :: to_gpu        => psb_@X@_csrg_to_gpu
@@ -177,43 +175,6 @@ module psb_@X@_csrg_mat_mod
     end subroutine psb_@X@_mv_csrg_from_fmt
   end interface
   
-
-  interface 
-    subroutine psb_@X@_cp_csrg_to_coo(a,b,info) 
-      import :: psb_@X@_csrg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(in)   :: a
-      class(psb_@X@_coo_sparse_mat), intent(inout) :: b
-      integer(psb_ipk_), intent(out)              :: info
-    end subroutine psb_@X@_cp_csrg_to_coo
-  end interface
-  
-  interface 
-    subroutine psb_@X@_cp_csrg_to_fmt(a,b,info) 
-      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(in)    :: a
-      class(psb_@X@_base_sparse_mat), intent(inout) :: b
-      integer(psb_ipk_), intent(out)              :: info
-    end subroutine psb_@X@_cp_csrg_to_fmt
-  end interface
-  
-  interface 
-    subroutine psb_@X@_mv_csrg_to_coo(a,b,info) 
-      import :: psb_@X@_csrg_sparse_mat, psb_@X@_coo_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
-      class(psb_@X@_coo_sparse_mat), intent(inout)  :: b
-      integer(psb_ipk_), intent(out)              :: info
-    end subroutine psb_@X@_mv_csrg_to_coo
-  end interface
-  
-  interface 
-    subroutine psb_@X@_mv_csrg_to_fmt(a,b,info) 
-      import :: psb_@X@_csrg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
-      class(psb_@X@_base_sparse_mat), intent(inout) :: b
-      integer(psb_ipk_), intent(out)              :: info
-    end subroutine psb_@X@_mv_csrg_to_fmt
-  end interface
-  
   interface 
     subroutine psb_@X@_csrg_csmv(alpha,a,x,beta,y,info,trans) 
       import :: psb_@X@_csrg_sparse_mat, @FKIND@, psb_ipk_
@@ -311,13 +272,8 @@ contains
 
     class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
 
-    if (allocated(a%irp)) deallocate(a%irp)
-    if (allocated(a%ja))  deallocate(a%ja)
-    if (allocated(a%val)) deallocate(a%val)
-    call a%set_null()
-    call a%set_nrows(0)
-    call a%set_ncols(0)
     info = CSRGDeviceFree(a%deviceMat)
+    call a%psb_@X@_csr_sparse_mat%free()
     
     return
 
