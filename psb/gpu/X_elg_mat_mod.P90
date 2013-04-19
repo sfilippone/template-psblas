@@ -66,6 +66,7 @@ module psb_@X@_elg_mat_mod
     procedure, pass(a) :: free          => @X@_elg_free
     procedure, pass(a) :: mold          => psb_@X@_elg_mold
     procedure, pass(a) :: to_gpu        => psb_@X@_elg_to_gpu
+    procedure, pass(a) :: trim          => psb_@X@_elg_trim
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_elg_mold

@@ -157,7 +157,6 @@ module psb_@X@_base_mat_mod
     procedure, pass(a) :: print        => psb_@X@_coo_print
     procedure, pass(a) :: free         => @X@_coo_free
     procedure, pass(a) :: mold         => psb_@X@_coo_mold
-!!$    procedure, pass(a) :: clone        => psb_@X@_coo_clone
     !
     ! This is COO specific
     !

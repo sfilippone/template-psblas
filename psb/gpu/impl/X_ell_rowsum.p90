@@ -30,18 +30,15 @@
 !!$ 
   
 
-subroutine psb_d_ell_rowsum(d,a) 
+subroutine psb_@X@_ell_rowsum(d,a) 
   
   use psb_base_mod
-  use psb_d_ell_mat_mod, psb_protect_name => psb_d_ell_rowsum
-  class(psb_d_ell_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(out)             :: d(:)
+  use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_rowsum
+  class(psb_@X@_ell_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(out)             :: d(:)
 
-  integer   :: i,j,k,m,n, nnz, ir, jc, nc
-  real(psb_dpk_) :: acc
-  real(psb_dpk_), allocatable :: vt(:)
-  logical   :: tra
-  Integer :: err_act, info, int_err(5)
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc
+  Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='rowsum'
   logical, parameter :: debug=.false.
 
@@ -58,7 +55,7 @@ subroutine psb_d_ell_rowsum(d,a)
   end if
 
   do i = 1, a%get_nrows()
-    d(i) = dzero
+    d(i) = @XZERO@
     do j=1,a%irn(i) 
       d(i) = d(i) + (a%val(i,j))
     end do
@@ -76,4 +73,4 @@ subroutine psb_d_ell_rowsum(d,a)
   end if
   return
 
-end subroutine psb_d_ell_rowsum
+end subroutine psb_@X@_ell_rowsum

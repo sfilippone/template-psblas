@@ -19,4 +19,6 @@ s/@NRM2@/snrm2/g
 s/@MPI_TYPE@/mpi_real/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
 
+s/@SPGPU_TYPE@/spgpu_type_float/g
+
 s/@CTYPE@/Float/g

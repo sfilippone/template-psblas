@@ -30,42 +30,34 @@
 !!$ 
   
 
-subroutine psb_d_csrg_scal(d,a,info,side) 
+subroutine psb_@X@_csrg_scal(d,a,info,side) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use cusparse_mod
-  use psb_d_csrg_mat_mod, psb_protect_name => psb_d_csrg_scal
+  use psb_@X@_csrg_mat_mod, psb_protect_name => psb_@X@_csrg_scal
 #else 
-  use psb_d_csrg_mat_mod
+  use psb_@X@_csrg_mat_mod
 #endif
   implicit none 
-  class(psb_d_csrg_sparse_mat), intent(inout) :: a
+  class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
   real(psb_dpk_), intent(in)      :: d(:)
-  integer, intent(out)            :: info
+  integer(psb_ipk_), intent(out)  :: info
   character, intent(in), optional :: side
 
 
-  Integer :: err_act,mnm, i, j, m,n,nz
+  Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='scal'
   logical, parameter :: debug=.false.
 
   info  = psb_success_
   call psb_erractionsave(err_act)
 
-  call a%psb_d_csr_sparse_mat%scal(d,info,side=side)
+  call a%psb_@X@_csr_sparse_mat%scal(d,info,side=side)
   if (info /= 0) goto 9999
   
 #ifdef HAVE_SPGPU
-  if (.not.c_associated(a%deviceMat%mat)) then 
-    info = psb_err_invalid_mat_state_
-    call psb_errpush(info,name)
-    goto 9999
-  endif
-  m  = a%get_nrows()
-  n  = a%get_nrows()
-  nz = a%get_nzeros()
-  info = CSRGHost2Device(a%deviceMat,m,n,nz,a%irp,a%ja,a%val)
+  call a%to_gpu(info)
   if (info /= 0) goto 9999
 #endif
 
@@ -80,4 +72,4 @@ subroutine psb_d_csrg_scal(d,a,info,side)
   end if
   return
 
-end subroutine psb_d_csrg_scal
+end subroutine psb_@X@_csrg_scal

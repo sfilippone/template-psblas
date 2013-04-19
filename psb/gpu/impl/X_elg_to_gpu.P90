@@ -30,22 +30,22 @@
 !!$ 
   
 
-subroutine psb_d_elg_to_gpu(a,info,nzrm) 
+subroutine psb_@X@_elg_to_gpu(a,info,nzrm) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use elldev_mod
   use vectordev_mod
-  use psb_d_elg_mat_mod, psb_protect_name => psb_d_elg_to_gpu
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_elg_to_gpu
 #else 
-  use psb_d_elg_mat_mod
+  use psb_@X@_elg_mat_mod
 #endif
   implicit none 
-  class(psb_d_elg_sparse_mat), intent(inout) :: a
-  integer, intent(out)                       :: info
-  integer, intent(in), optional              :: nzrm
+  class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_), intent(out)             :: info
+  integer(psb_ipk_), intent(in), optional    :: nzrm
 
-  integer :: m, nzm, n, pitch,maxrowsize
+  integer(psb_ipk_)  :: m, nzm, n, pitch,maxrowsize
 #ifdef HAVE_SPGPU
   type(elldev_parms) :: gpu_parms
 #endif
@@ -60,7 +60,7 @@ subroutine psb_d_elg_to_gpu(a,info,nzrm)
   n   = a%get_ncols()
   if (present(nzrm)) nzm = max(nzm,nzrm)
   
-  gpu_parms = FgetEllDeviceParams(m,nzm,n,spgpu_type_double,1)
+  gpu_parms = FgetEllDeviceParams(m,nzm,n,@SPGPU_TYPE@,1)
   
   if (c_associated(a%deviceMat)) then 
     pitch      = getEllDevicePitch(a%deviceMat)
@@ -74,7 +74,7 @@ subroutine psb_d_elg_to_gpu(a,info,nzrm)
     if (c_associated(a%deviceMat)) then 
       call freeEllDevice(a%deviceMat)
     endif
-    info       = FallocEllDevice(a%deviceMat,m,nzm,n,spgpu_type_double,1)
+    info       = FallocEllDevice(a%deviceMat,m,nzm,n,@SPGPU_TYPE@,1)
     pitch      = getEllDevicePitch(a%deviceMat)
     maxrowsize = getEllDeviceMaxRowSize(a%deviceMat)
   end if
@@ -89,4 +89,4 @@ subroutine psb_d_elg_to_gpu(a,info,nzrm)
 !!$  if (info /= 0) goto 9999
 #endif
 
-end subroutine psb_d_elg_to_gpu
+end subroutine psb_@X@_elg_to_gpu

@@ -30,18 +30,16 @@
 !!$ 
   
 
-subroutine psb_d_ell_colsum(d,a) 
+subroutine psb_@X@_ell_colsum(d,a) 
   
   use psb_base_mod
-  use psb_d_ell_mat_mod, psb_protect_name => psb_d_ell_colsum
-  class(psb_d_ell_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(out)              :: d(:)
+  use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_colsum
+  class(psb_@X@_ell_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(out)              :: d(:)
 
-  integer   :: i,j,k,m,n, nnz, ir, jc, nc
-  real(psb_dpk_) :: acc
-  real(psb_dpk_), allocatable :: vt(:)
-  logical   :: tra
-  Integer :: err_act, info, int_err(5)
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc
+  logical            :: tra
+  Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='colsum'
   logical, parameter :: debug=.false.
 
@@ -58,11 +56,10 @@ subroutine psb_d_ell_colsum(d,a)
     goto 9999
   end if
 
-  d   = dzero
-
+  d   = @XZERO@
   do i=1, m
     do j=1,a%irn(i)
-      k = a%ja(i,j)
+      k    = a%ja(i,j)
       d(k) = d(k) + (a%val(i,j))
     end do
   end do
@@ -79,4 +76,4 @@ subroutine psb_d_ell_colsum(d,a)
   end if
   return
 
-end subroutine psb_d_ell_colsum
+end subroutine psb_@X@_ell_colsum

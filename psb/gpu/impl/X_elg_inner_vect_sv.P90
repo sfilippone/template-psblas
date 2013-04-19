@@ -30,28 +30,28 @@
 !!$ 
   
 
-subroutine psb_d_elg_inner_vect_sv(alpha,a,x,beta,y,info,trans) 
+subroutine psb_@X@_elg_inner_vect_sv(alpha,a,x,beta,y,info,trans) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use elldev_mod
   use vectordev_mod
-  use psb_d_elg_mat_mod, psb_protect_name => psb_d_elg_inner_vect_sv
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_elg_inner_vect_sv
 #else 
-  use psb_d_elg_mat_mod
+  use psb_@X@_elg_mat_mod
 #endif
-  use psb_d_gpu_vect_mod
+  use psb_@X@_gpu_vect_mod
   implicit none 
-  class(psb_d_elg_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(in)       :: alpha, beta
-  class(psb_d_base_vect_type), intent(inout) :: x, y
+  class(psb_@X@_elg_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(in)       :: alpha, beta
+  class(psb_@X@_base_vect_type), intent(inout) :: x, y
   integer(psb_ipk_), intent(out)             :: info
   character, optional, intent(in)  :: trans
 
   integer(psb_ipk_) :: err_act
-  character(len=20)  :: name='d_base_inner_vect_sv'
+  character(len=20)  :: name='@X@_elg_inner_vect_sv'
   logical, parameter :: debug=.false.
-  real(psb_dpk_), allocatable      :: rx(:), ry(:)
+  @TYPE@(@FKIND@), allocatable      :: rx(:), ry(:)
 
   call psb_get_erraction(err_act)
   ! This is the base version. If we get here
@@ -67,7 +67,7 @@ subroutine psb_d_elg_inner_vect_sv(alpha,a,x,beta,y,info,trans)
   else
     call x%sync()
     call y%sync()
-    call a%psb_d_ell_sparse_mat%inner_spsm(alpha,x,beta,y,info,trans)
+    call a%psb_@X@_ell_sparse_mat%inner_spsm(alpha,x,beta,y,info,trans)
     call y%set_host()
   end if
 
@@ -91,4 +91,4 @@ subroutine psb_d_elg_inner_vect_sv(alpha,a,x,beta,y,info,trans)
   end if
   return
 
-end subroutine psb_d_elg_inner_vect_sv
+end subroutine psb_@X@_elg_inner_vect_sv

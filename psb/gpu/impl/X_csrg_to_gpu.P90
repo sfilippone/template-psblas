@@ -30,24 +30,24 @@
 !!$ 
   
 
-subroutine psb_d_csrg_to_gpu(a,info,nzrm) 
+subroutine psb_@X@_csrg_to_gpu(a,info,nzrm) 
 
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use cusparse_mod
-  use psb_d_csrg_mat_mod, psb_protect_name => psb_d_csrg_to_gpu
+  use psb_@X@_csrg_mat_mod, psb_protect_name => psb_@X@_csrg_to_gpu
 #else 
-  use psb_d_csrg_mat_mod
+  use psb_@X@_csrg_mat_mod
 #endif
   implicit none 
-  class(psb_d_csrg_sparse_mat), intent(inout) :: a
-  integer, intent(out)                       :: info
-  integer, intent(in), optional              :: nzrm
+  class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_), intent(out)              :: info
+  integer(psb_ipk_), intent(in), optional     :: nzrm
 
-  integer :: m, nzm, n, pitch,maxrowsize,nz
-  integer :: nzdi,i,j,k,nrz
+  integer(psb_ipk_) :: m, nzm, n, pitch,maxrowsize,nz
+  integer(psb_ipk_) :: nzdi,i,j,k,nrz
   integer(psb_ipk_), allocatable :: irpdi(:),jadi(:)
-  real(psb_dpk_), allocatable :: valdi(:)
+  @TYPE@(@FKIND@), allocatable :: valdi(:)
 
   info = 0
 
@@ -92,7 +92,7 @@ subroutine psb_d_csrg_to_gpu(a,info,nzrm)
         do i=1,m
           j        = irpdi(i) 
           jadi(j)  = i
-          valdi(j) = done
+          valdi(j) = @XONE@
           nrz      = a%irp(i+1)-a%irp(i)
           jadi(j+1:j+nrz)  = a%ja(a%irp(i):a%irp(i+1)-1)
           valdi(j+1:j+nrz) = a%val(a%irp(i):a%irp(i+1)-1)
@@ -106,7 +106,7 @@ subroutine psb_d_csrg_to_gpu(a,info,nzrm)
           jadi(j+0:j+nrz-1)  = a%ja(a%irp(i):a%irp(i+1)-1)
           valdi(j+0:j+nrz-1) = a%val(a%irp(i):a%irp(i+1)-1)
           jadi(j+nrz)  = i
-          valdi(j+nrz) = done
+          valdi(j+nrz) = @XONE@
           irpdi(i+1)   = j + nrz + 1
           !          write(0,*) 'Row ',i,' : ',irpdi(i:i+1),':',jadi(j:j+nrz),valdi(j:j+nrz)
         end do        
@@ -147,4 +147,4 @@ subroutine psb_d_csrg_to_gpu(a,info,nzrm)
   end if
 #endif
 
-end subroutine psb_d_csrg_to_gpu
+end subroutine psb_@X@_csrg_to_gpu

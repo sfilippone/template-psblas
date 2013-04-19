@@ -30,41 +30,35 @@
 !!$ 
   
 
-subroutine psb_d_elg_scals(d,a,info) 
+subroutine psb_@X@_elg_scals(d,a,info) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use elldev_mod
   use vectordev_mod
-  use psb_d_elg_mat_mod, psb_protect_name => psb_d_elg_scals 
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_elg_scals 
 #else 
-  use psb_d_elg_mat_mod
+  use psb_@X@_elg_mat_mod
 #endif
   implicit none 
-  class(psb_d_elg_sparse_mat), intent(inout) :: a
-  real(psb_dpk_), intent(in)      :: d
-  integer, intent(out)            :: info
+  class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)      :: d
+  integer(psb_ipk_), intent(out)   :: info
 
-  Integer :: err_act,mnm, i, j, m
+  Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='scal'
   logical, parameter :: debug=.false.
 
   info  = psb_success_
   call psb_erractionsave(err_act)
 
-
   a%val(:,:) = a%val(:,:) * d
 
 #ifdef HAVE_SPGPU
-  if (.not.c_associated(a%deviceMat)) then 
-    info = psb_err_invalid_mat_state_
-    call psb_errpush(info,name)
-    goto 9999
-  endif
-  info = writeEllDevice(a%deviceMat,a%val,a%ja,size(a%ja,1),a%irn)
+  call a%to_gpu(info)
   if (info /= 0) goto 9999
 #endif
-  call psb_erractionrestore(err_act)
+
   return
 
 9999 continue
@@ -75,4 +69,4 @@ subroutine psb_d_elg_scals(d,a,info)
   end if
   return
 
-end subroutine psb_d_elg_scals
+end subroutine psb_@X@_elg_scals

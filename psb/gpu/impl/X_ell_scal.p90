@@ -30,20 +30,20 @@
 !!$ 
   
 
-subroutine psb_d_ell_scal(d,a,info,side) 
+subroutine psb_@X@_ell_scal(d,a,info,side) 
   
   use psb_base_mod
-  use psb_d_ell_mat_mod, psb_protect_name => psb_d_ell_scal
+  use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_scal
   implicit none 
-  class(psb_d_ell_sparse_mat), intent(inout) :: a
-  real(psb_dpk_), intent(in)      :: d(:)
-  integer, intent(out)            :: info
+  class(psb_@X@_ell_sparse_mat), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)     :: d(:)
+  integer(psb_ipk_), intent(out)  :: info
   character, intent(in), optional :: side
 
-  Integer :: err_act,mnm, i, j, m, n, ierr(5)
+  Integer(Psb_ipk_)  :: err_act,mnm, i, j, m, n, ierr(5)
   character(len=20)  :: name='scal'
-  character :: side_
-  logical   :: left 
+  character          :: side_
+  logical            :: left 
   logical, parameter :: debug=.false.
 
   info  = psb_success_
@@ -60,7 +60,7 @@ subroutine psb_d_ell_scal(d,a,info,side)
     m = a%get_nrows()
     if (size(d) < m) then 
       info=psb_err_input_asize_invalid_i_
-      call psb_errpush(info,name,i_err=(/2,size(d),0,0,0/))
+      call psb_errpush(info,name,i_err=(/2*ione,size(d),izero,izero,izero/))
       goto 9999
     end if
     
@@ -94,4 +94,4 @@ subroutine psb_d_ell_scal(d,a,info,side)
   end if
   return
 
-end subroutine psb_d_ell_scal
+end subroutine psb_@X@_ell_scal

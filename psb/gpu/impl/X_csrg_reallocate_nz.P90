@@ -30,21 +30,21 @@
 !!$ 
   
 
-subroutine  psb_d_csrg_reallocate_nz(nz,a) 
+subroutine  psb_@X@_csrg_reallocate_nz(nz,a) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use cusparse_mod
-  use psb_d_csrg_mat_mod, psb_protect_name => psb_d_csrg_reallocate_nz
+  use psb_@X@_csrg_mat_mod, psb_protect_name => psb_@X@_csrg_reallocate_nz
 #else 
-  use psb_d_csrg_mat_mod
+  use psb_@X@_csrg_mat_mod
 #endif
   implicit none 
-  integer, intent(in) :: nz
-  class(psb_d_csrg_sparse_mat), intent(inout) :: a
-  integer :: m, nzrm,ld
-  Integer :: err_act, info
-  character(len=20)  :: name='d_csrg_reallocate_nz'
+  integer(psb_ipk_), intent(in) :: nz
+  class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_) :: m, nzrm,ld
+  Integer(Psb_ipk_) :: err_act, info
+  character(len=20)  :: name='@X@_csrg_reallocate_nz'
   logical, parameter :: debug=.false.
 
   call psb_erractionsave(err_act)
@@ -53,7 +53,7 @@ subroutine  psb_d_csrg_reallocate_nz(nz,a)
   !
   ! What should this really do??? 
   ! 
-  call a%psb_d_csr_sparse_mat%reallocate(nz)
+  call a%psb_@X@_csr_sparse_mat%reallocate(nz)
 
 #ifdef HAVE_SPGPU
   call a%to_gpu(info,nzrm=nz)
@@ -72,4 +72,4 @@ subroutine  psb_d_csrg_reallocate_nz(nz,a)
   end if
   return
 
-end subroutine psb_d_csrg_reallocate_nz
+end subroutine psb_@X@_csrg_reallocate_nz

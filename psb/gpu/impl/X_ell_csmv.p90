@@ -30,22 +30,22 @@
 !!$ 
   
 
-subroutine psb_d_ell_csmv(alpha,a,x,beta,y,info,trans) 
+subroutine psb_@X@_ell_csmv(alpha,a,x,beta,y,info,trans) 
   
   use psb_base_mod
-  use psb_d_ell_mat_mod, psb_protect_name => psb_d_ell_csmv
+  use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_csmv
   implicit none 
-  class(psb_d_ell_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(in)          :: alpha, beta, x(:)
-  real(psb_dpk_), intent(inout)       :: y(:)
-  integer, intent(out)                :: info
-  character, optional, intent(in)     :: trans
+  class(psb_@X@_ell_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(in)        :: alpha, beta, x(:)
+  @TYPE@(@FKIND@), intent(inout)     :: y(:)
+  integer(psb_ipk_), intent(out)     :: info
+  character, optional, intent(in)    :: trans
 
   character :: trans_
-  integer   :: i,j,k,m,n, nnz, ir, jc
-  real(psb_dpk_) :: acc
-  logical   :: tra
-  Integer :: err_act
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc
+  @TYPE@(@FKIND@)    :: acc
+  logical            :: tra, ctra
+  Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='d_ell_csmv'
   logical, parameter :: debug=.false.
 
@@ -65,9 +65,9 @@ subroutine psb_d_ell_csmv(alpha,a,x,beta,y,info,trans)
   endif
 
 
-  tra = (psb_toupper(trans_) == 'T').or.(psb_toupper(trans_)=='C')
-
-  if (tra) then 
+  tra  = (psb_toupper(trans_) == 'T')
+  ctra = (psb_toupper(trans_) == 'C')
+  if (tra.or.ctra) then 
     m = a%get_ncols()
     n = a%get_nrows()
   else
@@ -77,21 +77,21 @@ subroutine psb_d_ell_csmv(alpha,a,x,beta,y,info,trans)
 
   if (size(x,1)<n) then 
     info = 36
-    call psb_errpush(info,name,i_err=(/3,n,0,0,0/))
+    call psb_errpush(info,name,i_err=(/3*ione,n,izero,izero,izero/))
     goto 9999
   end if
 
   if (size(y,1)<m) then 
     info = 36
-    call psb_errpush(info,name,i_err=(/5,m,0,0,0/))
+    call psb_errpush(info,name,i_err=(/5*ione,m,izero,izero,izero/))
     goto 9999
   end if
 
 
-  call psb_d_ell_csmv_inner(m,n,alpha,size(a%ja,2),&
+  call psb_@X@_ell_csmv_inner(m,n,alpha,size(a%ja,2),&
        & a%ja,size(a%ja,1),a%val,size(a%val,1),&
        & a%is_triangle(),a%is_unit(),&
-       & x,beta,y,tra) 
+       & x,beta,y,tra,ctra) 
 
   call psb_erractionrestore(err_act)
   return
@@ -107,22 +107,22 @@ subroutine psb_d_ell_csmv(alpha,a,x,beta,y,info,trans)
 
 contains
 
-  subroutine psb_d_ell_csmv_inner(m,n,alpha,nc,ja,ldj,val,ldv,&
-       & is_triangle,is_unit, x,beta,y,tra) 
-    integer, intent(in)             :: m,n,nc,ldj,ldv,ja(ldj,*)
-    real(psb_dpk_), intent(in)      :: alpha, beta, x(*),val(ldv,*)
-    real(psb_dpk_), intent(inout)   :: y(*)
-    logical, intent(in)             :: is_triangle,is_unit,tra
+  subroutine psb_@X@_ell_csmv_inner(m,n,alpha,nc,ja,ldj,val,ldv,&
+       & is_triangle,is_unit, x,beta,y,tra,ctra) 
+    integer(psb_ipk_), intent(in)   :: m,n,nc,ldj,ldv,ja(ldj,*)
+    @TYPE@(@FKIND@), intent(in)     :: alpha, beta, x(*),val(ldv,*)
+    @TYPE@(@FKIND@), intent(inout)  :: y(*)
+    logical, intent(in)             :: is_triangle,is_unit,tra,ctra
 
 
-    integer   :: i,j,k, ir, jc, m4
-    real(psb_dpk_) :: acc(4) 
+    integer(psb_ipk_) :: i,j,k, ir, jc, m4
+    @TYPE@(@FKIND@)   :: acc(4) 
 
 
-    if (alpha == dzero) then
-      if (beta == dzero) then
+    if (alpha == @XZERO@) then
+      if (beta == @XZERO@) then
         do i = 1, m
-          y(i) = dzero
+          y(i) = @XZERO@
         enddo
       else
         do  i = 1, m
@@ -133,13 +133,13 @@ contains
     end if
 
 
-    if (.not.tra) then 
+    if (.not.(tra.or.ctra)) then 
 
-      if (beta == dzero) then 
+      if (beta == @XZERO@) then 
 
         m4 = mod(m,4) 
         do i=1,m4
-          acc(1) = dzero 
+          acc(1) = @XZERO@ 
           do j=1,nc
             acc(1)  = acc(1) + val(i,j) * x(ja(i,j))          
           enddo
@@ -147,20 +147,20 @@ contains
         end do
 
 
-        if (alpha == done) then 
+        if (alpha == @XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4)  = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
             y(i:i+3) = acc(1:4)
           end do
 
-        else if (alpha == -done) then 
+        else if (alpha == -@XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) - val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -170,7 +170,7 @@ contains
         else 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4)  = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -180,31 +180,31 @@ contains
         end if
 
 
-      else if (beta == done) then 
+      else if (beta == @XONE@) then 
         
 
         m4 = mod(m,4) 
         do i=1,m4
-          acc(1) = dzero 
+          acc(1) = @XZERO@ 
           do j=1,nc
             acc(1)  = acc(1) + val(i,j) * x(ja(i,j))          
           enddo
           y(i) = y(i) + alpha*acc(1)
         end do
 
-        if (alpha == done) then 
+        if (alpha == @XONE@) then 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
             y(i:i+3) = y(i:i+3) + acc(1:4)
           end do
 
-        else if (alpha == -done) then 
+        else if (alpha == -@XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) - val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -214,7 +214,7 @@ contains
         else 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -223,31 +223,31 @@ contains
 
         end if
 
-      else if (beta == -done) then 
+      else if (beta == -@XONE@) then 
 
         m4 = mod(m,4) 
         do i=1,m4
-          acc(1) = dzero 
+          acc(1) = @XZERO@ 
           do j=1,nc
             acc(1)  = acc(1) + val(i,j) * x(ja(i,j))          
           enddo
           y(i) = - y(i) + alpha*acc(1)
         end do
 
-        if (alpha == done) then 
+        if (alpha == @XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
             y(i:i+3) = -y(i:i+3) + acc(1:4)
           end do
 
-        else if (alpha == -done) then 
+        else if (alpha == -@XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) - val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -257,7 +257,7 @@ contains
         else 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -270,27 +270,27 @@ contains
 
         m4 = mod(m,4) 
         do i=1,m4
-          acc(1) = dzero 
+          acc(1) = @XZERO@ 
           do j=1,nc
             acc(1)  = acc(1) + val(i,j) * x(ja(i,j))          
           enddo
           y(i) = beta*y(i) + alpha*acc(1)
         end do
 
-        if (alpha == done) then 
+        if (alpha == @XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
             y(i:i+3) = beta*y(i:i+3) + acc(1:4)
           end do
 
-        else if (alpha == -done) then 
+        else if (alpha == -@XONE@) then 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) - val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -300,7 +300,7 @@ contains
         else 
 
           do i=m4+1,m,4
-            acc  = dzero
+            acc  = @XZERO@
             do j=1,nc
               acc(1:4) = acc(1:4) + val(i:i+3,j) * x(ja(i:i+3,j))          
             enddo
@@ -313,13 +313,13 @@ contains
 
     else if (tra) then 
 
-      if (beta == dzero) then 
+      if (beta == @XZERO@) then 
         do i=1, m
-          y(i) = dzero
+          y(i) = @XZERO@
         end do
-      else if (beta == done) then 
+      else if (beta == @XONE@) then 
         ! Do nothing
-      else if (beta == -done) then 
+      else if (beta == -@XONE@) then 
         do i=1, m
           y(i) = -y(i) 
         end do
@@ -333,7 +333,7 @@ contains
       ! Need to think about this.
       ! Transpose does not mix well with ELLPACK.
       ! 
-      if (alpha == done) then
+      if (alpha == @XONE@) then
 
         do i=1,n
           do j=1,nc
@@ -342,7 +342,7 @@ contains
           end do
         enddo
 
-      else if (alpha == -done) then
+      else if (alpha == -@XONE@) then
 
         do i=1,n
           do j=1,nc
@@ -362,6 +362,57 @@ contains
 
       end if
 
+    else if (ctra) then 
+
+      if (beta == @XZERO@) then 
+        do i=1, m
+          y(i) = @XZERO@
+        end do
+      else if (beta == @XONE@) then 
+        ! Do nothing
+      else if (beta == -@XONE@) then 
+        do i=1, m
+          y(i) = -y(i) 
+        end do
+      else
+        do i=1, m
+          y(i) = beta*y(i) 
+        end do
+      end if
+
+      !
+      ! Need to think about this.
+      ! Transpose does not mix well with ELLPACK.
+      ! 
+      if (alpha == @XONE@) then
+
+        do i=1,n
+          do j=1,nc
+            ir = ja(i,j)
+            y(ir) = y(ir) +  @CONJG@(val(i,j))*x(i)
+          end do
+        enddo
+
+      else if (alpha == -@XONE@) then
+
+        do i=1,n
+          do j=1,nc
+            ir = ja(i,j)
+            y(ir) = y(ir) -  @CONJG@(val(i,j))*x(i)
+          end do
+        enddo
+
+      else                    
+
+        do i=1,n
+          do j=1,nc
+            ir = ja(i,j)
+            y(ir) = y(ir) +  alpha*@CONJG@(val(i,j))*x(i)
+          end do
+        enddo
+
+      end if
+
     endif
 
     if (is_triangle.and.is_unit) then 
@@ -371,6 +422,6 @@ contains
     end if
 
 
-  end subroutine psb_d_ell_csmv_inner
+  end subroutine psb_@X@_ell_csmv_inner
 
-end subroutine psb_d_ell_csmv
+end subroutine psb_@X@_ell_csmv

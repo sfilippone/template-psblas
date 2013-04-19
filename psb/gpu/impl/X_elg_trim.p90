@@ -30,43 +30,38 @@
 !!$ 
   
 
-
-subroutine psb_d_csrg_copy(a,b,info) 
-  use psb_d_csrg_mat_mod, psb_protect_name => psb_d_csrg_copy
-  use psb_error_mod
-  use psb_realloc_mod
+subroutine  psb_@X@_elg_trim(a)
+  
+  use psb_base_mod
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_elg_trim
   implicit none 
-  class(psb_d_csrg_sparse_mat), intent(in)     :: a
-  class(psb_d_base_sparse_mat), intent(inout) :: b
-  integer(psb_ipk_), intent(out)              :: info
-  integer(psb_ipk_) :: err_act
-  integer(psb_ipk_) :: ierr(5)
-  character(len=20)  :: name='csrg_copy'
+  class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+  Integer(psb_ipk_)  :: err_act, info, nz, m, nzm,ld
+  character(len=20)  :: name='trim'
   logical, parameter :: debug=.false.
 
-  call psb_get_erraction(err_act)
+  call psb_erractionsave(err_act)
+  info = psb_success_
+  m    = a%get_nrows()
+  ld   = size(a%ja,1)
+  nzm  = maxval(a%irn(1:m))
   
-  info = 0 
+  call psb_realloc(m,a%irn,info)
+  if (info == psb_success_) call psb_realloc(m,a%idiag,info)
+  if (info == psb_success_) call psb_realloc(ld,nzm,a%ja,info)
+  if (info == psb_success_) call psb_realloc(ld,nzm,a%val,info)
 
-  select type(b)
-  type is (psb_d_csrg_sparse_mat)
-    b%psb_d_csr_sparse_mat = a%psb_d_csr_sparse_mat
-    if (info /= 0) goto 9999
-#ifdef HAVE_SPGPU
-    call b%to_gpu(info)
-    if (info /= 0) goto 9999
-#endif
-    
-  class default
-    info = psb_err_internal_error_
-    goto 9999
-  end select
-
+  if (info /= psb_success_) goto 9999 
+  call psb_erractionrestore(err_act)
   return
+
 9999 continue
-  if (err_act /= psb_act_ret_) then
+  call psb_erractionrestore(err_act)
+
+  if (err_act == psb_act_abort_) then
     call psb_error()
+    return
   end if
   return
 
-end subroutine psb_d_csrg_copy
+end subroutine psb_@X@_elg_trim

@@ -30,16 +30,16 @@
 !!$ 
   
 
-subroutine  psb_d_ell_reallocate_nz(nz,a) 
+subroutine  psb_@X@_ell_reallocate_nz(nz,a) 
   
   use psb_base_mod
-  use psb_d_ell_mat_mod, psb_protect_name => psb_d_ell_reallocate_nz
+  use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_reallocate_nz
   implicit none 
-  integer, intent(in) :: nz
-  class(psb_d_ell_sparse_mat), intent(inout) :: a
-  integer :: m, nzrm
-  Integer :: err_act, info
-  character(len=20)  :: name='d_ell_reallocate_nz'
+  integer(psb_ipk_), intent(in) :: nz
+  class(psb_@X@_ell_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_)  :: m, nzrm
+  Integer(Psb_ipk_)  :: err_act, info
+  character(len=20)  :: name='@X@_ell_reallocate_nz'
   logical, parameter :: debug=.false.
 
   call psb_erractionsave(err_act)
@@ -49,8 +49,9 @@ subroutine  psb_d_ell_reallocate_nz(nz,a)
   ! 
   m    = a%get_nrows()
   nzrm = (nz+m-1)/m
-  call psb_realloc(m,nzrm,a%ja,info)
-  if (info == psb_success_) call psb_realloc(m,nzrm,a%val,info)
+  ld = size(a%ja,1)
+  call psb_realloc(ld,nzrm,a%ja,info)
+  if (info == psb_success_) call psb_realloc(ld,nzrm,a%val,info)
   if (info /= psb_success_) then 
     call psb_errpush(psb_err_alloc_dealloc_,name)
     goto 9999
@@ -68,4 +69,4 @@ subroutine  psb_d_ell_reallocate_nz(nz,a)
   end if
   return
 
-end subroutine psb_d_ell_reallocate_nz
+end subroutine psb_@X@_ell_reallocate_nz
