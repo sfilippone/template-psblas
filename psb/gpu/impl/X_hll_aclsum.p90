@@ -30,18 +30,18 @@
 !!$ 
   
 
-subroutine psb_d_hll_aclsum(d,a) 
+subroutine psb_@X@_hll_aclsum(d,a) 
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_aclsum
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(out)              :: d(:)
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_aclsum
+  class(psb_@X@_hll_sparse_mat), intent(in) :: a
+  @RTYPE@(@FKIND@), intent(out)             :: d(:)
 
-  integer   :: i,j,k,m,n, nnz, ir, jc, nc
-  real(psb_dpk_) :: acc
-  real(psb_dpk_), allocatable :: vt(:)
+  integer(psb_ipk_) :: i,j,k,m,n, nnz, ir, jc, nc
+  @RTYPE@(@FKIND@)  :: acc
+  @RTYPE@(@FKIND@), allocatable :: vt(:)
   logical   :: tra
-  Integer :: err_act, info, int_err(5)
+  Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='aclsum'
   logical, parameter :: debug=.false.
 
@@ -80,4 +80,4 @@ subroutine psb_d_hll_aclsum(d,a)
   end if
   return
 
-end subroutine psb_d_hll_aclsum
+end subroutine psb_@X@_hll_aclsum

@@ -30,23 +30,23 @@
 !!$ 
   
 
-subroutine psb_d_hlg_scals(d,a,info) 
+subroutine psb_@X@_hlg_scals(d,a,info) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use hlldev_mod
   use vectordev_mod
-  use psb_d_hlg_mat_mod, psb_protect_name => psb_d_hlg_scals 
+  use psb_@X@_hlg_mat_mod, psb_protect_name => psb_@X@_hlg_scals 
 #else 
-  use psb_d_hlg_mat_mod
+  use psb_@X@_hlg_mat_mod
 #endif
   use iso_c_binding
   implicit none 
-  class(psb_d_hlg_sparse_mat), intent(inout) :: a
-  real(psb_dpk_), intent(in)      :: d
-  integer, intent(out)            :: info
+  class(psb_@X@_hlg_sparse_mat), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)      :: d
+  integer(psb_ipk_), intent(out)  :: info
 
-  Integer :: err_act,mnm, i, j, m
+  Integer(Psb_ipk_)  :: err_act,mnm, i, j, m
   character(len=20)  :: name='scal'
   logical, parameter :: debug=.false.
 
@@ -54,7 +54,7 @@ subroutine psb_d_hlg_scals(d,a,info)
   call psb_erractionsave(err_act)
 
 
-  call a%psb_d_hll_sparse_mat%scal(d,info)
+  call a%psb_@X@_hll_sparse_mat%scal(d,info)
   if (info /= psb_success_) goto 9999
 #ifdef HAVE_SPGPU
   call a%to_gpu(info)
@@ -72,4 +72,4 @@ subroutine psb_d_hlg_scals(d,a,info)
   end if
   return
 
-end subroutine psb_d_hlg_scals
+end subroutine psb_@X@_hlg_scals

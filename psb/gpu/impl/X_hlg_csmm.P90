@@ -42,14 +42,14 @@ subroutine psb_@X@_hlg_csmm(alpha,a,x,beta,y,info,trans)
 #endif
   implicit none 
   class(psb_@X@_hlg_sparse_mat), intent(in) :: a
-  @TYPE@(KIND@), intent(in)          :: alpha, beta, x(:,:)
-  @TYPE@(KIND@), intent(inout)       :: y(:,:)
+  @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:,:)
+  @TYPE@(@FKIND@), intent(inout)       :: y(:,:)
   integer(psb_ipk_), intent(out)                :: info
   character, optional, intent(in)     :: trans
 
   character :: trans_
   integer(psb_ipk_)   :: i,j,k,m,n, nnz, ir, jc, nxy
-  @TYPE@(KIND@), allocatable  :: acc(:)
+  @TYPE@(@FKIND@), allocatable  :: acc(:)
   type(c_ptr)        :: gpX, gpY
   logical            :: tra
   Integer(Psb_ipk_)  :: err_act
