@@ -64,6 +64,13 @@ subroutine psb_@X@_ell_aclsum(d,a)
     end do
   end do
 
+  if (a%is_triangle().and.a%is_unit()) then 
+    do i=1, n
+      d(i) = d(i) + @RONE@
+    end do
+  end if
+
+
   call psb_erractionrestore(err_act)
   return  
 

@@ -62,6 +62,12 @@ subroutine psb_@X@_ell_arwsum(d,a)
       d(i) = d(i) + abs(a%val(i,j))
     end do
   end do
+  
+  if (a%is_triangle().and.a%is_unit()) then 
+    do i=1, m
+      d(i) = d(i) + @RONE@
+    end do
+  end if
 
   call psb_erractionrestore(err_act)
   return  

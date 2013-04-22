@@ -30,44 +30,56 @@
 !!$ 
   
 
-subroutine psb_d_hll_rowsum(d,a) 
+subroutine psb_@X@_hll_rowsum(d,a) 
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_rowsum
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(out)             :: d(:)
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_rowsum
+  class(psb_@X@_hll_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(out)             :: d(:)
 
-  integer   :: i,j,k,m,n, nnz, ir, jc, nc
-  real(psb_dpk_) :: acc
-  real(psb_dpk_), allocatable :: vt(:)
-  logical   :: tra
-  Integer :: err_act, info, int_err(5)
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc
+  logical            :: tra
+  Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='rowsum'
   logical, parameter :: debug=.false.
 
   call psb_erractionsave(err_act)
-  info = psb_err_missing_override_method_
+  info = 0
 
-!!$  m = a%get_nrows()
-!!$  if (size(d) < m) then 
-!!$    info=psb_err_input_asize_small_i_
-!!$    int_err(1) = 1
-!!$    int_err(2) = size(d)
-!!$    int_err(3) = m
-!!$    call psb_errpush(info,name,i_err=int_err)
-!!$    goto 9999
-!!$  end if
-!!$
-!!$  do i = 1, a%get_nrows()
-!!$    d(i) = dzero
-!!$    do j=1,a%irn(i) 
-!!$      d(i) = d(i) + (a%val(i,j))
-!!$    end do
-!!$  end do
-!!$
-!!$ 
-!!$  call psb_erractionrestore(err_act)
-!!$  return  
+  m = a%get_nrows()
+  n = a%get_ncols()
+  if (size(d) < m) then 
+    info=psb_err_input_asize_small_i_
+    int_err(1) = 1
+    int_err(2) = size(d)
+    int_err(3) = m
+    call psb_errpush(info,name,i_err=int_err)
+    goto 9999
+  end if
+
+  d    = @XZERO@
+  hksz = a%get_hksz()
+  j    = 1
+  do i=1,m,hksz
+    ir    = min(hksz,m-i+1) 
+    mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+    k     = a%hkoffs(j) + 1
+    call @X@_hll_rowsum(i,ir,mxrwl,a%irn(i),&
+         & a%ja(k),hksz,a%val(k),hksz, &
+         & d,info) 
+    if (info /= psb_success_) goto 9999
+    j = j + 1 
+  end do
+  
+  
+  if (a%is_triangle().and.a%is_unit()) then 
+    do i=1, m
+      d(i) = d(i) + @XONE@
+    end do
+  end if
+
+  call psb_erractionrestore(err_act)
+  return  
 
 9999 continue
   call psb_erractionrestore(err_act)
@@ -78,4 +90,25 @@ subroutine psb_d_hll_rowsum(d,a)
   end if
   return
 
-end subroutine psb_d_hll_rowsum
+contains
+
+  subroutine @X@_hll_rowsum(ir,m,n,irn,ja,ldj,val,ldv,&
+       & d,info) 
+    integer(psb_ipk_), intent(in)   :: ir,m,n,ldj,ldv,ja(ldj,*),irn(*)
+    @TYPE@(@FKIND@), intent(in)     :: val(ldv,*)
+    @TYPE@(@FKIND@), intent(inout) :: d(*)
+    integer(psb_ipk_), intent(out)  :: info
+
+    integer(psb_ipk_)   :: i,j,k, m4, jc
+    @TYPE@(@FKIND@) :: acc(4), tmp
+
+    info = psb_success_
+    do i=1,m
+      do j=1, irn(i)
+        d(ir+i-1) = d(ir+i-1) + (val(i,j))
+      end do
+    end do
+
+  end subroutine @X@_hll_rowsum
+
+end subroutine psb_@X@_hll_rowsum

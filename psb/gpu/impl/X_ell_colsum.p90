@@ -63,6 +63,12 @@ subroutine psb_@X@_ell_colsum(d,a)
       d(k) = d(k) + (a%val(i,j))
     end do
   end do
+ 
+  if (a%is_triangle().and.a%is_unit()) then 
+    do i=1, n
+      d(i) = d(i) + @XONE@
+    end do
+  end if
 
   call psb_erractionrestore(err_act)
   return  
