@@ -53,6 +53,9 @@ subroutine psb_@X@_hlg_scals(d,a,info)
   info  = psb_success_
   call psb_erractionsave(err_act)
 
+  if (a%is_unit()) then 
+    call a%add_unit_diag()
+  end if
 
   call a%psb_@X@_hll_sparse_mat%scal(d,info)
   if (info /= psb_success_) goto 9999

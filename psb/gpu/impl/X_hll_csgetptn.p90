@@ -30,25 +30,24 @@
 !!$ 
   
 
-subroutine psb_d_hll_csgetptn(imin,imax,a,nz,ia,ja,info,&
-  
+subroutine psb_@X@_hll_csgetptn(imin,imax,a,nz,ia,ja,info,&
      & jmin,jmax,iren,append,nzin,rscale,cscale)
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_csgetptn
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_csgetptn
   implicit none
 
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  integer, intent(in)                  :: imin,imax
-  integer, intent(out)                 :: nz
-  integer, allocatable, intent(inout)  :: ia(:), ja(:)
-  integer,intent(out)                  :: info
-  logical, intent(in), optional        :: append
-  integer, intent(in), optional        :: iren(:)
-  integer, intent(in), optional        :: jmin,jmax, nzin
-  logical, intent(in), optional        :: rscale,cscale
+  class(psb_@X@_hll_sparse_mat), intent(in)       :: a
+  integer(psb_ipk_), intent(in)                 :: imin,imax
+  integer(psb_ipk_), intent(out)                :: nz
+  integer(psb_ipk_), allocatable, intent(inout) :: ia(:), ja(:)
+  integer(psb_ipk_),intent(out)                 :: info
+  logical, intent(in), optional                 :: append
+  integer(psb_ipk_), intent(in), optional       :: iren(:)
+  integer(psb_ipk_), intent(in), optional       :: jmin,jmax, nzin
+  logical, intent(in), optional                 :: rscale,cscale
 
-  logical :: append_, rscale_, cscale_ 
-  integer :: nzin_, jmin_, jmax_, err_act, i
+  logical            :: append_, rscale_, cscale_ 
+  integer(psb_ipk_)  :: nzin_, jmin_, jmax_, err_act, i
   character(len=20)  :: name='csget'
   logical, parameter :: debug=.false.
 
@@ -128,19 +127,18 @@ contains
 
   subroutine hll_getptn(imin,imax,jmin,jmax,a,nz,ia,ja,nzin,append,info,&
        & iren)
-
     implicit none
 
-    class(psb_d_hll_sparse_mat), intent(in)    :: a
-    integer                              :: imin,imax,jmin,jmax
-    integer, intent(out)                 :: nz
-    integer, allocatable, intent(inout)  :: ia(:), ja(:)
-    integer, intent(in)                  :: nzin
-    logical, intent(in)                  :: append
-    integer                              :: info
-    integer, optional                    :: iren(:)
-    integer  :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, hksz, hk, mxrwl, irs
-    integer  :: debug_level, debug_unit
+    class(psb_@X@_hll_sparse_mat), intent(in)       :: a
+    integer(psb_ipk_)                             :: imin,imax,jmin,jmax
+    integer(psb_ipk_), intent(out)                :: nz
+    integer(psb_ipk_), allocatable, intent(inout) :: ia(:), ja(:)
+    integer(psb_ipk_), intent(in)                 :: nzin
+    logical, intent(in)                           :: append
+    integer(psb_ipk_)                             :: info
+    integer(psb_ipk_), optional                   :: iren(:)
+    integer(psb_ipk_) :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, hksz, hk, mxrwl, irs
+    integer(psb_ipk_) :: debug_level, debug_unit
     character(len=20) :: name='hll_getptn'
 
     debug_unit  = psb_get_debug_unit()
@@ -211,7 +209,5 @@ contains
       end do
     end if
 
-
-
   end subroutine hll_getptn
-end subroutine psb_d_hll_csgetptn
+end subroutine psb_@X@_hll_csgetptn

@@ -50,6 +50,7 @@ function psb_@X@_ell_csnmi(a) result(res)
  
   do i = 1, a%get_nrows()
     acc = sum(abs(a%val(i,:)))
+    if (a%is_unit()) acc = acc + @RONE@
     res = max(res,acc)
   end do
 

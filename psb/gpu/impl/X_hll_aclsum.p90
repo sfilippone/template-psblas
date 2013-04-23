@@ -57,7 +57,11 @@ subroutine psb_@X@_hll_aclsum(d,a)
     goto 9999
   end if
   
-  d   = @RZERO@
+  if (a%is_unit()) then 
+    d = @RONE@
+  else
+    d = @RZERO@
+  end if
 
   hksz = a%get_hksz()
   j    = 1
@@ -72,13 +76,6 @@ subroutine psb_@X@_hll_aclsum(d,a)
     j = j + 1 
   end do
   
-  
-  if (a%is_triangle().and.a%is_unit()) then 
-    do i=1, n
-      d(i) = d(i) + @RONE@
-    end do
-  end if
-
   call psb_erractionrestore(err_act)
   return  
 

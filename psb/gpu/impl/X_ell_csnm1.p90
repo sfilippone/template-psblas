@@ -47,13 +47,17 @@ function psb_@X@_ell_csnm1(a) result(res)
   logical, parameter :: debug=.false.
 
 
-  res = -@RONE@ 
+  res = @RZERO@ 
   nnz = a%get_nzeros()
   m   = a%get_nrows()
   n   = a%get_ncols()
   allocate(vt(n),stat=info)
   if (info /= 0) return
-  vt(:) = @RZERO@
+  if (a%is_unit()) then 
+    vt(:) = @RONE@
+  else
+    vt(:) = @RZERO@
+  end if
   do i=1, m
     do j=1,a%irn(i)
       k = a%ja(i,j)

@@ -45,7 +45,11 @@ function psb_@X@_ell_maxval(a) result(res)
   character(len=20)  :: name='@X@_csnmi'
   logical, parameter :: debug=.false.
 
-  res = @RZERO@
+  if (a%is_unit()) then 
+    res = @RONE@
+  else
+    res = @RZERO@
+  end if
  
   do i = 1, a%get_nrows()
     acc = maxval(abs(a%val(i,:)))

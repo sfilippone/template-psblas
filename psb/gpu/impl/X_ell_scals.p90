@@ -46,6 +46,9 @@ subroutine psb_@X@_ell_scals(d,a,info)
   info  = psb_success_
   call psb_erractionsave(err_act)
 
+  if (a%is_unit()) then 
+    call a%add_unit_diag()
+  end if
 
   a%val(:,:) = a%val(:,:) * d
 

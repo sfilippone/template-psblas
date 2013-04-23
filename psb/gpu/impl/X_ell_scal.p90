@@ -49,6 +49,11 @@ subroutine psb_@X@_ell_scal(d,a,info,side)
   info  = psb_success_
   call psb_erractionsave(err_act)
 
+
+  if (a%is_unit()) then 
+    call a%add_unit_diag()
+  end if
+
   side_ = 'L'
   if (present(side)) then 
     side_ = psb_toupper(side)

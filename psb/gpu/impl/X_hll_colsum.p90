@@ -57,7 +57,12 @@ subroutine psb_@X@_hll_colsum(d,a)
     goto 9999
   end if
 
-  d    = @XZERO@
+  if (a%is_unit()) then 
+    d = @XONE@
+  else
+    d = @XZERO@
+  end if
+
   hksz = a%get_hksz()
   j    = 1
   do i=1,m,hksz
@@ -71,13 +76,6 @@ subroutine psb_@X@_hll_colsum(d,a)
     j = j + 1 
   end do
   
-  
-  if (a%is_triangle().and.a%is_unit()) then 
-    do i=1, n
-      d(i) = d(i) + @XONE@
-    end do
-  end if
-
   call psb_erractionrestore(err_act)
   return  
 

@@ -56,7 +56,12 @@ subroutine psb_@X@_ell_aclsum(d,a)
     goto 9999
   end if
 
-  d   = @RZERO@
+  if (a%is_unit()) then 
+    d = @RONE@
+  else
+    d = @RZERO@
+  end if
+
   do i=1, m
     do j=1,a%irn(i)
       k = a%ja(i,j)
@@ -64,11 +69,6 @@ subroutine psb_@X@_ell_aclsum(d,a)
     end do
   end do
 
-  if (a%is_triangle().and.a%is_unit()) then 
-    do i=1, n
-      d(i) = d(i) + @RONE@
-    end do
-  end if
 
 
   call psb_erractionrestore(err_act)

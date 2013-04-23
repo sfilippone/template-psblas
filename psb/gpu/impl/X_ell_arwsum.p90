@@ -55,19 +55,16 @@ subroutine psb_@X@_ell_arwsum(d,a)
     goto 9999
   end if
 
-
   do i = 1, a%get_nrows()
-    d(i) = @RZERO@
+    if (a%is_unit()) then 
+      d(i) = @RONE@
+    else
+      d(i) = @RZERO@
+    end if
     do j=1,a%irn(i)
       d(i) = d(i) + abs(a%val(i,j))
     end do
   end do
-  
-  if (a%is_triangle().and.a%is_unit()) then 
-    do i=1, m
-      d(i) = d(i) + @RONE@
-    end do
-  end if
 
   call psb_erractionrestore(err_act)
   return  

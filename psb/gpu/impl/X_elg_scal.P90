@@ -54,8 +54,13 @@ subroutine psb_@X@_elg_scal(d,a,info,side)
   info  = psb_success_
   call psb_erractionsave(err_act)
 
+  if (a%is_unit()) then 
+    call a%add_unit_diag()
+  end if
+
   call a%psb_@X@_ell_sparse_mat%scal(d,info,side)
   if (info /= psb_success_) goto 9999
+
 #ifdef HAVE_SPGPU
   call a%to_gpu(info)
   if (info /= 0) goto 9999

@@ -48,6 +48,8 @@ subroutine psb_d_hll_scal(d,a,info,side)
 
   info  = psb_success_
   call psb_erractionsave(err_act)
+
+
   info = psb_err_missing_override_method_
 
 !!$  side_ = 'L'

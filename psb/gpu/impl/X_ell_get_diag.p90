@@ -54,7 +54,7 @@ subroutine psb_@X@_ell_get_diag(a,d,info)
   end if
 
 
-  if (a%is_triangle().and.a%is_unit()) then 
+  if (a%is_unit()) then 
     d(1:mnm) = @XONE@
   else
     do i=1, mnm

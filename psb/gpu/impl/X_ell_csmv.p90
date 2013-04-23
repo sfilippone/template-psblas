@@ -415,7 +415,7 @@ contains
 
     endif
 
-    if (is_triangle.and.is_unit) then 
+    if (is_unit) then 
       do i=1, min(m,n)
         y(i) = y(i) + alpha*x(i)
       end do

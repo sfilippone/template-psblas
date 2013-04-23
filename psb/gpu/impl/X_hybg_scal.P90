@@ -21,19 +21,15 @@ subroutine psb_d_hybg_scal(d,a,info,side)
   info  = psb_success_
   call psb_erractionsave(err_act)
 
+  if (a%is_unit()) then 
+    call a%add_unit_diag()
+  end if
+
   call a%psb_d_csr_sparse_mat%scal(d,info,side=side)
   if (info /= 0) goto 9999
   
 #ifdef HAVE_SPGPU
-  if (.not.c_associated(a%deviceMat%mat)) then 
-    info = psb_err_invalid_mat_state_
-    call psb_errpush(info,name)
-    goto 9999
-  endif
-  m  = a%get_nrows()
-  n  = a%get_nrows()
-  nz = a%get_nzeros()
-  info = HYBGHost2Device(a%deviceMat,m,n,nz,a%irp,a%ja,a%val)
+  call a%to_gpu(info)
   if (info /= 0) goto 9999
 #endif
 
