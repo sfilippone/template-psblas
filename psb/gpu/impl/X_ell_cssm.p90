@@ -333,7 +333,7 @@ contains
               info = -1 
               return
             endif
-            y(i,:) = y(i,:)/@CONJG(val(i,idiag(i)))
+            y(i,:) = y(i,:)/@CONJG@(val(i,idiag(i)))
             acc  = y(i,:) 
             do j=1,idiag(i)
               jc    = ja(i,j)

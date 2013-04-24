@@ -42,7 +42,7 @@ subroutine psb_@X@_hll_cssv(alpha,a,x,beta,y,info,trans)
   character, optional, intent(in)         :: trans
 
   character           :: trans_
-  integer(psb_ipk_)   :: i,j,k,m,n, nnz, ir, jc, ic, hksz, hk, mxrwl, noffs, kc,mk
+  integer(psb_ipk_)   :: i,j,k,m,n, nnz, ir, jc, ic, hksz, hk, mxrwl, noffs, kc, mk
   @TYPE@(@FKIND@)      :: acc
   @TYPE@(@FKIND@), allocatable :: tmp(:)
   logical            :: tra, ctra

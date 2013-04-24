@@ -39,9 +39,9 @@ function psb_@X@_hll_csnm1(a) result(res)
   class(psb_@X@_hll_sparse_mat), intent(in) :: a
   @RTYPE@(@FKIND@)        :: res
   
-  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc, info
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc, info, hksz, mxrwl
   @RTYPE@(@FKIND@), allocatable :: vt(:)
-  logical            :: tra
+  logical            :: is_unit
   Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='@X@_hll_csnm1'
   logical, parameter :: debug=.false.

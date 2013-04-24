@@ -124,9 +124,9 @@ module psb_@X@_ell_mat_mod
   interface 
     subroutine psb_@X@_ell_mold(a,b,info) 
       import :: psb_@X@_ell_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_ell_sparse_mat), intent(in)                :: a
-      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
-      integer(psb_ipk_), intent(out)                         :: info
+      class(psb_@X@_ell_sparse_mat), intent(in)                  :: a
+      class(psb_@X@_base_sparse_mat), intent(inout), allocatable :: b
+      integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_ell_mold
   end interface
 

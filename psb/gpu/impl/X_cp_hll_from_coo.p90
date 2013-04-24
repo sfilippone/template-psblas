@@ -41,6 +41,7 @@ subroutine psb_@X@_cp_hll_from_coo(a,b,info)
   integer(psb_ipk_), intent(out)             :: info
 
   !locals
+  type(psb_@X@_coo_sparse_mat) :: tmp
   Integer(Psb_ipk_)   :: nza, nr, i,j,irw, idl,err_act, nc, isz,irs
   integer(psb_ipk_)   :: nzm, ir, ic, k, hksz, hk, mxrwl, noffs, kc
   integer(psb_ipk_)   :: debug_level, debug_unit

@@ -30,29 +30,25 @@
 !!$ 
   
 
-subroutine psb_d_mv_elg_to_fmt(a,b,info) 
+subroutine psb_@X@_mv_elg_to_fmt(a,b,info) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use elldev_mod
   use vectordev_mod
-  use psb_d_elg_mat_mod, psb_protect_name => psb_d_mv_elg_to_fmt
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_mv_elg_to_fmt
 #else 
-  use psb_d_elg_mat_mod
+  use psb_@X@_elg_mat_mod
 #endif
   implicit none 
 
-  class(psb_d_elg_sparse_mat), intent(inout)  :: a
-  class(psb_d_base_sparse_mat), intent(inout) :: b
-  integer, intent(out)                         :: info
+  class(psb_@X@_elg_sparse_mat), intent(inout)  :: a
+  class(psb_@X@_base_sparse_mat), intent(inout) :: b
+  integer(psb_ipk_), intent(out)              :: info
 
   !locals
-  type(psb_d_coo_sparse_mat) :: tmp
-  logical             :: rwshr_
-  Integer             :: nza, nr, i,j,irw, idl,err_act, nc, ld, nzm, m
-  Integer, Parameter  :: maxtry=8
-  integer              :: debug_level, debug_unit
-  character(len=20)   :: name
+  type(psb_@X@_coo_sparse_mat) :: tmp
+  Integer(Psb_ipk_)          :: nza, nr, i,j,irw, idl,err_act, nc, ld, nzm, m
 #ifdef HAVE_SPGPU
   type(elldev_parms) :: gpu_parms
 #endif
@@ -60,10 +56,10 @@ subroutine psb_d_mv_elg_to_fmt(a,b,info)
   info = psb_success_
 
   select type (b)
-  type is (psb_d_coo_sparse_mat) 
+  type is (psb_@X@_coo_sparse_mat) 
     call a%mv_to_coo(b,info)
 
-  class is (psb_d_ell_sparse_mat) 
+  class is (psb_@X@_ell_sparse_mat) 
     nzm = size(b%ja,2)  
     m   = b%get_nrows()
     nc  = b%get_ncols()
@@ -74,7 +70,7 @@ subroutine psb_d_mv_elg_to_fmt(a,b,info)
 #else
     ld  = m 
 #endif
-    a%psb_d_base_sparse_mat = b%psb_d_base_sparse_mat
+    a%psb_@X@_base_sparse_mat = b%psb_@X@_base_sparse_mat
     call move_alloc(b%irn,   a%irn)
     call move_alloc(b%idiag, a%idiag)
     call psb_realloc(ld,nzm,a%ja,info) 
@@ -97,4 +93,4 @@ subroutine psb_d_mv_elg_to_fmt(a,b,info)
     if (info == psb_success_) call a%mv_to_coo(tmp,info)
   end select
 
-end subroutine psb_d_mv_elg_to_fmt
+end subroutine psb_@X@_mv_elg_to_fmt

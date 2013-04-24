@@ -34,6 +34,7 @@ subroutine psb_@X@_ell_rowsum(d,a)
   
   use psb_base_mod
   use psb_@X@_ell_mat_mod, psb_protect_name => psb_@X@_ell_rowsum
+  implicit none 
   class(psb_@X@_ell_sparse_mat), intent(in) :: a
   @TYPE@(@FKIND@), intent(out)             :: d(:)
 

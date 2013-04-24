@@ -97,7 +97,6 @@ module psb_@X@_hll_mat_mod
     procedure, pass(a) :: csgetrow     => psb_@X@_hll_csgetrow
     procedure, pass(a) :: get_nz_row   => @X@_hll_get_nz_row
     procedure, pass(a) :: reinit       => psb_@X@_hll_reinit
-    procedure, pass(a) :: trim         => psb_@X@_hll_trim
     procedure, pass(a) :: print        => psb_@X@_hll_print
     procedure, pass(a) :: free         => @X@_hll_free
     procedure, pass(a) :: mold         => psb_@X@_hll_mold
@@ -123,19 +122,12 @@ module psb_@X@_hll_mat_mod
     end subroutine psb_@X@_hll_reinit
   end interface
   
-  interface
-    subroutine  psb_@X@_hll_trim(a)
-      import :: psb_@X@_hll_sparse_mat
-      class(psb_@X@_hll_sparse_mat), intent(inout) :: a
-    end subroutine psb_@X@_hll_trim
-  end interface
-  
   interface 
     subroutine psb_@X@_hll_mold(a,b,info) 
       import :: psb_@X@_hll_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_hll_sparse_mat), intent(in)                :: a
-      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
-      integer(psb_ipk_), intent(out)                         :: info
+      class(psb_@X@_hll_sparse_mat), intent(in)                  :: a
+      class(psb_@X@_base_sparse_mat), intent(inout), allocatable :: b
+      integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_hll_mold
   end interface
 

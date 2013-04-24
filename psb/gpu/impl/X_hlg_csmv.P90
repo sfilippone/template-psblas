@@ -84,7 +84,7 @@ subroutine psb_@X@_hlg_csmv(alpha,a,x,beta,y,info,trans)
 
   if (size(x,1)<n) then 
     info = 36
-    call psb_errpush(info,name,i_err=(/3*ione,izero,izero,izero/))
+    call psb_errpush(info,name,i_err=(/3*ione,n,izero,izero,izero/))
     goto 9999
   end if
 
@@ -115,7 +115,6 @@ subroutine psb_@X@_hlg_csmv(alpha,a,x,beta,y,info,trans)
     end if
     if (info == 0)  &
          & info = spmvHllDevice(a%deviceMat,alpha,gpX,beta,gpY)
-    if (debug) t1=psb_wtime()
     if (info == 0) &
          & info = readMultiVecDevice(gpY,y)
     if (info /= 0) goto 9999

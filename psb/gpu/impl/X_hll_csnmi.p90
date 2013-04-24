@@ -38,14 +38,15 @@ function psb_@X@_hll_csnmi(a) result(res)
   class(psb_@X@_hll_sparse_mat), intent(in) :: a
   @RTYPE@(@FKIND@)         :: res
 
-  integer   :: i,j,k,m,n, nr, ir, jc, nc
-  real(psb_dpk_) :: acc
-  logical            :: tra, is_unit
-  Integer            :: err_act
+  integer(psb_ipk_)  :: i,j,k,m,n, nr, ir, jc, nc, hksz, mxrwl, info 
+  Integer(Psb_ipk_)  :: err_act
+  logical            :: is_unit
   character(len=20)  :: name='@X@_csnmi'
   logical, parameter :: debug=.false.
 
-  
+  call psb_erractionsave(err_act)
+
+  info = 0
   res = @RZERO@ 
   
   n = a%get_ncols()

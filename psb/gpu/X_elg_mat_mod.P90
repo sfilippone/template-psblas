@@ -66,7 +66,6 @@ module psb_@X@_elg_mat_mod
     procedure, pass(a) :: free          => @X@_elg_free
     procedure, pass(a) :: mold          => psb_@X@_elg_mold
     procedure, pass(a) :: to_gpu        => psb_@X@_elg_to_gpu
-    procedure, pass(a) :: trim          => psb_@X@_elg_trim
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_elg_mold
@@ -121,9 +120,9 @@ module psb_@X@_elg_mat_mod
   interface 
     subroutine psb_@X@_elg_mold(a,b,info) 
       import :: psb_@X@_elg_sparse_mat, psb_@X@_base_sparse_mat, psb_ipk_
-      class(psb_@X@_elg_sparse_mat), intent(in)               :: a
-      class(psb_@X@_base_sparse_mat), intent(out), allocatable :: b
-      integer(psb_ipk_), intent(out)                                 :: info
+      class(psb_@X@_elg_sparse_mat), intent(in)                  :: a
+      class(psb_@X@_base_sparse_mat), intent(inout), allocatable :: b
+      integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_elg_mold
   end interface
 

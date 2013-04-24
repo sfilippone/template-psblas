@@ -30,29 +30,25 @@
 !!$ 
   
 
-subroutine psb_d_mv_elg_from_coo(a,b,info) 
+subroutine psb_@X@_mv_elg_from_coo(a,b,info) 
   
   use psb_base_mod
 #ifdef HAVE_SPGPU
   use elldev_mod
   use vectordev_mod
-  use psb_d_elg_mat_mod, psb_protect_name => psb_d_mv_elg_from_coo
+  use psb_@X@_elg_mat_mod, psb_protect_name => psb_@X@_mv_elg_from_coo
 #else 
-  use psb_d_elg_mat_mod
+  use psb_@X@_elg_mat_mod
 #endif
   implicit none 
 
-  class(psb_d_elg_sparse_mat), intent(inout) :: a
-  class(psb_d_coo_sparse_mat), intent(inout) :: b
-  integer, intent(out)                        :: info
+  class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+  class(psb_@X@_coo_sparse_mat), intent(inout) :: b
+  integer(psb_ipk_), intent(out)             :: info
 
-  integer, allocatable :: itemp(:)
   !locals
-  logical             :: rwshr_
-  Integer             :: nza, nr, i,j,k, idl,err_act, nc, nzm, ir, ic, ld
-  Integer, Parameter  :: maxtry=8
-  integer             :: debug_level, debug_unit
-  character(len=20)   :: name
+  Integer(Psb_ipk_)  :: nza, nr, i,j,k, idl,err_act, nc, nzm, ir, ic, ld
+  character(len=20)  :: name
 #ifdef HAVE_SPGPU
   type(elldev_parms) :: gpu_parms
 #endif
@@ -67,7 +63,7 @@ subroutine psb_d_mv_elg_from_coo(a,b,info)
   nza = b%get_nzeros()
   if (b%is_sorted()) then 
     ! If it is sorted then we can lessen memory impact 
-    a%psb_d_base_sparse_mat = b%psb_d_base_sparse_mat
+    a%psb_@X@_base_sparse_mat = b%psb_@X@_base_sparse_mat
 
     ! First compute the number of nonzeros in each row.
     call psb_realloc(nr,a%irn,info) 
@@ -122,7 +118,7 @@ subroutine psb_d_mv_elg_from_coo(a,b,info)
   else 
     ! If b is not sorted, the only way is to copy.
     ! But do it with the base method for ELL. 
-    call a%psb_d_ell_sparse_mat%cp_from_coo(b,info)
+    call a%psb_@X@_ell_sparse_mat%cp_from_coo(b,info)
     if (info /= 0) goto 9999
   end if
 
@@ -140,4 +136,4 @@ subroutine psb_d_mv_elg_from_coo(a,b,info)
   return
 
 
-end subroutine psb_d_mv_elg_from_coo
+end subroutine psb_@X@_mv_elg_from_coo

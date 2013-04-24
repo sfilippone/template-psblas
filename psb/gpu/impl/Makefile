@@ -21,7 +21,6 @@ X_cp_hll_to_fmt.p90 \
 X_cp_hybg_from_coo.P90 \
 X_cp_hybg_from_fmt.P90 \
 X_csrg_allocate_mnnz.P90 \
-X_csrg_copy.P90 \
 X_csrg_csmm.P90 \
 X_csrg_csmv.P90 \
 X_csrg_inner_vect_sv.P90 \
@@ -99,7 +98,6 @@ X_hll_reinit.p90 \
 X_hll_rowsum.p90 \
 X_hll_scal.p90 \
 X_hll_scals.p90 \
-X_hll_trim.p90 \
 X_hybg_allocate_mnnz.P90 \
 X_hybg_csmm.P90 \
 X_hybg_csmv.P90 \

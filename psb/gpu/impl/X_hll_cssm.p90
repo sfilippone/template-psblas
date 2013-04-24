@@ -42,7 +42,7 @@ subroutine psb_@X@_hll_cssm(alpha,a,x,beta,y,info,trans)
   character, optional, intent(in)         :: trans
 
   character :: trans_
-  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nxy, ldx, ldy, hksz
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, ldx, ldy, hksz, nxy, mk, mxrwl
   @TYPE@(@FKIND@), allocatable :: tmp(:,:), acc(:)
   logical            :: tra, ctra
   Integer(Psb_ipk_)  :: err_act
@@ -272,7 +272,7 @@ subroutine psb_@X@_hll_cssm(alpha,a,x,beta,y,info,trans)
     end if
 
     if (info == 0) & 
-         & call psb_geaxpby(m,alpha,tmp,beta,y(:,1:nxy),info)
+         & call psb_geaxpby(m,nxy,alpha,tmp,beta,y(:,1:nxy),info)
 
     if (info /= 0) then 
       info = psb_err_invalid_mat_state_
@@ -300,7 +300,7 @@ contains
        & ja,ldj,val,ldv,x,ldx,y,ldy,acc,info) 
     implicit none 
     logical, intent(in)             :: tra,ctra,lower,unit
-    integer(psb_ipk_), intent(in)   :: ie,n,nc,ldj,ldv,ldx,ldy
+    integer(psb_ipk_), intent(in)   :: ie,n,nc,ldj,ldv,ldx,ldy, nxy
     integer(psb_ipk_), intent(in)   :: irn(*),idiag(*), ja(ldj,*)
     @TYPE@(@FKIND@), intent(in)      :: val(ldv,*)
     @TYPE@(@FKIND@), intent(in)      :: x(ldx,nxy)

@@ -34,12 +34,13 @@ subroutine psb_@X@_hll_arwsum(d,a)
   
   use psb_base_mod
   use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_arwsum
+  implicit none 
   class(psb_@X@_hll_sparse_mat), intent(in) :: a
   @RTYPE@(@FKIND@), intent(out)             :: d(:)
 
-  integer(psb_ipk_)   :: i,j,k,m,n, nnz, ir, jc, nc
-  logical   :: tra
-  Integer(Psb_ipk_) :: err_act, info, int_err(5)
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc, hksz, mxrwl
+  logical            :: tra
+  Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='arwsum'
   logical, parameter :: debug=.false.
 

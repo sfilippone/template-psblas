@@ -41,7 +41,7 @@ subroutine psb_@X@_csrg_scals(d,a,info)
 #endif
   implicit none 
   class(psb_@X@_csrg_sparse_mat), intent(inout) :: a
-  real(psb_dpk_), intent(in)      :: d
+  @TYPE@(@FKIND@), intent(in)      :: d
   integer(psb_ipk_), intent(out)  :: info
 
   Integer(Psb_ipk_) :: err_act
