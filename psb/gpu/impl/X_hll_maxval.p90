@@ -30,27 +30,15 @@
 !!$ 
   
 
-function psb_d_hll_maxval(a) result(res)
+function psb_@X@_hll_maxval(a) result(res)
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_maxval
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_maxval
   implicit none 
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  real(psb_dpk_)         :: res
-
-  integer   :: i,j,k,m,n, nr, ir, jc, nc
-  real(psb_dpk_) :: acc
-  logical   :: tra
-  Integer :: err_act
-  character(len=20)  :: name='d_csnmi'
-  logical, parameter :: debug=.false.
-
+  class(psb_@X@_hll_sparse_mat), intent(in) :: a
+  @RTYPE@(@FKIND@)     :: res
 
   res = maxval(abs(a%val(:)))
+  if (a%is_unit()) res = max(res,@RONE@)
  
-!!$  do i = 1, a%get_nrows()
-!!$    acc = maxval(abs(a%val(i,:)))
-!!$    res = max(res,acc)
-!!$  end do
-
-end function psb_d_hll_maxval
+end function psb_@X@_hll_maxval

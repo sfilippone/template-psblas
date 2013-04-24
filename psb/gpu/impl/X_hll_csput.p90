@@ -30,23 +30,23 @@
 !!$ 
   
 
-subroutine psb_d_hll_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+subroutine psb_@X@_hll_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_csput
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_csput
   implicit none 
 
-  class(psb_d_hll_sparse_mat), intent(inout) :: a
-  real(psb_dpk_), intent(in)      :: val(:)
-  integer, intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
-  integer, intent(out)            :: info
-  integer, intent(in), optional   :: gtl(:)
+  class(psb_@X@_hll_sparse_mat), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)                   :: val(:)
+  integer(psb_ipk_), intent(in)                :: nz, ia(:), ja(:), imin,imax,jmin,jmax
+  integer(psb_ipk_), intent(out)               :: info
+  integer(psb_ipk_), intent(in), optional      :: gtl(:)
+ 
 
-
-  Integer            :: err_act
-  character(len=20)  :: name='d_hll_csput'
+  Integer(Psb_ipk_)  :: err_act
+  character(len=20)  :: name='@X@_hll_csput'
   logical, parameter :: debug=.false.
-  integer            :: nza, i,j,k, nzl, isza, int_err(5)
+  integer(psb_ipk_)  :: nza, i,j,k, nzl, isza, int_err(5)
 
 
   call psb_erractionsave(err_act)
@@ -87,7 +87,7 @@ subroutine psb_d_hll_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl)
     info = psb_err_invalid_mat_state_
 
   else  if (a%is_upd()) then 
-    call  psb_d_hll_srch_upd(nz,ia,ja,val,a,&
+    call  psb_@X@_hll_srch_upd(nz,ia,ja,val,a,&
          & imin,imax,jmin,jmax,info,gtl)
 
     if (info /= psb_success_) then  
@@ -116,30 +116,31 @@ subroutine psb_d_hll_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl)
   end if
   return
 
-
 contains
 
-  subroutine psb_d_hll_srch_upd(nz,ia,ja,val,a,&
+  subroutine psb_@X@_hll_srch_upd(nz,ia,ja,val,a,&
        & imin,imax,jmin,jmax,info,gtl)
 
     implicit none 
 
-    class(psb_d_hll_sparse_mat), intent(inout) :: a
-    integer, intent(in) :: nz, imin,imax,jmin,jmax
-    integer, intent(in) :: ia(:),ja(:)
-    real(psb_dpk_), intent(in) :: val(:)
-    integer, intent(out) :: info
-    integer, intent(in), optional  :: gtl(:)
-    integer  :: i,ir,ic, ilr, ilc, ip, &
+    class(psb_@X@_hll_sparse_mat), intent(inout) :: a
+    integer(psb_ipk_), intent(in)  :: nz, imin,imax,jmin,jmax
+    integer(psb_ipk_), intent(in)  :: ia(:),ja(:)
+    @TYPE@(@FKIND@), intent(in)     :: val(:)
+    integer(psb_ipk_), intent(out) :: info
+    integer(psb_ipk_), intent(in), optional :: gtl(:)
+    integer(psb_ipk_)  :: i,ir,ic, ilr, ilc, ip, &
          & i1,i2,nr,nc,nnz,dupl,ng
-    integer              :: debug_level, debug_unit
-    character(len=20)    :: name='d_hll_srch_upd'
+    integer(psb_ipk_)  :: debug_level, debug_unit
+    character(len=20)  :: name='@X@_hll_srch_upd'
 
     info = psb_success_
     debug_unit  = psb_get_debug_unit()
     debug_level = psb_get_debug_level()
     info = psb_err_missing_override_method_
+
     return
+
     ! TO BE FINISHED
     dupl = a%get_dupl()
 
@@ -300,5 +301,5 @@ contains
 !!$
 !!$    end if
 
-  end subroutine psb_d_hll_srch_upd
-end subroutine psb_d_hll_csput
+  end subroutine psb_@X@_hll_srch_upd
+end subroutine psb_@X@_hll_csput

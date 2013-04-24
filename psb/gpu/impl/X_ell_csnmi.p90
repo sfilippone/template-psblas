@@ -40,17 +40,17 @@ function psb_@X@_ell_csnmi(a) result(res)
 
   integer(psb_ipk_)  :: i,j,k,m,n, nr, ir, jc, nc
   @RTYPE@(@FKIND@)   :: acc
-  logical            :: tra
+  logical            :: tra, is_unit
   Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='@X@_csnmi'
   logical, parameter :: debug=.false.
 
 
   res = @RZERO@
- 
+  is_unit = a%is_unit()
   do i = 1, a%get_nrows()
     acc = sum(abs(a%val(i,:)))
-    if (a%is_unit()) acc = acc + @RONE@
+    if (is_unit) acc = acc + @RONE@
     res = max(res,acc)
   end do
 

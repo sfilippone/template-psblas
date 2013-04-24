@@ -51,7 +51,7 @@ subroutine psb_@X@_ell_scal(d,a,info,side)
 
 
   if (a%is_unit()) then 
-    call a%add_unit_diag()
+    call a%make_nonunit()
   end if
 
   side_ = 'L'

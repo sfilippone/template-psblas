@@ -40,6 +40,7 @@ subroutine psb_@X@_ell_rowsum(d,a)
   integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc
   Integer(Psb_ipk_)  :: err_act, info, int_err(5)
   character(len=20)  :: name='rowsum'
+  logical            :: is_unit
   logical, parameter :: debug=.false.
 
   call psb_erractionsave(err_act)
@@ -54,8 +55,9 @@ subroutine psb_@X@_ell_rowsum(d,a)
     goto 9999
   end if
 
+  is_unit = a%is_unit()
   do i = 1, a%get_nrows()
-    if (a%is_unit()) then 
+    if (is_unit) then 
       d(i) = @XONE@
     else
       d(i) = @XZERO@

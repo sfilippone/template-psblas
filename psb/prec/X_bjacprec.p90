@@ -43,8 +43,6 @@ module psb_@X@_bjacprec
     procedure, pass(prec) :: precbld   => psb_@X@_bjac_precbld
     procedure, pass(prec) :: precinit  => psb_@X@_bjac_precinit
     procedure, pass(prec) :: precseti  => psb_@X@_bjac_precseti
-!!$    procedure, pass(prec) :: precsetr  => psb_@X@_bjac_precsetr
-!!$    procedure, pass(prec) :: precsetc  => psb_@X@_bjac_precsetc
     procedure, pass(prec) :: precdescr => psb_@X@_bjac_precdescr
     procedure, pass(prec) :: dump      => psb_@X@_bjac_dump
     procedure, pass(prec) :: clone     => psb_@X@_bjac_clone

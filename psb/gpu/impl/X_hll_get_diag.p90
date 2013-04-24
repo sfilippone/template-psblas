@@ -30,44 +30,55 @@
 !!$ 
   
 
-subroutine psb_d_hll_get_diag(a,d,info) 
+subroutine psb_@X@_hll_get_diag(a,d,info) 
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_get_diag
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_get_diag
   implicit none 
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(out)     :: d(:)
-  integer, intent(out)            :: info
+  class(psb_@X@_hll_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(out)             :: d(:)
+  integer(psb_ipk_), intent(out)          :: info
 
-  Integer :: err_act, mnm, i, j, k
+  Integer(Psb_ipk_)  :: err_act, mnm, i, j, k, hksz, ld
   character(len=20)  :: name='get_diag'
   logical, parameter :: debug=.false.
 
   info  = psb_success_
   call psb_erractionsave(err_act)
-  info = psb_err_missing_override_method_
 
-!!$  mnm = min(a%get_nrows(),a%get_ncols())
-!!$  if (size(d) < mnm) then 
-!!$    info=psb_err_input_asize_invalid_i_
-!!$    call psb_errpush(info,name,i_err=(/2,size(d),0,0,0/))
-!!$    goto 9999
-!!$  end if
-!!$
-!!$
-!!$  if (a%is_triangle().and.a%is_unit()) then 
-!!$    d(1:mnm) = done 
-!!$  else
-!!$    do i=1, mnm
-!!$      if (1<=a%idiag(i).and.(a%idiag(i)<=size(a%ja,2))) &
-!!$           &  d(i) = a%val(i,a%idiag(i))
-!!$    end do
-!!$  end if
-!!$  do i=mnm+1,size(d) 
-!!$    d(i) = dzero
-!!$  end do
-!!$  call psb_erractionrestore(err_act)
-!!$  return
+  mnm = min(a%get_nrows(),a%get_ncols())
+  ld = size(d)
+  if (ld< mnm) then 
+    info=psb_err_input_asize_invalid_i_
+    call psb_errpush(info,name,i_err=(/2*ione,ld,izero,izero,izero/))
+    goto 9999
+  end if
+
+  if (a%is_triangle().and.a%is_unit()) then 
+    d(1:mnm) = done 
+  else
+
+    hksz = a%get_hksz()
+    j=1
+    do i=1,mnm,hksz
+      ir    = min(hksz,mnm-i+1) 
+      mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+      k     = a%hkoffs(j) + 1
+      call psb_@X@_hll_get_diag_inner(i,ir,mxrwl,a%irn(i),&
+           & a%ja(k),hksz,a%val(k),hksz,&
+           & a%idiag,d,info) 
+      if (info /= psb_success_) goto 9999
+      j = j + 1 
+    end do
+
+
+  end if
+
+  do i=mnm+1,size(d) 
+    d(i) = dzero
+  end do
+  call psb_erractionrestore(err_act)
+  return
 
 9999 continue
   call psb_erractionrestore(err_act)
@@ -77,4 +88,23 @@ subroutine psb_d_hll_get_diag(a,d,info)
   end if
   return
 
-end subroutine psb_d_hll_get_diag
+contains
+
+  subroutine psb_@X@_hll_get_diag_inner(ir,m,n,irn,ja,ldj,val,ldv,&
+       & idiag,d,info) 
+    integer(psb_ipk_), intent(in)    :: ir,m,n,ldj,ldv,ja(ldj,*),irn(*), idiag(*)
+    @TYPE@(@FKIND@), intent(in)      :: val(ldv,*)
+    @TYPE@(@FKIND@), intent(inout)   :: d(*)
+    integer(psb_ipk_), intent(out)   :: info
+
+    integer(psb_ipk_) :: i,j,k, m4, jc
+
+    info = psb_success_
+    
+    do i=1,m
+      d(ir+i-1) = val(i,idiag(i))
+    end do
+
+  end subroutine psb_@X@_hll_csmv_inner
+
+end subroutine psb_@X@_hll_get_diag

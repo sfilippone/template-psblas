@@ -37,13 +37,12 @@ function psb_@X@_hll_csnm1(a) result(res)
 
   implicit none 
   class(psb_@X@_hll_sparse_mat), intent(in) :: a
-  @RTYPE@(@FKIND@)         :: res
+  @RTYPE@(@FKIND@)        :: res
   
-  integer   :: i,j,k,m,n, nnz, ir, jc, nc, info
-  real(psb_dpk_) :: acc
-  real(psb_dpk_), allocatable :: vt(:)
-  logical   :: tra
-  Integer :: err_act
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nc, info
+  @RTYPE@(@FKIND@), allocatable :: vt(:)
+  logical            :: tra
+  Integer(Psb_ipk_)  :: err_act
   character(len=20)  :: name='@X@_hll_csnm1'
   logical, parameter :: debug=.false.
   
@@ -100,11 +99,11 @@ contains
        & vt,info) 
     integer(psb_ipk_), intent(in)    :: ir,m,n,ldj,ldv,ja(ldj,*),irn(*)
     @TYPE@(@FKIND@), intent(in)      :: val(ldv,*)
-    @TYPE@(@FKIND@), intent(inout)   :: vt(*)
+    @RTYPE@(@FKIND@), intent(inout)   :: vt(*)
     integer(psb_ipk_), intent(out)   :: info
 
     integer(psb_ipk_) :: i,j,k, m4, jc
-    @TYPE@(@FKIND@)   :: acc(4), tmp
+    @RTYPE@(@FKIND@)   :: acc(4), tmp
 
     info = psb_success_
     do i=1,m

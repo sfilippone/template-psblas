@@ -30,23 +30,23 @@
 !!$ 
   
 
-subroutine psb_d_hll_cssm(alpha,a,x,beta,y,info,trans) 
+subroutine psb_@X@_hll_cssm(alpha,a,x,beta,y,info,trans) 
   
   use psb_base_mod
-  use psb_d_hll_mat_mod, psb_protect_name => psb_d_hll_cssm
+  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_hll_cssm
   implicit none 
-  class(psb_d_hll_sparse_mat), intent(in) :: a
-  real(psb_dpk_), intent(in)          :: alpha, beta, x(:,:)
-  real(psb_dpk_), intent(inout)       :: y(:,:)
-  integer, intent(out)                :: info
-  character, optional, intent(in)     :: trans
+  class(psb_@X@_hll_sparse_mat), intent(in) :: a
+  @TYPE@(@FKIND@), intent(in)              :: alpha, beta, x(:,:)
+  @TYPE@(@FKIND@), intent(inout)           :: y(:,:)
+  integer(psb_ipk_), intent(out)          :: info
+  character, optional, intent(in)         :: trans
 
   character :: trans_
-  integer   :: i,j,k,m,n, nnz, ir, jc, nxy
-  real(psb_dpk_), allocatable :: tmp(:,:), acc(:)
-  logical   :: tra
-  Integer :: err_act
-  character(len=20)  :: name='d_hll_cssm'
+  integer(psb_ipk_)  :: i,j,k,m,n, nnz, ir, jc, nxy, ldx, ldy, hksz
+  @TYPE@(@FKIND@), allocatable :: tmp(:,:), acc(:)
+  logical            :: tra, ctra
+  Integer(Psb_ipk_)  :: err_act
+  character(len=20)  :: name='@X@_hll_cssm'
   logical, parameter :: debug=.false.
 
   info = psb_success_
@@ -63,96 +63,227 @@ subroutine psb_d_hll_cssm(alpha,a,x,beta,y,info,trans)
   endif
   info = psb_err_missing_override_method_
 
-!!$  tra = (psb_toupper(trans_) == 'T').or.(psb_toupper(trans_)=='C')
-!!$  m = a%get_nrows()
-!!$
-!!$  if (.not. (a%is_triangle())) then 
-!!$    info = psb_err_invalid_mat_state_
-!!$    call psb_errpush(info,name)
-!!$    goto 9999
-!!$  end if
-!!$
-!!$  if (size(x,1)<m) then 
-!!$    info = 36
-!!$    call psb_errpush(info,name,i_err=(/3,m,0,0,0/))
-!!$    goto 9999
-!!$  end if
-!!$
-!!$  if (size(y,1)<m) then 
-!!$    info = 36
-!!$    call psb_errpush(info,name,i_err=(/5,m,0,0,0/))
-!!$    goto 9999
-!!$  end if
-!!$
-!!$  nxy = min(size(x,2),size(y,2))
-!!$
-!!$  if (alpha == dzero) then
-!!$    if (beta == dzero) then
-!!$      do i = 1, m
-!!$        y(i,:) = dzero
-!!$      enddo
-!!$    else
-!!$      do  i = 1, m
-!!$        y(i,:) = beta*y(i,:)
-!!$      end do
-!!$    endif
-!!$    return
-!!$  end if
-!!$
-!!$  if (beta == dzero) then 
-!!$    allocate(acc(nxy), stat=info) 
-!!$    if (info /= psb_success_) then 
-!!$      info = psb_err_alloc_dealloc_
-!!$      call psb_errpush(info,name)
-!!$      goto 9999
-!!$    endif
-!!$
-!!$    call inner_hllsm(tra,a%is_lower(),a%is_unit(),a%get_nrows(),nxy,&
-!!$         & size(a%ja,2),a%irn,a%idiag,a%ja,size(a%ja,1),a%val,size(a%val,1),&
-!!$         & x,size(x,1),y,size(y,1),acc,info) 
-!!$
-!!$    if (info /= 0) then 
-!!$      info = psb_err_invalid_mat_state_
-!!$      call psb_errpush(info,name)
-!!$      goto 9999
-!!$    endif
-!!$
-!!$    if (alpha == done) then 
-!!$      ! do nothing
-!!$    else if (alpha == -done) then 
-!!$      do  i = 1, m
-!!$        y(i,:) = -y(i,:)
-!!$      end do
-!!$    else
-!!$      do  i = 1, m
-!!$        y(i,:) = alpha*y(i,:)
-!!$      end do
-!!$    end if
-!!$  else 
-!!$    allocate(tmp(m,nxy),acc(nxy), stat=info) 
-!!$    if (info /= psb_success_) then 
-!!$      info = psb_err_alloc_dealloc_
-!!$      call psb_errpush(info,name)
-!!$      goto 9999
-!!$    endif
-!!$
-!!$    call inner_hllsm(tra,a%is_lower(),a%is_unit(),a%get_nrows(),nxy,&
-!!$         & size(a%ja,2),a%irn,a%idiag,a%ja,size(a%ja,1),a%val,size(a%val,1),&
-!!$         & x,size(x,1),tmp,size(tmp,1),acc,info) 
-!!$
-!!$    if (info == 0) &
-!!$         & call psb_geaxpby(m,nxy,alpha,tmp,beta,y,info)
-!!$
-!!$    if (info /= 0) then 
-!!$      info = psb_err_invalid_mat_state_
-!!$      call psb_errpush(info,name)
-!!$      goto 9999
-!!$    endif
-!!$
-!!$  end if
-!!$
-!!$  call psb_erractionrestore(err_act)
-!!$  return
+  tra  = (psb_toupper(trans_) == 'T')
+  ctra = (psb_toupper(trans_) == 'C')
+  m    = a%get_nrows()
+  hksz = a%get_hksz()
+
+  if (.not. (a%is_triangle())) then 
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  end if
+  ldx = size(x,1) 
+  ldy = size(y,1)
+  if (ldx<m) then 
+    info = 36
+    call psb_errpush(info,name,i_err=(/3,m,0,0,0/))
+    goto 9999
+  end if
+
+  if (ldy<m) then 
+    info = 36
+    call psb_errpush(info,name,i_err=(/5,m,0,0,0/))
+    goto 9999
+  end if
+
+  nxy = min(size(x,2),size(y,2))
+
+  if (alpha == dzero) then
+    if (beta == dzero) then
+      do i = 1, m
+        y(i,:) = dzero
+      enddo
+    else
+      do  i = 1, m
+        y(i,:) = beta*y(i,:)
+      end do
+    endif
+    return
+  end if
+
+  allocate(tmp(m,nxy),acc(nxy), stat=info) 
+  if (info /= psb_success_) then 
+    info = psb_err_alloc_dealloc_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+   
+
+
+  if (beta == @XZERO@) then 
+
+    if (.not.(tra.or.ctra)) then 
+
+      if (a%is_lower()) then 
+        do i=1,m,hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,y,ldy,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+      else
+
+        k = mod(m,hksz)
+        do i=m-k+1,1,-hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,y,ldy,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+      end if
+
+    else if (tra.or.ctra) then 
+
+      do i=1, m
+        y(i,:) = x(i,:)
+      end do
+
+
+      if (a%is_lower()) then 
+
+        mk = mod(m,hksz)
+        do i=m-mk+1,1,-hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,y,ldy,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+
+      else
+
+        do i=1,m,hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,y,ldy,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+
+      end if
+
+    end if
+
+    if (info /= 0) then 
+      info = psb_err_invalid_mat_state_
+      call psb_errpush(info,name)
+      goto 9999
+    endif
+
+    if (alpha == @XONE@) then 
+      ! do nothing
+    else if (alpha == -@XONE@) then 
+      do  i = 1, m
+        y(i,:) = -y(i,:)
+      end do
+    else
+      do  i = 1, m
+        y(i,:) = alpha*y(i,:)
+      end do
+    end if
+
+  else 
+
+    if (.not.(tra.or.ctra)) then 
+
+      if (a%is_lower()) then 
+        do i=1,m,hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,tmp,m,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+      else
+
+        mk = mod(m,hksz)
+        do i=m-mk+1,1,-hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,tmp,m,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+      end if
+
+    else if (tra.or.ctra) then 
+
+      do i=1, m
+        tmp(i,:) = x(i,:)
+      end do
+
+      if (a%is_lower()) then 
+
+        mk = mod(m,hksz)
+        do i=m-mk+1,1,-hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,tmp,m,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+
+      else
+
+        do i=1,m,hksz
+          ir   = min(hksz,m-i+1) 
+          j     = (i-1)/hksz + 1
+          mxrwl = (a%hkoffs(j+1) - a%hkoffs(j))/hksz
+          k     = a%hkoffs(j) + 1
+          call inner_hllsm(tra,ctra,a%is_lower(),a%is_unit(),&
+               & i,ir,mxrwl,nxy,a%irn(i),a%idiag(i),&
+               & a%ja(k),hksz,a%val(k),hksz,&
+               & x,ldx,tmp,m,acc,info) 
+          if (info /= 0) goto 9999
+        end do
+
+      end if
+    end if
+
+    if (info == 0) & 
+         & call psb_geaxpby(m,alpha,tmp,beta,y(:,1:nxy),info)
+
+    if (info /= 0) then 
+      info = psb_err_invalid_mat_state_
+      call psb_errpush(info,name)
+      goto 9999
+    endif
+
+  end if
+
+  call psb_erractionrestore(err_act)
+  return
 
 9999 continue
   call psb_erractionrestore(err_act)
@@ -163,150 +294,212 @@ subroutine psb_d_hll_cssm(alpha,a,x,beta,y,info,trans)
   end if
   return
 
-!!$contains 
-!!$
-!!$  subroutine inner_hllsm(tra,lower,unit,n,nc,nxy,irn,idiag,ja,ldj,val,ldv,&
-!!$       & x,ldx,y,ldy,acc,info) 
-!!$    implicit none 
-!!$    logical, intent(in)                 :: tra,lower,unit
-!!$    integer, intent(in)                 :: n,nc,ldj,ldv,nxy,ldx,ldy
-!!$    integer, intent(in)                 :: irn(*),idiag(*), ja(ldj,*)
-!!$    real(psb_dpk_), intent(in)          :: val(ldv,*)
-!!$    real(psb_dpk_), intent(in)          :: x(ldx,nxy)
-!!$    real(psb_dpk_), intent(out)         :: y(ldy,nxy), acc(nxy)
-!!$    integer, intent(out)                :: info
-!!$
-!!$    integer :: i,j,k,m, ir, jc
-!!$
-!!$    !
-!!$    ! The only error condition here is if
-!!$    ! the matrix is non-unit and some idiag value is illegal.
-!!$    !
-!!$    info = 0 
-!!$
-!!$    if (.not.tra) then 
-!!$
-!!$      if (lower) then 
-!!$
-!!$        if (unit) then 
-!!$          do i=1, n
-!!$            acc = dzero 
-!!$            do j=1,irn(i)
-!!$              acc = acc + val(i,j)*y(ja(i,j),:)
-!!$            end do
-!!$            y(i,:) = x(i,:) - acc
-!!$          end do
-!!$        else if (.not.unit) then 
-!!$          do i=1, n
-!!$            acc = dzero 
-!!$            do j=1,idiag(i)-1
-!!$              acc = acc + val(i,j)*y(ja(i,j),:)
-!!$            end do
-!!$            if (idiag(i) <= 0) then 
-!!$              info = -1 
-!!$              return
-!!$            endif
-!!$            y(i,:) = (x(i,:) - acc)/val(i,idiag(i))
-!!$          end do
-!!$        end if
-!!$
-!!$      else if (.not.lower) then 
-!!$
-!!$        if (unit) then 
-!!$
-!!$          do i=n, 1, -1 
-!!$            acc = dzero 
-!!$            do j=1,irn(i)
-!!$              acc = acc + val(i,j)*y(ja(i,j),:)
-!!$            end do
-!!$            y(i,:) = x(i,:) - acc
-!!$          end do
-!!$
-!!$        else if (.not.unit) then 
-!!$
-!!$          do i=n, 1, -1 
-!!$            acc = dzero 
-!!$            do j=idiag(i)+1, irn(i)
-!!$              acc = acc + val(i,j)*y(ja(i,j),:)
-!!$            end do
-!!$            if (idiag(i) <= 0) then 
-!!$              info = -1 
-!!$              return
-!!$            endif
-!!$            y(i,:) = (x(i,:) - acc)/val(i,idiag(i))
-!!$          end do
-!!$
-!!$        end if
-!!$
-!!$      end if
-!!$
-!!$    else if (tra) then 
-!!$
-!!$      do i=1, n
-!!$        y(i,:) = x(i,:)
-!!$      end do
-!!$
-!!$      if (lower) then 
-!!$
-!!$        if (unit) then 
-!!$
-!!$          do i=n, 1, -1
-!!$            acc = y(i,:) 
-!!$            do j=1,irn(i)
-!!$              jc    = ja(i,j)
-!!$              y(jc,:) = y(jc,:) - val(i,j)*acc 
-!!$            end do
-!!$
-!!$          end do
-!!$
-!!$        else if (.not.unit) then 
-!!$
-!!$          do i=n, 1, -1
-!!$            if (idiag(i) <= 0) then 
-!!$              info = -1 
-!!$              return
-!!$            endif
-!!$            y(i,:) = y(i,:)/val(i,idiag(i))
-!!$            acc  = y(i,:) 
-!!$            do j=1,idiag(i)
-!!$              jc    = ja(i,j)
-!!$              y(jc,:) = y(jc,:) - val(i,j)*acc 
-!!$            end do
-!!$          end do
-!!$
-!!$        end if
-!!$
-!!$      else if (.not.lower) then 
-!!$
-!!$        if (unit) then 
-!!$
-!!$          do i=1, n
-!!$            acc  = y(i,:) 
-!!$            do j=1, irn(i)
-!!$              jc    = ja(i,j)
-!!$              y(jc,:) = y(jc,:) - val(i,j)*acc 
-!!$            end do
-!!$          end do
-!!$
-!!$        else if (.not.unit) then 
-!!$
-!!$          do i=1, n
-!!$            if (idiag(i) <= 0) then 
-!!$              info = -1 
-!!$              return
-!!$            endif
-!!$            y(i,:) = y(i,:)/val(i,idiag(i))
-!!$            acc  = y(i,:) 
-!!$            do j=idiag(i)+1, irn(i) 
-!!$              jc    = ja(i,j)
-!!$              y(jc,:) = y(jc,:) - val(i,j)*acc 
-!!$            end do
-!!$          end do
-!!$
-!!$        end if
-!!$
-!!$      end if
-!!$    end if
-!!$  end subroutine inner_hllsm
+contains 
 
-end subroutine psb_d_hll_cssm
+  subroutine inner_hllsm(tra,ctra,lower,unit,ie,n,nc,nxy,irn,idiag,&
+       & ja,ldj,val,ldv,x,ldx,y,ldy,acc,info) 
+    implicit none 
+    logical, intent(in)             :: tra,ctra,lower,unit
+    integer(psb_ipk_), intent(in)   :: ie,n,nc,ldj,ldv,ldx,ldy
+    integer(psb_ipk_), intent(in)   :: irn(*),idiag(*), ja(ldj,*)
+    @TYPE@(@FKIND@), intent(in)      :: val(ldv,*)
+    @TYPE@(@FKIND@), intent(in)      :: x(ldx,nxy)
+    @TYPE@(@FKIND@), intent(out)     :: y(ldy,nxy)
+    integer(psb_ipk_), intent(out)  :: info
+
+    integer(psb_ipk_) :: i,j,k,m, ir, jc
+    @TYPE@(@FKIND@)   :: acc(nxy)
+
+    !
+    ! The only error condition here is if
+    ! the matrix is non-unit and some idiag value is illegal.
+    !
+    info = 0 
+    if (.not.(tra.or.ctra)) then 
+
+      if (lower) then 
+
+        if (unit) then 
+          do i=1,n
+            acc = @XZERO@ 
+            do j=1,irn(i)
+              acc = acc + val(i,j)*y(ja(i,j),:)
+            end do
+            y(ie+i-1,:) = x(ie+i-1,:) - acc
+          end do
+        else if (.not.unit) then 
+          do i=1, n
+            acc = @XZERO@ 
+            do j=1,idiag(i)-1
+              acc = acc + val(i,j)*y(ja(i,j),:)
+            end do
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = (x(ie+i-1,:) - acc)/val(i,idiag(i))
+          end do
+        end if
+
+      else if (.not.lower) then 
+
+        if (unit) then 
+
+          do i=n, 1, -1 
+            acc = @XZERO@ 
+            do j=1,irn(i)
+              acc = acc + val(i,j)*y(ja(i,j),:)
+            end do
+            y(ie+i-1,:) = x(ie+i-1,:) - acc
+          end do
+
+        else if (.not.unit) then 
+
+          do i=n, 1, -1 
+            acc = @XZERO@ 
+            do j=idiag(i)+1, irn(i)
+              acc = acc + val(i,j)*y(ja(i,j),:)
+            end do
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = (x(ie+i-1,:) - acc)/val(i,idiag(i))
+          end do
+
+        end if
+
+      end if
+
+    else if (tra) then 
+
+      if (lower) then 
+
+        if (unit) then 
+
+          do i=n, 1, -1
+            acc = y(ie+i-1,:) 
+
+            do j=1,irn(i)
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - val(i,j)*acc 
+            end do
+
+          end do
+
+        else if (.not.unit) then 
+
+          do i=n, 1, -1
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = y(ie+i-1,:)/val(i,idiag(i))
+            acc  = y(ie+i-1,:) 
+            do j=1,idiag(i) -1
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - val(i,j)*acc 
+            end do
+          end do
+
+        end if
+
+      else if (.not.lower) then 
+
+        if (unit) then 
+
+          do i=1, n
+            acc  = y(ie+i-1,:) 
+            do j=1, irn(i)
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - val(i,j)*acc 
+            end do
+          end do
+
+        else if (.not.unit) then 
+
+          do i=1, n
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = y(ie+i-1,:)/val(i,idiag(i))
+            acc  = y(ie+i-1,:) 
+            do j=idiag(i)+1, irn(i) 
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - val(i,j)*acc 
+            end do
+          end do
+
+        end if
+
+      end if
+
+    else if (ctra) then 
+          
+      if (lower) then 
+
+        if (unit) then 
+
+          do i=n, 1, -1
+            acc = y(ie+i-1,:) 
+
+            do j=1,irn(i)
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - @CONJG@(val(i,j))*acc 
+            end do
+
+          end do
+
+        else if (.not.unit) then 
+
+          do i=n, 1, -1
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = y(ie+i-1,:)/@CONJG@(val(i,idiag(i)))
+            acc  = y(ie+i-1,:) 
+            do j=1,idiag(i) -1
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - @CONJG@(val(i,j))*acc 
+            end do
+          end do
+
+        end if
+
+      else if (.not.lower) then 
+
+        if (unit) then 
+
+          do i=1, n
+            acc  = y(ie+i-1,:) 
+            do j=1, irn(i)
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - @CONJG@(val(i,j))*acc 
+            end do
+          end do
+
+        else if (.not.unit) then 
+
+          do i=1, n
+            if (idiag(i) <= 0) then 
+              info = -1 
+              return
+            endif
+            y(ie+i-1,:) = y(ie+i-1,:)/@CONJG@(val(i,idiag(i)))
+            acc  = y(ie+i-1,:) 
+            do j=idiag(i)+1, irn(i) 
+              jc    = ja(i,j)
+              y(jc,:) = y(jc,:) - @CONJG@(val(i,j))*acc 
+            end do
+          end do
+
+        end if
+
+      end if
+    end if
+  end subroutine inner_hllsm
+
+
+end subroutine psb_@X@_hll_cssm
