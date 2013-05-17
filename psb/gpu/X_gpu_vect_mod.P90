@@ -496,7 +496,7 @@ contains
     integer(psb_ipk_) :: info
     ! WARNING: this should be changed. 
     if (x%is_host()) call x%sync()
-    info = nrm2MultiVecDevice(res,n,x%deviceVect)
+    info = nrm2MultiVecDevice@FLAG_COMPLEX@(res,n,x%deviceVect)
     
   end function @X@_gpu_nrm2
   
@@ -575,7 +575,7 @@ contains
     if (x%is_host()) then 
       if (.not.c_associated(x%deviceVect)) then 
         n    = size(x%v)
-        info = FallocMultiVecDevice(x%deviceVect,1,n,spgpu_type_@CTYPE@)
+        info = FallocMultiVecDevice(x%deviceVect,1,n,@SPGPU_TYPE@)
         if  (info /= 0) then 
           write(0,*) 'Error from FallocMultiVecDevice',info,n
         end if
@@ -597,7 +597,7 @@ contains
     if (x%is_host()) then 
       if (.not.c_associated(x%deviceVect)) then 
         n    = size(x%v)
-        info = FallocMultiVecDevice(x%deviceVect,1,n,spgpu_type_@CTYPE@)
+        info = FallocMultiVecDevice(x%deviceVect,1,n,@SPGPU_TYPE@)
       end if
       if (info == 0) &
            & info = writeMultiVecDevice(x%deviceVect,x%v)

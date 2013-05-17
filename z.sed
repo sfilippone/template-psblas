@@ -20,3 +20,5 @@ s/@MPI_TYPE@/mpi_double_complex/g
 s/@PSB_SWAP_TAG@/psb_dcomplex_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_complex_double/g
+s/@CTYPE@/DoubleComplex/g
+s/@FLAG_COMPLEX@/Complex/g

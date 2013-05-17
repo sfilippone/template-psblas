@@ -325,7 +325,7 @@ module psb_@X@_ell_mat_mod
     function psb_@X@_ell_maxval(a) result(res)
       import :: psb_@X@_ell_sparse_mat, @FKIND@
       class(psb_@X@_ell_sparse_mat), intent(in) :: a
-      @TYPE@(@FKIND@)         :: res
+      @RTYPE@(@FKIND@)         :: res
     end function psb_@X@_ell_maxval
   end interface
   

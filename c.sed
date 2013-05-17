@@ -20,3 +20,6 @@ s/@MPI_TYPE@/mpi_complex/g
 s/@PSB_SWAP_TAG@/psb_complex_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_complex_float/g
+
+s/@CTYPE@/FloatComplex/g
+s/@FLAG_COMPLEX@/Complex/g
