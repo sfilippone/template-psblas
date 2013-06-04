@@ -271,7 +271,9 @@ contains
     integer(psb_ipk_) :: info
     class(psb_@X@_hlg_sparse_mat), intent(inout) :: a
 
-    call freeHllDevice(a%deviceMat)
+    if (c_associated(a%deviceMat)) &
+         & call freeHllDevice(a%deviceMat)
+    a%deviceMat = c_null_ptr
     call a%psb_@X@_hll_sparse_mat%free()
     
     return
