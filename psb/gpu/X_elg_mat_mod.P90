@@ -66,6 +66,9 @@ module psb_@X@_elg_mat_mod
     procedure, pass(a) :: free          => @X@_elg_free
     procedure, pass(a) :: mold          => psb_@X@_elg_mold
     procedure, pass(a) :: to_gpu        => psb_@X@_elg_to_gpu
+#ifdef HAVE_FINAL
+    final              :: @X@_elg_finalize
+#endif
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_elg_mold
@@ -278,6 +281,20 @@ contains
     return
 
   end subroutine @X@_elg_free
+
+#ifdef HAVE_FINAL
+  subroutine  @X@_elg_finalize(a) 
+    use elldev_mod
+    implicit none 
+    type(psb_@X@_elg_sparse_mat), intent(inout) :: a
+
+    if (c_associated(a%deviceMat)) &
+         & call freeEllDevice(a%deviceMat)
+    a%deviceMat = c_null_ptr
+    return
+
+  end subroutine @X@_elg_finalize
+#endif
 
 #else 
 
