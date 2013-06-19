@@ -23,3 +23,4 @@ s/@SPGPU_TYPE@/spgpu_type_float/g
 
 s/@CTYPE@/Float/g
 s/@FLAG_COMPLEX@//g
+s/@FCKIND@/c_float/g

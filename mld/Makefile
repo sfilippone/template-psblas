@@ -8,7 +8,8 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 SRC=X_prec_type.p90 X_prec_mod.p90 \
   X_base_solver_mod.p90 X_base_smoother_mod.p90 X_onelev_mod.p90\
   X_as_smoother.p90 X_jac_smoother.p90 X_diag_solver.p90 X_id_solver.p90\
-  X_ilu_solver.p90 X_inner_mod.p90 X_ilu_fact_mod.p90
+  X_ilu_solver.p90 X_inner_mod.p90 X_ilu_fact_mod.p90 \
+  X_umf_solver.P90 X_slu_solver.P90 X_sludist_solver.P90
 
 
 
