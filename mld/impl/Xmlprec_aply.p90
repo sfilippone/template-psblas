@@ -316,7 +316,7 @@ subroutine mld_@X@mlprec_aply(alpha,p,x,beta,y,desc_data,trans,work,info)
 
   ! Arguments
   type(psb_desc_type),intent(in)    :: desc_data
-  type(mld_@X@prec_type), intent(in)  :: p
+  type(mld_@X@prec_type), intent(inout)  :: p
   @TYPE@(@FKIND@),intent(in)         :: alpha,beta
   @TYPE@(@FKIND@),intent(inout)      :: x(:)
   @TYPE@(@FKIND@),intent(inout)      :: y(:)
@@ -410,7 +410,7 @@ contains
 
     ! Arguments
     integer(psb_ipk_)                  :: level 
-    type(mld_@X@prec_type), intent(in) :: p
+    type(mld_@X@prec_type), intent(inout) :: p
     type(mld_mlprec_wrk_type), intent(inout) :: mlprec_wrk(:)
     character, intent(in)             :: trans
     @TYPE@(@FKIND@),target            :: work(:)

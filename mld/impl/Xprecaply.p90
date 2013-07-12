@@ -80,7 +80,7 @@ subroutine mld_@X@precaply(prec,x,y,desc_data,info,trans,work)
   
   ! Arguments
   type(psb_desc_type),intent(in)    :: desc_data
-  type(mld_@X@prec_type), intent(in)  :: prec
+  type(mld_@X@prec_type), intent(inout)  :: prec
   @TYPE@(@FKIND@),intent(inout)   :: x(:)
   @TYPE@(@FKIND@),intent(inout)   :: y(:)
   integer(psb_ipk_), intent(out)    :: info
@@ -215,7 +215,7 @@ subroutine mld_@X@precaply1(prec,x,desc_data,info,trans)
 
   ! Arguments
   type(psb_desc_type),intent(in)    :: desc_data
-  type(mld_@X@prec_type), intent(in)  :: prec
+  type(mld_@X@prec_type), intent(inout)  :: prec
   @TYPE@(@FKIND@),intent(inout)   :: x(:)
   integer(psb_ipk_), intent(out)    :: info
   character(len=1), optional        :: trans
