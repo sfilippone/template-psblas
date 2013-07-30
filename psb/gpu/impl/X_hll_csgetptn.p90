@@ -166,6 +166,8 @@ contains
     if (info == psb_success_) call psb_ensure_size(nzin_+nzt,ja,info)
 
     if (info /= psb_success_) return
+
+    hksz = a%get_hksz()
     
     if (present(iren)) then 
       do i=irw, lrw
