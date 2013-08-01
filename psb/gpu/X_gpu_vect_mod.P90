@@ -48,6 +48,7 @@ module psb_@X@_gpu_vect_mod
     type(c_ptr) :: deviceVect = c_null_ptr
   contains
     procedure, pass(x) :: get_nrows => @X@_gpu_get_nrows
+    procedure, nopass  :: get_fmt   => @X@_gpu_get_fmt
     procedure, pass(x) :: dot_v    => @X@_gpu_dot_v
     procedure, pass(x) :: dot_a    => @X@_gpu_dot_a
     procedure, pass(y) :: axpby_v  => @X@_gpu_axpby_v
@@ -244,6 +245,12 @@ contains
     res = 0
     if (allocated(x%v)) res = size(x%v)
   end function @X@_gpu_get_nrows
+
+  function @X@_gpu_get_fmt() result(res)
+    implicit none 
+    character(len=5) :: res
+    res = 'GPU'
+  end function @X@_gpu_get_fmt
 
   function @X@_gpu_dot_v(n,x,y) result(res)
     implicit none 
