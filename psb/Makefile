@@ -7,7 +7,6 @@ UTIL_MODS =
 src: sbase sprec skryl sext sgpu
 
 
-
 sbase:
 	cd base && $(MAKE) src
 sprec:
@@ -19,6 +18,8 @@ sext:
 	cd ext && $(MAKE) src
 sgpu:
 	cd gpu && $(MAKE) src
+sext:
+	cd ext && $(MAKE) src
 
 clean:
 	cd base && $(MAKE) clean

@@ -1,0 +1,202 @@
+!!$              Parallel Sparse BLAS   GPU plugin 
+!!$    (C) Copyright 2013
+!!$
+!!$                       Salvatore Filippone    University of Rome Tor Vergata
+!!$                       Alessandro Fanfarillo  University of Rome Tor Vergata
+!!$ 
+!!$  Redistribution and use in source and binary forms, with or without
+!!$  modification, are permitted provided that the following conditions
+!!$  are met:
+!!$    1. Redistributions of source code must retain the above copyright
+!!$       notice, this list of conditions and the following disclaimer.
+!!$    2. Redistributions in binary form must reproduce the above copyright
+!!$       notice, this list of conditions, and the following disclaimer in the
+!!$       documentation and/or other materials provided with the distribution.
+!!$    3. The name of the PSBLAS group or the names of its contributors may
+!!$       not be used to endorse or promote products derived from this
+!!$       software without specific written permission.
+!!$ 
+!!$  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!!$  ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!!$  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!!$  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!!$  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!!$  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!!$  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!!$  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!!$  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!!$  POSSIBILITY OF SUCH DAMAGE.
+!!$ 
+  
+
+module psb_@X@_vectordev_mod
+
+  use psb_base_vectordev_mod
+ 
+#ifdef HAVE_SPGPU  
+  
+  interface registerMapped
+    function registerMapped@CTYPE@(buf,d_p,n,dummy) &
+         & result(res) bind(c,name='registerMapped@CTYPE@')
+      use iso_c_binding
+      integer(c_int) :: res
+      type(c_ptr), value :: buf
+      type(c_ptr) :: d_p
+      integer(c_int),value :: n
+      @TYPE@(@FCKIND@), value :: dummy
+    end function registerMapped@CTYPE@
+  end interface
+
+  interface writeMultiVecDevice 
+    function writeMultiVecDevice@CTYPE@(deviceVec,hostVec) &
+         & result(res) bind(c,name='writeMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)             :: res
+      type(c_ptr), value         :: deviceVec
+      @TYPE@(@FCKIND@)   :: hostVec(*)
+    end function writeMultiVecDevice@CTYPE@
+    function writeMultiVecDevice@CTYPE@R2(deviceVec,hostVec,ld) &
+         & result(res) bind(c,name='writeMultiVecDevice@CTYPE@R2')
+      use iso_c_binding
+      integer(c_int)      :: res
+      type(c_ptr), value  :: deviceVec
+      integer(c_int), value :: ld
+      @TYPE@(@FCKIND@)      :: hostVec(ld,*)
+    end function writeMultiVecDevice@CTYPE@R2
+  end interface 
+
+  interface readMultiVecDevice
+    function readMultiVecDevice@CTYPE@(deviceVec,hostVec) &
+         & result(res) bind(c,name='readMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)           :: res
+      type(c_ptr), value       :: deviceVec
+      @TYPE@(@FCKIND@) :: hostVec(*)
+    end function readMultiVecDevice@CTYPE@
+    function readMultiVecDevice@CTYPE@R2(deviceVec,hostVec,ld) &
+         & result(res) bind(c,name='readMultiVecDevice@CTYPE@R2')
+      use iso_c_binding
+      integer(c_int)      :: res
+      type(c_ptr), value  :: deviceVec
+      integer(c_int), value :: ld
+      @TYPE@(@FCKIND@)      :: hostVec(ld,*)
+    end function readMultiVecDevice@CTYPE@R2
+  end interface 
+
+! New gather functions
+
+  interface 
+    function igathMultiVecDevice@CTYPE@(deviceVec, vectorId, first, n, idx, hostVec, indexBase) &
+	& result(res) bind(c,name='igathMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)      :: res
+      type(c_ptr), value  :: deviceVec
+      integer(c_int),value:: vectorId
+      integer(c_int),value:: first, n
+      type(c_ptr),value	  :: idx
+      type(c_ptr),value   :: hostVec
+      integer(c_int),value:: indexBase
+    end function igathMultiVecDevice@CTYPE@
+  end interface
+
+
+  interface 
+    function iscatMultiVecDevice@CTYPE@(deviceVec, vectorId, first, n, idx, hostVec, indexBase, beta) &
+	& result(res) bind(c,name='iscatMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)         :: res
+      type(c_ptr), value     :: deviceVec
+      integer(c_int),value   :: vectorId
+      integer(c_int),value   :: first, n
+      type(c_ptr), value     :: idx
+      type(c_ptr), value     :: hostVec
+      integer(c_int),value   :: indexBase
+      @TYPE@(@FCKIND@),value :: beta
+    end function iscatMultiVecDevice@CTYPE@
+  end interface
+
+    
+  interface nrm2MultiVecDevice@FLAG_COMPLEX@
+    function nrm2MultiVecDevice@CTYPE@(res,n,deviceVecA) &
+         & result(val) bind(c,name='nrm2MultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)        :: val
+      integer(c_int), value :: n
+      real(@FRCKIND@)         :: res
+      type(c_ptr), value    :: deviceVecA
+    end function nrm2MultiVecDevice@CTYPE@
+  end interface
+
+  interface dotMultiVecDevice
+    function dotMultiVecDevice@CTYPE@(res, n,deviceVecA,deviceVecB) &
+         & result(val) bind(c,name='dotMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)        :: val
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@) :: res
+      type(c_ptr), value    :: deviceVecA, deviceVecB
+    end function dotMultiVecDevice@CTYPE@
+  end interface
+  
+  interface axpbyMultiVecDevice
+    function axpbyMultiVecDevice@CTYPE@(n,alpha,deviceVecA,beta,deviceVecB) &
+         & result(res) bind(c,name='axpbyMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)      :: res
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value  :: deviceVecA, deviceVecB
+    end function axpbyMultiVecDevice@CTYPE@
+  end interface
+
+  interface axyMultiVecDevice
+    function axyMultiVecDevice@CTYPE@(n,alpha,deviceVecA,deviceVecB) &
+         & result(res) bind(c,name='axyMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)        :: res
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@) :: alpha
+      type(c_ptr), value       :: deviceVecA, deviceVecB
+    end function axyMultiVecDevice@CTYPE@
+  end interface
+
+  interface axybzMultiVecDevice
+    function axybzMultiVecDevice@CTYPE@(n,alpha,deviceVecA,deviceVecB,beta,deviceVecZ) &
+         & result(res) bind(c,name='axybzMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)              :: res
+      integer(c_int), value       :: n
+      @TYPE@(@FCKIND@), value     :: alpha, beta
+      type(c_ptr), value          :: deviceVecA, deviceVecB,deviceVecZ
+    end function axybzMultiVecDevice@CTYPE@
+  end interface
+
+  interface inner_register
+    module procedure inner_register@CTYPE@
+  end interface
+  
+  interface inner_unregister
+    module procedure inner_unregister@CTYPE@
+  end interface
+
+contains
+
+
+  function inner_register@CTYPE@(buffer,dval) result(res)
+    @TYPE@(@FCKIND@), allocatable, target :: buffer(:)
+    type(c_ptr)            :: dval
+    integer(c_int)         :: res
+    @TYPE@(@FCKIND@)         :: dummy
+    res = registerMapped(c_loc(buffer),dval,size(buffer), dummy)        
+  end function inner_register@CTYPE@
+
+  subroutine inner_unregister@CTYPE@(buffer)
+    @TYPE@(@FCKIND@), allocatable, target :: buffer(:)
+
+    call  unregisterMapped(c_loc(buffer))
+  end subroutine inner_unregister@CTYPE@
+
+#endif  
+
+end module psb_@X@_vectordev_mod

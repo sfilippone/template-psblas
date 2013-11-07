@@ -16,7 +16,7 @@ s/@RONE@/done/g
 s/@DOT@/ddot/g
 s/@NRM2@/dnrm2/g
 
-s/@MPI_TYPE@/mpi_double_precision/g
+s/@MPI_TYPE@/psb_mpi_r_dpk_/g
 s/@PSB_SWAP_TAG@/psb_double_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_double/g
@@ -24,3 +24,4 @@ s/@SPGPU_TYPE@/spgpu_type_double/g
 s/@CTYPE@/Double/g
 s/@FLAG_COMPLEX@//g
 s/@FCKIND@/c_double/g
+s/@FRCKIND@/c_double/g

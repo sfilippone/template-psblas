@@ -48,17 +48,18 @@ module mld_@X@_inner_mod
   use mld_@X@_prec_type
 
   interface mld_mlprec_bld
-    subroutine mld_@X@mlprec_bld(a,desc_a,prec,info, amold, vmold)
-      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, &
+    subroutine mld_@X@mlprec_bld(a,desc_a,prec,info, amold, vmold,imold)
+      use psb_base_mod, only : psb_@X@spmat_type, psb_desc_type, psb_i_base_vect_type, &
            & @FKIND@, psb_@X@_base_sparse_mat, psb_@X@_base_vect_type, psb_ipk_
       use mld_@X@_prec_type, only : mld_@X@prec_type
       implicit none
       type(psb_@X@spmat_type), intent(in), target          :: a
-      type(psb_desc_type), intent(in), target              :: desc_a
+      type(psb_desc_type), intent(inout), target           :: desc_a
       type(mld_@X@prec_type), intent(inout), target        :: prec
       integer(psb_ipk_), intent(out)                       :: info
       class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
       class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
+      class(psb_i_base_vect_type), intent(in), optional  :: imold
 !!$      character, intent(in),optional             :: upd
     end subroutine mld_@X@mlprec_bld
   end interface mld_mlprec_bld

@@ -8,7 +8,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 SRC=X_base_onelev_check.p90 X_base_onelev_descr.p90 X_base_onelev_dump.p90 \
     X_base_onelev_free.p90 X_base_onelev_setc.p90 X_base_onelev_seti.p90 \
     X_base_onelev_setr.p90 X_base_onelev_csetc.p90 X_base_onelev_cseti.p90 \
-    X_base_onelev_csetr.p90
+    X_base_onelev_csetr.p90 X_base_onelev_cnv.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, mld_$(ARITH), $(filter %.p90, $(SRC))))

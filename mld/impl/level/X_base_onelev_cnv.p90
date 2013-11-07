@@ -36,43 +36,29 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$
-subroutine mld_@X@_base_smoother_bld(a,desc_a,sm,upd,info,amold,vmold,imold)
+subroutine mld_@X@_base_onelev_cnv(lv,info,amold,vmold,imold)
   
   use psb_base_mod
-  use mld_@X@_base_smoother_mod, mld_protect_name =>  mld_@X@_base_smoother_bld
-  Implicit None
+  use mld_@X@_onelev_mod, mld_protect_name =>  mld_@X@_base_onelev_cnv
+  implicit none 
 
-  ! Arguments
-  type(psb_@X@spmat_type), intent(in), target      :: a
-  Type(psb_desc_type), Intent(inout)               :: desc_a 
-  class(mld_@X@_base_smoother_type), intent(inout) :: sm 
-  character, intent(in)                            :: upd
-  integer(psb_ipk_), intent(out)                   :: info
+  class(mld_@X@_onelev_type), intent(inout) :: lv
+  integer(psb_ipk_), intent(out)          :: info
   class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
   class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
   class(psb_i_base_vect_type), intent(in), optional  :: imold
-  integer(psb_ipk_) :: err_act
-  character(len=20) :: name='@X@_base_smoother_bld'
 
-  call psb_erractionsave(err_act)
+  integer(psb_ipk_) :: i
 
   info = psb_success_
-  if (allocated(sm%sv)) then 
-    call sm%sv%build(a,desc_a,upd,info,amold=amold,vmold=vmold)
-  else
-    info = 1121
-    call psb_errpush(info,name)
-  endif
-  if (info /= psb_success_) goto 9999 
-
-  call psb_erractionrestore(err_act)
-  return
-
-9999 continue
-  call psb_erractionrestore(err_act)
-  if (err_act == psb_act_abort_) then
-    call psb_error()
-    return
+  
+  if (any((/present(amold),present(vmold),present(imold)/))) then 
+    if (allocated(lv%sm)) &
+         & call lv%sm%cnv(info,amold=amold,vmold=vmold,imold=imold)
+    if (info == psb_success_) &
+         & call lv%ac%cscnv(info,mold=amold)
+    if (info == psb_success_ .and. lv%desc_ac%is_ok()) &
+         & call lv%desc_ac%cnv(imold)
+    call lv%map%cnv(info,mold=amold,imold=imold)
   end if
-  return
-end subroutine mld_@X@_base_smoother_bld
+end subroutine mld_@X@_base_onelev_cnv

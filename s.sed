@@ -16,7 +16,7 @@ s/@RONE@/sone/g
 s/@DOT@/sdot/g
 s/@NRM2@/snrm2/g
 
-s/@MPI_TYPE@/mpi_real/g
+s/@MPI_TYPE@/psb_mpi_r_spk_/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_float/g
@@ -24,3 +24,4 @@ s/@SPGPU_TYPE@/spgpu_type_float/g
 s/@CTYPE@/Float/g
 s/@FLAG_COMPLEX@//g
 s/@FCKIND@/c_float/g
+s/@FRCKIND@/c_float/g

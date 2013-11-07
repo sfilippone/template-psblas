@@ -36,49 +36,29 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$
-subroutine mld_@X@_jac_smoother_bld(a,desc_a,sm,upd,info,amold,vmold,imold)
+subroutine mld_@X@_jac_smoother_cnv(sm,info,amold,vmold,imold)
 
   use psb_base_mod
   use mld_@X@_diag_solver
-  use mld_@X@_jac_smoother, mld_protect_name => mld_@X@_jac_smoother_bld
+  use mld_@X@_jac_smoother, mld_protect_name => mld_@X@_jac_smoother_cnv
   Implicit None
 
   ! Arguments
-  type(psb_@X@spmat_type), intent(in), target          :: a
-  Type(psb_desc_type), Intent(inout)                 :: desc_a 
   class(mld_@X@_jac_smoother_type), intent(inout)      :: sm
-  character, intent(in)                              :: upd
   integer(psb_ipk_), intent(out)                     :: info
   class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
   class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
   class(psb_i_base_vect_type), intent(in), optional  :: imold
   ! Local variables
-  integer(psb_ipk_) :: n_row,n_col, nrow_a, nztota, nzeros
-  @TYPE@(@FKIND@), pointer :: ww(:), aux(:), tx(:),ty(:)
   integer(psb_ipk_) :: ictxt,np,me,i, err_act, debug_unit, debug_level
-  character(len=20) :: name='@X@_jac_smoother_bld', ch_err
+  character(len=20) :: name='d_jac_smoother_cnv', ch_err
 
   info=psb_success_
   call psb_erractionsave(err_act)
   debug_unit  = psb_get_debug_unit()
   debug_level = psb_get_debug_level()
-  ictxt       = desc_a%get_context()
-  call psb_info(ictxt, me, np)
-  if (debug_level >= psb_debug_outer_) &
-       & write(debug_unit,*) me,' ',trim(name),' start'
 
 
-  n_row  = desc_a%get_local_rows()
-
-  nrow_a = a%get_nrows()
-  nztota = a%get_nzeros()
-  select type (smsv => sm%sv)
-  type is (mld_@X@_diag_solver_type)
-    call a%clip_diag(sm%nd,info)
-    class default
-    call a%csclip(sm%nd,info,&
-         & jmin=nrow_a+1,rscale=.false.,cscale=.false.)
-  end select
   if (info == psb_success_) then 
     if (present(amold)) then 
       call sm%nd%cscnv(info,&
@@ -88,23 +68,14 @@ subroutine mld_@X@_jac_smoother_bld(a,desc_a,sm,upd,info,amold,vmold,imold)
            & type='csr',dupl=psb_dupl_add_)
     endif
   end if
+  
+  if (allocated(sm%sv)) &
+       & call sm%sv%cnv(info,amold=amold,vmold=vmold,imold=imold)
   if (info /= psb_success_) then
     call psb_errpush(psb_err_from_subroutine_,name,&
-         & a_err='clip & psb_spcnv csr 4')
+         & a_err='solver cnv')
     goto 9999
   end if
-
-  call sm%sv%build(a,desc_a,upd,info,amold=amold,vmold=vmold)
-  if (info /= psb_success_) then
-    call psb_errpush(psb_err_from_subroutine_,name,&
-         & a_err='solver build')
-    goto 9999
-  end if
-  nzeros = sm%nd%get_nzeros()
-  call psb_sum(ictxt,nzeros)
-  sm%nnz_nd_tot = nzeros
-  if (debug_level >= psb_debug_outer_) &
-       & write(debug_unit,*) me,' ',trim(name),' end'
 
   call psb_erractionrestore(err_act)
   return
@@ -117,4 +88,4 @@ subroutine mld_@X@_jac_smoother_bld(a,desc_a,sm,upd,info,amold,vmold,imold)
   end if
   return
 
-end subroutine mld_@X@_jac_smoother_bld
+end subroutine mld_@X@_jac_smoother_cnv

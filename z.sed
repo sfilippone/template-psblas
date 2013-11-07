@@ -16,10 +16,11 @@ s/@RONE@/done/g
 s/@DOT@/zdotc/g
 s/@NRM2@/dznrm2/g
 
-s/@MPI_TYPE@/mpi_double_complex/g
+s/@MPI_TYPE@/psb_mpi_c_dpk_/g
 s/@PSB_SWAP_TAG@/psb_dcomplex_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_complex_double/g
 s/@CTYPE@/DoubleComplex/g
 s/@FLAG_COMPLEX@/Complex/g
 s/@FCKIND@/c_double_complex/g
+s/@FRCKIND@/c_double/g
