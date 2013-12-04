@@ -1603,6 +1603,7 @@ subroutine psb_@X@_csc_csgetptn(imin,imax,a,nz,ia,ja,info,&
 
   call psb_erractionsave(err_act)
   info = psb_success_
+  nz = 0
 
   if (present(jmin)) then
     jmin_ = jmin
@@ -1615,10 +1616,7 @@ subroutine psb_@X@_csc_csgetptn(imin,imax,a,nz,ia,ja,info,&
     jmax_ = a%get_ncols()
   endif
 
-  if ((imax<imin).or.(jmax_<jmin_)) then 
-    nz = 0
-    return
-  end if
+  if ((imax<imin).or.(jmax_<jmin_)) return
 
   if (present(append)) then
     append_=append
@@ -1686,13 +1684,13 @@ contains
 
     class(psb_@X@_csc_sparse_mat), intent(in)    :: a
     integer(psb_ipk_) :: imin,imax,jmin,jmax
-    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_ipk_), intent(inout)               :: nz
     integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
     integer(psb_ipk_), intent(in)                  :: nzin
     logical, intent(in)                  :: append
     integer(psb_ipk_) :: info
     integer(psb_ipk_), optional                    :: iren(:)
-    integer(psb_ipk_) :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, icl, lcl,m,isz
+    integer(psb_ipk_) :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, icl, lcl,m,isz, nrd, ncd
     integer(psb_ipk_) :: debug_level, debug_unit
     character(len=20) :: name='coo_getrow'
 
@@ -1715,11 +1713,12 @@ contains
       nzin_ = 0
     endif
 
-
+    nrd = max(1,a%get_nrows())
+    ncd = max(1,a%get_ncols())
     nzt = min((a%icp(lcl+1)-a%icp(icl)),&
-         & ((nza*(lcl+1-icl))/a%get_ncols()) )
+         & ((nza+ncd-1)/ncd)*(lcl+1-icl),&
+         & ((nza+nrd-1)/nrd)*(lrw+1-irw))
     nz = 0 
-
 
     call psb_ensure_size(nzin_+nzt,ia,info)
     if (info == psb_success_) call psb_ensure_size(nzin_+nzt,ja,info)
@@ -1796,7 +1795,8 @@ subroutine psb_@X@_csc_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
 
   call psb_erractionsave(err_act)
   info = psb_success_
-
+  nz = 0
+    
   if (present(jmin)) then
     jmin_ = jmin
   else
@@ -1809,10 +1809,7 @@ subroutine psb_@X@_csc_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
   endif
 
 
-  if ((imax<imin).or.(jmax_<jmin_)) then 
-    nz = 0
-    return
-  end if
+  if ((imax<imin).or.(jmax_<jmin_)) return
 
   if (present(append)) then
     append_=append
@@ -1881,14 +1878,14 @@ contains
 
     class(psb_@X@_csc_sparse_mat), intent(in)    :: a
     integer(psb_ipk_) :: imin,imax,jmin,jmax
-    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_ipk_), intent(inout)               :: nz
     integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
     @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
     integer(psb_ipk_), intent(in)                  :: nzin
     logical, intent(in)                  :: append
     integer(psb_ipk_) :: info
     integer(psb_ipk_), optional                    :: iren(:)
-    integer(psb_ipk_) :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, icl, lcl,isz,m
+    integer(psb_ipk_) :: nzin_, nza, idx,i,j,k, nzt, irw, lrw, icl, lcl,isz,m, nrd, ncd
     integer(psb_ipk_) :: debug_level, debug_unit
     character(len=20) :: name='coo_getrow'
 
@@ -1912,10 +1909,12 @@ contains
       nzin_ = 0
     endif
 
+    nrd = max(1,a%get_nrows())
+    ncd = max(1,a%get_ncols())
     nzt = min((a%icp(lcl+1)-a%icp(icl)),&
-         & ((nza*(lrw+1-irw))/m) )
+         & ((nza+ncd-1)/ncd)*(lcl+1-icl),&
+         & ((nza+nrd-1)/nrd)*(lrw+1-irw))
     nz = 0 
-
 
     call psb_ensure_size(nzin_+nzt,ia,info)
     if (info == psb_success_) call psb_ensure_size(nzin_+nzt,ja,info)
