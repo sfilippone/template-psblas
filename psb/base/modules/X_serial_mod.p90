@@ -51,6 +51,33 @@ module psb_@X@_serial_mod
     end function psb_@X@asum_s
   end interface psb_asum
 
+  interface psb_spspmm
+    subroutine psb_@X@spspmm(a,b,c,info)
+      use psb_@X@_mat_mod, only : psb_@X@spmat_type
+      import :: psb_ipk_
+      implicit none 
+      type(psb_@X@spmat_type), intent(in)  :: a,b
+      type(psb_@X@spmat_type), intent(out) :: c
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@spspmm
+    subroutine psb_@X@csrspspmm(a,b,c,info)
+      use psb_@X@_mat_mod, only : psb_@X@_csr_sparse_mat
+      import :: psb_ipk_
+      implicit none 
+      class(psb_@X@_csr_sparse_mat), intent(in) :: a,b
+      type(psb_@X@_csr_sparse_mat), intent(out) :: c
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@csrspspmm
+    subroutine psb_@X@cscspspmm(a,b,c,info)
+      use psb_@X@_mat_mod, only : psb_@X@_csc_sparse_mat
+      import :: psb_ipk_
+      implicit none 
+      class(psb_@X@_csc_sparse_mat), intent(in) :: a,b
+      type(psb_@X@_csc_sparse_mat), intent(out) :: c
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@cscspspmm
+  end interface
+
   interface psb_symbmm
     subroutine psb_@X@symbmm(a,b,c,info)
       use psb_@X@_mat_mod, only : psb_@X@spmat_type
