@@ -1292,7 +1292,7 @@ module psb_@X@_base_mat_mod
   !! \param val(:) Coefficients
   !! \param nzout  Number of entries after sorting/duplicate handling
   !! \param info   return code
-  !! \param idir [0] Sort in: row major order (0) or col major order (1)
+  !! \param idir [psb_row_major_] Sort in row major order or col major order 
   !! 
   !
   interface 
@@ -1311,7 +1311,7 @@ module psb_@X@_base_mat_mod
   !! \memberof  psb_@X@_coo_sparse_mat
   !! \brief Make sure the entries are sorted and duplicates are handled.
   !! \param info   return code
-  !! \param idir [0] Sort in: row major order (0) or col major order (1)
+  !! \param idir [psb_row_major_] Sort in row major order or col major order 
   !!
   !
   interface 
