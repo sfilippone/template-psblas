@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC= X_ell_mat_mod.p90 X_hll_mat_mod.p90 
+SRC= X_ell_mat_mod.p90 X_hll_mat_mod.p90 X_dia_mat_mod.p90 X_hdia_mat_mod.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
