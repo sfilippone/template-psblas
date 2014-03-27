@@ -797,13 +797,21 @@ module psb_@X@_mat_mod
   end interface
 
   
+!!$  interface 
+!!$    subroutine psb_@X@_get_diag(a,d,info)
+!!$      import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
+!!$      class(psb_@X@spmat_type), intent(in) :: a
+!!$      @TYPE@(@FKIND@), intent(out)         :: d(:)
+!!$      integer(psb_ipk_), intent(out)                 :: info
+!!$    end subroutine psb_@X@_get_diag
+!!$  end interface
   interface 
-    subroutine psb_@X@_get_diag(a,d,info)
+    function psb_@X@_get_diag(a,info) result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in) :: a
-      @TYPE@(@FKIND@), intent(out)         :: d(:)
-      integer(psb_ipk_), intent(out)                 :: info
-    end subroutine psb_@X@_get_diag
+      @TYPE@(@FKIND@), allocatable         :: d(:)
+      integer(psb_ipk_), intent(out)       :: info
+    end function psb_@X@_get_diag
   end interface
   
   interface psb_scal
