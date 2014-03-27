@@ -144,6 +144,13 @@ module psb_@X@_psblas_mod
     end function psb_@X@amax_vect
   end interface
 
+  interface psb_genrmi
+    procedure psb_@X@amax, psb_@X@amaxv, psb_@X@amax_vect
+  end interface 
+  interface psb_normi
+    procedure psb_@X@amax, psb_@X@amaxv, psb_@X@amax_vect
+  end interface 
+
   interface psb_geamaxs
     subroutine  psb_@X@amaxvs(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
@@ -211,6 +218,13 @@ module psb_@X@_psblas_mod
     end subroutine psb_@X@masum
   end interface
 
+  interface psb_genrm1
+    procedure psb_@X@asum, psb_@X@asumv, psb_@X@asum_vect
+  end interface 
+  interface psb_norm1
+    procedure psb_@X@asum, psb_@X@asumv, psb_@X@asum_vect
+  end interface 
+
 
   interface psb_genrm2
     function psb_@X@nrm2(x, desc_a, info, jx)
@@ -240,6 +254,10 @@ module psb_@X@_psblas_mod
     end function psb_@X@nrm2_vect
   end interface
 
+  interface psb_norm2
+    procedure psb_@X@nrm2, psb_@X@nrm2v, psb_@X@nrm2_vect
+  end interface 
+
   interface psb_genrm2s
     subroutine  psb_@X@nrm2vs(res,x,desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
@@ -263,6 +281,10 @@ module psb_@X@_psblas_mod
     end function psb_@X@nrmi
   end interface
 
+  interface psb_normi
+    procedure psb_@X@nrmi
+  end interface 
+
   interface psb_spnrm1
     function psb_@X@spnrm1(a, desc_a,info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
@@ -273,6 +295,10 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), intent(out)                :: info
     end function psb_@X@spnrm1
   end interface
+  
+  interface psb_norm1
+    procedure psb_@X@spnrm1
+  end interface 
 
   interface psb_spmm
     subroutine psb_@X@spmm(alpha, a, x, beta, y, desc_a, info,&
