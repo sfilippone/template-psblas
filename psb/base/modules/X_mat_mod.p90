@@ -761,50 +761,41 @@ module psb_@X@_mat_mod
   end interface
 
   interface 
-    subroutine psb_@X@_rowsum(d,a,info) 
+    function psb_@X@_rowsum(a,info) result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in) :: a
-      @TYPE@(@FKIND@), intent(out)     :: d(:)
+      @TYPE@(@FKIND@), allocatable      :: d(:)
       integer(psb_ipk_), intent(out)               :: info
-    end subroutine psb_@X@_rowsum
+    end function psb_@X@_rowsum
   end interface
 
   interface 
-    subroutine psb_@X@_arwsum(d,a,info) 
+    function psb_@X@_arwsum(a,info) result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in) :: a
-      @RTYPE@(@FKIND@), intent(out)        :: d(:)
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
       integer(psb_ipk_), intent(out)               :: info
-    end subroutine psb_@X@_arwsum
+    end function psb_@X@_arwsum
   end interface
   
   interface 
-    subroutine psb_@X@_colsum(d,a,info) 
+    function psb_@X@_colsum(a,info) result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in) :: a
-      @TYPE@(@FKIND@), intent(out)     :: d(:)
+      @TYPE@(@FKIND@), allocatable      :: d(:)
       integer(psb_ipk_), intent(out)               :: info
-    end subroutine psb_@X@_colsum
+    end function psb_@X@_colsum
   end interface
 
   interface 
-    subroutine psb_@X@_aclsum(d,a,info) 
+    function psb_@X@_aclsum(a,info)  result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in) :: a
-      @RTYPE@(@FKIND@), intent(out)        :: d(:)
-      integer(psb_ipk_), intent(out)              :: info
-    end subroutine psb_@X@_aclsum
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
+      integer(psb_ipk_), intent(out)        :: info
+    end function psb_@X@_aclsum
   end interface
 
-  
-!!$  interface 
-!!$    subroutine psb_@X@_get_diag(a,d,info)
-!!$      import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
-!!$      class(psb_@X@spmat_type), intent(in) :: a
-!!$      @TYPE@(@FKIND@), intent(out)         :: d(:)
-!!$      integer(psb_ipk_), intent(out)                 :: info
-!!$    end subroutine psb_@X@_get_diag
-!!$  end interface
   interface 
     function psb_@X@_get_diag(a,info) result(d)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
