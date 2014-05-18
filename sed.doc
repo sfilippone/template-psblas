@@ -10,8 +10,8 @@ s/@FKIND@/psb_dpk_/g
 s/@CONJG@/conjg/g
 
 4. ZERO and ONE constants in the desired type
-s/@XZERO@/szero/g
-s/@XONE@/sone/g
+s/@XZERO@/zzero/g
+s/@XONE@/zone/g
 
 5. ZERO and ONE constants in the NORM type, i.e always REAL, matching KIND
 s/@RZERO@/dzero/g
