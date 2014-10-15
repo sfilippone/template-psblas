@@ -35,6 +35,11 @@ module psb_@X@_elg_mat_mod
   use iso_c_binding
   use psb_@X@_mat_mod
   use psb_@X@_ell_mat_mod
+  use psb_i_gpu_vect_mod
+
+  integer(psb_ipk_), parameter, private :: is_host = -1
+  integer(psb_ipk_), parameter, private :: is_sync = 0 
+  integer(psb_ipk_), parameter, private :: is_dev  = 1 
 
   type, extends(psb_@X@_ell_sparse_mat) :: psb_@X@_elg_sparse_mat
     !
@@ -46,6 +51,7 @@ module psb_@X@_elg_mat_mod
     ! 
 #ifdef HAVE_SPGPU
     type(c_ptr) :: deviceMat = c_null_ptr
+    integer     :: devstate  = is_host
 
   contains
     procedure, nopass  :: get_fmt       => @X@_elg_get_fmt
@@ -58,6 +64,7 @@ module psb_@X@_elg_mat_mod
     procedure, pass(a) :: scalv         => psb_@X@_elg_scal
     procedure, pass(a) :: reallocate_nz => psb_@X@_elg_reallocate_nz
     procedure, pass(a) :: allocate_mnnz => psb_@X@_elg_allocate_mnnz
+    procedure, pass(a) :: reinit        => @X@_elg_reinit
     ! Note: we do *not* need the TO methods, because the parent type
     ! methods will work. 
     procedure, pass(a) :: cp_from_coo   => psb_@X@_cp_elg_from_coo
@@ -66,19 +73,31 @@ module psb_@X@_elg_mat_mod
     procedure, pass(a) :: mv_from_fmt   => psb_@X@_mv_elg_from_fmt
     procedure, pass(a) :: free          => @X@_elg_free
     procedure, pass(a) :: mold          => psb_@X@_elg_mold
+    procedure, pass(a) :: is_host       => @X@_elg_is_host
+    procedure, pass(a) :: is_dev        => @X@_elg_is_dev
+    procedure, pass(a) :: is_sync       => @X@_elg_is_sync
+    procedure, pass(a) :: set_host      => @X@_elg_set_host
+    procedure, pass(a) :: set_dev       => @X@_elg_set_dev
+    procedure, pass(a) :: set_sync      => @X@_elg_set_sync
+    procedure, pass(a) :: sync          => @X@_elg_sync
+    procedure, pass(a) :: csput_a       => psb_@X@_elg_csput_a
+    procedure, pass(a) :: csput_v       => psb_@X@_elg_csput_v
     procedure, pass(a) :: to_gpu        => psb_@X@_elg_to_gpu
+    procedure, pass(a) :: from_gpu      => psb_@X@_elg_from_gpu
+    procedure, pass(a) :: asb           => psb_@X@_elg_asb
 #ifdef HAVE_FINAL
     final              :: @X@_elg_finalize
 #endif
 #else 
   contains
     procedure, pass(a) :: mold         => psb_@X@_elg_mold
+    procedure, pass(a) :: asb          => psb_@X@_elg_asb
 #endif
   end type psb_@X@_elg_sparse_mat
 
 #ifdef HAVE_SPGPU
   private :: @X@_elg_get_nzeros, @X@_elg_free,  @X@_elg_get_fmt, &
-       & @X@_elg_get_size, @X@_elg_sizeof, @X@_elg_get_nz_row
+       & @X@_elg_get_size, @X@_elg_sizeof, @X@_elg_get_nz_row, @X@_elg_sync
 
 
   interface 
@@ -129,6 +148,31 @@ module psb_@X@_elg_mat_mod
       integer(psb_ipk_), intent(out)                           :: info
     end subroutine psb_@X@_elg_mold
   end interface
+  
+  interface 
+    subroutine psb_@X@_elg_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      import :: psb_@X@_elg_sparse_mat, @FKIND@, psb_ipk_
+      class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: val(:)
+      integer(psb_ipk_), intent(in)             :: nz,ia(:), ja(:),&
+           &  imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+    end subroutine psb_@X@_elg_csput_a
+  end interface
+
+  interface 
+    subroutine psb_@X@_elg_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      import :: psb_@X@_elg_sparse_mat, psb_dpk_, psb_ipk_, psb_@X@_base_vect_type,&
+           & psb_i_base_vect_type
+      class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+      class(psb_@X@_base_vect_type), intent(inout) :: val
+      class(psb_i_base_vect_type), intent(inout) :: ia, ja
+      integer(psb_ipk_), intent(in)              :: nz, imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(in), optional    :: gtl(:)
+    end subroutine psb_@X@_elg_csput_v
+  end interface
 
   interface 
     subroutine psb_@X@_elg_to_gpu(a,info, nzrm) 
@@ -137,6 +181,14 @@ module psb_@X@_elg_mat_mod
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: nzrm
     end subroutine psb_@X@_elg_to_gpu
+  end interface
+
+  interface 
+    subroutine psb_@X@_elg_from_gpu(a,info) 
+      import :: psb_@X@_elg_sparse_mat, psb_ipk_
+      class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)             :: info
+    end subroutine psb_@X@_elg_from_gpu
   end interface
 
   interface 
@@ -216,6 +268,13 @@ module psb_@X@_elg_mat_mod
     end subroutine psb_@X@_elg_scals
   end interface
   
+  interface 
+    subroutine psb_@X@_elg_asb(a)
+      import :: psb_@X@_elg_sparse_mat
+      class(psb_@X@_elg_sparse_mat), intent(inout) :: a   
+    end subroutine psb_@X@_elg_asb
+  end interface
+  
 
 contains 
 
@@ -266,6 +325,32 @@ contains
   !
   !
   ! == ===================================  
+  subroutine  @X@_elg_reinit(a,clear) 
+    use elldev_mod
+    implicit none 
+    integer(psb_ipk_) :: info
+
+    class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+    logical, intent(in), optional :: clear
+    integer(psb_ipk_) :: isz
+  
+    
+!!$    if (a%is_repeatable_updates()) then       
+!!$      if (a%updidx%get_nrows() < a%get_size()) then 
+!!$        call a%updidx%free(info)
+!!$        isz = 1.25*a%get_size()
+!!$        call a%updidx%bld(isz)
+!!$        call a%updidx%set_scal(-ione)
+!!$        call a%updidx%sync()
+!!$      end if
+!!$      a%updcnt = 0
+!!$    end if
+    
+    call a%psb_@X@_ell_sparse_mat%reinit(clear)
+
+    return
+
+  end subroutine @X@_elg_reinit
 
   subroutine  @X@_elg_free(a) 
     use elldev_mod
@@ -278,10 +363,75 @@ contains
          & call freeEllDevice(a%deviceMat)
     a%deviceMat = c_null_ptr
     call a%psb_@X@_ell_sparse_mat%free()
+    call a%set_sync()
     
     return
 
   end subroutine @X@_elg_free
+
+  subroutine  @X@_elg_sync(a) 
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), target, intent(in) :: a
+    class(psb_@X@_elg_sparse_mat), pointer :: tmpa
+    integer(psb_ipk_) :: info
+
+    tmpa=>a
+    if (tmpa%is_host()) then 
+      call tmpa%to_gpu(info)
+    else if (tmpa%is_dev()) then 
+      ! Missing method 
+      call tmpa%from_gpu(info)
+    end if
+    call tmpa%set_sync()
+    return
+
+  end subroutine @X@_elg_sync
+
+  subroutine @X@_elg_set_host(a)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+    
+    a%devstate = is_host
+  end subroutine @X@_elg_set_host
+
+  subroutine @X@_elg_set_dev(a)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+    
+    a%devstate = is_dev
+  end subroutine @X@_elg_set_dev
+
+  subroutine @X@_elg_set_sync(a)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(inout) :: a
+    
+    a%devstate = is_sync
+  end subroutine @X@_elg_set_sync
+
+  function @X@_elg_is_dev(a) result(res)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(in) :: a
+    logical  :: res
+  
+    res = (a%devstate == is_dev)
+  end function @X@_elg_is_dev
+  
+  function @X@_elg_is_host(a) result(res)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(in) :: a
+    logical  :: res
+
+    res = (a%devstate == is_host)
+  end function @X@_elg_is_host
+
+  function @X@_elg_is_sync(a) result(res)
+    implicit none 
+    class(psb_@X@_elg_sparse_mat), intent(in) :: a
+    logical  :: res
+
+    res = (a%devstate == is_sync)
+  end function @X@_elg_is_sync
+
 
 #ifdef HAVE_FINAL
   subroutine  @X@_elg_finalize(a) 
@@ -298,6 +448,13 @@ contains
 #endif
 
 #else 
+
+  interface 
+    subroutine psb_@X@_elg_asb(a)
+      import :: psb_@X@_elg_sparse_mat
+      class(psb_@X@_elg_sparse_mat), intent(inout) :: a   
+    end subroutine psb_@X@_elg_asb
+  end interface
 
   interface 
     subroutine psb_@X@_elg_mold(a,b,info) 

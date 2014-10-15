@@ -23,8 +23,11 @@ X_csrg_scals.P90 \
 X_csrg_to_gpu.P90 \
 X_csrg_vect_mv.P90 \
 X_elg_allocate_mnnz.P90 \
+X_elg_asb.p90 \
 X_elg_csmm.P90 \
 X_elg_csmv.P90 \
+X_elg_csput.P90 \
+X_elg_from_gpu.P90 \
 X_elg_inner_vect_sv.P90 \
 X_elg_mold.P90 \
 X_elg_reallocate_nz.P90 \

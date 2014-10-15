@@ -71,7 +71,7 @@ module psb_@X@_dia_mat_mod
     procedure, pass(a) :: mv_from_coo  => psb_@X@_mv_dia_from_coo
     ! procedure, pass(a) :: mv_to_fmt    => psb_@X@_mv_dia_to_fmt
 !    procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_dia_from_fmt
-    ! procedure, pass(a) :: csput        => psb_@X@_dia_csput
+    ! procedure, pass(a) :: csput_a      => psb_@X@_dia_csput_a
     ! procedure, pass(a) :: get_diag     => psb_@X@_dia_get_diag
     ! procedure, pass(a) :: csgetptn     => psb_@X@_dia_csgetptn
     ! procedure, pass(a) :: csgetrow     => psb_@X@_dia_csgetrow
@@ -212,7 +212,7 @@ module psb_@X@_dia_mat_mod
   end interface
   
   interface 
-    subroutine psb_@X@_dia_csput(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@X@_dia_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
       import :: psb_@X@_dia_sparse_mat, @FKIND@, psb_ipk_
       class(psb_@X@_dia_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
@@ -220,7 +220,7 @@ module psb_@X@_dia_mat_mod
            &  imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
       integer(psb_ipk_), intent(in), optional   :: gtl(:)
-    end subroutine psb_@X@_dia_csput
+    end subroutine psb_@X@_dia_csput_a
   end interface
   
   interface 

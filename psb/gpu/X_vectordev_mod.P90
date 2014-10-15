@@ -139,6 +139,17 @@ module psb_@X@_vectordev_mod
     end function dotMultiVecDevice@CTYPE@
   end interface
   
+!!$  interface 
+!!$    function geinsMultiVecDevice@CTYPE@(n,deviceVecIrl,deviceVecVal,&
+!!$         & dupl,indexbase,deviceVecX) &
+!!$         & result(res) bind(c,name='geinsMultiVecDevice@CTYPE@')
+!!$      use iso_c_binding
+!!$      integer(c_int)      :: res
+!!$      integer(c_int), value :: n, dupl,indexbase
+!!$      type(c_ptr), value  :: deviceVecIrl, deviceVecVal, deviceVecX
+!!$    end function geinsMultiVecDeviceDouble
+!!$  end interface
+
   interface axpbyMultiVecDevice
     function axpbyMultiVecDevice@CTYPE@(n,alpha,deviceVecA,beta,deviceVecB) &
          & result(res) bind(c,name='axpbyMultiVecDevice@CTYPE@')
