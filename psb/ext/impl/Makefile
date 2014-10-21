@@ -5,9 +5,7 @@ UTIL_MODS =
 
 SRC= \
 X_cp_dia_from_coo.p90 \
-X_cp_dia_from_fmt.p90 \
 X_cp_dia_to_coo.p90 \
-X_cp_dia_to_fmt.p90 \
 X_cp_ell_from_coo.p90 \
 X_cp_ell_from_fmt.p90 \
 X_cp_ell_to_coo.p90 \
@@ -22,16 +20,10 @@ X_dia_aclsum.p90 \
 X_dia_allocate_mnnz.p90 \
 X_dia_arwsum.p90 \
 X_dia_colsum.p90 \
-X_dia_csgetblk.p90 \
 X_dia_csgetptn.p90 \
 X_dia_csgetrow.p90 \
 X_dia_csmm.p90 \
 X_dia_csmv.p90 \
-X_dia_csnm1.p90 \
-X_dia_csnmi.p90 \
-X_dia_csput.p90 \
-X_dia_cssm.p90 \
-X_dia_cssv.p90 \
 X_dia_get_diag.p90 \
 X_dia_maxval.p90 \
 X_dia_mold.p90 \
@@ -41,7 +33,6 @@ X_dia_reinit.p90 \
 X_dia_rowsum.p90 \
 X_dia_scal.p90 \
 X_dia_scals.p90 \
-X_dia_trim.p90 \
 X_ell_aclsum.p90 \
 X_ell_allocate_mnnz.p90 \
 X_ell_arwsum.p90 \
@@ -93,10 +84,6 @@ X_hll_reinit.p90 \
 X_hll_rowsum.p90 \
 X_hll_scal.p90 \
 X_hll_scals.p90 \
-X_mv_dia_from_coo.p90 \
-X_mv_dia_from_fmt.p90 \
-X_mv_dia_to_coo.p90 \
-X_mv_dia_to_fmt.p90 \
 X_mv_ell_from_coo.p90 \
 X_mv_ell_from_fmt.p90 \
 X_mv_ell_to_coo.p90 \

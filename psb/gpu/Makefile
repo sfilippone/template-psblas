@@ -7,7 +7,9 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC= X_csrg_mat_mod.P90 X_elg_mat_mod.P90 \
      X_gpu_vect_mod.P90 X_hlg_mat_mod.P90 \
-     X_hybg_mat_mod.P90 X_vectordev_mod.P90
+     X_hybg_mat_mod.P90 X_diag_mat_mod.P90 \
+     X_hdiag_mat_mod.P90 \
+     X_vectordev_mod.P90
 
 
 

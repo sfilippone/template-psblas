@@ -28,65 +28,47 @@
 !!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
-subroutine psb_@X@_dia_rowsum(d,a) 
+  
+
+subroutine psb_@X@_diag_to_gpu(a,info,nzrm) 
   
   use psb_base_mod
-  use psb_@X@_dia_mat_mod, psb_protect_name => psb_@X@_dia_rowsum
+#ifdef HAVE_SPGPU
+  use diagdev_mod
+  use psb_vectordev_mod
+  use psb_@X@_diag_mat_mod, psb_protect_name => psb_@X@_diag_to_gpu
+#else 
+  use psb_@X@_diag_mat_mod
+#endif
+  use iso_c_binding
   implicit none 
-  class(psb_@X@_dia_sparse_mat), intent(in) :: a
-  @RTYPE@(@FKIND@), intent(out)              :: d(:)
+  class(psb_@X@_diag_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_), intent(out)             :: info
+  integer(psb_ipk_), intent(in), optional    :: nzrm
 
-  integer(psb_ipk_) :: i,j,k,m,n, nnz, ir, jc, nc, ir1,ir2, nr
-  logical           :: tra
-  integer(psb_ipk_) :: err_act, info, int_err(5)
-  character(len=20) :: name='rowsum'
-  logical, parameter :: debug=.false.
+  integer(psb_ipk_) :: m, nzm, n, c,pitch,maxrowsize,d
+#ifdef HAVE_SPGPU
+  type(diagdev_parms) :: gpu_parms
+#endif
 
-  call psb_erractionsave(err_act)
+  info = 0
 
-  m = a%get_nrows()
-  n = a%get_ncols()
-  if (size(d) < n) then 
-    info=psb_err_input_asize_small_i_
-    int_err(1) = 1
-    int_err(2) = size(d)
-    int_err(3) = n
-    call psb_errpush(info,name,i_err=int_err)
-    goto 9999
-  end if
+#ifdef HAVE_SPGPU
+  if ((.not.allocated(a%data)).or.(.not.allocated(a%offset))) return
+  
+  n   = size(a%data,1)
+  d   = size(a%data,2)
+  c   = a%get_ncols()
+  !allocsize = a%get_size()
+  !write(*,*) 'Create the DIAG matrix'
+  gpu_parms = FgetDiagDeviceParams(n,c,d,@SPGPU_TYPE@)
+  if (c_associated(a%deviceMat)) then 
+     call freeDiagDevice(a%deviceMat)
+  endif
+  info       = FallocDiagDevice(a%deviceMat,n,c,d,@SPGPU_TYPE@)
+  if (info == 0)  info = &
+       & writeDiagDevice(a%deviceMat,a%data,a%offset,n)
+!  if (info /= 0) goto 9999
+#endif
 
-  if (a%is_unit()) then 
-    d = @RONE@
-  else
-    d = @RZERO@
-  end if
-
-  nr = size(a%data,1)
-  nc = size(a%data,2)
-  do j=1,nc
-    jc = a%offset(j) 
-    if (jc > 0) then 
-      ir1 = 1
-      ir2 = nr - jc
-    else
-      ir1 = 1 - jc
-      ir2 = nr
-    end if
-    do i=ir1, ir2
-      d(i) = d(i) + a%data(i,j)
-    enddo
-  enddo
-
-  call psb_erractionrestore(err_act)
-  return  
-
-9999 continue
-  call psb_erractionrestore(err_act)
-
-  if (err_act == psb_act_abort_) then
-    call psb_error()
-    return
-  end if
-  return
-
-end subroutine psb_@X@_dia_rowsum
+end subroutine psb_@X@_diag_to_gpu

@@ -63,9 +63,19 @@ X_mv_elg_from_fmt.P90 \
 X_mv_hlg_from_coo.P90 \
 X_mv_hlg_from_fmt.P90 \
 X_mv_hybg_from_coo.P90 \
-X_mv_hybg_from_fmt.P90 
-
-
+X_mv_hybg_from_fmt.P90 \
+X_cp_diag_from_coo.P90  \
+X_diag_mold.P90    \
+X_diag_vect_mv.P90 \
+X_diag_csmv.P90    \
+X_diag_to_gpu.P90  \
+X_mv_diag_from_coo.P90 \
+X_cp_hdiag_from_coo.P90 \
+X_hdiag_mold.P90 \
+X_hdiag_vect_mv.P90 \
+X_hdiag_csmv.P90 \
+X_hdiag_to_gpu.P90 \
+X_mv_hdiag_from_coo.P90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))

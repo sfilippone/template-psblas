@@ -28,65 +28,39 @@
 !!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
-subroutine psb_@X@_dia_rowsum(d,a) 
+  
+
+subroutine psb_@X@_hdiag_mold(a,b,info) 
   
   use psb_base_mod
-  use psb_@X@_dia_mat_mod, psb_protect_name => psb_@X@_dia_rowsum
+  use psb_@X@_hdiag_mat_mod, psb_protect_name => psb_@X@_hdiag_mold
   implicit none 
-  class(psb_@X@_dia_sparse_mat), intent(in) :: a
-  @RTYPE@(@FKIND@), intent(out)              :: d(:)
-
-  integer(psb_ipk_) :: i,j,k,m,n, nnz, ir, jc, nc, ir1,ir2, nr
-  logical           :: tra
-  integer(psb_ipk_) :: err_act, info, int_err(5)
-  character(len=20) :: name='rowsum'
+  class(psb_@X@_hdiag_sparse_mat), intent(in)                   :: a
+  class(psb_@X@_base_sparse_mat), intent(inout), allocatable  :: b
+  integer(psb_ipk_), intent(out)                            :: info
+  integer(psb_ipk_)  :: err_act
+  character(len=20)  :: name='hdiag_mold'
   logical, parameter :: debug=.false.
 
-  call psb_erractionsave(err_act)
+  call psb_get_erraction(err_act)
+  
+  info = 0 
+  if (allocated(b)) then 
+    call b%free()
+    deallocate(b,stat=info)
+  end if
+  if (info == 0) allocate(psb_@X@_hdiag_sparse_mat :: b, stat=info)
 
-  m = a%get_nrows()
-  n = a%get_ncols()
-  if (size(d) < n) then 
-    info=psb_err_input_asize_small_i_
-    int_err(1) = 1
-    int_err(2) = size(d)
-    int_err(3) = n
-    call psb_errpush(info,name,i_err=int_err)
+  if (info /= psb_success_) then 
+    info = psb_err_alloc_dealloc_ 
+    call psb_errpush(info, name)
     goto 9999
   end if
-
-  if (a%is_unit()) then 
-    d = @RONE@
-  else
-    d = @RZERO@
-  end if
-
-  nr = size(a%data,1)
-  nc = size(a%data,2)
-  do j=1,nc
-    jc = a%offset(j) 
-    if (jc > 0) then 
-      ir1 = 1
-      ir2 = nr - jc
-    else
-      ir1 = 1 - jc
-      ir2 = nr
-    end if
-    do i=ir1, ir2
-      d(i) = d(i) + a%data(i,j)
-    enddo
-  enddo
-
-  call psb_erractionrestore(err_act)
-  return  
-
+  return
 9999 continue
-  call psb_erractionrestore(err_act)
-
-  if (err_act == psb_act_abort_) then
+  if (err_act /= psb_act_ret_) then
     call psb_error()
-    return
   end if
   return
 
-end subroutine psb_@X@_dia_rowsum
+end subroutine psb_@X@_hdiag_mold
