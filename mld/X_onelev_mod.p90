@@ -123,6 +123,7 @@ module mld_@X@_onelev_mod
     class(mld_@X@_base_smoother_type), allocatable :: sm
     type(mld_@RT@ml_parms)              :: parms 
     type(psb_@X@spmat_type)            :: ac
+    integer(psb_ipk_)                :: ac_nz_loc, ac_nz_tot
     type(psb_desc_type)              :: desc_ac
     type(psb_@X@spmat_type), pointer   :: base_a    => null() 
     type(psb_desc_type), pointer     :: base_desc => null() 
