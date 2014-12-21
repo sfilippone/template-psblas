@@ -121,6 +121,8 @@ module psb_@X@_prec_type
 contains
 
   subroutine psb_@X@file_prec_descr(p,iout)
+    use psb_base_mod
+    implicit none 
     type(psb_@X@prec_type), intent(in) :: p
     integer(psb_ipk_), intent(in), optional    :: iout
     integer(psb_ipk_) :: iout_,info
@@ -162,6 +164,8 @@ contains
 
 
   subroutine psb_@X@_precfree(p,info)
+    use psb_base_mod
+    implicit none 
     type(psb_@X@prec_type), intent(inout) :: p
     integer(psb_ipk_), intent(out)                :: info
     integer(psb_ipk_) :: me, err_act,i
@@ -185,6 +189,8 @@ contains
   end subroutine psb_@X@_precfree
 
   subroutine psb_@X@_prec_free(prec,info)
+    use psb_base_mod
+    implicit none 
     class(psb_@X@prec_type), intent(inout) :: prec
     integer(psb_ipk_), intent(out)         :: info
     integer(psb_ipk_) :: me, err_act,i

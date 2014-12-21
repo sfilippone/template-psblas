@@ -134,8 +134,8 @@ module psb_@X@_bjacprec
 contains
 
   subroutine psb_@X@_bjac_precdescr(prec,iout)
-    
-    Implicit None
+    use psb_error_mod
+    implicit none 
 
     class(psb_@X@_bjac_prec_type), intent(in) :: prec
     integer(psb_ipk_), intent(in), optional    :: iout
