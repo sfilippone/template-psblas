@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspins.p90 Xins.p90 Xspasb.p90
+SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.p90 Xspasb.p90 Xspfree.p90\
+  Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
 
 
 

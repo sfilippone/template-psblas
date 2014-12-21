@@ -29,7 +29,7 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! Subroutine: psb_@X@insvi
+! Subroutine: psb_zinsvi
 !    Insert dense submatrix to dense matrix. Note: the row indices in IRW 
 !    are assumed to be in global numbering and are converted on the fly. 
 !    Row indices not belonging to the current process are silently discarded.
@@ -38,15 +38,15 @@
 !    m       - integer.        Number of rows of submatrix belonging to 
 !                              val to be inserted.
 !    irw(:)  - integer          Row indices of rows of val (global numbering)
-!    val(:)  - @TYPE@               The source dense submatrix.  
-!    x(:)    - @TYPE@               The destination dense matrix.  
+!    val(:)  - complex               The source dense submatrix.  
+!    x(:)    - complex               The destination dense matrix.  
 !    desc_a  - type(psb_desc_type).         The communication descriptor.
 !    info    - integer.                       return code
 !    dupl    - integer               What to do with duplicates: 
 !                                     psb_dupl_ovwrt_    overwrite
 !                                     psb_dupl_add_      add         
-subroutine psb_@X@insvi(m, irw, val, x, desc_a, info, dupl,local)
-  use psb_base_mod, psb_protect_name => psb_@X@insvi
+subroutine psb_zinsvi(m, irw, val, x, desc_a, info, dupl,local)
+  use psb_base_mod, psb_protect_name => psb_zinsvi
   use psi_mod
   implicit none
 
@@ -58,8 +58,8 @@ subroutine psb_@X@insvi(m, irw, val, x, desc_a, info, dupl,local)
   !....parameters...
   integer(psb_ipk_), intent(in)              ::  m
   integer(psb_ipk_), intent(in)              ::  irw(:)
-  @TYPE@(@FKIND@), intent(in)  ::  val(:)
-  @TYPE@(@FKIND@),intent(inout)      ::  x(:)
+  complex(psb_dpk_), intent(in)  ::  val(:)
+  complex(psb_dpk_),intent(inout)      ::  x(:)
   type(psb_desc_type), intent(in)  ::  desc_a
   integer(psb_ipk_), intent(out)             ::  info
   integer(psb_ipk_), optional, intent(in)    ::  dupl
@@ -76,7 +76,7 @@ subroutine psb_@X@insvi(m, irw, val, x, desc_a, info, dupl,local)
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
-  name = 'psb_@X@insvi'
+  name = 'psb_zinsvi'
 
   if (.not.desc_a%is_ok()) then
     info = psb_err_invalid_cd_state_
@@ -175,11 +175,11 @@ subroutine psb_@X@insvi(m, irw, val, x, desc_a, info, dupl,local)
 
   return
 
-end subroutine psb_@X@insvi
+end subroutine psb_zinsvi
 
 
-subroutine psb_@X@ins_vect(m, irw, val, x, desc_a, info, dupl,local)
-  use psb_base_mod, psb_protect_name => psb_@X@ins_vect
+subroutine psb_zins_vect(m, irw, val, x, desc_a, info, dupl,local)
+  use psb_base_mod, psb_protect_name => psb_zins_vect
   use psi_mod
   implicit none
 
@@ -190,8 +190,8 @@ subroutine psb_@X@ins_vect(m, irw, val, x, desc_a, info, dupl,local)
   !....parameters...
   integer(psb_ipk_), intent(in)                  :: m
   integer(psb_ipk_), intent(in)                  :: irw(:)
-  @TYPE@(@FKIND@), intent(in)        :: val(:)
-  type(psb_@X@_vect_type), intent(inout) :: x
+  complex(psb_dpk_), intent(in)        :: val(:)
+  type(psb_z_vect_type), intent(inout) :: x
   type(psb_desc_type), intent(in)      :: desc_a
   integer(psb_ipk_), intent(out)                 :: info
   integer(psb_ipk_), optional, intent(in)        :: dupl
@@ -208,7 +208,7 @@ subroutine psb_@X@ins_vect(m, irw, val, x, desc_a, info, dupl,local)
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
-  name = 'psb_@X@insvi'
+  name = 'psb_zinsvi'
 
   if (.not.desc_a%is_ok()) then
     info = psb_err_invalid_cd_state_
@@ -290,10 +290,10 @@ subroutine psb_@X@ins_vect(m, irw, val, x, desc_a, info, dupl,local)
 
   return
 
-end subroutine psb_@X@ins_vect
+end subroutine psb_zins_vect
 
-subroutine psb_@X@ins_vect_v(m, irw, val, x, desc_a, info, dupl,local)
-  use psb_base_mod, psb_protect_name => psb_@X@ins_vect_v
+subroutine psb_zins_vect_v(m, irw, val, x, desc_a, info, dupl,local)
+  use psb_base_mod, psb_protect_name => psb_zins_vect_v
   use psi_mod
   implicit none
 
@@ -304,8 +304,8 @@ subroutine psb_@X@ins_vect_v(m, irw, val, x, desc_a, info, dupl,local)
   !....parameters...
   integer(psb_ipk_), intent(in)                  :: m
   type(psb_i_vect_type), intent(inout)           :: irw
-  type(psb_@X@_vect_type), intent(inout)        :: val
-  type(psb_@X@_vect_type), intent(inout) :: x
+  type(psb_z_vect_type), intent(inout)        :: val
+  type(psb_z_vect_type), intent(inout) :: x
   type(psb_desc_type), intent(in)      :: desc_a
   integer(psb_ipk_), intent(out)                 :: info
   integer(psb_ipk_), optional, intent(in)        :: dupl
@@ -316,14 +316,14 @@ subroutine psb_@X@ins_vect_v(m, irw, val, x, desc_a, info, dupl,local)
        & loc_rows,loc_cols,mglob,err_act, int_err(5)
   integer(psb_ipk_) :: np, me, dupl_
   integer(psb_ipk_), allocatable   :: irl(:)
-  @TYPE@(@FKIND@), allocatable   :: lval(:)
+  complex(psb_dpk_), allocatable   :: lval(:)
   logical :: local_
   character(len=20)      :: name
 
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
-  name = 'psb_@X@insvi_vect_v'
+  name = 'psb_zinsvi_vect_v'
 
   if (.not.desc_a%is_ok()) then
     info = psb_err_invalid_cd_state_
@@ -400,10 +400,10 @@ subroutine psb_@X@ins_vect_v(m, irw, val, x, desc_a, info, dupl,local)
 
   return
 
-end subroutine psb_@X@ins_vect_v
+end subroutine psb_zins_vect_v
 
-subroutine psb_@X@ins_vect_r2(m, irw, val, x, desc_a, info, dupl,local)
-  use psb_base_mod, psb_protect_name => psb_@X@ins_vect_r2
+subroutine psb_zins_vect_r2(m, irw, val, x, desc_a, info, dupl,local)
+  use psb_base_mod, psb_protect_name => psb_zins_vect_r2
   use psi_mod
   implicit none
 
@@ -414,8 +414,8 @@ subroutine psb_@X@ins_vect_r2(m, irw, val, x, desc_a, info, dupl,local)
   !....parameters...
   integer(psb_ipk_), intent(in)                  :: m
   integer(psb_ipk_), intent(in)                  :: irw(:)
-  @TYPE@(@FKIND@), intent(in)        :: val(:,:)
-  type(psb_@X@_vect_type), intent(inout) :: x(:)
+  complex(psb_dpk_), intent(in)        :: val(:,:)
+  type(psb_z_vect_type), intent(inout) :: x(:)
   type(psb_desc_type), intent(in)      :: desc_a
   integer(psb_ipk_), intent(out)                 :: info
   integer(psb_ipk_), optional, intent(in)        :: dupl
@@ -432,7 +432,7 @@ subroutine psb_@X@ins_vect_r2(m, irw, val, x, desc_a, info, dupl,local)
   if (psb_errstatus_fatal()) return 
   info=psb_success_
   call psb_erractionsave(err_act)
-  name = 'psb_@X@insvi'
+  name = 'psb_zinsvi'
 
   if (.not.desc_a%is_ok()) then
     info = psb_err_invalid_cd_state_
@@ -519,7 +519,7 @@ subroutine psb_@X@ins_vect_r2(m, irw, val, x, desc_a, info, dupl,local)
 
   return
 
-end subroutine psb_@X@ins_vect_r2
+end subroutine psb_zins_vect_r2
 
 
 
@@ -554,7 +554,7 @@ end subroutine psb_@X@ins_vect_r2
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! Subroutine: psb_@X@insi
+! Subroutine: psb_zinsi
 !    Insert dense submatrix to dense matrix. Note: the row indices in IRW 
 !    are assumed to be in global numbering and are converted on the fly. 
 !    Row indices not belonging to the current process are silently discarded.
@@ -563,15 +563,15 @@ end subroutine psb_@X@ins_vect_r2
 !    m       - integer.        Number of rows of submatrix belonging to 
 !                              val to be inserted.
 !    irw(:)   - integer          Row indices of rows of val (global numbering)
-!    val(:,:) - @TYPE@                 The source dense submatrix.  
-!    x(:,:)   - @TYPE@                 The destination dense matrix.  
+!    val(:,:) - complex                 The source dense submatrix.  
+!    x(:,:)   - complex                 The destination dense matrix.  
 !    desc_a   - type(psb_desc_type).         The communication descriptor.
 !    info     - integer.                       return code
 !    dupl    - integer               What to do with duplicates: 
 !                                     psb_dupl_ovwrt_    overwrite
 !                                     psb_dupl_add_      add         
-subroutine psb_@X@insi(m, irw, val, x, desc_a, info, dupl,local)
-  use psb_base_mod, psb_protect_name => psb_@X@insi
+subroutine psb_zinsi(m, irw, val, x, desc_a, info, dupl,local)
+  use psb_base_mod, psb_protect_name => psb_zinsi
   use psi_mod
   implicit none
 
@@ -583,8 +583,8 @@ subroutine psb_@X@insi(m, irw, val, x, desc_a, info, dupl,local)
   !....parameters...
   integer(psb_ipk_), intent(in)             ::  m
   integer(psb_ipk_), intent(in)             ::  irw(:)
-  @TYPE@(@FKIND@), intent(in) ::  val(:,:)
-  @TYPE@(@FKIND@),intent(inout)     ::  x(:,:)
+  complex(psb_dpk_), intent(in) ::  val(:,:)
+  complex(psb_dpk_),intent(inout)     ::  x(:,:)
   type(psb_desc_type), intent(in) ::  desc_a
   integer(psb_ipk_), intent(out)            ::  info
   integer(psb_ipk_), optional, intent(in)   ::  dupl
@@ -601,7 +601,7 @@ subroutine psb_@X@insi(m, irw, val, x, desc_a, info, dupl,local)
   if(psb_get_errstatus() /= 0) return 
   info=psb_success_
   call psb_erractionsave(err_act)
-  name = 'psb_@X@insi'
+  name = 'psb_zinsi'
 
   if (.not.desc_a%is_ok()) then
     info = psb_err_invalid_cd_state_
@@ -710,6 +710,6 @@ subroutine psb_@X@insi(m, irw, val, x, desc_a, info, dupl,local)
 
   return
 
-end subroutine psb_@X@insi
+end subroutine psb_zinsi
 
 
