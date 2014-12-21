@@ -166,12 +166,8 @@ contains
     call psb_erractionrestore(err_act)
     return
 
-9999 continue
-    call psb_erractionrestore(err_act)
-    if (err_act == psb_act_abort_) then
-      call psb_error()
-      return
-    end if
+9999 call psb_error_handler(err_act)
+
     return
     
   end subroutine psb_@X@_bjac_precdescr
@@ -239,12 +235,8 @@ contains
     call psb_erractionrestore(err_act)
     return
 
-9999 continue
-    call psb_erractionrestore(err_act)
-    if (err_act == psb_act_abort_) then
-      call psb_error()
-      return
-    end if
+9999 call psb_error_handler(err_act)
+
     return
 
   end subroutine psb_@X@_bjac_precfree
@@ -270,7 +262,7 @@ contains
       if (info == psb_success_) deallocate(precout, stat=info)
     end if
     if (info == psb_success_) &
-       & allocate(psb_@X@_bjac_prec_type :: precout, stat=info)
+         & allocate(psb_@X@_bjac_prec_type :: precout, stat=info)
     if (info /= 0) goto 9999
     select type(pout => precout)
     type is (psb_@X@_bjac_prec_type) 
@@ -289,7 +281,7 @@ contains
         allocate(pout%dv,stat=info)
         if (info == 0) call prec%dv%clone(pout%dv,info)
       end if
-    class default
+      class default
       info = psb_err_internal_error_
     end select
     if (info /= 0) goto 9999
@@ -297,12 +289,8 @@ contains
     call psb_erractionrestore(err_act)
     return
 
-9999 continue
-    call psb_erractionrestore(err_act)
-    if (err_act == psb_act_abort_) then
-      call psb_error()
-      return
-    end if
+9999 call psb_error_handler(err_act)
+
     return
 
   end subroutine psb_@X@_bjac_clone
