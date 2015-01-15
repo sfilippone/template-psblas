@@ -570,8 +570,8 @@ contains
     integer(psb_ipk_), intent(in)        :: n
     @RTYPE@(@FKIND@)                :: res
 
-    if (x%is_dev()) call x%sync()
-    res =  maxval(abs(x%v(1:n)))
+    if (x%is_host()) call x%sync()
+    info = amaxMultiVecDevice@FLAG_COMPLEX@(res,n,x%deviceVect)
 
   end function @X@_gpu_amax
 
@@ -581,8 +581,8 @@ contains
     integer(psb_ipk_), intent(in)        :: n
     @RTYPE@(@FKIND@)                :: res
 
-    if (x%is_dev()) call x%sync()
-    res =  sum(abs(x%v(1:n)))
+    if (x%is_host()) call x%sync()
+    info = asumMultiVecDevice@FLAG_COMPLEX@(res,n,x%deviceVect)
 
   end function @X@_gpu_asum
   
