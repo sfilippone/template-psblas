@@ -160,7 +160,8 @@ module psb_@X@_vectordev_mod
       type(c_ptr), value    :: deviceVecA
     end function asumMultiVecDevice@CTYPE@
   end interface
-  
+
+ 
 
 !!$  interface 
 !!$    function geinsMultiVecDevice@CTYPE@(n,deviceVecIrl,deviceVecVal,&
