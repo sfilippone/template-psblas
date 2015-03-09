@@ -33,21 +33,21 @@ module psb_@X@_hdia_mat_mod
 
   use psb_@X@_base_mat_mod
 
-  type pm
-     @TYPE@(@FKIND@), pointer :: data(:,:)
-  end type pm
+  type psb_@X@_pm
+     @TYPE@(@FKIND@), allocatable  :: data(:,:)
+  end type psb_@X@_pm
 
-  type po
-     integer(psb_ipk_), pointer :: off(:)
-  end type po
+  type psb_@X@_po
+     integer(psb_ipk_), allocatable  :: off(:)
+  end type psb_@X@_po
 
   type, extends(psb_@X@_base_sparse_mat) :: psb_@X@_hdia_sparse_mat
     !
     ! HDIA format, extended.
     !
     
-    type(pm), allocatable :: hdia(:)
-    type(po), allocatable :: offset(:)
+    type(psb_@X@_pm), allocatable :: hdia(:)
+    type(psb_@X@_po), allocatable :: offset(:)
     integer(psb_ipk_) :: nblocks, nzeros
     integer(psb_ipk_) :: hack = 64
     integer(psb_long_int_k_) :: dim=0
