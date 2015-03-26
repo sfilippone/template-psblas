@@ -2656,9 +2656,9 @@ subroutine psb_@X@_cp_csr_from_coo(a,b,info)
   use psb_@X@_csr_mat_mod, psb_protect_name => psb_@X@_cp_csr_from_coo
   implicit none 
 
-  class(psb_@X@_csr_sparse_mat), intent(inout)      :: a
-  class(psb_@X@_coo_sparse_mat), intent(in), target :: b
-  integer(psb_ipk_), intent(out)                    :: info
+  class(psb_@X@_csr_sparse_mat), intent(inout) :: a
+  class(psb_@X@_coo_sparse_mat), intent(in)    :: b
+  integer(psb_ipk_), intent(out)               :: info
 
   type(psb_@X@_coo_sparse_mat)   :: tmp
   integer(psb_ipk_), allocatable :: itemp(:)
