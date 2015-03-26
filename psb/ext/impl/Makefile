@@ -1,5 +1,5 @@
 #include ../../Make.inc
-
+TOP=../../..
 BASIC_MODS=
 UTIL_MODS =
 
@@ -95,14 +95,16 @@ X_mv_hll_from_fmt.p90 \
 X_mv_hll_to_coo.p90 \
 X_mv_hll_to_fmt.p90
 
-
+SRCI=Xi_convert_hll_from_coo.p90 Xi_xtr_dia_from_coo.p90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
-FSRC=$(FSRC1) $(FSRC2) 
+FSRC3=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCI))))
+FSRC=$(FSRC1) $(FSRC2) $(FSRC3)
 FOBJS1=$(FSRC1:.f90=.o)
 FOBJS2=$(FSRC2:.F90=.o)
-FOBJS=$(FOBJS1) $(FOBJS2)
+FOBJS3=$(FSRC3:.f90=.o)
+FOBJS=$(FOBJS1) $(FOBJS2) $(FOBJS3)
 
 
 src: ssingle sdouble scomplex sdcompl
@@ -120,9 +122,11 @@ bsrc: $(FSRC)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRC3): psi_$(ARITH)%.f90 : Xi%.p90 
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean: 
 	/bin/rm -f *.f90 *.F90 *.o 

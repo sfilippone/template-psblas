@@ -29,43 +29,34 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
   
+subroutine psi_@X@_xtr_dia_from_coo(nr,nz,ia,ja,val,d,data,info,initd)    
+  use psb_base_mod, only : psb_ipk_, psb_success_, @FKIND@, @XZERO@
 
-subroutine psb_@X@_cp_hll_from_coo(a,b,info) 
-  
-  use psb_base_mod
-  use psb_@X@_hll_mat_mod, psb_protect_name => psb_@X@_cp_hll_from_coo
   implicit none 
 
-  class(psb_@X@_hll_sparse_mat), intent(inout) :: a
-  class(psb_@X@_coo_sparse_mat), intent(in)    :: b
-  integer(psb_ipk_), intent(out)             :: info
+  integer(psb_ipk_), intent(in)  :: nr, nz, ia(:), ja(:), d(:)
+  @TYPE@(@FKIND@),    intent(in)  :: val(:)
+  @TYPE@(@FKIND@),    intent(out) :: data(:,:)
+  integer(psb_ipk_), intent(out) :: info
+  logical, intent(in), optional  :: initd
 
   !locals
-  type(psb_@X@_coo_sparse_mat) :: tmp
-  integer(psb_ipk_)   :: debug_level, debug_unit
-  character(len=20)   :: name='hll_from_coo'
+  logical                        :: initd_
+
+  integer(psb_ipk_) :: i,ir,ic,k
 
   info = psb_success_
-  debug_unit  = psb_get_debug_unit()
-  debug_level = psb_get_debug_level()
-  if (b%is_by_rows()) then 
-    call  psi_convert_hll_from_coo(a,b,info)
-  else
-    ! This is to guarantee tmp%is_by_rows()
-    call b%cp_to_coo(tmp,info)
-    call tmp%fix(info)
-    
-    if (info /= psb_success_) return
-    call psi_convert_hll_from_coo(a,tmp,info)
-    
-    call tmp%free()
-  end if
-  if (info /= 0) goto 9999
+  info = psb_success_
+  initd_ = .true.
+  if (present(initd)) initd_ = initd
+  if (initd_) data(:,:) = @XZERO@
 
-  return
+  do i=1,nz
+    ir = ia(i)
+    k  = ja(i) - ir
+    ic = d(nr+k)
+    data(ir,ic) = val(i)
+  enddo
 
-9999 continue
-  info = psb_err_alloc_dealloc_
-  return
 
-end subroutine psb_@X@_cp_hll_from_coo
+end subroutine psi_@X@_xtr_dia_from_coo
