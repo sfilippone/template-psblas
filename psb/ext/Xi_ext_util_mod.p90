@@ -35,12 +35,12 @@ module psi_@X@_ext_util_mod
   use psb_base_mod, only : psb_ipk_, @FKIND@
 
   interface psi_xtr_dia_from_coo
-    subroutine psi_@X@_xtr_dia_from_coo(nr,nz,ia,ja,val,d,data,info,initdata)    
+    subroutine psi_@X@_xtr_dia_from_coo(nr,nz,ia,ja,val,d,nrd,ncd,data,info,initdata)    
       import  :: psb_ipk_, @FKIND@
       implicit none 
-      integer(psb_ipk_), intent(in)  :: nr, nz, ia(:), ja(:), d(:)
+      integer(psb_ipk_), intent(in)  :: nr, nz, nrd, ncd, ia(:), ja(:), d(:)
       @TYPE@(@FKIND@),    intent(in)  :: val(:)
-      @TYPE@(@FKIND@),    intent(out) :: data(:,:)
+      @TYPE@(@FKIND@),    intent(out) :: data(nrd,ncd)
       integer(psb_ipk_), intent(out) :: info
       logical, intent(in), optional  :: initdata
       
