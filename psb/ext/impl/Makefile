@@ -84,6 +84,7 @@ X_hll_reinit.p90 \
 X_hll_rowsum.p90 \
 X_hll_scal.p90 \
 X_hll_scals.p90 \
+X_mv_dia_from_coo.p90 \
 X_mv_ell_from_coo.p90 \
 X_mv_ell_from_fmt.p90 \
 X_mv_ell_to_coo.p90 \
