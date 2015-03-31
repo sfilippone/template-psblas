@@ -33,28 +33,23 @@ module psb_@X@_hdia_mat_mod
 
   use psb_@X@_base_mat_mod
 
-  type psb_@X@_pm
-     @TYPE@(@FKIND@), allocatable  :: data(:,:)
-  end type psb_@X@_pm
-
-  type psb_@X@_po
-     integer(psb_ipk_), allocatable  :: off(:)
-  end type psb_@X@_po
 
   type, extends(psb_@X@_base_sparse_mat) :: psb_@X@_hdia_sparse_mat
     !
-    ! HDIA format, extended.
+    ! HDIA format
     !
+    integer(psb_ipk_), allocatable :: hackOffsets(:), diaOffsets(:)
+    @TYPE@(@FKIND@), allocatable    :: val(:)
     
-    type(psb_@X@_pm), allocatable :: hdia(:)
-    type(psb_@X@_po), allocatable :: offset(:)
-    integer(psb_ipk_) :: nblocks, nzeros
-    integer(psb_ipk_) :: hack = 64
+    
+    integer(psb_ipk_) :: nhacks, nzeros
+    integer(psb_ipk_) :: hacksize = 32
     integer(psb_long_int_k_) :: dim=0
 
   contains
     ! procedure, pass(a) :: get_size     => @X@_hdia_get_size
     procedure, pass(a) :: get_nzeros   => @X@_hdia_get_nzeros
+    procedure, pass(a) :: set_nzeros   => @X@_hdia_set_nzeros
     procedure, nopass  :: get_fmt      => @X@_hdia_get_fmt
     procedure, pass(a) :: sizeof       => @X@_hdia_sizeof
     ! procedure, pass(a) :: csmm         => psb_@X@_hdia_csmm
@@ -75,11 +70,11 @@ module psb_@X@_hdia_mat_mod
     procedure, pass(a) :: cp_to_coo    => psb_@X@_cp_hdia_to_coo
     procedure, pass(a) :: cp_from_coo  => psb_@X@_cp_hdia_from_coo
     ! procedure, pass(a) :: cp_to_fmt    => psb_@X@_cp_hdia_to_fmt
- !   procedure, pass(a) :: cp_from_fmt  => psb_@X@_cp_hdia_from_fmt
+    !   procedure, pass(a) :: cp_from_fmt  => psb_@X@_cp_hdia_from_fmt
     procedure, pass(a) :: mv_to_coo    => psb_@X@_mv_hdia_to_coo
     procedure, pass(a) :: mv_from_coo  => psb_@X@_mv_hdia_from_coo
     ! procedure, pass(a) :: mv_to_fmt    => psb_@X@_mv_hdia_to_fmt
-!    procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_hdia_from_fmt
+    !    procedure, pass(a) :: mv_from_fmt  => psb_@X@_mv_hdia_from_fmt
     ! procedure, pass(a) :: csput_a        => psb_@X@_hdia_csput_a
     ! procedure, pass(a) :: get_hdiag     => psb_@X@_hdia_get_hdiag
     ! procedure, pass(a) :: csgetptn     => psb_@X@_hdia_csgetptn
@@ -93,7 +88,7 @@ module psb_@X@_hdia_mat_mod
 
   end type psb_@X@_hdia_sparse_mat
 
-  private :: @X@_hdia_get_nzeros, @X@_hdia_free,  @X@_hdia_get_fmt, &
+  private :: @X@_hdia_get_nzeros, @X@_hdia_set_nzeros, @X@_hdia_free,  @X@_hdia_get_fmt, &
        & @X@_hdia_get_size, @X@_hdia_sizeof, @X@_hdia_get_nz_row
 
   interface
@@ -421,22 +416,17 @@ contains
 
   
    function @X@_hdia_sizeof(a) result(res)
+     use psb_realloc_mod, only : psb_size
      implicit none 
      class(psb_@X@_hdia_sparse_mat), intent(in) :: a
      integer(psb_long_int_k_) :: res
      integer(psb_ipk_) :: i
 
      res = 0
-
-     if(a%dim==0.and.allocated(a%hdia)) then
-        do i=1,a%nblocks
-           res = res + (size(a%hdia(i)%data,1) + size(a%hdia(i)%data,2))*@SIZET@
-           res = res + size(a%offset(i)%off)*psb_sizeof_int
-        enddo
-     else
-        !Dim is set during cp_hdia_from_coo
-        res = a%dim
-     endif
+     
+     res = res + psb_size(a%hackOffsets)*psb_sizeof_int
+     res = res + psb_size(a%diaOffsets)*psb_sizeof_int
+     res = res + psb_size(a%val) * @SIZET@ 
 
    end function @X@_hdia_sizeof
 
@@ -453,6 +443,13 @@ contains
     res = a%nzeros
   end function @X@_hdia_get_nzeros
 
+  subroutine  @X@_hdia_set_nzeros(a,nz) 
+    implicit none 
+    class(psb_@X@_hdia_sparse_mat), intent(inout) :: a
+    integer(psb_ipk_), intent(in) :: nz
+    a%nzeros = nz
+  end subroutine @X@_hdia_set_nzeros
+  
   ! function @X@_hdia_get_size(a) result(res)
   !   implicit none 
   !   class(psb_@X@_hdia_sparse_mat), intent(in) :: a
@@ -512,21 +509,16 @@ contains
     implicit none 
 
     class(psb_@X@_hdia_sparse_mat), intent(inout) :: a
-    integer(psb_ipk_) :: i
+    integer(psb_ipk_) :: i, info
 
-    if(allocated(a%hdia)) then
-       do i=1,a%nblocks
-          deallocate(a%hdia(i)%data)
-       enddo
-       deallocate(a%hdia)
-    endif
-
-    if(allocated(a%offset)) then
-       do i=1,a%nblocks
-          deallocate(a%offset(i)%off)
-       enddo
-       deallocate(a%offset)
-    endif
+    
+    if (allocated(a%hackOffsets))&
+         &  deallocate(a%hackOffsets,stat=info)
+    if (allocated(a%diaOffsets))&
+         &  deallocate(a%diaOffsets,stat=info)
+    if (allocated(a%val))&
+         &  deallocate(a%val,stat=info)
+    a%nhacks=0
 
     call a%set_null()
     call a%set_nrows(0)
