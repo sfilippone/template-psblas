@@ -85,6 +85,7 @@ X_hll_rowsum.p90 \
 X_hll_scal.p90 \
 X_hll_scals.p90 \
 X_mv_dia_from_coo.p90 \
+X_mv_dia_to_coo.p90 \
 X_mv_ell_from_coo.p90 \
 X_mv_ell_from_fmt.p90 \
 X_mv_ell_to_coo.p90 \
@@ -98,6 +99,7 @@ X_mv_hll_to_fmt.p90
 
 SRCI=Xi_convert_hll_from_coo.p90 \
 Xi_xtr_dia_from_coo.p90 \
+Xi_xtr_coo_from_dia.p90 \
 Xi_convert_dia_from_coo.p90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
