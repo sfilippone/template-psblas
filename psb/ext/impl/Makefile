@@ -100,7 +100,8 @@ X_mv_hll_to_fmt.p90
 SRCI=Xi_convert_hll_from_coo.p90 \
 Xi_xtr_dia_from_coo.p90 \
 Xi_xtr_coo_from_dia.p90 \
-Xi_convert_dia_from_coo.p90
+Xi_convert_dia_from_coo.p90 \
+Xi_xtr_ell_from_coo.p90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
