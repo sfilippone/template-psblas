@@ -28,32 +28,76 @@
 !!$  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
-subroutine psi_@X@_xtr_ell_from_coo(i,nr,mxrwl,iac,jac,valc, &
-     & ja,val,irn,diag,ld)
-  use psb_base_mod, only : psb_ipk_, psb_success_, @FKIND@, @XZERO@
+subroutine psi_@X@_convert_ell_from_coo(a,tmp,info,hacksize) 
   
+  use psb_base_mod
+  use psb_@X@_ell_mat_mod, psb_protect_name => psi_@X@_convert_ell_from_coo
+  use psi_ext_util_mod
   implicit none 
-  integer(psb_ipk_) :: i,nr,mxrwl,ld
-  integer(psb_ipk_) :: iac(*),jac(*),ja(ld,*),irn(*),diag(*)
-  @TYPE@(@FKIND@)    :: valc(*), val(ld,*)
+
+  class(psb_@X@_ell_sparse_mat), intent(inout) :: a
+  class(psb_@X@_coo_sparse_mat), intent(in)    :: tmp
+  integer(psb_ipk_), intent(out)             :: info
+  integer(psb_ipk_), intent(in), optional    :: hacksize
+
+  !locals
+  Integer(Psb_ipk_) :: nza, nr, i,j,k, idl,err_act, nc, nzm, &
+       & ir, ic, hsz_, ldv
   
-  integer(psb_ipk_) :: ii,jj,kk, kc,nc, ir, ic 
-  kc = 1
-  do ii = 1, nr
-    nc = irn(ii)
-    do jj=1,nc
-      !if (iac(kc) /= i+ii-1) write(0,*) 'Copy mismatch',iac(kc),i,ii,i+ii-1
-      ir = iac(kc)
-      ic = jac(kc)
-      if (ir == ic) diag(ii) = jj
-      ja(ii,jj)  = ic
-      val(ii,jj) = valc(kc) 
-      kc = kc + 1
-    end do
-    do jj = nc+1,mxrwl
-      ja(ii,jj)  = i+ii-1
-      val(ii,jj) = @XZERO@
-    end do
+  info = psb_success_
+  
+  nr  = tmp%get_nrows()
+  nc  = tmp%get_ncols()
+  nza = tmp%get_nzeros()
+
+  hsz_ = 1
+  if (present(hacksize)) then
+    if (hacksize> 1) hsz_ = hacksize
+  end if
+  ! Make ldv a multiple of hacksize 
+  ldv = ((nr+hsz_-1)/hsz_)*hsz_
+  
+  ! If it is sorted then we can lessen memory impact 
+  a%psb_@X@_base_sparse_mat = tmp%psb_@X@_base_sparse_mat
+  
+  ! First compute the number of nonzeros in each row.
+  call psb_realloc(nr,a%irn,info) 
+  if (info /= psb_success_) return
+  a%irn = 0
+  nzm = 0 
+  do i=1, nza
+    ir = tmp%ia(i)
+    a%irn(ir) = a%irn(ir) + 1
+    nzm = max(nzm,a%irn(ir))
   end do
-end subroutine psi_@X@_xtr_ell_from_coo
+  ! Second: copy the column indices.
+  call psb_realloc(nr,a%idiag,info) 
+  if (info == psb_success_) call psb_realloc(ldv,nzm,a%ja,info) 
+  if (info == psb_success_) call psb_realloc(ldv,nzm,a%val,info)
+  if (info /= psb_success_) return
+  k = 0
+  a%nzt = 0 
+  do i=1, nr
+    ic = i
+    a%idiag(i) = 1
+    do j=1, a%irn(i)
+      ir = tmp%ia(k+j)
+      ic = tmp%ja(k+j)
+      if (ir == ic) a%idiag(i) = j
+      a%ja(i,j)  = ic
+      a%val(i,j) = tmp%val(k+j)
+    end do
+    do j=a%irn(i)+1,nzm
+      a%ja(i,j) = ic
+      a%val(i,j) = @XZERO@
+    end do
+    k = k + a%irn(i)
+  end do
+
+  a%val(nr+1:,:) = @XZERO@
+  a%ja(nr+1:,:)  = nr
+
+  a%nzt = k
+  
+end subroutine psi_@X@_convert_ell_from_coo
 
