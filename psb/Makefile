@@ -4,7 +4,7 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: sbase sprec skryl sext sgpu
+src: sbase sprec skryl 
 
 
 sbase:
@@ -14,18 +14,10 @@ sprec:
 
 skryl:
 	cd krylov && $(MAKE) src
-sext:
-	cd ext && $(MAKE) src
-sgpu:
-	cd gpu && $(MAKE) src
-sext:
-	cd ext && $(MAKE) src
 
 clean:
 	cd base && $(MAKE) clean
 	cd prec && $(MAKE) clean
 	cd krylov && $(MAKE) clean
-	cd ext && $(MAKE) clean
-	cd gpu && $(MAKE) clean
 
 
