@@ -135,7 +135,9 @@ module psb_@X@_base_vect_mod
     ! Scaling and norms
     !
     procedure, pass(x) :: scal     => @X@_base_scal
-    procedure, pass(x) :: absval   => @X@_base_absval
+    procedure, pass(x) :: absval1  => @X@_base_absval1
+    procedure, pass(x) :: absval2  => @X@_base_absval2
+    generic, public    :: absval   => absval1, absval2
     procedure, pass(x) :: nrm2     => @X@_base_nrm2
     procedure, pass(x) :: amax     => @X@_base_amax
     procedure, pass(x) :: asum     => @X@_base_asum
@@ -651,13 +653,29 @@ contains
   !! \memberof  psb_@X@_base_vect_type
   !! \brief  Set all entries to their respective absolute values.
   !!
-  subroutine @X@_base_absval(x)
+  subroutine @X@_base_absval1(x)
     class(psb_@X@_base_vect_type), intent(inout)  :: x
 
-    if (allocated(x%v)) &
-         &  x%v =  abs(x%v)
+    if (allocated(x%v)) then
+      if (.not.x%is_host()) call x%sync()
+      x%v =  abs(x%v)
+      call x%set_host()
+    end if
 
-  end subroutine @X@_base_absval
+  end subroutine @X@_base_absval1
+
+  subroutine @X@_base_absval2(x,y)
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    class(psb_@X@_base_vect_type), intent(inout) :: y
+
+    if (.not.x%is_host()) call x%sync()
+    if (allocated(x%v)) then 
+      call y%bld(x%v)
+      call y%absval()
+      call y%set_host()
+    end if
+    
+  end subroutine @X@_base_absval2
 
   !
   !> Function  base_set_vect
