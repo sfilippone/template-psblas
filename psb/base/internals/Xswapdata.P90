@@ -1325,7 +1325,8 @@ subroutine psi_@X@swap_vidx_vect(iictxt,iicomm,flag,beta,y,idx,totxch,totsnd,tot
       snd_pt = 1+pnti+nerv+psb_n_elem_send_
       rcv_pt = 1+pnti+psb_n_elem_recv_
 
-      if (debug) write(0,*)me,' Received from: ',prcid(i),y%combuf(rcv_pt:rcv_pt+nerv-1)        
+      if (debug) write(0,*)me,' Received from: ',prcid(i),&
+           & y%combuf(rcv_pt:rcv_pt+nerv-1)        
       call y%sct(rcv_pt,nerv,idx,beta)
       pnti   = pnti + nerv + nesd + 3
     end do
