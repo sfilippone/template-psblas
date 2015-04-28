@@ -13,8 +13,14 @@ s/@XONE@/ione/g
 s/@RZERO@/izero/g
 s/@RONE@/ione/g
 
+/^@NOTIS@/,/^@NOTIE@/d
+/^@IS@/d
+/^@IE@/d
+
 s/@DOT@/idot/g
 s/@NRM2@/inrm2/g
+
+s/@USE_I_BASEVECT@/                       /g
 
 s/@MPI_TYPE@/psb_mpi_ipk_integer/g
 s/@PSB_SWAP_TAG@/psb_int_swap_tag/g

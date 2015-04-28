@@ -15,11 +15,16 @@ s/@RONE@/done/g
 
 s/@DOT@/ddot/g
 s/@NRM2@/dnrm2/g
+/^@IS@/,/^@IE@/d
+/^@NOTIS@/d
+/^@NOTIE@/d
+
 
 s/@MPI_TYPE@/psb_mpi_r_dpk_/g
 s/@PSB_SWAP_TAG@/psb_double_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_double/g
+
 
 s/@CTYPE@/Double/g
 s/@FLAG_COMPLEX@//g

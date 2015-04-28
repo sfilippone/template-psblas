@@ -24,3 +24,16 @@ s/@NRM2@/dznrm2/g
 7. The "sister" real type, i.e. S,C: S,  D,Z: D
 s/@RT@/d/g
 
+8. @IS@ @IE@   
+   At the beginning of the line, they mark the start and end of a
+   region that should only appear for types Integer. 
+   So: I just deletes those lines, S/D/C/Z delete everything in
+   between. 
+
+   @NOTIS@ @NOTIE@   
+   At the beginning of the line, they mark the start and end of a
+   region that should only appear for types NOT Integer. 
+   So: S/D/C/Z just delete those lines, I deletes everything in
+   between. 
+   
+

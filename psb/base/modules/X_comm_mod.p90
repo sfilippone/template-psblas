@@ -30,27 +30,38 @@
 !!$ 
 !!$  
 module psb_@X@_comm_mod
+@NOTIS@  
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@
+  use psb_mat_mod, only  : psb_@X@spmat_type
+@NOTIE@
+@IS@
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_
+@IE@ 
+
+  use psb_@X@_vect_mod, only : psb_@X@_vect_type, psb_@X@_base_vect_type
 
   interface psb_ovrl
-    subroutine  psb_@X@ovrlm(x,desc_a,info,jx,ik,work,update,mode)
-      use psb_desc_mod
+    subroutine psb_@X@ovrlm(x,desc_a,info,jx,ik,work,update,mode)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(inout), target   :: x(:,:)
       type(psb_desc_type), intent(in)            :: desc_a
       integer(psb_ipk_), intent(out)                       :: info
       @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
       integer(psb_ipk_), intent(in), optional              :: update,jx,ik,mode
     end subroutine psb_@X@ovrlm
-    subroutine  psb_@X@ovrlv(x,desc_a,info,work,update,mode)
-      use psb_desc_mod
+    subroutine psb_@X@ovrlv(x,desc_a,info,work,update,mode)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(inout), target   :: x(:)
       type(psb_desc_type), intent(in)            :: desc_a
       integer(psb_ipk_), intent(out)                       :: info
       @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
       integer(psb_ipk_), intent(in), optional              :: update,mode
     end subroutine psb_@X@ovrlv
-    subroutine  psb_@X@ovrl_vect(x,desc_a,info,work,update,mode)
-      use psb_desc_mod
-      use psb_@X@_vect_mod
+    subroutine psb_@X@ovrl_vect(x,desc_a,info,work,update,mode)
+      import
+      implicit none
       type(psb_@X@_vect_type), intent(inout)    :: x
       type(psb_desc_type), intent(in)         :: desc_a
       integer(psb_ipk_), intent(out)                    :: info
@@ -60,33 +71,32 @@ module psb_@X@_comm_mod
   end interface psb_ovrl
 
   interface psb_halo
-    subroutine  psb_@X@halom(x,desc_a,info,alpha,jx,ik,work,tran,mode,data)
-      use psb_desc_mod
+    subroutine psb_@X@halom(x,desc_a,info,jx,ik,work,tran,mode,data)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(inout), target :: x(:,:)
       type(psb_desc_type), intent(in)          :: desc_a
       integer(psb_ipk_), intent(out)                     :: info
-      @TYPE@(@FKIND@), intent(in), optional  :: alpha
       @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
       integer(psb_ipk_), intent(in), optional           :: mode,jx,ik,data
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halom
-    subroutine  psb_@X@halov(x,desc_a,info,alpha,work,tran,mode,data)
-      use psb_desc_mod
+    subroutine psb_@X@halov(x,desc_a,info,work,tran,mode,data)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(inout)        :: x(:)
       type(psb_desc_type), intent(in)         :: desc_a
       integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), intent(in), optional :: alpha
       @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
       integer(psb_ipk_), intent(in), optional           :: mode,data
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halov
-    subroutine  psb_@X@halo_vect(x,desc_a,info,alpha,work,tran,mode,data)
-      use psb_desc_mod
-      use psb_@X@_vect_mod
+    subroutine psb_@X@halo_vect(x,desc_a,info,work,tran,mode,data)
+      import
+      implicit none
       type(psb_@X@_vect_type), intent(inout)   :: x
       type(psb_desc_type), intent(in)         :: desc_a
       integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), intent(in), optional    :: alpha
       @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
       integer(psb_ipk_), intent(in), optional           :: mode,data
       character, intent(in), optional         :: tran
@@ -95,16 +105,18 @@ module psb_@X@_comm_mod
 
 
   interface psb_scatter
-    subroutine  psb_@X@scatterm(globx, locx, desc_a, info, root)
-      use psb_desc_mod
+    subroutine psb_@X@scatterm(globx, locx, desc_a, info, root)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(out) :: locx(:,:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@scatterm
-    subroutine  psb_@X@scatterv(globx, locx, desc_a, info, root)
-      use psb_desc_mod
+    subroutine psb_@X@scatterv(globx, locx, desc_a, info, root)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(out) :: locx(:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:)
       type(psb_desc_type), intent(in)  :: desc_a
@@ -114,9 +126,9 @@ module psb_@X@_comm_mod
   end interface psb_scatter
 
   interface psb_gather
-    subroutine  psb_@X@sp_allgather(globa, loca, desc_a, info, root, dupl,keepnum,keeploc)
-      use psb_desc_mod
-      use psb_mat_mod
+@NOTIS@
+    subroutine psb_@X@sp_allgather(globa, loca, desc_a, info, root, dupl,keepnum,keeploc)
+      import
       implicit none
       type(psb_@X@spmat_type), intent(inout) :: loca
       type(psb_@X@spmat_type), intent(out)   :: globa
@@ -125,25 +137,28 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional   :: root,dupl
       logical, intent(in), optional   :: keepnum,keeploc
     end subroutine psb_@X@sp_allgather
+@NOTIE@
     subroutine psb_@X@gatherm(globx, locx, desc_a, info, root)
-      use psb_desc_mod
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(in)  :: locx(:,:)
       @TYPE@(@FKIND@), intent(out), allocatable  :: globx(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@gatherm
-    subroutine  psb_@X@gatherv(globx, locx, desc_a, info, root)
-      use psb_desc_mod
+    subroutine psb_@X@gatherv(globx, locx, desc_a, info, root)
+      import
+      implicit none
       @TYPE@(@FKIND@), intent(in)  :: locx(:)
       @TYPE@(@FKIND@), intent(out), allocatable  :: globx(:)
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@gatherv
-    subroutine  psb_@X@gather_vect(globx, locx, desc_a, info, root)
-      use psb_desc_mod
-      use psb_@X@_vect_mod
+    subroutine psb_@X@gather_vect(globx, locx, desc_a, info, root)
+      import
+      implicit none
       type(psb_@X@_vect_type), intent(inout) :: locx
       @TYPE@(@FKIND@), intent(out), allocatable :: globx(:)
       type(psb_desc_type), intent(in) :: desc_a

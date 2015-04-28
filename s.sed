@@ -15,6 +15,9 @@ s/@RONE@/sone/g
 
 s/@DOT@/sdot/g
 s/@NRM2@/snrm2/g
+/^@IS@/,/^@IE@/d
+/^@NOTIS@/d
+/^@NOTIE@/d
 
 s/@MPI_TYPE@/psb_mpi_r_spk_/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
