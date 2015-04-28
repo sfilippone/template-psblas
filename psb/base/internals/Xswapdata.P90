@@ -152,7 +152,8 @@ subroutine psi_@X@swapdatam(flag,n,beta,y,desc_a,work,info,data)
     return
 end subroutine psi_@X@swapdatam
 
-subroutine psi_@X@swapidxm(iictxt,iicomm,flag,n,beta,y,idx,totxch,totsnd,totrcv,work,info)
+subroutine psi_@X@swapidxm(iictxt,iicomm,flag,n,beta,y,idx, &
+     & totxch,totsnd,totrcv,work,info)
 
   use psi_mod, psb_protect_name => psi_@X@swapidxm
   use psb_error_mod
@@ -654,7 +655,8 @@ end subroutine psi_@X@swapdatav
 !   
 !   
 ! 
-subroutine psi_@X@swapidxv(iictxt,iicomm,flag,beta,y,idx,totxch,totsnd,totrcv,work,info)
+subroutine psi_@X@swapidxv(iictxt,iicomm,flag,beta,y,idx, &
+     & totxch,totsnd,totrcv,work,info)
 
   use psi_mod, psb_protect_name => psi_@X@swapidxv
   use psb_error_mod
@@ -1104,7 +1106,8 @@ end subroutine psi_@X@swapdata_vect
 !   
 !   
 ! 
-subroutine psi_@X@swap_vidx_vect(iictxt,iicomm,flag,beta,y,idx,totxch,totsnd,totrcv,work,info)
+subroutine psi_@X@swap_vidx_vect(iictxt,iicomm,flag,beta,y,idx, &
+     & totxch,totsnd,totrcv,work,info)
 
   use psi_mod, psb_protect_name => psi_@X@swap_vidx_vect
   use psb_error_mod
