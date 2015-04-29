@@ -131,6 +131,17 @@ module psb_@X@_sort_mod
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
     end subroutine psb_@X@qsort
   end interface psb_qsort
+  
+  interface psb_isort
+    subroutine psb_@X@isort(x,ix,dir,flag)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(psb_ipk_), optional, intent(in)    :: dir, flag
+      integer(psb_ipk_), optional, intent(inout) :: ix(:)
+    end subroutine psb_@X@isort
+  end interface psb_isort
+    
+
 
 
   interface psb_hsort

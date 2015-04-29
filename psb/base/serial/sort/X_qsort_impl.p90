@@ -87,7 +87,7 @@ subroutine psb_@X@qsort(x,ix,dir,flag)
 
   select case(dir_) 
     @NOTCS@
-  case( psb_sort_up_, psb_sort_down_)
+  case (psb_sort_up_, psb_sort_down_)
     if (present(ix)) then 
       if (size(ix) < n) then 
         ierr(1) = 2; ierr(2) = size(ix); 
@@ -102,7 +102,7 @@ subroutine psb_@X@qsort(x,ix,dir,flag)
     @NOTCE@
 
     @CS@
-  case( psb_lsort_up_, psb_lsort_down_)
+  case (psb_lsort_up_, psb_lsort_down_)
     if (present(ix)) then 
       if (size(ix) < n) then 
         ierr(1) = 2; ierr(2) = size(ix); 
@@ -115,7 +115,7 @@ subroutine psb_@X@qsort(x,ix,dir,flag)
       call psi_@X@lsr(n,x,dir_)
     end if
 
-  case( psb_alsort_up_, psb_alsort_down_)
+  case (psb_alsort_up_, psb_alsort_down_)
     if (present(ix)) then 
       if (size(ix) < n) then 
         ierr(1) = 2; ierr(2) = size(ix); 
@@ -129,7 +129,7 @@ subroutine psb_@X@qsort(x,ix,dir,flag)
     end if
     @CE@
 
-  case( psb_asort_up_, psb_asort_down_)
+  case (psb_asort_up_, psb_asort_down_)
     ! OK keep going
     if (present(ix)) then 
       if (size(ix) < n) then 
