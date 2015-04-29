@@ -15,7 +15,7 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 
-src: simpl  ssingle sdouble scomplex sdcompl
+src: simpl ssort  ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -28,6 +28,12 @@ sdcompl:
 bsrc: $(FSRC)
 
 
+ssort:
+	cd sort && $(MAKE) src
+
+sclean:
+	cd sort && $(MAKE) clean
+
 simpl:
 	cd impl && $(MAKE) src
 
@@ -36,11 +42,12 @@ iclean:
 
 
 
+
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f ../../../$(ARITH).sed $< >$@
 
-clean: iclean
+clean: iclean sclean
 	/bin/rm -f *.f90 *.F90 *.o 
 
