@@ -30,8 +30,7 @@
 !!$ 
 !!$  
 !
-!  The merge-sort and quicksort routines are implemented in the
-!  serial/aux directory
+!  Sorting routines
 !  References:
 !  D. Knuth
 !  The Art of Computer Programming, vol. 3
@@ -140,8 +139,6 @@ module psb_@X@_sort_mod
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
     end subroutine psb_@X@isort
   end interface psb_isort
-    
-
 
 
   interface psb_hsort
@@ -300,7 +297,20 @@ module psb_@X@_sort_mod
     end subroutine psi_@X@_idx_heap_get_first
   end interface
 
-
+  interface 
+    subroutine psi_@X@isortx(n,x,ix,dir)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(psb_ipk_), intent(in)    :: dir
+      integer(psb_ipk_), intent(inout) :: ix(:)
+    end subroutine psi_@X@isortx
+    subroutine psi_@X@isort(n,x,dir)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(psb_ipk_), intent(in)    :: dir
+    end subroutine psi_@X@isort
+  end interface
+  
   interface psb_free_heap
     module procedure psb_free_@X@_heap, psb_free_@X@_idx_heap
   end interface psb_free_heap
