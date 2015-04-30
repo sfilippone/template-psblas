@@ -41,7 +41,6 @@
 !  Data Structures and Algorithms
 !  Addison-Wesley
 !
-
 subroutine psb_@X@hsort(x,ix,dir,flag)
   use psb_@X@_sort_mod, psb_protect_name => psb_@X@hsort
   use psb_error_mod

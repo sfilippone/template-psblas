@@ -40,8 +40,6 @@
 !  Data Structures and Algorithms
 !  Addison-Wesley
 !
-
-
 subroutine psb_@X@isort(x,ix,dir,flag)
   use psb_@X@_sort_mod, psb_protect_name => psb_@X@isort
   use psb_error_mod
@@ -96,49 +94,62 @@ subroutine psb_@X@isort(x,ix,dir,flag)
         ix(i) = i
       end do
     end if
+
+    select case(dir_) 
+      @NOTCS@
+    case (psb_sort_up_)
+      call psi_@X@isrx_up(n,x,ix)
+    case (psb_sort_down_)
+      call psi_@X@isrx_dw(n,x,ix)
+      @NOTCE@  
+      @CS@
+    case (psb_lsort_up_)
+        call psi_@X@lisrx_up(n,x,ix)
+    case (psb_lsort_down_)
+        call psi_@X@lisrx_dw(n,x,ix)
+    case (psb_alsort_up_)
+        call psi_@X@alisrx_up(n,x,ix)
+    case (psb_alsort_down_)
+        call psi_@X@alisrx_dw(n,x,ix)
+      @CE@
+    case (psb_asort_up_)
+        call psi_@X@aisrx_up(n,x,ix)
+    case (psb_asort_down_)
+        call psi_@X@aisrx_dw(n,x,ix)
+    case default
+      ierr(1) = 3; ierr(2) = dir_; 
+      call psb_errpush(psb_err_input_value_invalid_i_,name,i_err=ierr)
+      goto 9999
+    end select
+  else 
+    select case(dir_) 
+      @NOTCS@
+    case (psb_sort_up_)
+      call psi_@X@isr_up(n,x)
+    case (psb_sort_down_)
+      call psi_@X@isr_dw(n,x)
+      @NOTCE@
+      @CS@
+    case (psb_lsort_up_)
+        call psi_@X@lisr_up(n,x)
+    case (psb_lsort_down_)
+        call psi_@X@lisr_dw(n,x)
+    case (psb_alsort_up_)
+        call psi_@X@alisr_up(n,x)
+    case (psb_alsort_down_)
+        call psi_@X@alisr_dw(n,x)
+      @CE@
+    case (psb_asort_up_)
+        call psi_@X@aisr_up(n,x)
+    case (psb_asort_down_)
+        call psi_@X@aisr_dw(n,x)
+    case default
+      ierr(1) = 3; ierr(2) = dir_; 
+      call psb_errpush(psb_err_input_value_invalid_i_,name,i_err=ierr)
+      goto 9999
+    end select
+
   end if
-  
-  select case(dir_) 
-    @NOTCS@
-  case (psb_sort_up_, psb_sort_down_)
-    if (present(ix)) then 
-      call psi_@X@isx(n,x,ix,dir_)
-    else
-      call psi_@X@is(n,x,dir_)
-    end if
-    @NOTCE@
-
-    @CS@
-  case (psb_lsort_up_, psb_lsort_down_)
-    if (present(ix)) then 
-      
-      call psi_@X@lisx(n,x,ix,dir_)
-    else
-      call psi_@X@lis(n,x,dir_)
-    end if
-
-  case (psb_alsort_up_, psb_alsort_down_)
-    if (present(ix)) then 
-      call psi_@X@alisx(n,x,ix,dir_)
-    else
-      call psi_@X@alis(n,x,dir_)
-    end if
-    @CE@
-
-  case (psb_asort_up_, psb_asort_down_)
-    ! OK keep going
-    if (present(ix)) then 
-      call psi_@X@aisx(n,x,ix,dir_)
-    else
-      call psi@X@ais(n,x,dir_)
-    end if
-
-  case default
-    ierr(1) = 3; ierr(2) = dir_; 
-    call psb_errpush(psb_err_input_value_invalid_i_,name,i_err=ierr)
-    goto 9999
-  end select
-
 
   return
 
@@ -148,17 +159,431 @@ subroutine psb_@X@isort(x,ix,dir,flag)
 end subroutine psb_@X@isort
 
 @NOTCS@
-subroutine psi_@X@isx(n,x,ix,dir_)
-  use psb_const_mod
+subroutine psi_@X@isrx_up(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isrx_up
   use psb_error_mod
-  implicit none
-  
-  
-end subroutine psi_@X@isx
-  
-call psi_@X@is(n,x,dir_)
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
 
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@isrx_up
+
+subroutine psi_@X@isrx_dw(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isrx_dw
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@isrx_dw
+
+
+subroutine psi_@X@isr_up(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isr_up
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@isr_up
+
+subroutine psi_@X@isr_dw(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isr_dw
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@isr_dw
 @NOTCE@
+@CS@
+subroutine psi_@X@lisrx_up(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisrx_up
+  use psb_error_mod
+  use psi_lcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
 
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
 
+end subroutine psi_@X@lisrx_up
+
+subroutine psi_@X@lisrx_dw(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisrx_dw
+  use psb_error_mod
+  use psi_lcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@lisrx_dw
+
+subroutine psi_@X@lisr_up(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisr_up
+  use psb_error_mod
+  use psi_lcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@lisr_up
+
+subroutine psi_@X@lisr_dw(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisr_dw
+  use psb_error_mod
+  use psi_lcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@lisr_dw
+
+subroutine psi_@X@alisrx_up(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisrx_up
+  use psb_error_mod
+  use psi_alcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@alisrx_up
+
+subroutine psi_@X@alisrx_dw(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisrx_dw
+  use psb_error_mod
+  use psi_alcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@alisrx_dw
+
+subroutine psi_@X@alisr_up(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisr_up
+  use psb_error_mod
+  use psi_alcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) < x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) >= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@alisr_up
+
+subroutine psi_@X@alisr_dw(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisr_dw
+  use psb_error_mod
+  use psi_alcx_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (x(j+1) > x(j)) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (x(i) <= xx) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@alisr_dw
+@CE@
+
+subroutine psi_@X@aisrx_up(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisrx_up
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (abs(x(j+1)) < abs(x(j))) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (abs(x(i)) >= abs(xx)) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@aisrx_up
+
+subroutine psi_@X@aisrx_dw(n,x,ix)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisrx_dw
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(inout) :: ix(:)
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j,ix
+  @TYPE@(@FKIND@) :: xx
+
+  do j=n-1,1,-1
+    if (abs(x(j+1)) > abs(x(j))) then
+      xx = x(j)
+      ix = idx(j) 
+      i=j+1
+      do 
+        x(i-1)    = x(i)
+        idx(i-1) = idx(i)
+        i = i+1
+        if (i>n) exit          
+        if (abs(x(i)) <= abs(xx)) exit
+      end do
+      x(i-1)    = xx
+      idx(i-1) = ix
+    endif
+  enddo
+end subroutine psi_@X@aisrx_dw
+
+subroutine psi_@X@aisr_up(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisr_up
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (abs(x(j+1)) < abs(x(j))) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (abs(x(i)) >= abs(xx)) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@aisr_up
+
+subroutine psi_@X@aisr_dw(n,x)
+  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisr_dw
+  use psb_error_mod
+  implicit none 
+  @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+  integer(psb_ipk_), intent(in)   :: n
+  integer(psb_ipk_) :: i,j
+  @TYPE@(@FKIND@) :: xx
+  
+  do j=n-1,1,-1
+    if (abs(x(j+1)) > abs(x(j))) then
+      xx = x(j)
+      i=j+1
+      do 
+        x(i-1) = x(i)
+        i = i+1
+        if (i>n) exit          
+        if (abs(x(i)) <= abs(xx)) exit
+      end do
+      x(i-1) = xx
+    endif
+  enddo
+end subroutine psi_@X@aisr_dw
 
