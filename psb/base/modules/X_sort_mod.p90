@@ -122,6 +122,74 @@ module psb_@X@_sort_mod
     end subroutine psb_@X@msort
   end interface psb_msort
 
+  @NOTCS@
+  interface 
+    subroutine psi_@X@_msort_up(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_msort_up
+    subroutine psi_@X@_msort_dw(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_msort_dw
+  end interface
+  @NOTCE@
+  @CS@
+  interface 
+    subroutine psi_@X@_lmsort_up(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_lmsort_up
+    subroutine psi_@X@_lmsort_dw(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_lmsort_dw
+    subroutine psi_@X@_almsort_up(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_almsort_up
+    subroutine psi_@X@_almsort_dw(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_almsort_dw
+  end interface
+  @CE@
+  interface 
+    subroutine psi_@X@_amsort_up(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_amsort_up
+    subroutine psi_@X@_amsort_dw(n,k,l,iret)
+      import
+      implicit none
+      integer(psb_ipk_) :: n, iret
+      @TYPE@(@FKIND@)  ::  k(n)
+      integer(psb_ipk_) :: l(0:n+1)
+    end subroutine psi_@X@_amsort_dw
+  end interface
+  
+  
   interface psb_qsort
     subroutine psb_@X@qsort(x,ix,dir,flag)
       import 
