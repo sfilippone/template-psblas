@@ -54,7 +54,6 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: reall    => @X@_vect_reall
     procedure, pass(x) :: zero     => @X@_vect_zero
     procedure, pass(x) :: asb      => @X@_vect_asb
-    procedure, pass(x) :: sync     => @X@_vect_sync
     procedure, pass(x) :: gthab    => @X@_vect_gthab
     procedure, pass(x) :: gthzv    => @X@_vect_gthzv
     generic, public    :: gth      => gthab, gthzv
@@ -73,6 +72,15 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: set_vect => @X@_vect_set_vect
     generic, public    :: set      => set_vect, set_scal
     procedure, pass(x) :: clone    => @X@_vect_clone
+
+    procedure, pass(x) :: sync     => @X@_vect_sync
+    procedure, pass(x) :: is_host  => @X@_vect_is_host
+    procedure, pass(x) :: is_dev   => @X@_vect_is_dev
+    procedure, pass(x) :: is_sync  => @X@_vect_is_sync
+    procedure, pass(x) :: set_host => @X@_vect_set_host
+    procedure, pass(x) :: set_dev  => @X@_vect_set_dev
+    procedure, pass(x) :: set_sync => @X@_vect_set_sync
+
 @NOTIS@
     procedure, pass(x) :: dot_v    => @X@_vect_dot_v
     procedure, pass(x) :: dot_a    => @X@_vect_dot_a
@@ -94,7 +102,7 @@ module psb_@X@_vect_mod
     generic, public    :: absval   => absval1, absval2
     procedure, pass(x) :: nrm2     => @X@_vect_nrm2
     procedure, pass(x) :: amax     => @X@_vect_amax
-    procedure, pass(x) :: asum     => @X@_vect_asum
+    procedure, pass(x) :: asum     => @X@_vect_asum                  
 @NOTIE@
   end type psb_@X@_vect_type
 
@@ -103,7 +111,25 @@ module psb_@X@_vect_mod
   interface psb_@X@_vect
     module procedure constructor, size_const
   end interface psb_@X@_vect
- 
+
+  private :: @X@_vect_get_nrows, @X@_vect_sizeof, @X@_vect_get_fmt, &
+       & @X@_vect_all, @X@_vect_reall, @X@_vect_zero,  @X@_vect_asb, &
+       & @X@_vect_gthab, @X@_vect_gthzv, @X@_vect_sctb, &
+       & @X@_vect_free, @X@_vect_ins_a, @X@_vect_ins_v, @X@_vect_bld_x, &
+       & @X@_vect_bld_n, @X@_vect_get_vect, @X@_vect_cnv, @X@_vect_set_scal, &
+       & @X@_vect_set_vect, @X@_vect_clone, @X@_vect_sync, @X@_vect_is_host, &
+       & @X@_vect_is_dev, @X@_vect_is_sync, @X@_vect_set_host, &
+       & @X@_vect_set_dev, @X@_vect_set_sync
+
+  @NOTIS@                                
+  private ::  @X@_vect_dot_v, @X@_vect_dot_a, @X@_vect_axpby_v, @X@_vect_axpby_a, &
+       & @X@_vect_mlt_v, @X@_vect_mlt_a, @X@_vect_mlt_a_2, @X@_vect_mlt_v_2, &
+       & @X@_vect_mlt_va, @X@_vect_mlt_av, @X@_vect_scal, @X@_vect_absval1, &
+       & @X@_vect_absval2, @X@_vect_nrm2, @X@_vect_amax, @X@_vect_asum                  
+
+  @NOTIE@
+
+
   class(psb_@X@_base_vect_type), allocatable, target,&
        & save, private :: psb_@X@_base_vect_default
 
@@ -365,15 +391,6 @@ contains
     
   end subroutine @X@_vect_asb
 
-  subroutine @X@_vect_sync(x)
-    implicit none 
-    class(psb_@X@_vect_type), intent(inout) :: x
-    
-    if (allocated(x%v)) &
-         & call x%v%sync()
-    
-  end subroutine @X@_vect_sync
-
   subroutine @X@_vect_gthab(n,idx,alpha,x,beta,y)
     use psi_serial_mod
     integer(psb_ipk_) :: n, idx(:)
@@ -485,6 +502,77 @@ contains
       call move_alloc(tmp,x%v)
     end if
   end subroutine @X@_vect_cnv
+
+
+  subroutine @X@_vect_sync(x)
+    implicit none 
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    if (allocated(x%v)) &
+         & call x%v%sync()
+    
+  end subroutine @X@_vect_sync
+
+  subroutine @X@_vect_set_sync(x)
+    implicit none 
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    if (allocated(x%v)) &
+         & call x%v%set_sync()
+    
+  end subroutine @X@_vect_set_sync
+
+  subroutine @X@_vect_set_host(x)
+    implicit none 
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    if (allocated(x%v)) &
+         & call x%v%set_host()
+    
+  end subroutine @X@_vect_set_host
+
+  subroutine @X@_vect_set_dev(x)
+    implicit none 
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    if (allocated(x%v)) &
+         & call x%v%set_dev()
+    
+  end subroutine @X@_vect_set_dev
+
+  function @X@_vect_is_sync(x) result(res)
+    implicit none 
+    logical :: res
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    res = .true.
+    if (allocated(x%v)) &
+         & res = x%v%is_sync()
+    
+  end function @X@_vect_is_sync
+
+  function @X@_vect_is_host(x) result(res)
+    implicit none 
+    logical :: res
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    res = .true.
+    if (allocated(x%v)) &
+         & res = x%v%is_host()
+    
+  end function @X@_vect_is_host
+
+  function @X@_vect_is_dev(x) result(res)
+    implicit none 
+    logical :: res
+    class(psb_@X@_vect_type), intent(inout) :: x
+    
+    res = .false. 
+    if (allocated(x%v)) &
+         & res =  x%v%is_dev()
+    
+  end function @X@_vect_is_dev
+
 @NOTIS@
   
   function @X@_vect_dot_v(n,x,y) result(res)
