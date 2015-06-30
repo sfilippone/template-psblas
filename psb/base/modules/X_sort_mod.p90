@@ -257,7 +257,7 @@ module psb_@X@_sort_mod
 
   interface 
     module subroutine psi_@X@_idx_heap_get_first(key,index,last,heap,idxs,dir,info)
-      @TYPE@(@FKIND@), intent(inout)    :: key
+      @TYPE@(@FKIND@), intent(out)      :: key
       integer(psb_ipk_), intent(out)    :: index
       @TYPE@(@FKIND@), intent(inout)    :: heap(:)
       integer(psb_ipk_), intent(in)     :: dir
