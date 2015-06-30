@@ -45,24 +45,21 @@ module psb_@X@_sort_mod
 
   @IS@
   interface psb_iblsrch
-    function  psb_iblsrch(key,n,v) result(ipos)
-      import :: psb_ipk_
+    module function  psb_iblsrch(key,n,v) result(ipos)
       integer(psb_ipk_) :: ipos, key, n
       integer(psb_ipk_) :: v(:)
     end function psb_iblsrch
   end interface psb_iblsrch
 
   interface psb_ibsrch
-    function  psb_ibsrch(key,n,v) result(ipos)
-      import :: psb_ipk_
+    module function  psb_ibsrch(key,n,v) result(ipos)
       integer(psb_ipk_) :: ipos, key, n
       integer(psb_ipk_) :: v(:)
     end function psb_ibsrch
   end interface psb_ibsrch
 
   interface psb_issrch
-    function psb_issrch(key,n,v) result(ipos)
-      import :: psb_ipk_
+    module function psb_issrch(key,n,v) result(ipos)
       implicit none
       integer(psb_ipk_) :: ipos, key, n
       integer(psb_ipk_) :: v(:)
@@ -70,16 +67,15 @@ module psb_@X@_sort_mod
   end interface psb_issrch
 
   interface psb_isaperm
-    logical function psb_isaperm(n,eip)               
-      import :: psb_ipk_
+    module function psb_isaperm(n,eip) result(res)
+      logical :: res
       integer(psb_ipk_), intent(in) :: n                             
       integer(psb_ipk_), intent(in) :: eip(n)
     end function psb_isaperm
   end interface psb_isaperm
 
   interface psb_msort_unique
-    subroutine psb_imsort_u(x,nout,dir)
-      import :: psb_ipk_, psb_spk_, psb_dpk_
+    module subroutine psb_imsort_u(x,nout,dir)
       integer(psb_ipk_), intent(inout)           :: x(:) 
       integer(psb_ipk_), intent(out)             :: nout
       integer(psb_ipk_), optional, intent(in)    :: dir
@@ -114,8 +110,7 @@ module psb_@X@_sort_mod
 
 
   interface psb_msort
-    subroutine psb_@X@msort(x,ix,dir,flag)
-      import 
+    module subroutine psb_@X@msort(x,ix,dir,flag)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), optional, intent(in)    :: dir, flag
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
@@ -124,15 +119,13 @@ module psb_@X@_sort_mod
 
   @NOTCS@
   interface 
-    subroutine psi_@X@_msort_up(n,k,l,iret)
-      import
+    module subroutine psi_@X@_msort_up(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_msort_up
-    subroutine psi_@X@_msort_dw(n,k,l,iret)
-      import
+    module subroutine psi_@X@_msort_dw(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
@@ -142,29 +135,25 @@ module psb_@X@_sort_mod
   @NOTCE@
   @CS@
   interface 
-    subroutine psi_@X@_lmsort_up(n,k,l,iret)
-      import
+    module subroutine psi_@X@_lmsort_up(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_lmsort_up
-    subroutine psi_@X@_lmsort_dw(n,k,l,iret)
-      import
+    module subroutine psi_@X@_lmsort_dw(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_lmsort_dw
-    subroutine psi_@X@_almsort_up(n,k,l,iret)
-      import
+    module subroutine psi_@X@_almsort_up(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_almsort_up
-    subroutine psi_@X@_almsort_dw(n,k,l,iret)
-      import
+    module subroutine psi_@X@_almsort_dw(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
@@ -173,15 +162,13 @@ module psb_@X@_sort_mod
   end interface
   @CE@
   interface 
-    subroutine psi_@X@_amsort_up(n,k,l,iret)
-      import
+    module subroutine psi_@X@_amsort_up(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_amsort_up
-    subroutine psi_@X@_amsort_dw(n,k,l,iret)
-      import
+    module subroutine psi_@X@_amsort_dw(n,k,l,iret)
       implicit none
       integer(psb_ipk_) :: n, iret
       @TYPE@(@FKIND@)  ::  k(n)
@@ -189,10 +176,8 @@ module psb_@X@_sort_mod
     end subroutine psi_@X@_amsort_dw
   end interface
   
-  
   interface psb_qsort
-    subroutine psb_@X@qsort(x,ix,dir,flag)
-      import 
+    module subroutine psb_@X@qsort(x,ix,dir,flag)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), optional, intent(in)    :: dir, flag
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
@@ -200,8 +185,7 @@ module psb_@X@_sort_mod
   end interface psb_qsort
   
   interface psb_isort
-    subroutine psb_@X@isort(x,ix,dir,flag)
-      import 
+    module subroutine psb_@X@isort(x,ix,dir,flag)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), optional, intent(in)    :: dir, flag
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
@@ -210,8 +194,7 @@ module psb_@X@_sort_mod
 
 
   interface psb_hsort
-    subroutine psb_@X@hsort(x,ix,dir,flag)
-      import 
+    module subroutine psb_@X@hsort(x,ix,dir,flag)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), optional, intent(in)    :: dir, flag
       integer(psb_ipk_), optional, intent(inout) :: ix(:)
@@ -219,36 +202,9 @@ module psb_@X@_sort_mod
   end interface psb_hsort
 
 
-!!$  interface !psb_howmany_heap
-!!$    module procedure psb_@X@_howmany,  psb_@X@_idx_howmany
-!!$  end interface 
-!!$
-!!$
-!!$  interface !psb_init_heap
-!!$    module procedure psb_@X@_init_heap, psb_@X@_idx_init_heap
-!!$  end interface 
-!!$
-!!$
-!!$  interface !psb_dump_heap
-!!$    module procedure psb_@X@_dump_heap, psb_dump_@X@_idx_heap
-!!$  end interface 
-!!$
-!!$
-!!$  interface !psb_insert_heap
-!!$    module procedure psb_@X@_insert_heap,  psb_@X@_idx_insert_heap
-!!$  end interface 
-!!$
-!!$  interface !psb_heap_get_first
-!!$    module procedure psb_@X@_heap_get_first, psb_@X@_idx_heap_get_first
-!!$  end interface 
-!!$  
-!!$  interface !psb_free_heap
-!!$    module procedure psb_free_@X@_heap, psb_free_@X@_idx_heap
-!!$  end interface 
 
   interface 
-    subroutine psi_@X@_insert_heap(key,last,heap,dir,info)
-      import 
+    module subroutine psi_@X@_insert_heap(key,last,heap,dir,info)
       implicit none 
 
       !  
@@ -267,8 +223,7 @@ module psb_@X@_sort_mod
   end interface
 
   interface 
-    subroutine psi_@X@_idx_insert_heap(key,index,last,heap,idxs,dir,info)
-      import 
+    module subroutine psi_@X@_idx_insert_heap(key,index,last,heap,idxs,dir,info)
       implicit none 
 
       !  
@@ -290,8 +245,7 @@ module psb_@X@_sort_mod
 
 
   interface 
-    subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
-      import 
+    module subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
       implicit none 
       @TYPE@(@FKIND@), intent(inout)  :: key
       integer(psb_ipk_), intent(inout)  :: last
@@ -302,8 +256,7 @@ module psb_@X@_sort_mod
   end interface
 
   interface 
-    subroutine psi_@X@_idx_heap_get_first(key,index,last,heap,idxs,dir,info)
-      import
+    module subroutine psi_@X@_idx_heap_get_first(key,index,last,heap,idxs,dir,info)
       @TYPE@(@FKIND@), intent(inout)    :: key
       integer(psb_ipk_), intent(out)    :: index
       @TYPE@(@FKIND@), intent(inout)    :: heap(:)
@@ -316,94 +269,78 @@ module psb_@X@_sort_mod
 
   interface 
     @NOTCS@
-    subroutine psi_@X@isrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@isrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@isrx_up
-    subroutine psi_@X@isrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@isrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@isrx_dw
-    subroutine psi_@X@isr_up(n,x)
-      import 
+    module subroutine psi_@X@isr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@isr_up
-    subroutine psi_@X@isr_dw(n,x)
-      import 
+    module subroutine psi_@X@isr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@isr_dw
     @NOTCE@
     @CS@
-    subroutine psi_@X@lisrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@lisrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lisrx_up
-    subroutine psi_@X@lisrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@lisrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lisrx_dw
-    subroutine psi_@X@lisr_up(n,x)
-      import 
+    module subroutine psi_@X@lisr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lisr_up
-    subroutine psi_@X@lisr_dw(n,x)
-      import 
+    module subroutine psi_@X@lisr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lisr_dw
-    subroutine psi_@X@alisrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@alisrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alisrx_up
-    subroutine psi_@X@alisrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@alisrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alisrx_dw
-    subroutine psi_@X@alisr_up(n,x)
-      import 
+    module subroutine psi_@X@alisr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alisr_up
-    subroutine psi_@X@alisr_dw(n,x)
-      import 
+    module subroutine psi_@X@alisr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alisr_dw
     @CE@
-    subroutine psi_@X@aisrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@aisrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aisrx_up
-    subroutine psi_@X@aisrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@aisrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aisrx_dw
-    subroutine psi_@X@aisr_up(n,x)
-      import 
+    module subroutine psi_@X@aisr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aisr_up
-    subroutine psi_@X@aisr_dw(n,x)
-      import 
+    module subroutine psi_@X@aisr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aisr_dw
@@ -411,94 +348,78 @@ module psb_@X@_sort_mod
 
   interface 
     @NOTCS@
-    subroutine psi_@X@qsrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@qsrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@qsrx_up
-    subroutine psi_@X@qsrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@qsrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@qsrx_dw
-    subroutine psi_@X@qsr_up(n,x)
-      import 
+    module subroutine psi_@X@qsr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@qsr_up
-    subroutine psi_@X@qsr_dw(n,x)
-      import 
+    module subroutine psi_@X@qsr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@qsr_dw
     @NOTCE@
     @CS@
-    subroutine psi_@X@lqsrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@lqsrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lqsrx_up
-    subroutine psi_@X@lqsrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@lqsrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lqsrx_dw
-    subroutine psi_@X@lqsr_up(n,x)
-      import 
+    module subroutine psi_@X@lqsr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lqsr_up
-    subroutine psi_@X@lqsr_dw(n,x)
-      import 
+    module subroutine psi_@X@lqsr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@lqsr_dw
-    subroutine psi_@X@alqsrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@alqsrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alqsrx_up
-    subroutine psi_@X@alqsrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@alqsrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alqsrx_dw
-    subroutine psi_@X@alqsr_up(n,x)
-      import 
+    module subroutine psi_@X@alqsr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alqsr_up
-    subroutine psi_@X@alqsr_dw(n,x)
-      import 
+    module subroutine psi_@X@alqsr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alqsr_dw
     @CE@
-    subroutine psi_@X@aqsrx_up(n,x,ix)
-      import 
+    module subroutine psi_@X@aqsrx_up(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aqsrx_up
-    subroutine psi_@X@aqsrx_dw(n,x,ix)
-      import 
+    module subroutine psi_@X@aqsrx_dw(n,x,ix)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(inout) :: ix(:)
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aqsrx_dw
-    subroutine psi_@X@aqsr_up(n,x)
-      import 
+    module subroutine psi_@X@aqsr_up(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aqsr_up
-    subroutine psi_@X@aqsr_dw(n,x)
-      import 
+    module subroutine psi_@X@aqsr_dw(n,x)
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@aqsr_dw
