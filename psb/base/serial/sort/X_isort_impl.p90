@@ -161,56 +161,56 @@ contains
   end subroutine psb_@X@isort
 
   @NOTCS@
-  subroutine psi_@X@isrx_up(n,x,idx)
+  subroutine psi_@X@isrx_up(n,x,ix)
     use psb_error_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) < x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) >= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@isrx_up
 
-  subroutine psi_@X@isrx_dw(n,x,idx)
+  subroutine psi_@X@isrx_dw(n,x,ix)
     use psb_error_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) > x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) <= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@isrx_dw
@@ -263,59 +263,59 @@ contains
   end subroutine psi_@X@isr_dw
   @NOTCE@
   @CS@
-  subroutine psi_@X@lisrx_up(n,x,idx)
+  subroutine psi_@X@lisrx_up(n,x,ix)
     use psb_error_mod
     use psi_lcx_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) < x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) >= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
 
   end subroutine psi_@X@lisrx_up
 
-  subroutine psi_@X@lisrx_dw(n,x,idx)
+  subroutine psi_@X@lisrx_dw(n,x,ix)
     use psb_error_mod
     use psi_lcx_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) > x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) <= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@lisrx_dw
@@ -368,58 +368,58 @@ contains
     enddo
   end subroutine psi_@X@lisr_dw
 
-  subroutine psi_@X@alisrx_up(n,x,idx)
+  subroutine psi_@X@alisrx_up(n,x,ix)
     use psb_error_mod
     use psi_alcx_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) < x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) >= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@alisrx_up
 
-  subroutine psi_@X@alisrx_dw(n,x,idx)
+  subroutine psi_@X@alisrx_dw(n,x,ix)
     use psb_error_mod
     use psi_alcx_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (x(j+1) > x(j)) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (x(i) <= xx) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@alisrx_dw
@@ -473,56 +473,56 @@ contains
   end subroutine psi_@X@alisr_dw
   @CE@
 
-  subroutine psi_@X@aisrx_up(n,x,idx)
+  subroutine psi_@X@aisrx_up(n,x,ix)
     use psb_error_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (abs(x(j+1)) < abs(x(j))) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (abs(x(i)) >= abs(xx)) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@aisrx_up
 
-  subroutine psi_@X@aisrx_dw(n,x,idx)
+  subroutine psi_@X@aisrx_dw(n,x,ix)
     use psb_error_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-    integer(psb_ipk_), intent(inout) :: idx(:)
+    integer(psb_ipk_), intent(inout) :: ix(:)
     integer(psb_ipk_), intent(in)   :: n
-    integer(psb_ipk_) :: i,j,ix
+    integer(psb_ipk_) :: i,j,itx
     @TYPE@(@FKIND@) :: xx
 
     do j=n-1,1,-1
       if (abs(x(j+1)) > abs(x(j))) then
         xx = x(j)
-        ix = idx(j) 
+        itx = ix(j) 
         i=j+1
         do 
           x(i-1)    = x(i)
-          idx(i-1) = idx(i)
+          ix(i-1) = ix(i)
           i = i+1
           if (i>n) exit          
           if (abs(x(i)) <= abs(xx)) exit
         end do
         x(i-1)    = xx
-        idx(i-1) = ix
+        ix(i-1) = itx
       endif
     enddo
   end subroutine psi_@X@aisrx_dw

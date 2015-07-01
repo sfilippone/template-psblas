@@ -302,7 +302,7 @@ contains
   subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
     implicit none 
 
-    @TYPE@(@FKIND@), intent(inout)     :: key
+    @TYPE@(@FKIND@), intent(out)     :: key
     integer(psb_ipk_), intent(inout)  :: last
     integer(psb_ipk_), intent(in)     :: dir
     @TYPE@(@FKIND@), intent(inout)     :: heap(:)
@@ -897,9 +897,9 @@ contains
     !   heap: the heap
     !   dir:  sorting direction
 
-    @TYPE@(@FKIND@), intent(inout)     :: key
-    integer(psb_ipk_), intent(in)      :: dir
-    @TYPE@(@FKIND@), intent(inout)  :: heap(:)
+    @TYPE@(@FKIND@), intent(out)      :: key
+    integer(psb_ipk_), intent(in)     :: dir
+    @TYPE@(@FKIND@), intent(inout)    :: heap(:)
     integer(psb_ipk_), intent(inout)  :: last
     integer(psb_ipk_), intent(out)    :: info
 
@@ -1373,9 +1373,9 @@ contains
     !   heap: the heap
     !   dir:  sorting direction
 
-    @TYPE@(@FKIND@), intent(inout)     :: key
-    integer(psb_ipk_), intent(out)     :: index
-    integer(psb_ipk_), intent(in)      :: dir
+    @TYPE@(@FKIND@), intent(out)      :: key
+    integer(psb_ipk_), intent(out)    :: index
+    integer(psb_ipk_), intent(in)     :: dir
     @TYPE@(@FKIND@), intent(inout)    :: heap(:)
     integer(psb_ipk_), intent(inout)  :: idxs(:)
     integer(psb_ipk_), intent(inout)  :: last

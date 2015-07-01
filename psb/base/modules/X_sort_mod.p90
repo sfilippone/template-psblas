@@ -247,7 +247,7 @@ module psb_@X@_sort_mod
   interface 
     module subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
       implicit none 
-      @TYPE@(@FKIND@), intent(inout)  :: key
+      @TYPE@(@FKIND@), intent(out)  :: key
       integer(psb_ipk_), intent(inout)  :: last
       integer(psb_ipk_), intent(in)     :: dir
       @TYPE@(@FKIND@), intent(inout)  :: heap(:)
