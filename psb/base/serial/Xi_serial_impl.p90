@@ -54,6 +54,7 @@ subroutine psi_@X@axpby(m,n,alpha, x, beta, y, info)
 
   return
 end subroutine psi_@X@axpby
+
 subroutine psi_@X@axpbyv(m,alpha, x, beta, y, info)
   
   use psb_const_mod
@@ -105,8 +106,94 @@ subroutine psi_@X@axpbyv(m,alpha, x, beta, y, info)
   return
 
 end subroutine psi_@X@axpbyv
+
+
+subroutine psi_@X@gthmv(n,k,idx,alpha,x,beta,y)
+
+  use psb_const_mod
+  implicit none
+
+  integer(psb_ipk_) :: n, idx(:)
+  @TYPE@(@FKIND@) :: x(:,:), y(:),alpha,beta
+
+  ! Locals
+  integer(psb_ipk_) :: i, j, pt
+
+  if (beta == @XZERO@) then 
+    if (alpha == @XZERO@) then 
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = @XZERO@
+        end do
+      end do
+    else if (alpha == @XONE@) then
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = x(idx(i),j)
+        end do
+      end do
+    else if (alpha == -@XONE@) then 
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1                
+          y(pt) = -x(idx(i),j)
+        end do
+      end do
+    else
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = alpha*x(idx(i),j)
+        end do
+      end do
+    end if
+  else 
+    if (beta == @XONE@) then 
+      ! Do nothing
+    else if (beta == -@XONE@) then 
+      y(1:n*k) = -y(1:n*k) 
+    else
+      y(1:n*k) = beta*y(1:n*k) 
+    end if
+
+    if (alpha == @XZERO@) then 
+      ! do nothing
+    else if (alpha == @XONE@) then 
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = y(pt) + x(idx(i),j)
+        end do
+      end do
+    else if (alpha == -@XONE@) then
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = y(pt) - x(idx(i),j)
+        end do
+      end do
+    else  
+      pt=0
+      do j=1,k
+        do i=1,n
+          pt=pt+1
+          y(pt) = y(pt) + alpha*x(idx(i),j)
+        end do
+      end do
+    end if
+  end if
+
+end subroutine psi_@X@gthmv
+
 subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
-  
 
   use psb_const_mod
   implicit none
@@ -161,8 +248,8 @@ subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
   end if
 
 end subroutine psi_@X@gthv
+
 subroutine psi_@X@gthzmv(n,k,idx,x,y)
-  
 
   use psb_const_mod
   implicit none
@@ -182,8 +269,8 @@ subroutine psi_@X@gthzmv(n,k,idx,x,y)
   end do
 
 end subroutine psi_@X@gthzmv
+
 subroutine psi_@X@gthzv(n,idx,x,y)
-  
 
   use psb_const_mod
   implicit none
@@ -199,9 +286,9 @@ subroutine psi_@X@gthzv(n,idx,x,y)
   end do
 
 end subroutine psi_@X@gthzv
+
 subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
   
-
   use psb_const_mod
   implicit none
 
@@ -237,8 +324,8 @@ subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
     end do
   end if
 end subroutine psi_@X@sctmv
+
 subroutine psi_@X@sctv(n,idx,x,beta,y)
-  
 
   use psb_const_mod
   implicit none
