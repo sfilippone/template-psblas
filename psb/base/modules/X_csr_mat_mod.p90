@@ -98,12 +98,17 @@ module psb_@X@_csr_mat_mod
     procedure, pass(a) :: print       => psb_@X@_csr_print
     procedure, pass(a) :: free        => @X@_csr_free
     procedure, pass(a) :: mold        => psb_@X@_csr_mold
-
+    procedure, pass(a) :: get_irpp    => @X@_csr_get_irpp
+    procedure, pass(a) :: get_jap     => @X@_csr_get_jap
+    procedure, pass(a) :: get_valp    => @X@_csr_get_valp
   end type psb_@X@_csr_sparse_mat
 
   private :: @X@_csr_get_nzeros, @X@_csr_free,  @X@_csr_get_fmt, &
        & @X@_csr_get_size, @X@_csr_sizeof, @X@_csr_get_nz_row, &
-       & @X@_csr_is_by_rows
+       & @X@_csr_is_by_rows, @X@_csr_get_irpp, @X@_csr_get_jap, &
+       & @X@_csr_get_valp
+
+  
 
   !> \memberof psb_@X@_csr_sparse_mat
   !| \see psb_base_mat_mod::psb_base_reallocate_nz
@@ -579,6 +584,45 @@ contains
     return
 
   end subroutine @X@_csr_free
+  
+  function @X@_csr_get_irpp(a) result(res)
+    implicit none 
+    class(psb_@X@_csr_sparse_mat), intent(in), target  :: a
+    integer(psb_ipk_), pointer  :: res(:)
+    
+    if (allocated(a%irp)) then 
+      res => a%irp
+    else
+      res => null()
+    end if
+    
+  end function @X@_csr_get_irpp
 
+  function @X@_csr_get_jap(a) result(res)
+    implicit none 
+    class(psb_@X@_csr_sparse_mat), intent(in), target  :: a
+    integer(psb_ipk_), pointer  :: res(:)
+
+    
+    if (allocated(a%ja)) then 
+      res => a%ja
+    else
+      res => null()
+    end if
+    
+  end function @X@_csr_get_jap
+
+  function @X@_csr_get_valp(a) result(res)
+    implicit none 
+    class(psb_@X@_csr_sparse_mat), intent(in), target  :: a
+    @TYPE@(@FKIND@), pointer  :: res(:)
+    
+    if (allocated(a%val)) then 
+      res => a%val
+    else
+      res => null()
+    end if
+    
+  end function @X@_csr_get_valp
 
 end module psb_@X@_csr_mat_mod

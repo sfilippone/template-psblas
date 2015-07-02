@@ -225,9 +225,9 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@swapidxv
-    module subroutine psi_@X@swap_vidx_vect(iictxt,iicomm,flag,beta,y,idx,&
+    module subroutine psi_@X@swap_vidx_vect(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
-      integer(psb_ipk_), intent(in)           :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(in)           :: ictxt,icomm,flag
       integer(psb_ipk_), intent(out)          :: info
       class(psb_@X@_base_vect_type)             :: y
       @TYPE@(@FKIND@)                       :: beta
@@ -280,9 +280,9 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@tranidxv
-    module subroutine psi_@X@tran_vidx_vect(iictxt,iicomm,flag,beta,y,idx,&
+    module subroutine psi_@X@tran_vidx_vect(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
-      integer(psb_ipk_), intent(in)           :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(in)           :: ictxt,icomm,flag
       integer(psb_ipk_), intent(out)          :: info
       class(psb_@X@_base_vect_type)             :: y
       @TYPE@(@FKIND@)                       :: beta
