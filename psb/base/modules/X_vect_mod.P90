@@ -810,6 +810,8 @@ module psb_@X@_multivect_mod
 
   use psb_@X@_base_multivect_mod
   use psb_const_mod
+  use psb_i_vect_mod
+
 
   !private
 
@@ -837,11 +839,13 @@ module psb_@X@_multivect_mod
     procedure, pass(x) :: set_vect => @X@_vect_set_vect
     generic, public    :: set      => set_vect, set_scal
     procedure, pass(x) :: clone    => @X@_vect_clone
-!!$    procedure, pass(x) :: gthab    => @X@_vect_gthab
-!!$    procedure, pass(x) :: gthzv    => @X@_vect_gthzv
-!!$    generic, public    :: gth      => gthab, gthzv
-!!$    procedure, pass(y) :: sctb     => @X@_vect_sctb
-!!$    generic, public    :: sct      => sctb
+    procedure, pass(x) :: gthab    => @X@_vect_gthab
+    procedure, pass(x) :: gthzv    => @X@_vect_gthzv
+    procedure, pass(x) :: gthzv_x  => @X@_vect_gthzv_x
+    generic, public    :: gth      => gthab, gthzv
+    procedure, pass(y) :: sctb     => @X@_vect_sctb
+    procedure, pass(y) :: sctb_x   => @X@_vect_sctb_x
+    generic, public    :: sct      => sctb, sctb_x
 @NOTIS@
 !!$    procedure, pass(x) :: dot_v    => @X@_vect_dot_v
 !!$    procedure, pass(x) :: dot_a    => @X@_vect_dot_a
@@ -1139,38 +1143,62 @@ contains
     
   end subroutine @X@_vect_sync
 
-!!$  subroutine @X@_vect_gthab(n,idx,alpha,x,beta,y)
-!!$    use psi_serial_mod
-!!$    integer(psb_ipk_) :: n, idx(:)
-!!$    @TYPE@(@FKIND@) :: alpha, beta, y(:)
-!!$    class(psb_@X@_multivect_type) :: x
-!!$    
-!!$    if (allocated(x%v)) &
-!!$         &  call x%v%gth(n,idx,alpha,beta,y)
-!!$    
-!!$  end subroutine @X@_vect_gthab
-!!$
-!!$  subroutine @X@_vect_gthzv(n,idx,x,y)
-!!$    use psi_serial_mod
-!!$    integer(psb_ipk_) :: n, idx(:)
-!!$    @TYPE@(@FKIND@) ::  y(:)
-!!$    class(psb_@X@_multivect_type) :: x
-!!$
-!!$    if (allocated(x%v)) &
-!!$         &  call x%v%gth(n,idx,y)
-!!$    
-!!$  end subroutine @X@_vect_gthzv
-!!$
-!!$  subroutine @X@_vect_sctb(n,idx,x,beta,y)
-!!$    use psi_serial_mod
-!!$    integer(psb_ipk_) :: n, idx(:)
-!!$    @TYPE@(@FKIND@) :: beta, x(:)
-!!$    class(psb_@X@_multivect_type) :: y
-!!$    
-!!$    if (allocated(y%v)) &
-!!$         &  call y%v%sct(n,idx,x,beta)
-!!$
-!!$  end subroutine @X@_vect_sctb
+  subroutine @X@_vect_gthab(n,idx,alpha,x,beta,y)
+    use psi_serial_mod
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) :: alpha, beta, y(:)
+    class(psb_@X@_multivect_type) :: x
+    
+    if (allocated(x%v)) &
+         &  call x%v%gth(n,idx,alpha,beta,y)
+    
+  end subroutine @X@_vect_gthab
+
+  subroutine @X@_vect_gthzv(n,idx,x,y)
+    use psi_serial_mod
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) ::  y(:)
+    class(psb_@X@_multivect_type) :: x
+
+    if (allocated(x%v)) &
+         &  call x%v%gth(n,idx,y)
+    
+  end subroutine @X@_vect_gthzv
+
+  subroutine @X@_vect_gthzv_x(i,n,idx,x,y)
+    use psi_serial_mod
+    integer(psb_ipk_) :: i,n
+    class(psb_i_base_vect_type) :: idx
+    @TYPE@(@FKIND@) ::  y(:)
+    class(psb_@X@_multivect_type) :: x
+
+    if (allocated(x%v)) &
+         &  call x%v%gth(i,n,idx,y)
+    
+  end subroutine @X@_vect_gthzv_x
+
+  subroutine @X@_vect_sctb(n,idx,x,beta,y)
+    use psi_serial_mod
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) :: beta, x(:)
+    class(psb_@X@_multivect_type) :: y
+    
+    if (allocated(y%v)) &
+         &  call y%v%sct(n,idx,x,beta)
+
+  end subroutine @X@_vect_sctb
+
+  subroutine @X@_vect_sctb_x(i,n,idx,x,beta,y)
+    use psi_serial_mod
+    integer(psb_ipk_) :: i, n
+    class(psb_i_base_vect_type) :: idx
+    @TYPE@(@FKIND@) :: beta, x(:)
+    class(psb_@X@_multivect_type) :: y
+    
+    if (allocated(y%v)) &
+         &  call y%v%sct(i,n,idx,x,beta)
+
+  end subroutine @X@_vect_sctb_x
 
   subroutine @X@_vect_free(x, info)
     use psi_serial_mod
