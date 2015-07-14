@@ -30,15 +30,16 @@
 !!$ 
 !!$  
 module psb_@X@_comm_mod
-@NOTIS@  
+  @NOTIS@  
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@
   use psb_mat_mod, only  : psb_@X@spmat_type
-@NOTIE@
-@IS@
+  @NOTIE@
+  @IS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_
-@IE@ 
-
+  @IE@ 
+  
   use psb_@X@_vect_mod, only : psb_@X@_vect_type, psb_@X@_base_vect_type
+  use psb_@X@_multivect_mod, only : psb_@X@_multivect_type, psb_@X@_base_multivect_type
 
   interface psb_ovrl
     subroutine psb_@X@ovrlm(x,desc_a,info,jx,ik,work,update,mode)
@@ -101,6 +102,16 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional           :: mode,data
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halo_vect
+    subroutine psb_@X@halo_multivect(x,desc_a,info,work,tran,mode,data)
+      import
+      implicit none
+      type(psb_@X@_multivect_type), intent(inout)   :: x
+      type(psb_desc_type), intent(in)         :: desc_a
+      integer(psb_ipk_), intent(out)                    :: info
+      @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
+      integer(psb_ipk_), intent(in), optional           :: mode,data
+      character, intent(in), optional         :: tran
+    end subroutine psb_@X@halo_multivect
   end interface psb_halo
 
 
