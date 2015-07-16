@@ -249,6 +249,24 @@ subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
 
 end subroutine psi_@X@gthv
 
+subroutine psi_@X@gthzmm(n,k,idx,x,y)
+
+  use psb_const_mod
+  implicit none
+
+  integer(psb_ipk_) :: n, k, idx(:)
+  @TYPE@(@FKIND@) :: x(:,:), y(:,:)
+
+  ! Locals
+  integer(psb_ipk_) :: i
+
+  
+  do i=1,n
+    y(i,1:k)=x(idx(i),1:k)
+  end do
+
+end subroutine psi_@X@gthzmm
+
 subroutine psi_@X@gthzmv(n,k,idx,x,y)
 
   use psb_const_mod
@@ -286,6 +304,32 @@ subroutine psi_@X@gthzv(n,idx,x,y)
   end do
 
 end subroutine psi_@X@gthzv
+
+subroutine psi_@X@sctmm(n,k,idx,x,beta,y)
+  
+  use psb_const_mod
+  implicit none
+
+  integer(psb_ipk_) :: n, k, idx(:)
+  @TYPE@(@FKIND@) :: beta, x(:,:), y(:,:)
+
+  ! Locals
+  integer(psb_ipk_) :: i, j
+
+  if (beta == @XZERO@) then
+    do i=1,n
+      y(idx(i),1:k) = x(i,1:k)
+    end do
+  else if (beta == @XONE@) then
+    do i=1,n
+      y(idx(i),1:k) = y(idx(i),1:k)+x(i,1:k)
+    end do
+  else
+    do i=1,n
+      y(idx(i),1:k) = beta*y(idx(i),1:k)+x(i,1:k)
+    end do
+  end if
+end subroutine psi_@X@sctmm
 
 subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
   

@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=Xswapdata.P90 Xswaptran.P90
+SRC=Xswapdata.P90 Xswaptran.P90 Xovrl_restr.p90 Xovrl_save.p90 Xovrl_upd.p90
+
 
 
 
@@ -49,7 +50,7 @@ complex:
 dcompl:
 	$(MAKE) lib ARITH=z
 
-bsrc: $(FSRC)
+bsrc:  $(FSRC)
 
 lib: $(FOBJS)
 

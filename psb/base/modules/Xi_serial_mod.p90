@@ -102,6 +102,18 @@ module psi_@X@_serial_mod
       @TYPE@(@FKIND@) :: x(:,:), y(:)
       
     end subroutine psi_@X@gthzmv
+    subroutine psi_@X@gthzmm(n,k,idx,x,y)
+      @IS@
+      import :: psb_ipk_
+      @IE@
+      @NOTIS@
+      import :: psb_ipk_, @FKIND@
+      @NOTIE@
+      implicit none
+      integer(psb_ipk_) :: n, k, idx(:)
+      @TYPE@(@FKIND@) :: x(:,:), y(:,:)
+      
+    end subroutine psi_@X@gthzmm
     subroutine psi_@X@gthzv(n,idx,x,y)
       @IS@
       import :: psb_ipk_
@@ -116,6 +128,17 @@ module psi_@X@_serial_mod
   end interface psi_gth
 
   interface psi_sct
+    subroutine psi_@X@sctmm(n,k,idx,x,beta,y)
+      @IS@
+      import :: psb_ipk_
+      @IE@
+      @NOTIS@
+      import :: psb_ipk_, @FKIND@
+      @NOTIE@
+      implicit none
+      integer(psb_ipk_) :: n, k, idx(:)
+      @TYPE@(@FKIND@) :: beta, x(:,:), y(:,:)
+    end subroutine psi_@X@sctmm
     subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
       @IS@
       import :: psb_ipk_
