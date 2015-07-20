@@ -185,6 +185,15 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(out)            :: info
       integer(psb_ipk_), intent(in), optional   :: root
     end subroutine psb_@X@gather_vect
+    subroutine psb_@X@gather_multivect(globx, locx, desc_a, info, root)
+      import
+      implicit none
+      type(psb_@X@_multivect_type), intent(inout) :: locx
+      @TYPE@(@FKIND@), intent(out), allocatable :: globx(:)
+      type(psb_desc_type), intent(in) :: desc_a
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: root
+    end subroutine psb_@X@gather_multivect
   end interface psb_gather
 
 end module psb_@X@_comm_mod

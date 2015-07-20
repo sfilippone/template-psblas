@@ -30,15 +30,15 @@
 !!$ 
 !!$  
 Module psb_@X@_tools_mod
-@NOTIS@
+  @NOTIS@
   use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_
   use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type, psb_i_vect_type
   use psb_@X@_mat_mod, only : psb_@X@spmat_type, psb_@X@_base_sparse_mat
-@NOTIE@
-@IS@
+  @NOTIE@
+  @IS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_success_
   use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type
-@IE@
+  @IE@
   use psb_@X@_multivect_mod, only : psb_@X@_base_multivect_type, psb_@X@_multivect_type
 
   interface  psb_geall
@@ -244,7 +244,7 @@ Module psb_@X@_tools_mod
     end subroutine psb_@X@ins_multivect
   end interface
 
-@NOTIS@
+  @NOTIS@
   interface psb_cdbldext
     Subroutine psb_@X@cdbldext(a,desc_a,novr,desc_ov,info,extype)
       import
@@ -357,9 +357,9 @@ Module psb_@X@_tools_mod
       logical, intent(in), optional        :: clear
     end subroutine psb_@X@sprn
   end interface
-@NOTIE@
-
-@IS@
+  @NOTIE@
+  
+  @IS@
   interface psb_glob_to_loc
     subroutine psb_glob_to_loc2v(x,y,desc_a,info,iact,owned)
       import
@@ -544,5 +544,5 @@ contains
     res = (lx>0)
   end subroutine psb_local_index_v
 
-@IE@
+  @IE@
 end module psb_@X@_tools_mod
