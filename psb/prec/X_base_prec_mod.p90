@@ -95,7 +95,7 @@ module psb_@X@_base_prec_mod
            & psb_@X@_base_sparse_mat
       implicit none 
       type(psb_desc_type),intent(in)       :: desc_data
-      class(psb_@X@_base_prec_type), intent(in)  :: prec
+      class(psb_@X@_base_prec_type), intent(inout)  :: prec
       @TYPE@(@FKIND@),intent(in)         :: alpha, beta
       @TYPE@(@FKIND@),intent(inout)      :: x(:)
       @TYPE@(@FKIND@),intent(inout)      :: y(:)
