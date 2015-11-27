@@ -21,6 +21,9 @@ s/@NRM2@/dnrm2/g
 /^ *@CS@ *$/,/^ *@CE@ *$/d
 /^ *@NOTCS@ *$/d
 /^ *@NOTCE@ *$/d
+/^ *@NOTSS@ *$/d
+/^ *@NOTSE@ *$/d
+/^ *@SS@ *$/,/^ *@SE@ *$/d
 
 
 s/@MPI_TYPE@/psb_mpi_r_dpk_/g
