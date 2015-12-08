@@ -125,19 +125,19 @@ module psb_@X@_comm_mod
 
 
   interface psb_scatter
-    subroutine psb_@X@scatterm(globx, locx, desc_a, info, root)
+    subroutine  psb_@X@scatterm(globx, locx, desc_a, info, root)
       import
       implicit none
-      @TYPE@(@FKIND@), intent(out) :: locx(:,:)
+      @TYPE@(@FKIND@), intent(out), allocatable :: locx(:,:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: root
     end subroutine psb_@X@scatterm
-    subroutine psb_@X@scatterv(globx, locx, desc_a, info, root)
+    subroutine  psb_@X@scatterv(globx, locx, desc_a, info, root)
       import
       implicit none
-      @TYPE@(@FKIND@), intent(out) :: locx(:)
+      @TYPE@(@FKIND@), intent(out), allocatable :: locx(:)
       @TYPE@(@FKIND@), intent(in)  :: globx(:)
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
@@ -151,7 +151,7 @@ module psb_@X@_comm_mod
       type(psb_desc_type), intent(in)  :: desc_a
       integer(psb_ipk_), intent(out)             :: info
       integer(psb_ipk_), intent(in), optional    :: root
-      class(psb_@X@_base_vect_type), intent(in), optional :: mold
+      class(psb_@X@_base_vect_type), intent(in), optional :: mold  
     end subroutine psb_@X@scatter_vect
   end interface psb_scatter
 
