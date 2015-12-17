@@ -44,7 +44,7 @@
 ! the functionalities to have the encapsulated class change its
 ! type dynamically, and to extract/input an inner object.
 !
-! A sparse matric has a state corresponding to its progression
+! A sparse matrix has a state corresponding to its progression
 ! through the application life.
 ! In particular, computational methods can only be invoked when
 ! the matrix is in the ASSEMBLED state, whereas the other states are
@@ -133,6 +133,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: m_csclip    => psb_@X@_csclip
     procedure, pass(a) :: b_csclip    => psb_@X@_b_csclip
     generic, public    :: csclip      => b_csclip, m_csclip
+    procedure, pass(a) :: clean_zeros => psb_@X@_clean_zeros
     procedure, pass(a) :: reall       => psb_@X@_reallocate_nz
     procedure, pass(a) :: get_neigh   => psb_@X@_get_neigh
     procedure, pass(a) :: reinit      => psb_@X@_reinit
@@ -1176,6 +1177,16 @@ contains
     if (allocated(a%a)) res = a%a%get_nz_row(idx)
 
   end function psb_@X@_get_nz_row
+
+  subroutine psb_@X@_clean_zeros(a,info)
+    implicit none 
+    integer(psb_ipk_), intent(out)        :: info
+    class(psb_@X@spmat_type), intent(inout) :: a
+
+    info = 0 
+    if (allocated(a%a)) call a%a%clean_zeros(info)
+
+  end subroutine psb_@X@_clean_zeros
 
 
 end module psb_@X@_mat_mod

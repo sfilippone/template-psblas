@@ -42,7 +42,7 @@ module psb_@X@_base_mat_mod
   !! The psb_@X@_base_sparse_mat type, extending psb_base_sparse_mat,
   !! defines a middle level  @TYPE@(@FKIND@) sparse matrix object.
   !! This class object itself does not have any additional members
-  !! with respect to those of the base class. No methods can be fully
+  !! with respect to those of the base class. Most methods cannot be fully
   !! implemented at this level, but we can define the interface for the
   !! computational methods requiring the knowledge of the underlying
   !! field, such as the matrix-vector product; this interface is defined,
@@ -78,6 +78,7 @@ module psb_@X@_base_mat_mod
     procedure, pass(a) :: mold          => psb_@X@_base_mold 
     procedure, pass(a) :: clone         => psb_@X@_base_clone
     procedure, pass(a) :: make_nonunit  => psb_@X@_base_make_nonunit
+    procedure, pass(a) :: clean_zeros   => psb_@X@_base_clean_zeros
     
     !
     ! Transpose methods: defined here but not implemented. 
@@ -161,6 +162,7 @@ module psb_@X@_base_mat_mod
     procedure, pass(a) :: get_nz_row   => psb_@X@_coo_get_nz_row
     procedure, pass(a) :: fix          => psb_@X@_fix_coo
     procedure, pass(a) :: trim         => psb_@X@_coo_trim
+    procedure, pass(a) :: clean_zeros  => psb_@X@_coo_clean_zeros
     procedure, pass(a) :: print        => psb_@X@_coo_print
     procedure, pass(a) :: free         => @X@_coo_free
     procedure, pass(a) :: mold         => psb_@X@_coo_mold
@@ -696,6 +698,18 @@ module psb_@X@_base_mat_mod
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@X@_base_mv_from_fmt
+  end interface
+  !
+  !> 
+  !! \memberof  psb_@X@_base_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@X@_base_clean_zeros
+  !
+  interface
+    subroutine  psb_@X@_base_clean_zeros(a, info)
+      import :: psb_ipk_, psb_@X@_base_sparse_mat
+      class(psb_@X@_base_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_base_clean_zeros
   end interface
   
   !
@@ -1234,6 +1248,18 @@ module psb_@X@_base_mat_mod
       import :: psb_ipk_, psb_@X@_coo_sparse_mat
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
     end subroutine psb_@X@_coo_trim
+  end interface
+  !
+  !> 
+  !! \memberof  psb_@X@_coo_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@X@_base_clean_zeros
+  !
+  interface
+    subroutine  psb_@X@_coo_clean_zeros(a,info)
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      class(psb_@X@_coo_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)             :: info
+    end subroutine psb_@X@_coo_clean_zeros
   end interface
   
   !
