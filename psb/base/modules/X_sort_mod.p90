@@ -43,7 +43,7 @@
 module psb_@X@_sort_mod
   use psb_const_mod
 
-  @IS@
+  @INTS@
   interface psb_iblsrch
     function  psb_iblsrch(key,n,v) result(ipos)
       import :: psb_ipk_
@@ -85,7 +85,7 @@ module psb_@X@_sort_mod
       integer(psb_ipk_), optional, intent(in)    :: dir
     end subroutine psb_imsort_u
   end interface psb_msort_unique
-  @IE@
+  @INTE@
 
   type psb_@X@_heap
     integer(psb_ipk_) :: last, dir
@@ -122,7 +122,7 @@ module psb_@X@_sort_mod
     end subroutine psb_@X@msort
   end interface psb_msort
 
-  @NOTCS@
+  @REALS@
   interface 
     subroutine psi_@X@_msort_up(n,k,l,iret)
       import
@@ -139,8 +139,8 @@ module psb_@X@_sort_mod
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_msort_dw
   end interface
-  @NOTCE@
-  @CS@
+  @REALE@
+  @CPLXS@
   interface 
     subroutine psi_@X@_lmsort_up(n,k,l,iret)
       import
@@ -171,7 +171,7 @@ module psb_@X@_sort_mod
       integer(psb_ipk_) :: l(0:n+1)
     end subroutine psi_@X@_almsort_dw
   end interface
-  @CE@
+  @CPLXE@
   interface 
     subroutine psi_@X@_amsort_up(n,k,l,iret)
       import
@@ -288,7 +288,7 @@ module psb_@X@_sort_mod
   end interface
 
   interface 
-    @NOTCS@
+    @REALS@
     subroutine psi_@X@isrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -311,8 +311,8 @@ module psb_@X@_sort_mod
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@isr_dw
-    @NOTCE@
-    @CS@
+    @REALE@
+    @CPLXS@
     subroutine psi_@X@lisrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -357,7 +357,7 @@ module psb_@X@_sort_mod
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alisr_dw
-    @CE@
+    @CPLXE@
     subroutine psi_@X@aisrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -383,7 +383,7 @@ module psb_@X@_sort_mod
   end interface
 
   interface 
-    @NOTCS@
+    @REALS@
     subroutine psi_@X@qsrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -406,8 +406,8 @@ module psb_@X@_sort_mod
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@qsr_dw
-    @NOTCE@
-    @CS@
+    @REALE@
+    @CPLXS@
     subroutine psi_@X@lqsrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -452,7 +452,7 @@ module psb_@X@_sort_mod
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
       integer(psb_ipk_), intent(in)   :: n
     end subroutine psi_@X@alqsr_dw
-    @CE@
+    @CPLXE@
     subroutine psi_@X@aqsrx_up(n,x,ix)
       import 
       @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -491,28 +491,28 @@ contains
     if (present(dir)) then 
       heap%dir = dir
     else
-      @CS@
+      @CPLXS@
       heap%dir = psb_asort_up_
-      @CE@
-      @NOTCS@
+      @CPLXE@
+      @REALS@
       heap%dir = psb_sort_up_
-      @NOTCE@
+      @REALE@
     endif
     select case(heap%dir) 
-      @CS@
+      @CPLXS@
     case (psb_asort_up_,psb_asort_down_)
       ! ok, do nothing
     case default
       write(psb_err_unit,*) 'Invalid direction, defaulting to psb_asort_up_'
       heap%dir = psb_asort_up_
-      @CE@
-      @NOTCS@
+      @CPLXE@
+      @REALS@
     case (psb_sort_up_,psb_sort_down_,psb_asort_up_,psb_asort_down_)
       ! ok, do nothing
     case default
       write(psb_err_unit,*) 'Invalid direction, defaulting to psb_sort_up_'
       heap%dir = psb_sort_up_
-      @NOTCE@
+      @REALE@
     end select
     call psb_ensure_size(psb_heap_resize,heap%keys,info)
 
@@ -616,28 +616,28 @@ contains
     if (present(dir)) then 
       heap%dir = dir
     else
-      @CS@
+      @CPLXS@
       heap%dir = psb_asort_up_
-      @CE@
-      @NOTCS@
+      @CPLXE@
+      @REALS@
       heap%dir = psb_sort_up_
-      @NOTCE@
+      @REALE@
     endif
     select case(heap%dir) 
-      @CS@
+      @CPLXS@
     case (psb_asort_up_,psb_asort_down_)
       ! ok, do nothing
     case default
       write(psb_err_unit,*) 'Invalid direction, defaulting to psb_asort_up_'
       heap%dir = psb_asort_up_
-      @CE@
-      @NOTCS@
+      @CPLXE@
+      @REALS@
     case (psb_sort_up_,psb_sort_down_,psb_asort_up_,psb_asort_down_)
       ! ok, do nothing
     case default
       write(psb_err_unit,*) 'Invalid direction, defaulting to psb_sort_up_'
       heap%dir = psb_sort_up_
-      @NOTCE@
+      @REALE@
     end select
 
     call psb_ensure_size(psb_heap_resize,heap%keys,info)

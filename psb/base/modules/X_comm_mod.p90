@@ -30,13 +30,13 @@
 !!$ 
 !!$  
 module psb_@X@_comm_mod
-  @NOTIS@  
+  @NOTINTS@  
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@
   use psb_mat_mod, only  : psb_@X@spmat_type
-  @NOTIE@
-  @IS@
+  @NOTINTE@
+  @INTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_
-  @IE@ 
+  @INTE@ 
   
   use psb_@X@_vect_mod, only : psb_@X@_vect_type, psb_@X@_base_vect_type
   use psb_@X@_multivect_mod, only : psb_@X@_multivect_type, psb_@X@_base_multivect_type
@@ -156,7 +156,7 @@ module psb_@X@_comm_mod
   end interface psb_scatter
 
   interface psb_gather
-@NOTIS@
+@NOTINTS@
     subroutine psb_@X@sp_allgather(globa, loca, desc_a, info, root, dupl,keepnum,keeploc)
       import
       implicit none
@@ -167,7 +167,7 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional   :: root,dupl
       logical, intent(in), optional   :: keepnum,keeploc
     end subroutine psb_@X@sp_allgather
-@NOTIE@
+@NOTINTE@
     subroutine psb_@X@gatherm(globx, locx, desc_a, info, root)
       import
       implicit none

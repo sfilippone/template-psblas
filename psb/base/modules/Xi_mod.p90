@@ -30,16 +30,16 @@
 !!$ 
 !!$  
 module psi_@X@_mod
-  @IS@
+  @INTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpik_
-  @IE@
-  @NOTIS@
+  @INTE@
+  @NOTINTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type
-  @NOTIE@
+  @NOTINTE@
   use psb_@X@_base_vect_mod, only : psb_@X@_base_vect_type 
   use psb_@X@_base_multivect_mod, only : psb_@X@_base_multivect_type 
 
-  @IS@
+  @INTS@
   interface
     subroutine psi_compute_size(desc_data,&
          & index_in, dl_lda, info)
@@ -200,7 +200,7 @@ module psi_@X@_mod
     end subroutine psi_bld_ovr_mst
   end interface
 
-  @IE@
+  @INTE@
 
   interface psi_swapdata
     subroutine psi_@X@swapdatam(flag,n,beta,y,desc_a,work,info,data)

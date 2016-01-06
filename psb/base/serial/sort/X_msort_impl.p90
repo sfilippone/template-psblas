@@ -40,7 +40,7 @@
   !  Data Structures and Algorithms
   !  Addison-Wesley
   !
-  @IS@
+  @INTS@
   logical function psb_isaperm(n,eip)               
     use psb_@X@_sort_mod, psb_protect_name => psb_isaperm
     implicit none
@@ -232,9 +232,9 @@
     return
   end subroutine psb_imsort_u
 
-  @IE@
+  @INTE@
 
-  @NOTCS@
+  @REALS@
   subroutine psb_@X@msort(x,ix,dir,flag)
     use psb_@X@_sort_mod, psb_protect_name => psb_@X@msort
     use psb_error_mod
@@ -750,7 +750,7 @@
 
   end subroutine psi_@X@_amsort_dw
 
-  @NOTCE@
+  @REALE@
 
 
 
@@ -758,7 +758,7 @@
 
 
 
-  @CS@
+  @CPLXS@
   subroutine psb_@X@msort(x,ix,dir,flag)
     use psb_@X@_sort_mod, psb_protect_name => psb_@X@msort
     use psb_error_mod
@@ -1491,4 +1491,4 @@
 
   end subroutine psi_@X@_almsort_dw
 
-  @CE@
+  @CPLXE@

@@ -47,9 +47,9 @@ module psb_@X@_base_vect_mod
   use psb_const_mod
   use psb_error_mod
   use psb_realloc_mod
-@NOTIS@
+@NOTINTS@
   use psb_i_base_vect_mod
-@NOTIE@
+@NOTINTE@
 
   !> \namespace  psb_base_mod  \class psb_@X@_base_vect_type
   !! The psb_@X@_base_vect_type 
@@ -140,7 +140,7 @@ module psb_@X@_base_vect_mod
     generic, public    :: sct      => sctb, sctb_x, sctb_buf
 
 
-@NOTIS@
+@NOTINTS@
     !
     ! Dot product and AXPBY
     !
@@ -171,7 +171,7 @@ module psb_@X@_base_vect_mod
     procedure, pass(x) :: nrm2     => @X@_base_nrm2
     procedure, pass(x) :: amax     => @X@_base_amax
     procedure, pass(x) :: asum     => @X@_base_asum
-@NOTIE@
+@NOTINTE@
 
   end type psb_@X@_base_vect_type
 
@@ -704,7 +704,7 @@ contains
   end subroutine @X@_base_set_vect
 
 
-@NOTIS@
+@NOTINTS@
   !
   ! Overwrite with absolute value
   !
@@ -1133,7 +1133,7 @@ contains
     res =  sum(abs(x%v(1:n)))
 
   end function @X@_base_asum
-@NOTIE@
+@NOTINTE@
   
   
   !
@@ -1412,7 +1412,7 @@ module psb_@X@_base_multivect_mod
     procedure, pass(x) :: set_vect => @X@_base_mlv_set_vect
     generic, public    :: set      => set_vect, set_scal
 
-    @NOTIS@    
+    @NOTINTS@    
     !
     ! Dot product and AXPBY
     !
@@ -1446,7 +1446,7 @@ module psb_@X@_base_multivect_mod
     procedure, pass(x) :: absval1  => @X@_base_mlv_absval1
     procedure, pass(x) :: absval2  => @X@_base_mlv_absval2
     generic, public    :: absval   => absval1, absval2
-    @NOTIE@
+    @NOTINTE@
 
     !
     ! These are for handling gather/scatter in new
@@ -1967,7 +1967,7 @@ contains
 
   end subroutine @X@_base_mlv_set_vect
 
-  @NOTIS@
+  @NOTINTS@
   !
   ! Dot products 
   ! 
@@ -2447,7 +2447,7 @@ contains
 
   end subroutine @X@_base_mlv_absval2
 
-  @NOTIE@
+  @NOTINTE@
 
   function @X@_base_mlv_use_buffer() result(res)
     logical :: res

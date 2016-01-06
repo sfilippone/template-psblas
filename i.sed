@@ -13,12 +13,12 @@ s/@XONE@/ione/g
 s/@RZERO@/izero/g
 s/@RONE@/ione/g
 
-/^ *@NOTIS@ *$/,/^ *@NOTIE@ *$/d
-/^ *@IS@ *$/d
-/^ *@IE@ *$/d
-/^ *@CS@ *$/,/^ *@CE@ *$/d
-/^ *@NOTCS@ *$/d
-/^ *@NOTCE@ *$/d
+/^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
+/^ *@INTS@ *$/d
+/^ *@INTE@ *$/d
+/^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
+/^ *@REALS@ *$/d
+/^ *@REALE@ *$/d
 
 s/@DOT@/idot/g
 s/@NRM2@/inrm2/g

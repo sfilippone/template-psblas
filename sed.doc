@@ -24,28 +24,12 @@ s/@NRM2@/dznrm2/g
 7. The "sister" real type, i.e. S,C: S,  D,Z: D
 s/@RT@/d/g
 
-8. @IS@ @IE@   
-   On a line by their own, they mark the start and end of a
-   region that should only appear for types Integer. 
-   So: I just deletes those lines, S/D/C/Z delete everything in
-   between. 
 
-   @NOTIS@ @NOTIE@   
-   On a line by their own, they mark the start and end of a
-   region that should only appear for types NOT Integer. 
-   So: S/D/C/Z just delete those lines, I deletes everything in
-   between. 
-
-9. @CS@ @CE@   
-   On a line by their own, they mark the start and end of a
-   region that should only appear for Complex types. 
-   So: C/Z just delete those lines, I/S/D delete everything in
-   between. 
-
-   @NOTCS@ @NOTCE@   
-   On a line by their own, they mark the start and end of a
-   region that should only appear for types NOT complex. 
-   So: I/S/D just delete those lines, C/Z delete everything in
-   between. 
-   
-
+8. Specialized sections of code (markers are lines on their own) 
+  @INTS@     @INTE@         Integer start/end
+  @NOTINTS@  @NOTINTE@      Not Integer start/end	
+  @CPLXS@    @CPLXE@        Complex start/end
+  @REALS@    @REALE@        Real start/end
+  @SPKS@     @SPKE@	    Single precision start/end
+  @DPKS@     @DPKE@	    Double precision start/end	
+  

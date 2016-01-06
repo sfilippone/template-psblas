@@ -40,9 +40,9 @@
 module psb_@X@_vect_mod
 
   use psb_@X@_base_vect_mod
-  @NOTIS@
+  @NOTINTS@
   use psb_i_vect_mod
-  @NOTIE@
+  @NOTINTE@
 
   type psb_@X@_vect_type
     class(psb_@X@_base_vect_type), allocatable :: v 
@@ -81,7 +81,7 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: set_dev  => @X@_vect_set_dev
     procedure, pass(x) :: set_sync => @X@_vect_set_sync
 
-    @NOTIS@
+    @NOTINTS@
     procedure, pass(x) :: dot_v    => @X@_vect_dot_v
     procedure, pass(x) :: dot_a    => @X@_vect_dot_a
     generic, public    :: dot      => dot_v, dot_a
@@ -103,7 +103,7 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: nrm2     => @X@_vect_nrm2
     procedure, pass(x) :: amax     => @X@_vect_amax
     procedure, pass(x) :: asum     => @X@_vect_asum                  
-    @NOTIE@
+    @NOTINTE@
   end type psb_@X@_vect_type
 
   public  :: psb_@X@_vect
@@ -121,13 +121,13 @@ module psb_@X@_vect_mod
        & @X@_vect_is_dev, @X@_vect_is_sync, @X@_vect_set_host, &
        & @X@_vect_set_dev, @X@_vect_set_sync
 
-  @NOTIS@                                
+  @NOTINTS@                                
   private ::  @X@_vect_dot_v, @X@_vect_dot_a, @X@_vect_axpby_v, @X@_vect_axpby_a, &
        & @X@_vect_mlt_v, @X@_vect_mlt_a, @X@_vect_mlt_a_2, @X@_vect_mlt_v_2, &
        & @X@_vect_mlt_va, @X@_vect_mlt_av, @X@_vect_scal, @X@_vect_absval1, &
        & @X@_vect_absval2, @X@_vect_nrm2, @X@_vect_amax, @X@_vect_asum                  
 
-  @NOTIE@
+  @NOTINTE@
 
 
   class(psb_@X@_base_vect_type), allocatable, target,&
@@ -573,7 +573,7 @@ contains
 
   end function @X@_vect_is_dev
 
-  @NOTIS@
+  @NOTINTS@
 
   function @X@_vect_dot_v(n,x,y) result(res)
     implicit none 
@@ -800,7 +800,7 @@ contains
 
   end function @X@_vect_asum
 
-  @NOTIE@
+  @NOTINTE@
 
 end module psb_@X@_vect_mod
 
@@ -846,7 +846,7 @@ module psb_@X@_multivect_mod
     procedure, pass(y) :: sctb     => @X@_vect_sctb
     procedure, pass(y) :: sctb_x   => @X@_vect_sctb_x
     generic, public    :: sct      => sctb, sctb_x
-    @NOTIS@
+    @NOTINTS@
 !!$    procedure, pass(x) :: dot_v    => @X@_vect_dot_v
 !!$    procedure, pass(x) :: dot_a    => @X@_vect_dot_a
 !!$    generic, public    :: dot      => dot_v, dot_a
@@ -865,7 +865,7 @@ module psb_@X@_multivect_mod
 !!$    procedure, pass(x) :: nrm2     => @X@_vect_nrm2
 !!$    procedure, pass(x) :: amax     => @X@_vect_amax
 !!$    procedure, pass(x) :: asum     => @X@_vect_asum
-    @NOTIE@
+    @NOTINTE@
   end type psb_@X@_multivect_type
 
   public  :: psb_@X@_multivect, psb_@X@_multivect_type,&
@@ -1259,7 +1259,7 @@ contains
     end if
   end subroutine @X@_vect_cnv
 
-  @NOTIS@
+  @NOTINTS@
 
 !!$  function @X@_vect_dot_v(n,x,y) result(res)
 !!$    implicit none 
@@ -1468,6 +1468,6 @@ contains
 !!$    end if
 !!$
 !!$  end function @X@_vect_asum
-  @NOTIE@
+  @NOTINTE@
 
 end module psb_@X@_multivect_mod

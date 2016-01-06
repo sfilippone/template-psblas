@@ -80,14 +80,14 @@ subroutine psb_@X@hsort(x,ix,dir,flag)
   end if
 
   select case(dir_)
-    @NOTCS@
+    @REALS@
   case(psb_sort_up_,psb_sort_down_)
     ! OK
-    @NOTCE@
-    @CS@
+    @REALE@
+    @CPLXS@
   case(psb_lsort_up_,psb_lsort_down_,psb_alsort_up_,psb_alsort_down_)
     ! OK
-    @CE@
+    @CPLXE@
   case (psb_asort_up_,psb_asort_down_) 
     ! OK    
   case default
@@ -189,7 +189,7 @@ end subroutine psb_@X@hsort
 !
 !
 !
-@NOTCS@
+@REALS@
 
 subroutine psi_@X@_insert_heap(key,last,heap,dir,info)
   use psb_@X@_sort_mod, psb_protect_name => psi_@X@_insert_heap
@@ -680,9 +680,9 @@ subroutine psi_@X@_idx_heap_get_first(key,index,last,heap,idxs,dir,info)
   return
 end subroutine psi_@X@_idx_heap_get_first
 
-@NOTCE@
+@REALE@
 
-@CS@
+@CPLXS@
 subroutine psi_@X@_insert_heap(key,last,heap,dir,info)
   use psb_@X@_sort_mod, psb_protect_name => psi_@X@_insert_heap
   implicit none 
@@ -1635,6 +1635,6 @@ contains
 
 end subroutine psi_@X@_idx_heap_get_first
 
-@CE@
+@CPLXE@
 
 
