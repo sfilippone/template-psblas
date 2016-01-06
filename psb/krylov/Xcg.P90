@@ -96,7 +96,7 @@
 ! 
 !
 subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
-     & itmax,iter,err,itrace,istop)
+     & itmax,iter,err,itrace,istop,cond)
   use psb_base_mod
   use psb_prec_mod
   use psb_@X@_krylov_conv_mod
@@ -111,9 +111,10 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
   integer(psb_ipk_), intent(out)                 :: info
   integer(psb_ipk_), Optional, Intent(in)        :: itmax, itrace, istop
   integer(psb_ipk_), Optional, Intent(out)       :: iter
-  Real(@FKIND@), Optional, Intent(out) :: err
+  Real(@FKIND@), Optional, Intent(out) :: err,cond
 ! =   Local data
-  @TYPE@(@FKIND@), allocatable, target   :: aux(:)
+  @TYPE@(@FKIND@), allocatable, target   :: aux(:),td(:),tu(:),eig(:),ewrk(:)
+  integer(psb_mpik_), allocatable :: ibl(:), ispl(:), iwrk(:)
   type(psb_@X@_vect_type), allocatable, target :: wwrk(:)
   type(psb_@X@_vect_type), pointer  :: q, p, r, z, w
   @TYPE@(@FKIND@)   :: alpha, beta, rho, rho_old, sigma,alpha_old,beta_old
@@ -123,6 +124,7 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
   integer(psb_ipk_) :: np, me, ictxt
   real(psb_dpk_)     :: derr  
   type(psb_itconv_type)       :: stopdat
+  logical                     :: do_cond
   character(len=20)           :: name
   character(len=*), parameter :: methdname='CG'
 
@@ -196,6 +198,18 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
     itrace_ = 0
   end if
 
+  do_cond=present(cond)
+  if (do_cond) then 
+    istebz = 0
+    allocate(td(itmax_),tu(itmax_), eig(itmax_),&
+         & ibl(itmax_),ispl(itmax_),iwrk(3*itmax_),ewrk(4*itmax_),&
+         & stat=info)
+    if (info /= psb_success_) then 
+      info=psb_err_from_subroutine_non_
+      call psb_errpush(info,name)
+      goto 9999
+    end if
+  end if
 
   itx=0
 
