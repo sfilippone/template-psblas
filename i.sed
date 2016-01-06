@@ -13,8 +13,16 @@ s/@XONE@/ione/g
 s/@RZERO@/izero/g
 s/@RONE@/ione/g
 
+/^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
+/^ *@INTS@ *$/d
+/^ *@INTE@ *$/d
+/^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
+/^ *@REALS@ *$/d
+/^ *@REALE@ *$/d
+
 s/@DOT@/idot/g
 s/@NRM2@/inrm2/g
+
 
 s/@MPI_TYPE@/psb_mpi_ipk_integer/g
 s/@PSB_SWAP_TAG@/psb_int_swap_tag/g

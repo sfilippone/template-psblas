@@ -201,6 +201,7 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
   do_cond=present(cond)
   if (do_cond) then 
     istebz = 0
+@REALS@
     allocate(td(itmax_),tu(itmax_), eig(itmax_),&
          & ibl(itmax_),ispl(itmax_),iwrk(3*itmax_),ewrk(4*itmax_),&
          & stat=info)
@@ -209,8 +210,8 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
       call psb_errpush(info,name)
       goto 9999
     end if
+@REALE@
   end if
-
   itx=0
 
 
@@ -270,6 +271,19 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
       alpha_old = alpha
       alpha = rho/sigma
 
+@REALS@
+      if (do_cond) then 
+        istebz = istebz + 1
+        if (istebz == 1) then 
+          td(istebz) = @RONE@/alpha
+        else 
+          td(istebz) = @RONE@/alpha + beta/alpha_old
+          tu(istebz-1) = sqrt(beta)/alpha_old
+        end if
+      end if
+@REALE@
+
+
       call psb_geaxpby(alpha,p,@XONE@,x,desc_a,info)
       call psb_geaxpby(-alpha,q,@XONE@,r,desc_a,info)
 
@@ -281,6 +295,30 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
 
     end do iteration
   end do restart
+  if (do_cond) then 
+@REALS@
+    if (me == 0) then 
+#if defined(HAVE_LAPACK) 
+      call @X@stebz('A','E',istebz,@RZERO@,@RZERO@,0,0,-@RONE@,td,tu,&
+           & ieg,nspl,eig,ibl,ispl,ewrk,iwrk,info)
+      if (info < 0) then 
+        call psb_errpush(psb_err_from_subroutine_ai_,name,a_err='@X@stebz',i_err=(/info,0,0,0,0/))
+        info=psb_err_from_subroutine_ai_
+        goto 9999
+      end if
+      cond = eig(ieg)/eig(1)
+#else 
+      cond = @RZERO@
+#endif
+      info=psb_success_
+    end if
+    call psb_bcast(ictxt,cond,root=0)
+@REALE@
+@CPLXS@
+    cond = @RZERO@
+@CPLXE@
+  end if
+
 
   call psb_end_conv(methdname,itx,desc_a,stopdat,info,derr,iter)
   if (present(err)) err = derr
