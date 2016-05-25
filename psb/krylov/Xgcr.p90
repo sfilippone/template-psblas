@@ -29,7 +29,7 @@
 !!$  POSSIBILITY OF SUCH DAMAGE.
 !!$ 
 !!$  
-! File:  psb_@X@cgr.f90
+! File:  psb_@X@gcr.f90
 !!
 !! Contributors: Ambra Abdullahi (UNITOV) and Pasqua D’Ambra (IAC-CNR)
 !!
@@ -63,10 +63,10 @@
 !!$ C                                                                      C
 !!$ C                                                                      C
 !!$ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-! File:  psb_@X@cgr.f90
+! File:  psb_@X@gcr.f90
 !
-! Subroutine: psb_@X@cgr
-!    This subroutine implements the CGR method.
+! Subroutine: psb_@X@gcr
+!    This subroutine implements the GCR method.
 !
 !
 ! Arguments:
@@ -105,7 +105,7 @@
 !    irst   -  integer(optional)          Input: restart parameter 
 !
 
-subroutine psb_@X@cgr_vect(a,prec,b,x,eps,desc_a,info,&
+subroutine psb_@X@gcr_vect(a,prec,b,x,eps,desc_a,info,&
      & itmax,iter,err,itrace, irst, istop)
   use psb_base_mod
   use psb_prec_mod
@@ -138,10 +138,10 @@ subroutine psb_@X@cgr_vect(a,prec,b,x,eps,desc_a,info,&
   @TYPE@(@FKIND@), allocatable, target   :: aux(:)
   character(len=20)           :: name
   type(psb_itconv_type)       :: stopdat
-  character(len=*), parameter :: methdname='CGR'
+  character(len=*), parameter :: methdname='GCR'
   integer(psb_ipk_) ::int_err(5)
   info = psb_success_
-  name = 'psb_@X@cgr'
+  name = 'psb_@X@gcr'
   call psb_erractionsave(err_act)
   debug_unit  = psb_get_debug_unit()
   debug_level = psb_get_debug_level()
@@ -370,6 +370,6 @@ subroutine psb_@X@cgr_vect(a,prec,b,x,eps,desc_a,info,&
   end if
   
   return
-end subroutine psb_@X@cgr_vect
+end subroutine psb_@X@gcr_vect
 
 

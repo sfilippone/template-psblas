@@ -148,7 +148,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
 
   procedure(psb_@X@kryl_vect) :: psb_@X@bicg_vect, psb_@X@cgstab_vect,&
        & psb_@X@cgs_vect
-  procedure(psb_@X@kryl_rest_vect) :: psb_@X@rgmres_vect, psb_@X@cgstabl_vect, psb_@X@cgr_vect
+  procedure(psb_@X@kryl_rest_vect) :: psb_@X@rgmres_vect, psb_@X@cgstabl_vect, psb_@X@gcr_vect
   procedure(psb_@X@kryl_cond_vect) :: psb_@X@cg_vect, psb_@X@fcg_vect
 
   
@@ -173,8 +173,8 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
   case('FCG') 
     call  psb_@X@fcg_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace,istop,cond)
-  case('CGR') 
-    call  psb_@X@cgr_vect(a,prec,b,x,eps,desc_a,info,&
+  case('GCR') 
+    call  psb_@X@gcr_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace,istop)
   case('CGS') 
     call  psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
