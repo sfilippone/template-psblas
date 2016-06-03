@@ -1,5 +1,5 @@
 #include ../../Make.inc
-
+TOP=../../..
 BASIC_MODS=
 UTIL_MODS =
 
@@ -24,7 +24,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint
+src: ssingle sdouble scomplex sdcompl sint sinternals
 sint:
 	$(MAKE) bsrc ARITH=i
 ssingle:
@@ -51,13 +51,16 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
+sinternals:
+	cd internals && $(MAKE) src
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean:
+	cd internals && $(MAKE) clean
 	/bin/rm -f *.f90 *.F90 *.o 
 
 

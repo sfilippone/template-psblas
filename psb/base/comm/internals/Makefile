@@ -1,5 +1,5 @@
 #include ../../Make.inc
-
+TOP=../../../..
 BASIC_MODS=
 UTIL_MODS =
 
@@ -56,9 +56,9 @@ lib: $(FOBJS)
 
 
 $(FSRC1): psi_$(ARITH)%.f90 : X%.p90
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRC2): psi_$(ARITH)%.F90 : X%.P90 
-	sed -f ../../../$(ARITH).sed $< >$@
+	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean:
 	/bin/rm -f *.f90 *.F90 *.o 
