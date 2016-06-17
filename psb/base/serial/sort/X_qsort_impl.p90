@@ -171,8 +171,27 @@ subroutine psi_@X@qsrx_up(n,x,idx)
   @TYPE@(@FKIND@) :: piv, xk, xt
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
-
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@  
+@NOTINTE@  
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -326,7 +345,27 @@ subroutine psi_@X@qsrx_dw(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -481,7 +520,27 @@ subroutine psi_@X@qsr_up(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -622,7 +681,27 @@ subroutine psi_@X@qsr_dw(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -766,7 +845,27 @@ subroutine psi_@X@lqsrx_up(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -922,7 +1021,27 @@ subroutine psi_@X@lqsrx_dw(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -1077,7 +1196,27 @@ subroutine psi_@X@lqsr_up(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -1218,7 +1357,27 @@ subroutine psi_@X@lqsr_dw(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -1360,7 +1519,27 @@ subroutine psi_@X@alqsrx_up(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -1515,7 +1694,27 @@ subroutine psi_@X@alqsrx_dw(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -1670,7 +1869,27 @@ subroutine psi_@X@alqsr_up(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -1810,7 +2029,27 @@ subroutine psi_@X@alqsr_dw(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
 
@@ -1952,7 +2191,27 @@ subroutine psi_@X@aqsrx_up(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -2108,7 +2367,27 @@ subroutine psi_@X@aqsrx_dw(n,x,idx)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
   if (n > ithrs) then          
     !
@@ -2261,7 +2540,27 @@ subroutine psi_@X@aqsr_up(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
@@ -2401,7 +2700,27 @@ subroutine psi_@X@aqsr_dw(n,x)
   integer(psb_ipk_) :: i, j, ilx, iux, istp, lpiv
   integer(psb_ipk_) :: ixt, n1, n2
 
-  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=16
+@INTS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@INTE@
+@NOTINTS@
+@REALS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=72
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
+@DPKE@
+@REALE@  
+@CPLXS@
+@SPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
+@SPKE@
+@DPKS@
+  integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=24
+@DPKE@
+@CPLXE@
+@NOTINTE@
   integer(psb_ipk_) :: istack(nparms,maxstack)
 
   if (n > ithrs) then          
