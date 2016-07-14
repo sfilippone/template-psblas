@@ -2082,7 +2082,7 @@ subroutine psi_@X@aqsrx_up(n,x,idx)
 @DPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
 @DPKE@
-@REALE@  
+@REALE@
 @CPLXS@
 @SPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
@@ -2258,7 +2258,7 @@ subroutine psi_@X@aqsrx_dw(n,x,idx)
 @DPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
 @DPKE@
-@REALE@  
+@REALE@
 @CPLXS@
 @SPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
@@ -2431,7 +2431,7 @@ subroutine psi_@X@aqsr_up(n,x)
 @DPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
 @DPKE@
-@REALE@  
+@REALE@
 @CPLXS@
 @SPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
@@ -2591,7 +2591,7 @@ subroutine psi_@X@aqsr_dw(n,x)
 @DPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=60
 @DPKE@
-@REALE@  
+@REALE@
 @CPLXS@
 @SPKS@
   integer(psb_ipk_), parameter :: maxstack=64,nparms=3,ithrs=32
