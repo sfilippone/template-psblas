@@ -34,7 +34,7 @@ module psi_@X@_mod
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpik_
   @INTE@
   @NOTINTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type, psb_xch_idx_type
   @NOTINTE@
   use psb_@X@_base_vect_mod, only : psb_@X@_base_vect_type 
   use psb_@X@_base_multivect_mod, only : psb_@X@_base_multivect_type 
@@ -241,6 +241,14 @@ module psi_@X@_mod
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
     end subroutine psi_@X@swapdata_multivect
+    subroutine psi_@X@swap_xchg_m(iictxt,iicomm,flag,m,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag,m
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@)            :: y(:,:)
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swap_xchg_m
     subroutine psi_@X@swapidxm(ictxt,icomm,flag,n,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
@@ -250,6 +258,14 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@swapidxm
+    subroutine psi_@X@swap_xchg_v(iictxt,iicomm,flag,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@)            :: y(:)
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swap_xchg_v
     subroutine psi_@X@swapidxv(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
@@ -259,6 +275,14 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@swapidxv
+    subroutine psi_@X@swap_xchg_vect(iictxt,iicomm,flag,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(out)         :: info
+      class(psb_@X@_base_vect_type)            :: y
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swap_xchg_vect
     subroutine psi_@X@swap_vidx_vect(iictxt,iicomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
@@ -323,6 +347,14 @@ module psi_@X@_mod
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
     end subroutine psi_@X@swaptran_multivect
+    subroutine psi_@X@swaptran_xchg_m(iictxt,iicomm,flag,m,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag,m
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@)            :: y(:,:)
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swaptran_xchg_m
     subroutine psi_@X@tranidxm(ictxt,icomm,flag,n,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
@@ -332,6 +364,14 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)       :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@tranidxm
+    subroutine psi_@X@swaptran_xchg_v(iictxt,iicomm,flag,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@)            :: y(:)
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swaptran_xchg_v
     subroutine psi_@X@tranidxv(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
@@ -341,6 +381,14 @@ module psi_@X@_mod
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@tranidxv
+    subroutine psi_@X@swaptran_xchg_vect(iictxt,iicomm,flag,beta,y,xchg,info)
+      import 
+      integer(psb_ipk_), intent(in)          :: iictxt,iicomm,flag
+      integer(psb_ipk_), intent(out)         :: info
+      class(psb_@X@_base_vect_type)            :: y
+      @TYPE@(@FKIND@)                         :: beta
+      class(psb_xch_idx_type), intent(inout) :: xchg
+    end subroutine psi_@X@swaptran_xchg_vect
     subroutine psi_@X@tran_vidx_vect(iictxt,iicomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
