@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_mat_dist_impl.p90 X_mat_dist_mod.p90
+SRC=Xf_sample.p90
 
 
 
@@ -35,7 +35,6 @@ sdcompl:
 	$(MAKE) bsrc ARITH=z
 
 
-
 all:  single double complex dcompl
 
 single:
@@ -59,7 +58,7 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: 
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
 
 

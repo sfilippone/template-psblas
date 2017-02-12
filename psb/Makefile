@@ -4,7 +4,7 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: sbase sprec skryl 
+src: sbase sprec skryl sutil stest
 
 
 sbase:
@@ -14,10 +14,16 @@ sprec:
 
 skryl:
 	cd krylov && $(MAKE) src
+sutil:
+	cd util && $(MAKE) src
+stest:
+	cd test  && $(MAKE) src
 
 clean:
 	cd base && $(MAKE) clean
 	cd prec && $(MAKE) clean
 	cd krylov && $(MAKE) clean
+	cd util && $(MAKE) clean
+	cd test && $(MAKE) clean
 
 
