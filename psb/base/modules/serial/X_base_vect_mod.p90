@@ -108,6 +108,7 @@ module psb_@X@_base_vect_mod
     procedure, nopass  :: use_buffer   => @X@_base_use_buffer
     procedure, pass(x) :: new_buffer   => @X@_base_new_buffer
     procedure, nopass  :: device_wait  => @X@_base_device_wait
+    procedure, pass(x) :: maybe_free_buffer  => @X@_base_maybe_free_buffer
     procedure, pass(x) :: free_buffer  => @X@_base_free_buffer
     procedure, pass(x) :: new_comid    => @X@_base_new_comid
     procedure, pass(x) :: free_comid   => @X@_base_free_comid
@@ -454,7 +455,6 @@ contains
     call x%sync()
   end subroutine @X@_base_asb
 
-
   !
   !> Function  base_free:
   !! \memberof  psb_@X@_base_vect_type
@@ -480,6 +480,63 @@ contains
   end subroutine @X@_base_free
 
   
+
+  !
+  !> Function  base_free_buffer:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Free aux buffer
+  !!           
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_free_buffer(x,info)
+    use psb_realloc_mod
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    if (allocated(x%combuf)) &
+         &  deallocate(x%combuf,stat=info)
+  end subroutine @X@_base_free_buffer
+
+  !
+  !> Function  base_maybe_free_buffer:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Conditionally Free aux buffer
+  !!           
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_maybe_free_buffer(x,info)
+    use psb_realloc_mod
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    info = 0 
+    if (psb_get_maybe_free_buffer())&
+         &  call x%free_buffer(info)
+
+  end subroutine @X@_base_maybe_free_buffer
+
+  !
+  !> Function  base_free_comid:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Free aux MPI communication id buffer
+  !!           
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_free_comid(x,info)
+    use psb_realloc_mod
+    implicit none 
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    if (allocated(x%comid)) &
+         &  deallocate(x%comid,stat=info)
+  end subroutine @X@_base_free_comid
+
 
   !
   ! The base version of SYNC & friends does nothing, it's just
@@ -1235,27 +1292,6 @@ contains
   end subroutine @X@_base_new_comid
 
 
-  subroutine @X@_base_free_buffer(x,info)
-    use psb_realloc_mod
-    implicit none 
-    class(psb_@X@_base_vect_type), intent(inout) :: x
-    integer(psb_ipk_), intent(out)             :: info
-
-    if (allocated(x%combuf)) &
-         &  deallocate(x%combuf,stat=info)
-  end subroutine @X@_base_free_buffer
-
-  subroutine @X@_base_free_comid(x,info)
-    use psb_realloc_mod
-    implicit none 
-    class(psb_@X@_base_vect_type), intent(inout) :: x
-    integer(psb_ipk_), intent(out)             :: info
-
-    if (allocated(x%comid)) &
-         &  deallocate(x%comid,stat=info)
-  end subroutine @X@_base_free_comid
-
-
   !
   ! shortcut alpha=1 beta=0
   ! 
@@ -1455,6 +1491,7 @@ module psb_@X@_base_multivect_mod
     procedure, nopass  :: use_buffer   => @X@_base_mlv_use_buffer
     procedure, pass(x) :: new_buffer   => @X@_base_mlv_new_buffer
     procedure, nopass  :: device_wait  => @X@_base_mlv_device_wait
+    procedure, pass(x) :: maybe_free_buffer  => @X@_base_mlv_maybe_free_buffer
     procedure, pass(x) :: free_buffer  => @X@_base_mlv_free_buffer
     procedure, pass(x) :: new_comid    => @X@_base_mlv_new_comid
     procedure, pass(x) :: free_comid   => @X@_base_mlv_free_comid
@@ -2478,6 +2515,19 @@ contains
     call psb_realloc(n,2_psb_ipk_,x%comid,info)
   end subroutine @X@_base_mlv_new_comid
 
+
+  subroutine @X@_base_mlv_maybe_free_buffer(x,info)
+    use psb_realloc_mod
+    implicit none 
+    class(psb_@X@_base_multivect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+
+    info = 0 
+    if (psb_get_maybe_free_buffer())&
+         &  call x%free_buffer(info)
+
+  end subroutine @X@_base_mlv_maybe_free_buffer
 
   subroutine @X@_base_mlv_free_buffer(x,info)
     use psb_realloc_mod
