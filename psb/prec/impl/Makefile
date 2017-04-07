@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_prec_type_impl.p90 X_diagprec_impl.p90 \
+SRC=X_prec_type_impl.p90 X_diagprec_impl.p90 Xprecinit.p90\
     X_bjacprec_impl.p90 X_nullprec_impl.p90 Xprecbld.p90
 
 
