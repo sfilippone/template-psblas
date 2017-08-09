@@ -481,26 +481,28 @@ module psb_@X@_mat_mod
   end interface
   
   interface 
-    subroutine psb_@X@_tril(a,b,info,diag,imin,imax,&
-         & jmin,jmax,rscale,cscale)
+    subroutine psb_@X@_tril(a,l,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,u)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in)      :: a
-      class(psb_@X@spmat_type), intent(inout)   :: b
+      class(psb_@X@spmat_type), intent(inout)   :: l
       integer(psb_ipk_),intent(out)           :: info
       integer(psb_ipk_), intent(in), optional :: diag,imin,imax,jmin,jmax
       logical, intent(in), optional           :: rscale,cscale
+      class(psb_@X@spmat_type), optional, intent(inout)   :: u
     end subroutine psb_@X@_tril
   end interface
   
   interface 
-    subroutine psb_@X@_triu(a,b,info,diag,imin,imax,&
-         & jmin,jmax,rscale,cscale)
+    subroutine psb_@X@_triu(a,u,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,l)
       import :: psb_ipk_, psb_@X@spmat_type, @FKIND@
       class(psb_@X@spmat_type), intent(in)      :: a
-      class(psb_@X@spmat_type), intent(inout)   :: b
+      class(psb_@X@spmat_type), intent(inout)   :: u
       integer(psb_ipk_),intent(out)           :: info
       integer(psb_ipk_), intent(in), optional :: diag,imin,imax,jmin,jmax
       logical, intent(in), optional           :: rscale,cscale
+      class(psb_@X@spmat_type), optional, intent(inout)   :: l
     end subroutine psb_@X@_triu
   end interface
 
