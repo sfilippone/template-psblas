@@ -86,19 +86,21 @@ Module psb_@X@_tools_mod
 
 
   interface psb_geasb
-    subroutine psb_@X@asb(x, desc_a, info)
+    subroutine psb_@X@asb(x, desc_a, info, scratch)
       import
       implicit none
       type(psb_desc_type), intent(in) ::  desc_a
       @TYPE@(@FKIND@), allocatable, intent(inout)       ::  x(:,:)
       integer(psb_ipk_), intent(out)            ::  info
+      logical, intent(in), optional        :: scratch
     end subroutine psb_@X@asb
-    subroutine psb_@X@asbv(x, desc_a, info)
+    subroutine psb_@X@asbv(x, desc_a, info, scratch)
       import
       implicit none
       type(psb_desc_type), intent(in) ::  desc_a
       @TYPE@(@FKIND@), allocatable, intent(inout)   ::  x(:)
       integer(psb_ipk_), intent(out)        ::  info
+      logical, intent(in), optional        :: scratch
     end subroutine psb_@X@asbv
     subroutine psb_@X@asb_vect(x, desc_a, info,mold, scratch)
       import
