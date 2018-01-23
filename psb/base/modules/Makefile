@@ -44,7 +44,7 @@ sint:
 	$(MAKE) vsrc isrc ARITH=i
 
 saux:
-	cd aux && $(MAKE) src
+	cd auxil && $(MAKE) src
 scomm:
 	cd comm && $(MAKE) src
 spsb:
@@ -82,7 +82,7 @@ $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90
 
 
 clean:
-	cd aux && $(MAKE) clean
+	cd auxil && $(MAKE) clean
 	cd comm && $(MAKE) clean
 	cd psblas && $(MAKE) clean
 	cd serial && $(MAKE) clean
