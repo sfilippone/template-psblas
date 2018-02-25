@@ -1,18 +1,18 @@
-s/@X@/i/g
+s/@X@/l/g
 s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g
-s/@FKIND@/psb_ipk_/g
-s/@IXKIND@/psb_ipk_/g	
-s/@RT@/i/g
+s/@FKIND@/psb_lpk_/g
+s/@IXKIND@/psb_lpk_/g	
+s/@RT@/l/g
 
 s/@SIZET@/psb_sizeof_int/g 
 
-s/@XZERO@/izero/g
-s/@XONE@/ione/g
+s/@XZERO@/lzero/g
+s/@XONE@/lone/g
 
-s/@RZERO@/izero/g
-s/@RONE@/ione/g
+s/@RZERO@/lzero/g
+s/@RONE@/lone/g
 
 /^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
 /^ *@INTS@ *$/d
@@ -21,9 +21,9 @@ s/@RONE@/ione/g
 /^ *@REALS@ *$/d
 /^ *@REALE@ *$/d
 
-s/@DOT@/idot/g
-s/@NRM2@/inrm2/g
+s/@DOT@/ldot/g
+s/@NRM2@/lnrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_ipk_integer/g
-s/@PSB_SWAP_TAG@/psb_int_swap_tag/g
+s/@PSB_SWAP_TAG@/psb_int8_swap_tag/g

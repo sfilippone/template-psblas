@@ -46,9 +46,10 @@ subroutine psb_@X@isort(x,ix,dir,flag)
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
   integer(psb_ipk_), optional, intent(in)    :: dir, flag
-  integer(psb_ipk_), optional, intent(inout) :: ix(:)
+  integer(@IXKIND@), optional, intent(inout) :: ix(:)
 
-  integer(psb_ipk_) :: dir_, flag_, n, err_act, i
+  integer(psb_ipk_) :: dir_, flag_, err_act
+  integer(@IXKIND@) :: n, i
 
   integer(psb_ipk_)  :: ierr(5)
   character(len=20)  :: name
@@ -164,9 +165,9 @@ subroutine psi_@X@isrx_up(n,x,idx)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -192,9 +193,9 @@ subroutine psi_@X@isrx_dw(n,x,idx)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -221,8 +222,8 @@ subroutine psi_@X@isr_up(n,x)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -245,8 +246,8 @@ subroutine psi_@X@isr_dw(n,x)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -271,9 +272,9 @@ subroutine psi_@X@lisrx_up(n,x,idx)
   use psi_lcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -301,9 +302,9 @@ subroutine psi_@X@lisrx_dw(n,x,idx)
   use psi_lcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -330,8 +331,8 @@ subroutine psi_@X@lisr_up(n,x)
   use psi_lcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -355,8 +356,8 @@ subroutine psi_@X@lisr_dw(n,x)
   use psi_lcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -380,9 +381,9 @@ subroutine psi_@X@alisrx_up(n,x,idx)
   use psi_alcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -409,9 +410,9 @@ subroutine psi_@X@alisrx_dw(n,x,idx)
   use psi_alcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -438,8 +439,8 @@ subroutine psi_@X@alisr_up(n,x)
   use psi_alcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -463,8 +464,8 @@ subroutine psi_@X@alisr_dw(n,x)
   use psi_alcx_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -488,9 +489,9 @@ subroutine psi_@X@aisrx_up(n,x,idx)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -516,9 +517,9 @@ subroutine psi_@X@aisrx_dw(n,x,idx)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(inout) :: idx(:)
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j,ix
+  integer(@IXKIND@), intent(inout) :: idx(:)
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j,ix
   @TYPE@(@FKIND@) :: xx
 
   do j=n-1,1,-1
@@ -544,8 +545,8 @@ subroutine psi_@X@aisr_up(n,x)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1
@@ -568,8 +569,8 @@ subroutine psi_@X@aisr_dw(n,x)
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
-  integer(psb_ipk_), intent(in)   :: n
-  integer(psb_ipk_) :: i,j
+  integer(@IXKIND@), intent(in)   :: n
+  integer(@IXKIND@) :: i,j
   @TYPE@(@FKIND@) :: xx
   
   do j=n-1,1,-1

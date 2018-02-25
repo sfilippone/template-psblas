@@ -3,6 +3,7 @@ s/@CONJG@//g
 s/@TYPE@/real/g
 s/@RTYPE@/real/g
 s/@FKIND@/psb_dpk_/g
+s/@IXKIND@/psb_ipk_/g	
 s/@RT@/d/g
 
 s/@SIZET@/psb_sizeof_dp/g 

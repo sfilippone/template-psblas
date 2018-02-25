@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_sort_mod.p90
+VSRC=X_sort_mod.p90 X_ip_reord_mod.p90
 SRC=
 SRCI=Xi_serial_mod.p90
 
@@ -30,7 +30,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint
+src: ssingle sdouble scomplex sdcompl sint slong
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -39,9 +39,10 @@ scomplex:
 	$(MAKE) bsrc ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
-
 sint:
 	$(MAKE) vsrc isrc ARITH=i
+slong:
+	$(MAKE) vsrc isrc ARITH=l
 
 all:  single double complex dcompl
 

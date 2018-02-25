@@ -23,9 +23,11 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint 
+src: ssingle sdouble scomplex sdcompl sint lint
 sint:
 	$(MAKE) bsrc ARITH=i
+lint:
+	$(MAKE) bsrc ARITH=l
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:

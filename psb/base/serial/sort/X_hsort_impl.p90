@@ -47,11 +47,11 @@ subroutine psb_@X@hsort(x,ix,dir,flag)
   implicit none 
   @TYPE@(@FKIND@), intent(inout)           :: x(:) 
   integer(psb_ipk_), optional, intent(in)    :: dir, flag
-  integer(psb_ipk_), optional, intent(inout) :: ix(:)
+  integer(@IXKIND@), optional, intent(inout) :: ix(:)
 
   integer(psb_ipk_) :: dir_, flag_, n, i, l, err_act,info
   @TYPE@(@FKIND@) :: key
-  integer(psb_ipk_) :: index
+  integer(@IXKIND@) :: index
 
   integer(psb_ipk_)  :: ierr(5)
   character(len=20)  :: name
@@ -205,7 +205,7 @@ subroutine psi_@X@_insert_heap(key,last,heap,dir,info)
   @TYPE@(@FKIND@), intent(in)    :: key
   integer(psb_ipk_), intent(in)           :: dir
   @TYPE@(@FKIND@), intent(inout) :: heap(:)
-  integer(psb_ipk_), intent(inout)        :: last
+  integer(@IXKIND@), intent(inout)        :: last
   integer(psb_ipk_), intent(out)          :: info
   integer(psb_ipk_) :: i, i2
   @TYPE@(@FKIND@)   :: temp
@@ -302,7 +302,7 @@ subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
   implicit none 
 
   @TYPE@(@FKIND@), intent(inout)     :: key
-  integer(psb_ipk_), intent(inout)  :: last
+  integer(@IXKIND@), intent(inout)  :: last
   integer(psb_ipk_), intent(in)     :: dir
   @TYPE@(@FKIND@), intent(inout)     :: heap(:)
   integer(psb_ipk_), intent(out)    :: info
