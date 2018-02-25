@@ -6,7 +6,7 @@ s/@FKIND@/psb_lpk_/g
 s/@IXKIND@/psb_lpk_/g	
 s/@RT@/l/g
 
-s/@SIZET@/psb_sizeof_int/g 
+s/@SIZET@/psb_sizeof_long_int/g 
 
 s/@XZERO@/lzero/g
 s/@XONE@/lone/g
