@@ -1,11 +1,11 @@
 #include ../../Make.inc
-TOP=../..
+TOP=../../..
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=Xf_sample.p90
+SRC=X_pde2d.p90 X_pde3d.p90
 
 
 
@@ -24,7 +24,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl 
+src: ssingle sdouble 
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
