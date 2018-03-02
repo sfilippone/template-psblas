@@ -31,7 +31,7 @@
 !    
 module psi_@X@_mod
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpik_
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_
   @INTE@
   @NOTINTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type

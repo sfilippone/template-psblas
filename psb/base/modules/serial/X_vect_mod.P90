@@ -314,7 +314,7 @@ contains
   function @X@_vect_sizeof(x) result(res)
     implicit none 
     class(psb_@X@_vect_type), intent(in) :: x
-    integer(psb_long_int_k_) :: res
+    integer(psb_epk_) :: res
     res = 0
     if (allocated(x%v)) res = x%v%sizeof()
   end function @X@_vect_sizeof
@@ -1060,7 +1060,7 @@ contains
   function @X@_vect_sizeof(x) result(res)
     implicit none 
     class(psb_@X@_multivect_type), intent(in) :: x
-    integer(psb_long_int_k_) :: res
+    integer(psb_epk_) :: res
     res = 0
     if (allocated(x%v)) res = x%v%sizeof()
   end function @X@_vect_sizeof

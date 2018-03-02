@@ -248,7 +248,7 @@ contains
 
   function psb_@X@prec_sizeof(prec) result(val)
     class(psb_@X@prec_type), intent(in) :: prec
-    integer(psb_long_int_k_) :: val
+    integer(psb_epk_) :: val
     integer(psb_ipk_) :: i
     
     val = 0

@@ -60,7 +60,7 @@ program psb_@X@f_sample
   ! solver paramters
   integer(psb_ipk_) :: iter, itmax, ierr, itrace, ircode,&
        & methd, istopc, irst
-  integer(psb_long_int_k_) :: amatsize, precsize, descsize
+  integer(psb_epk_) :: amatsize, precsize, descsize
   @RTYPE@(@FKIND@)   :: err, eps, cond
 
   character(len=5)   :: afmt
