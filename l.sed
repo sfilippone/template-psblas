@@ -6,7 +6,7 @@ s/@FKIND@/psb_lpk_/g
 s/@IXKIND@/psb_lpk_/g	
 s/@RT@/l/g
 
-s/@SIZET@/psb_sizeof_long_int/g 
+s/@SIZET@/psb_sizeof_lp/g 
 
 s/@XZERO@/lzero/g
 s/@XONE@/lone/g
@@ -25,5 +25,5 @@ s/@DOT@/ldot/g
 s/@NRM2@/lnrm2/g
 
 
-s/@MPI_TYPE@/psb_mpi_ipk_integer/g
-s/@PSB_SWAP_TAG@/psb_int8_swap_tag/g
+s/@MPI_TYPE@/psb_mpi_lpk_int/g
+s/@PSB_SWAP_TAG@/psb_long_swap_tag/g

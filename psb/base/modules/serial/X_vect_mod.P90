@@ -64,8 +64,9 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: ins_v    => @X@_vect_ins_v
     generic, public    :: ins      => ins_v, ins_a
     procedure, pass(x) :: bld_x    => @X@_vect_bld_x
-    procedure, pass(x) :: bld_n    => @X@_vect_bld_n
-    generic, public    :: bld      => bld_x, bld_n
+    procedure, pass(x) :: bld_mn   => @X@_vect_bld_mn
+    procedure, pass(x) :: bld_en   => @X@_vect_bld_en
+    generic, public    :: bld      => bld_x, bld_mn, bld_en
     procedure, pass(x) :: get_vect => @X@_vect_get_vect
     procedure, pass(x) :: cnv      => @X@_vect_cnv
     procedure, pass(x) :: set_scal => @X@_vect_set_scal
@@ -116,7 +117,8 @@ module psb_@X@_vect_mod
        & @X@_vect_all, @X@_vect_reall, @X@_vect_zero,  @X@_vect_asb, &
        & @X@_vect_gthab, @X@_vect_gthzv, @X@_vect_sctb, &
        & @X@_vect_free, @X@_vect_ins_a, @X@_vect_ins_v, @X@_vect_bld_x, &
-       & @X@_vect_bld_n, @X@_vect_get_vect, @X@_vect_cnv, @X@_vect_set_scal, &
+       & @X@_vect_bld_mn, @X@_vect_bld_en, @X@_vect_get_vect, &
+       & @X@_vect_cnv, @X@_vect_set_scal, &
        & @X@_vect_set_vect, @X@_vect_clone, @X@_vect_sync, @X@_vect_is_host, &
        & @X@_vect_is_dev, @X@_vect_is_sync, @X@_vect_set_host, &
        & @X@_vect_set_dev, @X@_vect_set_sync
@@ -222,8 +224,8 @@ contains
   end subroutine @X@_vect_bld_x
 
 
-  subroutine @X@_vect_bld_n(x,n,mold)
-    integer(psb_ipk_), intent(in) :: n
+  subroutine @X@_vect_bld_mn(x,n,mold)
+    integer(psb_mpk_), intent(in) :: n
     class(psb_@X@_vect_type), intent(inout) :: x
     class(psb_@X@_base_vect_type), intent(in), optional :: mold
     integer(psb_ipk_) :: info
@@ -249,7 +251,37 @@ contains
     endif
     if (info == psb_success_) call x%v%bld(n)
 
-  end subroutine @X@_vect_bld_n
+  end subroutine @X@_vect_bld_mn
+
+
+  subroutine @X@_vect_bld_en(x,n,mold)
+    integer(psb_epk_), intent(in) :: n
+    class(psb_@X@_vect_type), intent(inout) :: x
+    class(psb_@X@_base_vect_type), intent(in), optional :: mold
+    integer(psb_ipk_) :: info
+    class(psb_@X@_base_vect_type), pointer :: mld
+
+
+    if (allocated(x%v)) &
+         & call x%free(info)
+
+    if (present(mold)) then 
+#ifdef HAVE_MOLD
+      allocate(x%v,stat=info,mold=mold)
+#else
+      call mold%mold(x%v,info)
+#endif
+    else
+#ifdef HAVE_MOLD
+      allocate(x%v,stat=info, mold=psb_@X@_get_base_vect_default())
+#else 
+      mld = psb_@X@_get_base_vect_default()
+      call mld%mold(x%v,info)
+#endif
+    endif
+    if (info == psb_success_) call x%v%bld(n)
+
+  end subroutine @X@_vect_bld_en
 
   function  @X@_vect_get_vect(x) result(res)
     class(psb_@X@_vect_type), intent(inout)  :: x

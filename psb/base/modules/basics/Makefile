@@ -1,13 +1,14 @@
 #include ../../Make.inc
-TOP=../../..
+TOP=../../../..
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_tools_mod.p90 
-SRC=
-SRCI=Xi_mod.p90 
+VSRC=
+SRC=X_realloc_mod.P90
+SRCI=
+#Xi_p2p_mod.P90 Xi_penv_mod.P90 Xi_reduce_mod.P90 
 
 
 
@@ -23,14 +24,13 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint sauxil sbasics scomm spsb sser 
+src: ssingle sdouble scomplex sdcompl smint seint
+
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -40,19 +40,12 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-sint:
-	$(MAKE) vsrc isrc ARITH=i
+smint:
+	$(MAKE) bsrc ARITH=m
 
-sauxil:
-	cd auxil && $(MAKE) src
-sbasics:
-	cd basics && $(MAKE) src
-scomm:
-	cd comm && $(MAKE) src
-spsb:
-	cd psblas && $(MAKE) src
-sser:
-	cd serial && $(MAKE) src
+seint:
+	$(MAKE) bsrc ARITH=e
+
 all:  single double complex dcompl
 
 single:
@@ -84,11 +77,6 @@ $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90
 
 
 clean:
-	cd auxil && $(MAKE) clean
-	cd basics && $(MAKE) clean	
-	cd comm && $(MAKE) clean
-	cd psblas && $(MAKE) clean
-	cd serial && $(MAKE) clean
 	/bin/rm -f *.f90 *.F90 *.o 
 
 
