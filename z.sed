@@ -22,6 +22,7 @@ s/@NRM2@/dznrm2/g
 /^ *@REALS@ *$/,/^ *@REALE@ *$/d
 /^ *@CPLXS@ *$/d
 /^ *@CPLXE@ *$/d
+/^ *@NOTCPLXS@ *$/,/^ *@NOTCPLXE@ *$/d
 /^ *@DPKS@ *$/d
 /^ *@DPKE@ *$/d
 /^ *@SPKS@ *$/,/^ *@SPKE@ *$/d

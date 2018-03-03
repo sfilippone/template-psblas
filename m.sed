@@ -18,6 +18,8 @@ s/@RONE@/mone/g
 /^ *@INTS@ *$/d
 /^ *@INTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
+/^ *@NOTCPLXS@ *$/d
+/^ *@NOTCPLXE@ *$/d
 /^ *@REALS@ *$/d
 /^ *@REALE@ *$/d
 

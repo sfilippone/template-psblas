@@ -8,9 +8,9 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 VSRC=
 
 SRC=X_realloc_mod.P90
-SRCI=Xi_p2p_mod.P90 
+SRCI=Xi_p2p_mod.P90  Xi_reduce_mod.P90 
 
-#Xi_penv_mod.P90 Xi_reduce_mod.P90 
+#Xi_penv_mod.P90
 
 
 

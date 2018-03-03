@@ -21,6 +21,8 @@ s/@NRM2@/snrm2/g
 /^ *@NOTINTS@ *$/d
 /^ *@NOTINTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
+/^ *@NOTCPLXS@ *$/d
+/^ *@NOTCPLXE@ *$/d
 /^ *@REALS@ *$/d
 /^ *@REALE@ *$/d
 /^ *@DPKS@ *$/,/^ *@DPKE@ *$/d
