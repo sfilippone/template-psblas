@@ -25,5 +25,6 @@ s/@DOT@/ldot/g
 s/@NRM2@/lnrm2/g
 
 
-s/@MPI_TYPE@/psb_mpi_lpk_int/g
+s/@MPI_TYPE@/psb_mpi_lpk_/g
+s/@PSB_TAG@/psb_long_tag/g
 s/@PSB_SWAP_TAG@/psb_long_swap_tag/g

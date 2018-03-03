@@ -28,7 +28,8 @@ s/@NRM2@/dnrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_r_dpk_/g
-s/@PSB_SWAP_TAG@/psb_double_swap_tag/g
+s/@PSB_TAG@/psb_double_tag/g
+s/@PSB_SWAP_TAG@/psb_double_swap_tag/g	
 
 s/@SPGPU_TYPE@/spgpu_type_double/g
 

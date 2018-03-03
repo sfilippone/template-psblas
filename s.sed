@@ -1,3 +1,4 @@
+
 s/@X@/s/g
 s/@CONJG@//g
 s/@TYPE@/real/g
@@ -27,6 +28,7 @@ s/@NRM2@/snrm2/g
 /^ *@SPKE@ *$/d
 
 s/@MPI_TYPE@/psb_mpi_r_spk_/g
+s/@PSB_TAG@/psb_real_tag/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
 
 s/@SPGPU_TYPE@/spgpu_type_float/g

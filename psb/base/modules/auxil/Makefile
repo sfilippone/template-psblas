@@ -18,9 +18,6 @@ FVSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(VSRC)
 FVSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(VSRC))))
 FVSRC= $(FVSRC1) $(FVSRC2)
 FSRC=$(FSRC1) $(FSRC2) 
-FOBJS1=$(FSRC1:.f90=.o)
-FOBJS2=$(FSRC2:.F90=.o)
-FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
 # OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
@@ -44,22 +41,11 @@ sint:
 slong:
 	$(MAKE) vsrc isrc ARITH=l
 
-all:  single double complex dcompl
-
-single:
-	$(MAKE) lib ARITH=s
-double:
-	$(MAKE) lib ARITH=d
-complex:
-	$(MAKE) lib ARITH=c
-dcompl:
-	$(MAKE) lib ARITH=z
 
 bsrc: vsrc isrc $(FSRC)
 vsrc: $(FVSRC)
 isrc: $(FSRCI)
 
-lib: $(FOBJS)
 
 X_map.p90:  X_linmap_mod.p90 
 	touch $@

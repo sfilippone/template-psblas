@@ -27,7 +27,8 @@ s/@NRM2@/scnrm2/g
 /^ *@SPKE@ *$/d
 
 s/@MPI_TYPE@/psb_mpi_c_spk_/g
-s/@PSB_SWAP_TAG@/psb_complex_swap_tag/g
+s/@PSB_TAG@/psb_complex_tag/g
+s/@PSB_SWAP_TAG@/psb_complex_swap_tag/g	
 
 s/@SPGPU_TYPE@/spgpu_type_complex_float/g
 
