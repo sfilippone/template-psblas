@@ -1,0 +1,153 @@
+!   
+!                Parallel Sparse BLAS  version 3.5
+!      (C) Copyright 2006-2018
+!        Salvatore Filippone    
+!        Alfredo Buttari      
+!   
+!    Redistribution and use in source and binary forms, with or without
+!    modification, are permitted provided that the following conditions
+!    are met:
+!      1. Redistributions of source code must retain the above copyright
+!         notice, this list of conditions and the following disclaimer.
+!      2. Redistributions in binary form must reproduce the above copyright
+!         notice, this list of conditions, and the following disclaimer in the
+!         documentation and/or other materials provided with the distribution.
+!      3. The name of the PSBLAS group or the names of its contributors may
+!         not be used to endorse or promote products derived from this
+!         software without specific written permission.
+!   
+!    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!    POSSIBILITY OF SUCH DAMAGE.
+!   
+!    
+!
+!  Sorting routines
+!  References:
+!  D. Knuth
+!  The Art of Computer Programming, vol. 3
+!  Addison-Wesley
+!  
+!  Aho, Hopcroft, Ullman
+!  Data Structures and Algorithms
+!  Addison-Wesley
+!
+module psb_@X@_isort_mod
+  use psb_const_mod
+
+  interface psb_isort
+    subroutine psb_@X@isort(x,ix,dir,flag)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(psb_ipk_), optional, intent(in)    :: dir, flag
+      integer(@IXKIND@), optional, intent(inout) :: ix(:)
+    end subroutine psb_@X@isort
+  end interface psb_isort
+
+
+
+  interface 
+    @REALS@
+    subroutine psi_@X@isrx_up(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@isrx_up
+    subroutine psi_@X@isrx_dw(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@isrx_dw
+    subroutine psi_@X@isr_up(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@isr_up
+    subroutine psi_@X@isr_dw(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@isr_dw
+    @REALE@
+    @CPLXS@
+    subroutine psi_@X@lisrx_up(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@lisrx_up
+    subroutine psi_@X@lisrx_dw(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@lisrx_dw
+    subroutine psi_@X@lisr_up(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@lisr_up
+    subroutine psi_@X@lisr_dw(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@lisr_dw
+    subroutine psi_@X@alisrx_up(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@alisrx_up
+    subroutine psi_@X@alisrx_dw(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@alisrx_dw
+    subroutine psi_@X@alisr_up(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@alisr_up
+    subroutine psi_@X@alisr_dw(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@alisr_dw
+    @CPLXE@
+    subroutine psi_@X@aisrx_up(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@aisrx_up
+    subroutine psi_@X@aisrx_dw(n,x,ix)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(inout) :: ix(:)
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@aisrx_dw
+    subroutine psi_@X@aisr_up(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@aisr_up
+    subroutine psi_@X@aisr_dw(n,x)
+      import 
+      @TYPE@(@FKIND@), intent(inout)  :: x(:) 
+      integer(@IXKIND@), intent(in)   :: n
+    end subroutine psi_@X@aisr_dw
+  end interface
+
+
+end module psb_@X@_isort_mod

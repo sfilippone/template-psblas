@@ -42,7 +42,7 @@
   !
   @INTS@
   logical function psb_@X@isaperm(n,eip)               
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@isaperm
+    use psb_sort_mod, psb_protect_name => psb_@X@isaperm
     implicit none
 
     integer(@FKIND@), intent(in) :: n                              
@@ -99,7 +99,7 @@
   @INTE@
 
   subroutine psb_@X@msort_u(x,nout,dir)
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@msort_u
+    use psb_sort_mod, psb_protect_name => psb_@X@msort_u
     use psb_error_mod
     implicit none 
     @TYPE@(@FKIND@), intent(inout)           :: x(:) 
@@ -136,7 +136,7 @@
   @REALS@
 
   function  psb_@X@bsrch(key,n,v) result(ipos)
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@bsrch
+    use psb_sort_mod, psb_protect_name => psb_@X@bsrch
     implicit none
     integer(psb_ipk_) :: ipos, n
     @TYPE@(@FKIND@) :: key
@@ -173,7 +173,7 @@
   end function psb_@X@bsrch
 
   function psb_@X@ssrch(key,n,v) result(ipos)
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@ssrch
+    use psb_sort_mod, psb_protect_name => psb_@X@ssrch
     implicit none
     integer(psb_ipk_) :: ipos, n
     @TYPE@(@FKIND@) :: key
@@ -193,7 +193,7 @@
   end function psb_@X@ssrch
 
   subroutine psb_@X@msort(x,ix,dir,flag)
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@msort
+    use psb_sort_mod, psb_protect_name => psb_@X@msort
     use psb_error_mod
     use psb_ip_reord_mod
     implicit none 
@@ -717,7 +717,7 @@
 
   @CPLXS@
   subroutine psb_@X@msort(x,ix,dir,flag)
-    use psb_@X@_sort_mod, psb_protect_name => psb_@X@msort
+    use psb_sort_mod, psb_protect_name => psb_@X@msort
     use psb_error_mod
     use psb_ip_reord_mod
     implicit none 

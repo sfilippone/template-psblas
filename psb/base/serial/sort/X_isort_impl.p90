@@ -41,7 +41,7 @@
 !  Addison-Wesley
 !
 subroutine psb_@X@isort(x,ix,dir,flag)
-  use psb_@X@_sort_mod, psb_protect_name => psb_@X@isort
+  use psb_sort_mod, psb_protect_name => psb_@X@isort
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -161,7 +161,7 @@ end subroutine psb_@X@isort
 
 @REALS@
 subroutine psi_@X@isrx_up(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isrx_up
+  use psb_sort_mod, psb_protect_name => psi_@X@isrx_up
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -189,7 +189,7 @@ subroutine psi_@X@isrx_up(n,x,idx)
 end subroutine psi_@X@isrx_up
 
 subroutine psi_@X@isrx_dw(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isrx_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@isrx_dw
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -218,7 +218,7 @@ end subroutine psi_@X@isrx_dw
 
 
 subroutine psi_@X@isr_up(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isr_up
+  use psb_sort_mod, psb_protect_name => psi_@X@isr_up
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -242,7 +242,7 @@ subroutine psi_@X@isr_up(n,x)
 end subroutine psi_@X@isr_up
 
 subroutine psi_@X@isr_dw(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@isr_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@isr_dw
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -267,7 +267,7 @@ end subroutine psi_@X@isr_dw
 @REALE@
 @CPLXS@
 subroutine psi_@X@lisrx_up(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisrx_up
+  use psb_sort_mod, psb_protect_name => psi_@X@lisrx_up
   use psb_error_mod
   use psi_lcx_mod
   implicit none 
@@ -297,7 +297,7 @@ subroutine psi_@X@lisrx_up(n,x,idx)
 end subroutine psi_@X@lisrx_up
 
 subroutine psi_@X@lisrx_dw(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisrx_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@lisrx_dw
   use psb_error_mod
   use psi_lcx_mod
   implicit none 
@@ -326,7 +326,7 @@ subroutine psi_@X@lisrx_dw(n,x,idx)
 end subroutine psi_@X@lisrx_dw
 
 subroutine psi_@X@lisr_up(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisr_up
+  use psb_sort_mod, psb_protect_name => psi_@X@lisr_up
   use psb_error_mod
   use psi_lcx_mod
   implicit none 
@@ -351,7 +351,7 @@ subroutine psi_@X@lisr_up(n,x)
 end subroutine psi_@X@lisr_up
 
 subroutine psi_@X@lisr_dw(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@lisr_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@lisr_dw
   use psb_error_mod
   use psi_lcx_mod
   implicit none 
@@ -376,7 +376,7 @@ subroutine psi_@X@lisr_dw(n,x)
 end subroutine psi_@X@lisr_dw
 
 subroutine psi_@X@alisrx_up(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisrx_up
+  use psb_sort_mod, psb_protect_name => psi_@X@alisrx_up
   use psb_error_mod
   use psi_alcx_mod
   implicit none 
@@ -405,7 +405,7 @@ subroutine psi_@X@alisrx_up(n,x,idx)
 end subroutine psi_@X@alisrx_up
 
 subroutine psi_@X@alisrx_dw(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisrx_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@alisrx_dw
   use psb_error_mod
   use psi_alcx_mod
   implicit none 
@@ -434,7 +434,7 @@ subroutine psi_@X@alisrx_dw(n,x,idx)
 end subroutine psi_@X@alisrx_dw
 
 subroutine psi_@X@alisr_up(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisr_up
+  use psb_sort_mod, psb_protect_name => psi_@X@alisr_up
   use psb_error_mod
   use psi_alcx_mod
   implicit none 
@@ -459,7 +459,7 @@ subroutine psi_@X@alisr_up(n,x)
 end subroutine psi_@X@alisr_up
 
 subroutine psi_@X@alisr_dw(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@alisr_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@alisr_dw
   use psb_error_mod
   use psi_alcx_mod
   implicit none 
@@ -485,7 +485,7 @@ end subroutine psi_@X@alisr_dw
 @CPLXE@
 
 subroutine psi_@X@aisrx_up(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisrx_up
+  use psb_sort_mod, psb_protect_name => psi_@X@aisrx_up
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -513,7 +513,7 @@ subroutine psi_@X@aisrx_up(n,x,idx)
 end subroutine psi_@X@aisrx_up
 
 subroutine psi_@X@aisrx_dw(n,x,idx)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisrx_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@aisrx_dw
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -541,7 +541,7 @@ subroutine psi_@X@aisrx_dw(n,x,idx)
 end subroutine psi_@X@aisrx_dw
 
 subroutine psi_@X@aisr_up(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisr_up
+  use psb_sort_mod, psb_protect_name => psi_@X@aisr_up
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
@@ -565,7 +565,7 @@ subroutine psi_@X@aisr_up(n,x)
 end subroutine psi_@X@aisr_up
 
 subroutine psi_@X@aisr_dw(n,x)
-  use psb_@X@_sort_mod, psb_protect_name => psi_@X@aisr_dw
+  use psb_sort_mod, psb_protect_name => psi_@X@aisr_dw
   use psb_error_mod
   implicit none 
   @TYPE@(@FKIND@), intent(inout)  :: x(:) 
