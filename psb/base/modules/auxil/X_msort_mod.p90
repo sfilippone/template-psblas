@@ -74,7 +74,7 @@ module psb_@X@_msort_mod
 
   @REALS@
 
-  interface 
+  interface psi_msort_up
     subroutine psi_@X@_msort_up(n,k,l,iret)
       import
       implicit none
@@ -82,6 +82,8 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_msort_up
+  end interface psi_msort_up
+  interface psi_msort_dw
     subroutine psi_@X@_msort_dw(n,k,l,iret)
       import
       implicit none
@@ -89,10 +91,10 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_msort_dw
-  end interface
+  end interface psi_msort_dw
   @REALE@
   @CPLXS@
-  interface 
+  interface psi_lmsort_up
     subroutine psi_@X@_lmsort_up(n,k,l,iret)
       import
       implicit none
@@ -100,6 +102,8 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_lmsort_up
+  end interface psi_lmsort_up
+  interface psi_lmsort_dw
     subroutine psi_@X@_lmsort_dw(n,k,l,iret)
       import
       implicit none
@@ -107,6 +111,8 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_lmsort_dw
+  end interface psi_lmsort_dw
+  interface psi_almsort_up
     subroutine psi_@X@_almsort_up(n,k,l,iret)
       import
       implicit none
@@ -114,6 +120,8 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_almsort_up
+  end interface psi_almsort_up
+  interface psi_almsort_dw
     subroutine psi_@X@_almsort_dw(n,k,l,iret)
       import
       implicit none
@@ -121,9 +129,9 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_almsort_dw
-  end interface
+  end interface psi_almsort_dw
   @CPLXE@
-  interface 
+  interface psi_amsort_up
     subroutine psi_@X@_amsort_up(n,k,l,iret)
       import
       implicit none
@@ -131,6 +139,8 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_amsort_up
+  end interface psi_amsort_up
+  interface psi_amsort_dw
     subroutine psi_@X@_amsort_dw(n,k,l,iret)
       import
       implicit none
@@ -138,6 +148,6 @@ module psb_@X@_msort_mod
       @TYPE@(@FKIND@)  ::  k(n)
       integer(@IXKIND@) :: l(0:n+1)
     end subroutine psi_@X@_amsort_dw
-  end interface
+  end interface psi_amsort_dw
   
 end module psb_@X@_msort_mod
