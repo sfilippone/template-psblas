@@ -51,12 +51,19 @@ contains
   
   subroutine psb_ip_reord_@X@1(n,x,iaux)
     integer(psb_ipk_), intent(in) :: n
+@NOTINTS@    
     integer(@IXKIND@) :: iaux(0:*) 
     @TYPE@(@FKIND@)   :: x(*)
-    
     integer(@IXKIND@) :: lswap, lp, k
     @TYPE@(@FKIND@) :: swap
-
+@NOTINTE@
+@INTS@    
+    integer(@FKIND@) :: iaux(0:*) 
+    @TYPE@(@FKIND@)   :: x(*)
+    integer(@FKIND@) :: lswap, lp, k
+    @TYPE@(@FKIND@) :: swap
+@INTE@
+    
     lp = iaux(0)
     k  = 1
     do 
@@ -79,12 +86,22 @@ contains
   
   subroutine psb_ip_reord_@X@1i1(n,x,indx,iaux)
     integer(psb_ipk_), intent(in) :: n
+@NOTINTS@    
     integer(@IXKIND@) :: iaux(0:*) 
     @TYPE@(@FKIND@)   :: x(*)
     integer(@IXKIND@) :: indx(*) 
-    
     integer(@IXKIND@) :: lswap, lp, k, ixswap
     @TYPE@(@FKIND@) :: swap
+@NOTINTE@
+@INTS@    
+    integer(@FKIND@) :: iaux(0:*) 
+    @TYPE@(@FKIND@)   :: x(*)
+    integer(@FKIND@) :: indx(*) 
+    integer(@FKIND@) :: lswap, lp, k, ixswap
+    @TYPE@(@FKIND@) :: swap
+@INTE@
+
+
 
     lp = iaux(0)
     k  = 1
@@ -150,7 +167,6 @@ contains
     integer(@IXKIND@) :: iaux(0:*) 
     @TYPE@(@FKIND@)   :: x(*)
     integer(@IXKIND@) :: i1(*), i2(*), i3(*) 
-
     
     integer(@IXKIND@) :: lswap, lp, k, isw1, isw2, isw3
     @TYPE@(@FKIND@)  :: swap
