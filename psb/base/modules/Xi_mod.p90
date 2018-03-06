@@ -31,7 +31,7 @@
 !    
 module psi_@X@_mod
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_epk_
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_epk_, psb_lpk_
   use psi_m_comm_a_mod
   use psi_e_comm_a_mod
   @INTE@
@@ -49,7 +49,8 @@ module psi_@X@_mod
     subroutine psi_compute_size(desc_data,&
          & index_in, dl_lda, info)
       import 
-      integer(psb_ipk_) :: info, dl_lda
+      integer(psb_ipk_) :: info
+      integer(psb_ipk_) :: dl_lda
       integer(psb_ipk_) :: desc_data(:), index_in(:)
     end subroutine psi_compute_size
   end interface
@@ -71,6 +72,7 @@ module psi_@X@_mod
       integer(psb_ipk_), intent(in)                 :: index_in(:)
       integer(psb_ipk_), allocatable, intent(inout) :: index_out(:)
       logical                             :: glob_idx
+      integer(psb_ipk_), intent(out)      :: info
     end subroutine psi_crea_index
   end interface
 
@@ -90,8 +92,9 @@ module psi_@X@_mod
       type(psb_desc_type) :: desc
       integer(psb_ipk_) :: index_in(:),dep_list(:)
       integer(psb_ipk_),allocatable  :: desc_index(:)
-      integer(psb_ipk_) :: length_dl,nsnd,nrcv,info
+      integer(psb_ipk_) :: length_dl,nsnd,nrcv
       logical         :: isglob_in
+      integer(psb_ipk_) :: info
     end subroutine psi_desc_index
   end interface
 
@@ -106,7 +109,9 @@ module psi_@X@_mod
   interface
     subroutine psi_sort_dl(dep_list,l_dep_list,np,info)
       import 
-      integer(psb_ipk_) :: np,dep_list(:,:), l_dep_list(:), info
+      integer(psb_ipk_) :: dep_list(:,:), l_dep_list(:)
+      integer(psb_mpk_) :: np
+      integer(psb_ipk_) :: info
     end subroutine psi_sort_dl
   end interface
 
@@ -116,8 +121,10 @@ module psi_@X@_mod
       import 
       logical :: is_bld, is_upd
       integer(psb_ipk_) :: ictxt
-      integer(psb_ipk_) :: np,dl_lda,mode, info
+      integer(psb_ipk_) :: dl_lda,mode
       integer(psb_ipk_) :: desc_str(*),dep_list(dl_lda,0:np),length_dl(0:np)
+      integer(psb_mpk_) :: np
+      integer(psb_ipk_) :: info
     end subroutine psi_extract_dep_list
   end interface
 
