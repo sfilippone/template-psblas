@@ -43,6 +43,7 @@ sdcompl:
 
 sint:
 	$(MAKE) vsrc isrc ARITH=i
+	$(MAKE) vsrc isrc ARITH=l
 
 all:  single double complex dcompl
 

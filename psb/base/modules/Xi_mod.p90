@@ -45,98 +45,98 @@ module psi_@X@_mod
 
   
   @INTS@
-  interface
-    subroutine psi_compute_size(desc_data,&
+  interface psi_compute_size
+    subroutine psi_@X@_compute_size(desc_data,&
          & index_in, dl_lda, info)
       import 
       integer(psb_ipk_) :: info
-      integer(psb_ipk_) :: dl_lda
-      integer(psb_ipk_) :: desc_data(:), index_in(:)
-    end subroutine psi_compute_size
+      @TYPE@(@FKIND@) :: dl_lda
+      @TYPE@(@FKIND@) :: desc_data(:), index_in(:)
+    end subroutine psi_@X@_compute_size
   end interface
 
-  interface
-    subroutine psi_crea_bnd_elem(bndel,desc_a,info)
+  interface psi_crea_bnd_elem
+    subroutine psi_@X@_crea_bnd_elem(bndel,desc_a,info)
       import 
-      integer(psb_ipk_), allocatable            :: bndel(:)
+      @TYPE@(@FKIND@), allocatable            :: bndel(:)
       type(psb_desc_type), intent(in) :: desc_a
       integer(psb_ipk_), intent(out)            :: info
-    end subroutine psi_crea_bnd_elem
+    end subroutine psi_@X@_crea_bnd_elem
   end interface
 
-  interface
-    subroutine psi_crea_index(desc_a,index_in,index_out,glob_idx,nxch,nsnd,nrcv,info)
+  interface psi_crea_index
+    subroutine psi_@X@_crea_index(desc_a,index_in,index_out,glob_idx,nxch,nsnd,nrcv,info)
       import 
       type(psb_desc_type), intent(in)     :: desc_a
-      integer(psb_ipk_), intent(out)                :: info,nxch,nsnd,nrcv
-      integer(psb_ipk_), intent(in)                 :: index_in(:)
-      integer(psb_ipk_), allocatable, intent(inout) :: index_out(:)
+      @TYPE@(@FKIND@), intent(out)                :: nxch,nsnd,nrcv
+      @TYPE@(@FKIND@), intent(in)                 :: index_in(:)
+      @TYPE@(@FKIND@), allocatable, intent(inout) :: index_out(:)
       logical                             :: glob_idx
       integer(psb_ipk_), intent(out)      :: info
-    end subroutine psi_crea_index
+    end subroutine psi_@X@_crea_index
   end interface
 
-  interface
-    subroutine psi_crea_ovr_elem(me,desc_overlap,ovr_elem,info)
+  interface psi_crea_ovr_elem
+    subroutine psi_@X@_crea_ovr_elem(me,desc_overlap,ovr_elem,info)
       import 
-      integer(psb_ipk_), intent(in)               :: me, desc_overlap(:)
-      integer(psb_ipk_), allocatable, intent(out) :: ovr_elem(:,:)
+      @TYPE@(@FKIND@), intent(in)               :: me, desc_overlap(:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: ovr_elem(:,:)
       integer(psb_ipk_), intent(out)              :: info
-    end subroutine psi_crea_ovr_elem
+    end subroutine psi_@X@_crea_ovr_elem
   end interface
 
-  interface
-    subroutine psi_desc_index(desc,index_in,dep_list,&
+  interface psi_desc_index
+    subroutine psi_@X@_desc_index(desc,index_in,dep_list,&
          & length_dl,nsnd,nrcv,desc_index,isglob_in,info)
       import 
       type(psb_desc_type) :: desc
-      integer(psb_ipk_) :: index_in(:),dep_list(:)
-      integer(psb_ipk_),allocatable  :: desc_index(:)
-      integer(psb_ipk_) :: length_dl,nsnd,nrcv
+      @TYPE@(@FKIND@) :: index_in(:),dep_list(:)
+      @TYPE@(@FKIND@),allocatable  :: desc_index(:)
+      @TYPE@(@FKIND@) :: length_dl,nsnd,nrcv
       logical         :: isglob_in
       integer(psb_ipk_) :: info
-    end subroutine psi_desc_index
+    end subroutine psi_@X@_desc_index
   end interface
 
-  interface
-    subroutine psi_dl_check(dep_list,dl_lda,np,length_dl)
+  interface psi_dl_check
+    subroutine psi_@X@_dl_check(dep_list,dl_lda,np,length_dl)
       import 
-      integer(psb_ipk_) :: np,dl_lda,length_dl(0:np)
-      integer(psb_ipk_) :: dep_list(dl_lda,0:np)
-    end subroutine psi_dl_check
+      @TYPE@(@FKIND@) :: np,dl_lda,length_dl(0:np)
+      @TYPE@(@FKIND@) :: dep_list(dl_lda,0:np)
+    end subroutine psi_@X@_dl_check
   end interface
 
-  interface
-    subroutine psi_sort_dl(dep_list,l_dep_list,np,info)
+  interface psi_sort_dl
+    subroutine psi_@X@_sort_dl(dep_list,l_dep_list,np,info)
       import 
-      integer(psb_ipk_) :: dep_list(:,:), l_dep_list(:)
+      @TYPE@(@FKIND@) :: dep_list(:,:), l_dep_list(:)
       integer(psb_mpk_) :: np
       integer(psb_ipk_) :: info
-    end subroutine psi_sort_dl
+    end subroutine psi_@X@_sort_dl
   end interface
 
-  interface
-    subroutine psi_extract_dep_list(ictxt,is_bld,is_upd,desc_str,dep_list,&
+  interface psi_extract_dep_list
+    subroutine psi_@X@_extract_dep_list(ictxt,is_bld,is_upd,desc_str,dep_list,&
          & length_dl,np,dl_lda,mode,info)
       import 
       logical :: is_bld, is_upd
-      integer(psb_ipk_) :: ictxt
-      integer(psb_ipk_) :: dl_lda,mode
-      integer(psb_ipk_) :: desc_str(*),dep_list(dl_lda,0:np),length_dl(0:np)
+      @TYPE@(@FKIND@) :: ictxt
+      @TYPE@(@FKIND@) :: dl_lda,mode
+      @TYPE@(@FKIND@) :: desc_str(*),dep_list(dl_lda,0:np),length_dl(0:np)
       integer(psb_mpk_) :: np
       integer(psb_ipk_) :: info
-    end subroutine psi_extract_dep_list
+    end subroutine psi_@X@_extract_dep_list
   end interface
 
   interface psi_fnd_owner
-    subroutine psi_fnd_owner(nv,idx,iprc,desc,info)
+    subroutine psi_@X@_fnd_owner(nv,idx,iprc,desc,info)
       import 
-      integer(psb_ipk_), intent(in) :: nv
-      integer(psb_ipk_), intent(in) ::  idx(:)
-      integer(psb_ipk_), allocatable, intent(out) ::  iprc(:)
+      @TYPE@(@FKIND@), intent(in) :: nv
+      @TYPE@(@FKIND@), intent(in) ::  idx(:)
+      @TYPE@(@FKIND@), allocatable, intent(out) ::  iprc(:)
       type(psb_desc_type), intent(in) :: desc
       integer(psb_ipk_), intent(out) :: info
-    end subroutine psi_fnd_owner
+    end subroutine psi_@X@_fnd_owner
   end interface psi_fnd_owner
 
   interface psi_bld_tmphalo
@@ -149,67 +149,67 @@ module psi_@X@_mod
 
 
   interface psi_bld_tmpovrl
-    subroutine psi_bld_tmpovrl(iv,desc,info)
+    subroutine psi_@X@_bld_tmpovrl(iv,desc,info)
       import 
-      integer(psb_ipk_), intent(in)  :: iv(:)
+      @TYPE@(@FKIND@), intent(in)  :: iv(:)
       type(psb_desc_type), intent(inout) :: desc
       integer(psb_ipk_), intent(out) :: info
-    end subroutine psi_bld_tmpovrl
+    end subroutine psi_@X@_bld_tmpovrl
   end interface psi_bld_tmpovrl
 
   interface psi_cnv_dsc
-    subroutine psi_cnv_dsc(halo_in,ovrlap_in,ext_in,cdesc, info, mold)
+    subroutine psi_@X@_cnv_dsc(halo_in,ovrlap_in,ext_in,cdesc, info, mold)
       import 
-      integer(psb_ipk_), intent(in)                :: halo_in(:), ovrlap_in(:),ext_in(:)
+      @TYPE@(@FKIND@), intent(in)        :: halo_in(:), ovrlap_in(:),ext_in(:)
       type(psb_desc_type), intent(inout) :: cdesc
       integer(psb_ipk_), intent(out)               :: info
-      class(psb_i_base_vect_type), optional, intent(in) :: mold
-    end subroutine psi_cnv_dsc
+      class(psb_@X@_base_vect_type), optional, intent(in) :: mold
+    end subroutine psi_@X@_cnv_dsc
   end interface psi_cnv_dsc
 
   interface psi_renum_index
-    subroutine psi_renum_index(iperm,idx,info)
+    subroutine psi_@X@_renum_index(iperm,idx,info)
       import 
       integer(psb_ipk_), intent(out)   :: info
-      integer(psb_ipk_), intent(in)    :: iperm(:)
-      integer(psb_ipk_), intent(inout) :: idx(:)
-    end subroutine psi_renum_index
+      @TYPE@(@FKIND@), intent(in)    :: iperm(:)
+      @TYPE@(@FKIND@), intent(inout) :: idx(:)
+    end subroutine psi_@X@_renum_index
   end interface psi_renum_index
 
   interface psi_inner_cnv
-    subroutine psi_inner_cnvs(x,hashmask,hashv,glb_lc)
+    subroutine psi_@X@_inner_cnvs(x,hashmask,hashv,glb_lc)
       import 
-      integer(psb_ipk_), intent(in)    :: hashmask,hashv(0:),glb_lc(:,:)
-      integer(psb_ipk_), intent(inout) :: x
-    end subroutine psi_inner_cnvs
-    subroutine psi_inner_cnvs2(x,y,hashmask,hashv,glb_lc)
+      @TYPE@(@FKIND@), intent(in)    :: hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(inout) :: x
+    end subroutine psi_@X@_inner_cnvs
+    subroutine psi_@X@_inner_cnvs2(x,y,hashmask,hashv,glb_lc)
       import 
-      integer(psb_ipk_), intent(in)  :: hashmask,hashv(0:),glb_lc(:,:)
-      integer(psb_ipk_), intent(in)  :: x
-      integer(psb_ipk_), intent(out) :: y
-    end subroutine psi_inner_cnvs2
-    subroutine psi_inner_cnv1(n,x,hashmask,hashv,glb_lc,mask)
+      @TYPE@(@FKIND@), intent(in)  :: hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(in)  :: x
+      @TYPE@(@FKIND@), intent(out) :: y
+    end subroutine psi_@X@_inner_cnvs2
+    subroutine psi_@X@_inner_cnv1(n,x,hashmask,hashv,glb_lc,mask)
       import 
-      integer(psb_ipk_), intent(in)    :: n,hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(in)    :: n,hashmask,hashv(0:),glb_lc(:,:)
       logical, intent(in), optional    :: mask(:)
-      integer(psb_ipk_), intent(inout) :: x(:)
-    end subroutine psi_inner_cnv1
-    subroutine psi_inner_cnv2(n,x,y,hashmask,hashv,glb_lc,mask)
+      @TYPE@(@FKIND@), intent(inout) :: x(:)
+    end subroutine psi_@X@_inner_cnv1
+    subroutine psi_@X@_inner_cnv2(n,x,y,hashmask,hashv,glb_lc,mask)
       import 
-      integer(psb_ipk_), intent(in)  :: n, hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(in)  :: n, hashmask,hashv(0:),glb_lc(:,:)
       logical, intent(in),optional  :: mask(:)
-      integer(psb_ipk_), intent(in)  :: x(:)
-      integer(psb_ipk_), intent(out) :: y(:)
-    end subroutine psi_inner_cnv2
+      @TYPE@(@FKIND@), intent(in)  :: x(:)
+      @TYPE@(@FKIND@), intent(out) :: y(:)
+    end subroutine psi_@X@_inner_cnv2
   end interface psi_inner_cnv
 
-  interface 
-    subroutine psi_bld_ovr_mst(me,ovrlap_elem,mst_idx,info)
+  interface psi_bld_ovr_mst
+    subroutine psi_@X@_bld_ovr_mst(me,ovrlap_elem,mst_idx,info)
       import 
-      integer(psb_ipk_), intent(in)               :: me, ovrlap_elem(:,:)
-      integer(psb_ipk_), allocatable, intent(out) :: mst_idx(:) 
+      @TYPE@(@FKIND@), intent(in)               :: me, ovrlap_elem(:,:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: mst_idx(:) 
       integer(psb_ipk_), intent(out)              :: info
-    end subroutine psi_bld_ovr_mst
+    end subroutine psi_@X@_bld_ovr_mst
   end interface
 
   @INTE@
