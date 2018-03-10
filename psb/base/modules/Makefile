@@ -49,8 +49,8 @@ sint:
 
 sauxil:
 	cd auxil && $(MAKE) src
-sbasics:
-	cd basics && $(MAKE) src
+spenv:
+	cd penv && $(MAKE) src
 scomm:
 	cd comm && $(MAKE) src
 spsb:
@@ -92,7 +92,7 @@ $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90
 
 clean:
 	cd auxil && $(MAKE) clean
-	cd basics && $(MAKE) clean	
+	cd penv && $(MAKE) clean	
 	cd comm && $(MAKE) clean
 	cd psblas && $(MAKE) clean
 	cd serial && $(MAKE) clean
