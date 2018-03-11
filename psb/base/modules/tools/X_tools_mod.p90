@@ -36,8 +36,14 @@ Module psb_@X@_tools_mod
   use psb_@X@_mat_mod, only : psb_@X@spmat_type, psb_@X@_base_sparse_mat
   @NOTINTE@
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_success_
+  @IINTS@
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_lpk_, psb_success_
   use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type
+  @IINTE@
+  @LINTS@
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_lpk_, psb_success_
+  use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type, psb_i_vect_type
+  @LINTE@
   @INTE@
   use psb_@X@_multivect_mod, only : psb_@X@_base_multivect_type, psb_@X@_multivect_type
 
@@ -362,6 +368,7 @@ Module psb_@X@_tools_mod
   @NOTINTE@
   
   @INTS@
+  @IINTS@
   interface psb_glob_to_loc
     subroutine psb_glob_to_loc2v(x,y,desc_a,info,iact,owned)
       import
@@ -545,6 +552,6 @@ contains
 
     res = (lx>0)
   end subroutine psb_local_index_v
-
+  @IINTE@
   @INTE@
 end module psb_@X@_tools_mod
