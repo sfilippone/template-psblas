@@ -15,6 +15,7 @@ s/@RZERO@/mzero/g
 s/@RONE@/mone/g
 
 /^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
+/^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@INTS@ *$/d
 /^ *@INTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d

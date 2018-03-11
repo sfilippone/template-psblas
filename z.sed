@@ -17,6 +17,7 @@ s/@RONE@/done/g
 s/@DOT@/zdotc/g
 s/@NRM2@/dznrm2/g
 /^ *@INTS@ *$/,/^ *@INTE@ *$/d
+/^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@NOTINTS@ *$/d
 /^ *@NOTINTE@ *$/d
 /^ *@REALS@ *$/,/^ *@REALE@ *$/d

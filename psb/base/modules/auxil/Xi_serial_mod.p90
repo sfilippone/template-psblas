@@ -33,6 +33,9 @@ module psi_@X@_serial_mod
   @INTS@
   use psb_const_mod, only : psb_ipk_
   @INTE@
+  @LINTS@
+  use psb_const_mod, only : psb_ipk_, @FKIND@
+  @LINTE@
   @NOTINTS@
   use psb_const_mod, only : psb_ipk_, @FKIND@
   @NOTINTE@
@@ -43,6 +46,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -56,6 +62,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -72,6 +81,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -86,6 +98,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -103,6 +118,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -114,6 +132,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -125,6 +146,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -137,6 +161,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -149,6 +176,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -163,6 +193,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -174,6 +207,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -185,6 +221,9 @@ module psi_@X@_serial_mod
       @INTS@
       import :: psb_ipk_
       @INTE@
+      @LINTS@
+      import :: psb_ipk_, @FKIND@
+      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@

@@ -17,6 +17,9 @@ s/@RONE@/ione/g
 /^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
 /^ *@INTS@ *$/d
 /^ *@INTE@ *$/d
+/^ *@IINTS@ *$/d
+/^ *@IINTE@ *$/d
+/^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
 /^ *@NOTCPLXS@ *$/d
 /^ *@NOTCPLXE@ *$/d
