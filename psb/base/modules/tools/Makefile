@@ -1,14 +1,15 @@
 #include ../../Make.inc
-TOP=../../..
+TOP=../../../..
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=
+VSRC=X_tools_mod.p90 
 SRC=
-SRCI=Xi_mod.P90
+SRCI=
 SRCE=
+
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
@@ -32,7 +33,8 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint sauxil spenv scomm spsb sser stl
+src: ssingle sdouble scomplex sdcompl sint 
+
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -47,19 +49,6 @@ sint:
 	$(MAKE) vsrc isrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
-
-sauxil:
-	cd auxil && $(MAKE) src
-spenv:
-	cd penv && $(MAKE) src
-scomm:
-	cd comm && $(MAKE) src
-spsb:
-	cd psblas && $(MAKE) src
-sser:
-	cd serial && $(MAKE) src
-stl:
-	cd tools && $(MAKE) src
 
 bsrc: vsrc isrc $(FSRC)
 vsrc: $(FVSRC) 
@@ -85,12 +74,6 @@ $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90
 
 
 clean:
-	cd auxil && $(MAKE) clean
-	cd penv && $(MAKE) clean	
-	cd comm && $(MAKE) clean
-	cd psblas && $(MAKE) clean
-	cd serial && $(MAKE) clean
-	cd tools && $(MAKE) clean	
 	/bin/rm -f *.f90 *.F90 *.o 
 
 
