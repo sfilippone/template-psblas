@@ -7,13 +7,16 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 VSRC=X_tools_mod.p90 
 SRC=
-SRCI=Xi_mod.p90 Xi_comm_v_mod.p90
-SRCE=Xi_comm_a_mod.p90
+SRCI=Xi_mod.P90
+#Xi_comm_v_mod.p90
+SRCE=
+#Xi_comm_a_mod.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
 FSRCI=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCI))))
+FSRCI2=$(patsubst %.P90, %.F90, $(subst Xi, psi_$(ARITH), $(filter %.P90, $(SRCI))))
 FSRCE=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCE))))
 FVSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(VSRC))))
 FVSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(VSRC))))
@@ -31,7 +34,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint sauxil sbasics scomm spsb sser 
+src: ssingle sdouble scomplex sdcompl sint sauxil spenv scomm spsb sser 
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -69,8 +72,8 @@ dcompl:
 	$(MAKE) lib ARITH=z
 
 bsrc: vsrc isrc $(FSRC)
-vsrc: $(FVSRC)
-isrc: $(FSRCI)
+vsrc: $(FVSRC) 
+isrc: $(FSRCI) $(FSRCI2)
 esrc: $(FSRCE)
 
 lib: $(FOBJS)
@@ -85,6 +88,8 @@ $(FVSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FVSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90 
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRCI2): psi_$(ARITH)%.F90 : Xi%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@

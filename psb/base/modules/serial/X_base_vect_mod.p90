@@ -50,6 +50,11 @@ module psb_@X@_base_vect_mod
 @NOTINTS@
   use psb_i_base_vect_mod
 @NOTINTE@
+@INTS@
+@LINTS@
+  use psb_i_base_vect_mod
+@LINTE@
+@INTE@
 
   !> \namespace  psb_base_mod  \class psb_@X@_base_vect_type
   !! The psb_@X@_base_vect_type 

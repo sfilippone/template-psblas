@@ -43,6 +43,9 @@ module psb_@X@_vect_mod
   @NOTINTS@
   use psb_i_vect_mod
   @NOTINTE@
+  @LINTS@
+  use psb_i_vect_mod
+  @LINTE@
 
   type psb_@X@_vect_type
     class(psb_@X@_base_vect_type), allocatable :: v 
