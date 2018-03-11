@@ -30,6 +30,7 @@
 !   
 !    
 module psi_@X@_mod
+
 @INTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_epk_, psb_lpk_
   use psi_m_comm_a_mod
@@ -42,7 +43,6 @@ module psi_@X@_mod
   use psb_@X@_base_vect_mod, only : psb_@X@_base_vect_type 
   use psb_@X@_base_multivect_mod, only : psb_@X@_base_multivect_type 
   use psi_@X@_comm_v_mod
-
   
 @INTS@
 @IINTS@
@@ -212,6 +212,7 @@ module psi_@X@_mod
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psi_@X@_bld_ovr_mst
   end interface
+
 @IINTE@
 @INTE@
 end module psi_@X@_mod
