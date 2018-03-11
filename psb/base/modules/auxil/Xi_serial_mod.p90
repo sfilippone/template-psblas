@@ -31,11 +31,8 @@
 !    
 module psi_@X@_serial_mod
   @INTS@
-  use psb_const_mod, only : psb_ipk_
+  use psb_const_mod, only : psb_ipk_, psb_lpk_
   @INTE@
-  @LINTS@
-  use psb_const_mod, only : psb_ipk_, @FKIND@
-  @LINTE@
   @NOTINTS@
   use psb_const_mod, only : psb_ipk_, @FKIND@
   @NOTINTE@
@@ -44,11 +41,8 @@ module psi_@X@_serial_mod
     ! 2-D version
     subroutine psb_@X@gelp(trans,iperm,x,info)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -60,11 +54,8 @@ module psi_@X@_serial_mod
     end subroutine psb_@X@gelp
     subroutine psb_@X@gelpv(trans,iperm,x,info)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -79,11 +70,8 @@ module psi_@X@_serial_mod
   interface psb_geaxpby 
     subroutine psi_@X@axpby(m,n,alpha, x, beta, y, info)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -96,11 +84,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@axpby
     subroutine psi_@X@axpbyv(m,alpha, x, beta, y, info)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -116,11 +101,8 @@ module psi_@X@_serial_mod
   interface psi_gth
     subroutine psi_@X@gthmv(n,k,idx,alpha,x,beta,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -130,11 +112,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@gthmv
     subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -144,11 +123,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@gthv
     subroutine psi_@X@gthzmv(n,k,idx,x,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -159,11 +135,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@gthzmv
     subroutine psi_@X@gthzmm(n,k,idx,x,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -174,11 +147,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@gthzmm
     subroutine psi_@X@gthzv(n,idx,x,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -191,11 +161,8 @@ module psi_@X@_serial_mod
   interface psi_sct
     subroutine psi_@X@sctmm(n,k,idx,x,beta,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -205,11 +172,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@sctmm
     subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
@@ -219,11 +183,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@sctmv
     subroutine psi_@X@sctv(n,idx,x,beta,y)
       @INTS@
-      import :: psb_ipk_
+      import :: psb_ipk_, psb_lpk_
       @INTE@
-      @LINTS@
-      import :: psb_ipk_, @FKIND@
-      @LINTE@
       @NOTINTS@
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
