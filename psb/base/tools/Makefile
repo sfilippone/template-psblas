@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=  Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
+VSRC=Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
+ESRC=Xallc_a.p90 Xins_a.p90 Xasb_a.p90 Xfree_a.p90
 SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.p90 \
 	Xsprn.p90 Xspasb.p90 Xspfree.p90 $(VSRC)
 
@@ -18,9 +19,11 @@ FSRC=$(FSRC1) $(FSRC2)
 FVSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(VSRC))))
 FVSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(VSRC))))
 FVSRC=$(FVSRC1) $(FVSRC2) 
-FOBJS1=$(FSRC1:.f90=.o)
-FOBJS2=$(FSRC2:.F90=.o)
-FOBJS=$(FOBJS1) $(FOBJS2)
+FESRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(ESRC))))
+FESRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(ESRC))))
+FESRC=$(FESRC1) $(FESRC2) 
+
+
 
 LIBMOD=
 # OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
@@ -42,20 +45,13 @@ sdcompl:
 sint:
 	$(MAKE) vsrc ARITH=i
 	$(MAKE) vsrc ARITH=l
+	$(MAKE) esrc ARITH=m
+	$(MAKE) esrc ARITH=e
 
-all:  single double complex dcompl
 
-single:
-	$(MAKE) lib ARITH=s
-double:
-	$(MAKE) lib ARITH=d
-complex:
-	$(MAKE) lib ARITH=c
-dcompl:
-	$(MAKE) lib ARITH=z
-
-bsrc: $(FSRC)
+bsrc: $(FSRC) $(FESRC) 
 vsrc: $(FVSRC)
+esrc: $(FESRC)
 
 lib: $(FOBJS)
 
@@ -63,6 +59,14 @@ lib: $(FOBJS)
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+	sed -f ../../../$(ARITH).sed $< >$@
+# $(FVSRC1): psb_$(ARITH)%.f90 : X%.p90
+# 	sed -f ../../../$(ARITH).sed $< >$@
+# $(FVSRC2): psb_$(ARITH)%.F90 : X%.P90 
+# 	sed -f ../../../$(ARITH).sed $< >$@
+$(FESRC1): psb_$(ARITH)%.f90 : X%.p90
+	sed -f ../../../$(ARITH).sed $< >$@
+$(FESRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f ../../../$(ARITH).sed $< >$@
 
 clean:

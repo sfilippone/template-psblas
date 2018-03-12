@@ -48,22 +48,6 @@ Module psb_@X@_tools_mod
   use psb_@X@_multivect_mod, only : psb_@X@_base_multivect_type, psb_@X@_multivect_type
 
   interface  psb_geall
-    subroutine psb_@X@alloc(x, desc_a, info, n, lb)
-      import
-      implicit none
-      @TYPE@(@FKIND@), allocatable, intent(out)    :: x(:,:)
-      type(psb_desc_type), intent(in) :: desc_a
-      integer(psb_ipk_), intent(out)            :: info
-      integer(psb_ipk_), optional, intent(in)   :: n, lb
-    end subroutine psb_@X@alloc
-    subroutine psb_@X@allocv(x, desc_a,info,n)
-      import
-      implicit none
-      @TYPE@(@FKIND@), allocatable, intent(out)    :: x(:)
-      type(psb_desc_type), intent(in) :: desc_a
-      integer(psb_ipk_), intent(out)            :: info
-      integer(psb_ipk_), optional, intent(in)   :: n
-    end subroutine psb_@X@allocv
     subroutine psb_@X@alloc_vect(x, desc_a,info,n)
       import
       implicit none
@@ -92,22 +76,6 @@ Module psb_@X@_tools_mod
 
 
   interface psb_geasb
-    subroutine psb_@X@asb(x, desc_a, info, scratch)
-      import
-      implicit none
-      type(psb_desc_type), intent(in) ::  desc_a
-      @TYPE@(@FKIND@), allocatable, intent(inout)       ::  x(:,:)
-      integer(psb_ipk_), intent(out)            ::  info
-      logical, intent(in), optional        :: scratch
-    end subroutine psb_@X@asb
-    subroutine psb_@X@asbv(x, desc_a, info, scratch)
-      import
-      implicit none
-      type(psb_desc_type), intent(in) ::  desc_a
-      @TYPE@(@FKIND@), allocatable, intent(inout)   ::  x(:)
-      integer(psb_ipk_), intent(out)        ::  info
-      logical, intent(in), optional        :: scratch
-    end subroutine psb_@X@asbv
     subroutine psb_@X@asb_vect(x, desc_a, info,mold, scratch)
       import
       implicit none
@@ -139,20 +107,6 @@ Module psb_@X@_tools_mod
   end interface
 
   interface psb_gefree
-    subroutine psb_@X@free(x, desc_a, info)
-      import
-      implicit none
-      @TYPE@(@FKIND@),allocatable, intent(inout)        :: x(:,:)
-      type(psb_desc_type), intent(in) :: desc_a
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@free
-    subroutine psb_@X@freev(x, desc_a, info)
-      import
-      implicit none
-      @TYPE@(@FKIND@),allocatable, intent(inout)        :: x(:)
-      type(psb_desc_type), intent(in) :: desc_a
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@freev
     subroutine psb_@X@free_vect(x, desc_a, info)
       import
       implicit none
@@ -178,30 +132,6 @@ Module psb_@X@_tools_mod
 
 
   interface psb_geins
-    subroutine psb_@X@insi(m,irw,val, x, desc_a,info,dupl,local)
-      import
-      implicit none
-      integer(psb_ipk_), intent(in)              ::  m
-      type(psb_desc_type), intent(in)  ::  desc_a
-      @TYPE@(@FKIND@),intent(inout)      ::  x(:,:)
-      integer(psb_ipk_), intent(in)              ::  irw(:)
-      @TYPE@(@FKIND@), intent(in)  ::  val(:,:)
-      integer(psb_ipk_), intent(out)             ::  info
-      integer(psb_ipk_), optional, intent(in)    ::  dupl
-      logical, intent(in), optional        :: local
-    end subroutine psb_@X@insi
-    subroutine psb_@X@insvi(m, irw,val, x,desc_a,info,dupl,local)
-      import
-      implicit none
-      integer(psb_ipk_), intent(in)              ::  m
-      type(psb_desc_type), intent(in)  ::  desc_a
-      @TYPE@(@FKIND@),intent(inout)      ::  x(:)
-      integer(psb_ipk_), intent(in)              ::  irw(:)
-      @TYPE@(@FKIND@), intent(in)  ::  val(:)
-      integer(psb_ipk_), intent(out)             ::  info
-      integer(psb_ipk_), optional, intent(in)    ::  dupl
-      logical, intent(in), optional        :: local
-    end subroutine psb_@X@insvi
     subroutine psb_@X@ins_vect(m,irw,val,x,desc_a,info,dupl,local)
       import
       implicit none
