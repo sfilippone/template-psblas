@@ -75,9 +75,9 @@ module psb_@X@_prec_type
            & psb_@X@_base_sparse_mat, @FKIND@, psb_@X@_base_vect_type, &
            & psb_@X@prec_type, psb_i_base_vect_type
       implicit none
-      type(psb_@X@spmat_type), intent(in), target  :: a
-      type(psb_desc_type), intent(inout), target    :: desc_a
-      class(psb_@X@prec_type), intent(inout) :: prec
+      type(psb_@X@spmat_type), intent(in), target    :: a
+      type(psb_desc_type), intent(inout), target     :: desc_a
+      class(psb_@X@prec_type), intent(inout), target :: prec
       integer(psb_ipk_), intent(out)               :: info
       class(psb_@X@_base_sparse_mat), intent(in), optional :: amold
       class(psb_@X@_base_vect_type), intent(in), optional  :: vmold
