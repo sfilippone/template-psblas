@@ -53,6 +53,8 @@ module psb_@X@_sort_mod
   end interface psb_isaperm
   @INTE@
 
+  @INTE@
+
   interface psb_msort_unique
     subroutine psb_@X@msort_u(x,nout,dir)
       import 
