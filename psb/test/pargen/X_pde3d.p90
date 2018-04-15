@@ -88,6 +88,70 @@ contains
     val = @XZERO@
 
   end function @X@_null_func_3d
+  !
+  ! functions parametrizing the differential equation 
+  !  
+  function b1(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) :: b1
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    b1=@XONE@/sqrt((3*@XONE@))
+  end function b1
+  function b2(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  b2
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    b2=@XONE@/sqrt((3*@XONE@))
+  end function b2
+  function b3(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  b3
+    @TYPE@(@FKIND@), intent(in) :: x,y,z      
+    b3=@XONE@/sqrt((3*@XONE@))
+  end function b3
+  function c(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  c
+    @TYPE@(@FKIND@), intent(in) :: x,y,z      
+    c=@XZERO@
+  end function c
+  function a1(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  a1   
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    a1=@XONE@/80
+  end function a1
+  function a2(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  a2
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    a2=@XONE@/80
+  end function a2
+  function a3(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  a3
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    a3=@XONE@/80
+  end function a3
+  function g(x,y,z)
+    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
+    implicit none 
+    @TYPE@(@FKIND@) ::  g
+    @TYPE@(@FKIND@), intent(in) :: x,y,z
+    g = @XZERO@
+    if (x == @XONE@) then
+      g = @XONE@
+    else if (x == @XZERO@) then 
+      g = exp(y**2-z**2)
+    end if
+  end function g
 
   
   !
@@ -114,7 +178,6 @@ contains
     ! Note that if b1=b2=b3=c=0., the PDE is the  Laplace equation.
     !
     implicit none
-!    procedure(@X@_func_3d)  :: b1,b2,b3,c,a1,a2,a3,g
     integer(psb_ipk_)     :: idim
     type(psb_@X@spmat_type) :: a
     type(psb_@X@_vect_type) :: xv,bv
@@ -491,62 +554,7 @@ contains
 
     return
   end subroutine psb_@X@_gen_pde3d
-    !
-  ! functions parametrizing the differential equation 
-  !  
-  function b1(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) :: b1
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b1=@XONE@/sqrt((3*@XONE@))
-  end function b1
-  function b2(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  b2
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b2=@XONE@/sqrt((3*@XONE@))
-  end function b2
-  function b3(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  b3
-    @TYPE@(@FKIND@), intent(in) :: x,y,z      
-    b3=@XONE@/sqrt((3*@XONE@))
-  end function b3
-  function c(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  c
-    @TYPE@(@FKIND@), intent(in) :: x,y,z      
-    c=@XZERO@
-  end function c
-  function a1(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  a1   
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    a1=@XONE@/80
-  end function a1
-  function a2(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  a2
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    a2=@XONE@/80
-  end function a2
-  function a3(x,y,z)
-    use psb_base_mod, only : @FKIND@
-    @TYPE@(@FKIND@) ::  a3
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    a3=@XONE@/80
-  end function a3
-  function g(x,y,z)
-    use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
-    @TYPE@(@FKIND@) ::  g
-    @TYPE@(@FKIND@), intent(in) :: x,y,z
-    g = @XZERO@
-    if (x == @XONE@) then
-      g = @XONE@
-    else if (x == @XZERO@) then 
-      g = exp(y**2-z**2)
-    end if
-  end function g
+
 
 end module psb_@X@_pde3d_mod
 
