@@ -52,8 +52,8 @@ sepk:
 
 bsrc: vsrc isrc esrc $(FSRC)
 vsrc: $(FVSRC)
-isrc: $(FSRCI)
-esrc: $(FESRC) $(FESRC1)
+#isrc: $(FSRCI)
+esrc: $(FESRC) $(FESRC1) $(FSRCI)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
