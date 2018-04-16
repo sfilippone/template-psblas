@@ -66,13 +66,12 @@ module psi_@X@_mod
   end interface
 
   interface psi_crea_index
-    subroutine psi_@X@_crea_index(desc_a,index_in,index_out,glob_idx,nxch,nsnd,nrcv,info)
+    subroutine psi_@X@_crea_index(desc_a,index_in,index_out,nxch,nsnd,nrcv,info)
       import 
       type(psb_desc_type), intent(in)     :: desc_a
       @TYPE@(@FKIND@), intent(out)                :: nxch,nsnd,nrcv
       @TYPE@(@FKIND@), intent(in)                 :: index_in(:)
       @TYPE@(@FKIND@), allocatable, intent(inout) :: index_out(:)
-      logical                             :: glob_idx
       integer(psb_ipk_), intent(out)      :: info
     end subroutine psi_@X@_crea_index
   end interface
@@ -88,13 +87,12 @@ module psi_@X@_mod
 
   interface psi_desc_index
     subroutine psi_@X@_desc_index(desc,index_in,dep_list,&
-         & length_dl,nsnd,nrcv,desc_index,isglob_in,info)
+         & length_dl,nsnd,nrcv,desc_index,info)
       import 
       type(psb_desc_type) :: desc
       @TYPE@(@FKIND@) :: index_in(:),dep_list(:)
       @TYPE@(@FKIND@),allocatable  :: desc_index(:)
       @TYPE@(@FKIND@) :: length_dl,nsnd,nrcv
-      logical         :: isglob_in
       integer(psb_ipk_) :: info
     end subroutine psi_@X@_desc_index
   end interface
