@@ -86,7 +86,7 @@ $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90
 
 clean:
 	cd auxil && $(MAKE) clean
-	cd penv && $(MAKE) clean	
+	cd penv && $(MAKE) clean
 	cd comm && $(MAKE) clean
 	cd psblas && $(MAKE) clean
 	cd serial && $(MAKE) clean
