@@ -35,50 +35,55 @@ module psb_@X@_psblas_mod
   use psb_@X@_mat_mod, only : psb_@X@spmat_type
 
   interface psb_gedot
-    function psb_@X@dot_vect(x, y, desc_a,info) result(res)
+    function psb_@X@dot_vect(x, y, desc_a,info,global) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @TYPE@(@FKIND@)                    :: res
       type(psb_@X@_vect_type), intent(inout) :: x, y
       type(psb_desc_type), intent(in)      :: desc_a
-      integer(psb_ipk_), intent(out)                 :: info
+      integer(psb_ipk_), intent(out)       :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@dot_vect
-    function psb_@X@dotv(x, y, desc_a,info) 
+    function psb_@X@dotv(x, y, desc_a,info,global) 
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @TYPE@(@FKIND@)                :: psb_@X@dotv
       @TYPE@(@FKIND@), intent(in)    :: x(:), y(:)
       type(psb_desc_type), intent(in)    :: desc_a
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
+      logical, intent(in), optional      :: global
     end function psb_@X@dotv
-    function psb_@X@dot(x, y, desc_a, info, jx, jy) 
+    function psb_@X@dot(x, y, desc_a, info, jx, jy,global) 
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @TYPE@(@FKIND@)                :: psb_@X@dot
       @TYPE@(@FKIND@), intent(in)    :: x(:,:), y(:,:)
       type(psb_desc_type), intent(in)    :: desc_a
       integer(psb_ipk_), optional, intent(in)      :: jx, jy
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
+      logical, intent(in), optional      :: global
     end function psb_@X@dot
   end interface
 
 
   interface psb_gedots
-    subroutine  psb_@X@dotvs(res,x, y, desc_a, info)
+    subroutine  psb_@X@dotvs(res,x, y, desc_a, info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type 
       @TYPE@(@FKIND@), intent(out)      :: res
       @TYPE@(@FKIND@), intent(in)       :: x(:), y(:)
       type(psb_desc_type), intent(in)    :: desc_a
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
+      logical, intent(in), optional      :: global
     end subroutine psb_@X@dotvs
-    subroutine  psb_@X@mdots(res,x, y, desc_a,info)
+    subroutine  psb_@X@mdots(res,x, y, desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type 
       @TYPE@(@FKIND@), intent(out)      :: res(:)
       @TYPE@(@FKIND@), intent(in)       :: x(:,:), y(:,:)
       type(psb_desc_type), intent(in)    :: desc_a
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
+      logical, intent(in), optional      :: global
     end subroutine psb_@X@mdots
   end interface
 
@@ -91,7 +96,7 @@ module psb_@X@_psblas_mod
       type(psb_@X@_vect_type), intent (inout) :: y
       @TYPE@(@FKIND@), intent (in)        :: alpha, beta
       type(psb_desc_type), intent (in)      :: desc_a
-      integer(psb_ipk_), intent(out)                  :: info
+      integer(psb_ipk_), intent(out)        :: info
     end subroutine psb_@X@axpby_vect
     subroutine psb_@X@axpbyv(alpha, x, beta, y,&
          & desc_a, info)
@@ -112,35 +117,38 @@ module psb_@X@_psblas_mod
       @TYPE@(@FKIND@), intent (in)       ::  alpha, beta
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent(in) :: n, jx, jy
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
     end subroutine psb_@X@axpby
   end interface
 
   interface psb_geamax
-    function psb_@X@amax(x, desc_a, info, jx)
+    function psb_@X@amax(x, desc_a, info, jx,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)   psb_@X@amax
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end function psb_@X@amax
-    function psb_@X@amaxv(x, desc_a,info)
+    function psb_@X@amaxv(x, desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@) psb_@X@amaxv
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end function psb_@X@amaxv
-    function psb_@X@amax_vect(x, desc_a, info) result(res)
+    function psb_@X@amax_vect(x, desc_a, info,global) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                        :: res
       type(psb_@X@_vect_type), intent (inout) :: x
-      type(psb_desc_type), intent (in)      :: desc_a
-      integer(psb_ipk_), intent(out)                  :: info
+      type(psb_desc_type), intent (in)     :: desc_a
+      integer(psb_ipk_), intent(out)       :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@amax_vect
   end interface
 
@@ -154,69 +162,76 @@ module psb_@X@_psblas_mod
 #endif
 
   interface psb_geamaxs
-    subroutine  psb_@X@amaxvs(res,x,desc_a,info)
+    subroutine  psb_@X@amaxvs(res,x,desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)    :: x(:)
       type(psb_desc_type), intent (in)  :: desc_a
-      integer(psb_ipk_), intent(out)              :: info
+      integer(psb_ipk_), intent(out)    :: info
+      logical, intent(in), optional     :: global
     end subroutine psb_@X@amaxvs
-    subroutine  psb_@X@mamaxs(res,x,desc_a,info,jx)
+    subroutine  psb_@X@mamaxs(res,x,desc_a,info,jx,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@), intent (out)       :: res(:)
       @TYPE@(@FKIND@), intent (in)     :: x(:,:)
       type(psb_desc_type), intent (in)   :: desc_a
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
       integer(psb_ipk_), optional, intent(in)      :: jx
+      logical, intent(in), optional      :: global
     end subroutine psb_@X@mamaxs
   end interface
 
   interface psb_geasum
-    function psb_@X@asum_vect(x, desc_a, info) result(res)
+    function psb_@X@asum_vect(x, desc_a, info,global) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                        :: res
       type(psb_@X@_vect_type), intent (inout) :: x
-      type(psb_desc_type), intent (in)      :: desc_a
-      integer(psb_ipk_), intent(out)                  :: info
+      type(psb_desc_type), intent (in)     :: desc_a
+      integer(psb_ipk_), intent(out)       :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@asum_vect
-    function psb_@X@asum(x, desc_a, info, jx)
+    function psb_@X@asum(x, desc_a, info, jx,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)   psb_@X@asum
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end function psb_@X@asum
-    function psb_@X@asumv(x, desc_a, info)
+    function psb_@X@asumv(x, desc_a, info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@) psb_@X@asumv
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end function psb_@X@asumv
   end interface
 
   interface psb_geasums
-    subroutine  psb_@X@asumvs(res,x,desc_a,info)
+    subroutine  psb_@X@asumvs(res,x,desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end subroutine psb_@X@asumvs
-    subroutine  psb_@X@masum(res,x,desc_a,info)
+    subroutine  psb_@X@masum(res,x,desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@), intent (out)      :: res(:)
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end subroutine psb_@X@masum
   end interface
 
@@ -230,30 +245,33 @@ module psb_@X@_psblas_mod
 #endif
 
   interface psb_genrm2
-    function psb_@X@nrm2(x, desc_a, info, jx)
+    function psb_@X@nrm2(x, desc_a, info, jx,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)   psb_@X@nrm2
       @TYPE@(@FKIND@), intent (in)       :: x(:,:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), optional, intent (in)      :: jx
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)       :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@nrm2
-    function psb_@X@nrm2v(x, desc_a, info)
+    function psb_@X@nrm2v(x, desc_a, info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@) psb_@X@nrm2v
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@nrm2v
-    function psb_@X@nrm2_vect(x, desc_a, info) result(res)
+    function psb_@X@nrm2_vect(x, desc_a, info,global) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                      :: res
       type(psb_@X@_vect_type), intent (inout)   :: x
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end function psb_@X@nrm2_vect
   end interface
 
@@ -264,25 +282,27 @@ module psb_@X@_psblas_mod
 #endif
 
   interface psb_genrm2s
-    subroutine  psb_@X@nrm2vs(res,x,desc_a,info)
+    subroutine  psb_@X@nrm2vs(res,x,desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@), intent (out)      :: res
       @TYPE@(@FKIND@), intent (in)       :: x(:)
       type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
     end subroutine psb_@X@nrm2vs
   end interface
 
 
   interface psb_spnrmi
-    function psb_@X@nrmi(a, desc_a,info)
+    function psb_@X@nrmi(a, desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                    :: psb_@X@nrmi
       type(psb_@X@spmat_type), intent (in) :: a
       type(psb_desc_type), intent (in)   :: desc_a
-      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), intent(out)     :: info
+      logical, intent(in), optional      :: global
     end function psb_@X@nrmi
   end interface
 
@@ -293,13 +313,14 @@ module psb_@X@_psblas_mod
 #endif
 
   interface psb_spnrm1
-    function psb_@X@spnrm1(a, desc_a,info)
+    function psb_@X@spnrm1(a, desc_a,info,global)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
-      @RTYPE@(@FKIND@)                      :: psb_@X@spnrm1
+      @RTYPE@(@FKIND@)                     :: psb_@X@spnrm1
       type(psb_@X@spmat_type), intent (in) :: a
-      type(psb_desc_type), intent (in)    :: desc_a
-      integer(psb_ipk_), intent(out)                :: info
+      type(psb_desc_type), intent (in)     :: desc_a
+      integer(psb_ipk_), intent(out)       :: info
+      logical, intent(in), optional        :: global
     end function psb_@X@spnrm1
   end interface
   
