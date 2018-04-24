@@ -128,7 +128,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: csgetrow    => psb_@X@_csgetrow
     procedure, pass(a) :: csgetblk    => psb_@X@_csgetblk
     generic, public    :: csget       => csgetptn, csgetrow, csgetblk
-#if defined(INT_I4_L8)
+#if defined(IPK4) && defined(LPK8)
     procedure, pass(a) :: lcsgetptn    => psb_@X@_lcsgetptn
     procedure, pass(a) :: lcsgetrow    => psb_@X@_lcsgetrow
     generic, public    :: csget        => lcsgetptn, lcsgetrow
@@ -1297,7 +1297,7 @@ contains
 
   end subroutine psb_@X@_clean_zeros
 
-#if defined(INT_I4_L8)
+#if defined(IPK4) && defined(LPK8)
   subroutine psb_@X@_lcsgetptn(imin,imax,a,nz,ia,ja,info,&
        & jmin,jmax,iren,append,nzin,rscale,cscale)
     implicit none 
