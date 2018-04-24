@@ -40,19 +40,18 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 sint:
-	$(MAKE) vsrc isrc ARITH=i
+	$(MAKE) vsrc ARITH=i
 slong:
-	$(MAKE) vsrc isrc ARITH=l
+	$(MAKE) vsrc ARITH=l
 smpk:
-	$(MAKE) esrc  ARITH=m
+	$(MAKE) esrc ARITH=m
 
 sepk:
-	$(MAKE) esrc  ARITH=e
+	$(MAKE) esrc ARITH=e
 
 
-bsrc: vsrc isrc esrc $(FSRC)
+bsrc: vsrc esrc $(FSRC)
 vsrc: $(FVSRC)
-#isrc: $(FSRCI)
 esrc: $(FESRC) $(FESRC1) $(FSRCI)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90

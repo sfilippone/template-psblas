@@ -8,7 +8,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 VSRC=
 
 SRC=
-SRCI=Xi_p2p_mod.P90  Xi_reduce_mod.P90  Xi_collective_mod.P90
+SRCI=Xi_p2p_mod.P90  Xi_collective_mod.P90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
