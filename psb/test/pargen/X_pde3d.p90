@@ -90,26 +90,36 @@ contains
   !
   ! functions parametrizing the differential equation 
   !  
+
+  !
+  ! Note: b1, b2 and b3 are the coefficients of the first
+  ! derivative of the unknown function. The default
+  ! we apply here is to have them zero, so that the resulting
+  ! matrix is symmetric/hermitian and suitable for
+  ! testing with CG and FCG.
+  ! When testing methods for non-hermitian matrices you can
+  ! change the B1/B2/B3 functions to e.g. @XONE@/sqrt((3*@XONE@))
+  !
   function b1(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) :: b1
     @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b1=@XONE@/sqrt((3*@XONE@))
+    b1=@XZERO@
   end function b1
   function b2(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) ::  b2
     @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b2=@XONE@/sqrt((3*@XONE@))
+    b2=@XZERO@
   end function b2
   function b3(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) ::  b3
     @TYPE@(@FKIND@), intent(in) :: x,y,z      
-    b3=@XONE@/sqrt((3*@XONE@))
+    b3=@XZERO@
   end function b3
   function c(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
@@ -248,7 +258,7 @@ contains
     
     m   = idim*idim*idim
     n   = m
-    nnz = ((n*9)/(np))
+    nnz = ((n*7)/(np))
     if(iam == psb_root_) write(psb_out_unit,'("Generating Matrix (size=",i0,")...")')n
     t0 = psb_wtime()
     select case(partition_)
@@ -665,7 +675,7 @@ program psb_@X@_pde3d
   if(iam == psb_root_) write(psb_out_unit,'("Calling iterative method ",a)')kmethd
   call psb_barrier(ictxt)
   t1 = psb_wtime()  
-  eps   = 1.d-9
+  eps   = 1.d-6
   call psb_krylov(kmethd,a,prec,bv,xxv,eps,desc_a,info,& 
        & itmax=itmax,iter=iter,err=err,itrace=itrace,istop=istopc,irst=irst)     
 
