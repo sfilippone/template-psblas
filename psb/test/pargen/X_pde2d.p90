@@ -88,20 +88,30 @@ contains
 
   !
   ! functions parametrizing the differential equation 
-  !  
+  !
+
+  !
+  ! Note: b1 and b2 are the coefficients of the first
+  ! derivative of the unknown function. The default
+  ! we apply here is to have them zero, so that the resulting
+  ! matrix is symmetric/hermitian and suitable for
+  ! testing with CG and FCG.
+  ! When testing methods for non-hermitian matrices you can
+  ! change the B1/B2 functions to e.g. @XONE@/sqrt((2*@XONE@))
+  !
   function b1(x,y)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) :: b1
     @TYPE@(@FKIND@), intent(in) :: x,y
-    b1=@XONE@/sqrt((2*@XONE@))
+    b1=@XZERO@
   end function b1
   function b2(x,y)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) ::  b2
     @TYPE@(@FKIND@), intent(in) :: x,y
-    b2=@XONE@/sqrt((2*@XONE@))
+    b2=@XZERO@
   end function b2
   function c(x,y)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
@@ -184,7 +194,7 @@ contains
     integer(psb_ipk_) :: nnz,nr,nlr,i,j,ii,ib,k, partition_
     integer(psb_lpk_) :: m,n,glob_row,nt
     integer(psb_ipk_) :: ix,iy,iz,ia,indx_owner
-    ! For 3D partition
+    ! For 2D partition
     ! Note: integer control variables going directly into an MPI call
     ! must be 4 bytes, i.e. psb_mpk_
     integer(psb_mpk_) :: npdims(2), npp, minfo
@@ -197,7 +207,7 @@ contains
     @TYPE@(@FKIND@), allocatable :: val(:)
     ! deltah dimension of each grid cell
     ! deltat discretization time
-    @TYPE@(@FKIND@)            :: deltah, sqdeltah, deltah2
+    @RTYPE@(@FKIND@)            :: deltah, sqdeltah, deltah2
     @TYPE@(@FKIND@), parameter :: rhs=@XZERO@,one=@XONE@,zero=@XZERO@
     real(psb_dpk_)    :: t0, t1, t2, t3, tasb, talc, ttot, tgen, tcdasb
     integer(psb_ipk_) :: err_act
@@ -217,9 +227,9 @@ contains
       f_ => @X@_null_func_2d
     end if
 
-    deltah   = @XONE@/(idim+2)
+    deltah   = @RONE@/(idim+2)
     sqdeltah = deltah*deltah
-    deltah2  = (2*@XONE@)* deltah
+    deltah2  = (2*@RONE@)* deltah
 
     if (present(partition)) then
       if ((1<= partition).and.(partition <= 3)) then
@@ -448,7 +458,7 @@ contains
       if(info /= psb_success_) exit
       call psb_geins(ib,myidx(ii:ii+ib-1),zt(1:ib),bv,desc_a,info)
       if(info /= psb_success_) exit
-      zt(:)=0.d0
+      zt(:)=@XZERO@
       call psb_geins(ib,myidx(ii:ii+ib-1),zt(1:ib),xv,desc_a,info)
       if(info /= psb_success_) exit
     end do

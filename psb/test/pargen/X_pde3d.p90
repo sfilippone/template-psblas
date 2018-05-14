@@ -91,26 +91,36 @@ contains
   !
   ! functions parametrizing the differential equation 
   !  
+
+  !
+  ! Note: b1, b2 and b3 are the coefficients of the first
+  ! derivative of the unknown function. The default
+  ! we apply here is to have them zero, so that the resulting
+  ! matrix is symmetric/hermitian and suitable for
+  ! testing with CG and FCG.
+  ! When testing methods for non-hermitian matrices you can
+  ! change the B1/B2/B3 functions to e.g. @XONE@/sqrt((3*@XONE@))
+  !
   function b1(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) :: b1
     @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b1=@XONE@/sqrt((3*@XONE@))
+    b1=@XZERO@
   end function b1
   function b2(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) ::  b2
     @TYPE@(@FKIND@), intent(in) :: x,y,z
-    b2=@XONE@/sqrt((3*@XONE@))
+    b2=@XZERO@
   end function b2
   function b3(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
     implicit none 
     @TYPE@(@FKIND@) ::  b3
     @TYPE@(@FKIND@), intent(in) :: x,y,z      
-    b3=@XONE@/sqrt((3*@XONE@))
+    b3=@XZERO@
   end function b3
   function c(x,y,z)
     use psb_base_mod, only : @FKIND@, @XONE@, @XZERO@
@@ -213,7 +223,7 @@ contains
     @TYPE@(@FKIND@), allocatable :: val(:)
     ! deltah dimension of each grid cell
     ! deltat discretization time
-    @TYPE@(@FKIND@)            :: deltah, sqdeltah, deltah2
+    @RTYPE@(@FKIND@)            :: deltah, sqdeltah, deltah2
     @TYPE@(@FKIND@), parameter :: rhs=@XZERO@,one=@XONE@,zero=@XZERO@
     real(psb_dpk_)    :: t0, t1, t2, t3, tasb, talc, ttot, tgen, tcdasb
     integer(psb_ipk_) :: err_act
@@ -233,9 +243,9 @@ contains
       f_ => @X@_null_func_3d
     end if
 
-    deltah   = @XONE@/(idim+2)
+    deltah   = @RONE@/(idim+2)
     sqdeltah = deltah*deltah
-    deltah2  = (2*@XONE@)* deltah
+    deltah2  = (2*@RONE@)* deltah
 
     if (present(partition)) then
       if ((1<= partition).and.(partition <= 3)) then
@@ -612,7 +622,6 @@ program psb_@X@_pde3d
   if(psb_get_errstatus() /= 0) goto 9999
   name='pde3d90'
   call psb_set_errverbosity(itwo)
-  call psb_cd_set_large_threshold(itwo)
   !
   ! Hello world
   !
