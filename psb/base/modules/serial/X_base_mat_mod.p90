@@ -130,11 +130,11 @@ module psb_@X@_base_mat_mod
   !!
   type, extends(psb_@X@_base_sparse_mat) :: psb_@X@_coo_sparse_mat
     !> Number of nonzeros.
-    integer(psb_ipk_) :: nnz
+    integer(@IXKIND@) :: nnz
     !> Row indices.
-    integer(psb_ipk_), allocatable :: ia(:)
+    integer(@IXKIND@), allocatable :: ia(:)
     !> Column indices.
-    integer(psb_ipk_), allocatable :: ja(:)
+    integer(@IXKIND@), allocatable :: ja(:)
     !> Coefficient values. 
     @TYPE@(@FKIND@), allocatable :: val(:)
 
@@ -260,25 +260,25 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
-      integer(psb_ipk_), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
+      integer(@IXKIND@), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@X@_base_csput_a
   end interface
   
   interface 
     subroutine psb_@X@_base_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, psb_@X@_base_vect_type,&
-           & psb_i_base_vect_type
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@, &
+           & psb_@X@_base_vect_type, psb_i_base_vect_type
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_base_vect_type), intent(inout)  :: val
       class(psb_i_base_vect_type), intent(inout)  :: ia, ja
-      integer(psb_ipk_), intent(in)             :: nz, imin, imax,jmin,jmax
+      integer(@IXKIND@), intent(in)             :: nz, imin, imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@X@_base_csput_v
   end interface
   
@@ -317,16 +317,16 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_base_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
          & jmin,jmax,iren,append,nzin,rscale,cscale)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
-      integer(psb_ipk_), intent(in)                  :: imin,imax
-      integer(psb_ipk_), intent(out)                 :: nz
-      integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      integer(@IXKIND@), intent(in)                  :: imin,imax
+      integer(@IXKIND@), intent(out)                 :: nz
+      integer(@IXKIND@), allocatable, intent(inout)  :: ia(:), ja(:)
       @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
       integer(psb_ipk_),intent(out)                  :: info
       logical, intent(in), optional        :: append
-      integer(psb_ipk_), intent(in), optional        :: iren(:)
-      integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+      integer(@IXKIND@), intent(in), optional        :: iren(:)
+      integer(@IXKIND@), intent(in), optional        :: jmin,jmax, nzin
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@X@_base_csgetrow
   end interface
@@ -356,14 +356,14 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_base_csgetblk(imin,imax,a,b,info,&
          & jmin,jmax,iren,append,rscale,cscale)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_@X@_coo_sparse_mat), intent(inout) :: b
-      integer(psb_ipk_), intent(in)                  :: imin,imax
+      integer(@IXKIND@), intent(in)                  :: imin,imax
       integer(psb_ipk_),intent(out)                  :: info
       logical, intent(in), optional        :: append
-      integer(psb_ipk_), intent(in), optional        :: iren(:)
-      integer(psb_ipk_), intent(in), optional        :: jmin,jmax
+      integer(@IXKIND@), intent(in), optional        :: iren(:)
+      integer(@IXKIND@), intent(in), optional        :: jmin,jmax
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@X@_base_csgetblk
   end interface
@@ -394,11 +394,11 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_base_csclip(a,b,info,&
          & imin,imax,jmin,jmax,rscale,cscale)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_@X@_coo_sparse_mat), intent(out) :: b
       integer(psb_ipk_),intent(out)            :: info
-      integer(psb_ipk_), intent(in), optional  :: imin,imax,jmin,jmax
+      integer(@IXKIND@), intent(in), optional  :: imin,imax,jmin,jmax
       logical, intent(in), optional            :: rscale,cscale
     end subroutine psb_@X@_base_csclip
   end interface
@@ -435,11 +435,11 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_base_tril(a,l,info,diag,imin,imax,&
          & jmin,jmax,rscale,cscale,u)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_@X@_coo_sparse_mat), intent(out) :: l
       integer(psb_ipk_),intent(out)              :: info
-      integer(psb_ipk_), intent(in), optional    :: diag,imin,imax,jmin,jmax
+      integer(@IXKIND@), intent(in), optional    :: diag,imin,imax,jmin,jmax
       logical, intent(in), optional              :: rscale,cscale
       class(psb_@X@_coo_sparse_mat), optional, intent(out) :: u
     end subroutine psb_@X@_base_tril
@@ -479,11 +479,11 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_base_triu(a,u,info,diag,imin,imax,&
          & jmin,jmax,rscale,cscale,l)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_@X@_coo_sparse_mat), intent(out) :: u
       integer(psb_ipk_),intent(out)              :: info
-      integer(psb_ipk_), intent(in), optional    :: diag,imin,imax,jmin,jmax
+      integer(@IXKIND@), intent(in), optional    :: diag,imin,imax,jmin,jmax
       logical, intent(in), optional              :: rscale,cscale
       class(psb_@X@_coo_sparse_mat), optional, intent(out) :: l
     end subroutine psb_@X@_base_triu
@@ -502,7 +502,7 @@ module psb_@X@_base_mat_mod
   ! 
   interface 
     subroutine psb_@X@_base_get_diag(a,d,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(out)     :: d(:)
       integer(psb_ipk_), intent(out)            :: info
@@ -596,7 +596,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_cp_from_coo(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_coo_sparse_mat), intent(in)     :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -614,7 +614,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_cp_to_fmt(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -632,7 +632,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_cp_from_fmt(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_base_sparse_mat), intent(in) :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -649,7 +649,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_mv_to_coo(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_coo_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -666,7 +666,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_mv_from_coo(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_coo_sparse_mat), intent(inout)  :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -684,7 +684,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_mv_to_fmt(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -702,7 +702,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_mv_from_fmt(a,b,info) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
       class(psb_@X@_base_sparse_mat), intent(inout) :: b
       integer(psb_ipk_), intent(out)            :: info
@@ -731,7 +731,7 @@ module psb_@X@_base_mat_mod
   !  
    interface 
     subroutine psb_@X@_base_transp_2mat(a,b)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_base_sparse_mat), intent(out)    :: b
     end subroutine psb_@X@_base_transp_2mat
@@ -747,7 +747,7 @@ module psb_@X@_base_mat_mod
   !  
   interface  
     subroutine psb_@X@_base_transc_2mat(a,b)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, psb_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       class(psb_base_sparse_mat), intent(out)    :: b
     end subroutine psb_@X@_base_transc_2mat
@@ -762,7 +762,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_transp_1mat(a)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
     end subroutine psb_@X@_base_transp_1mat
   end interface
@@ -776,7 +776,7 @@ module psb_@X@_base_mat_mod
   !  
   interface 
     subroutine psb_@X@_base_transc_1mat(a)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(inout) :: a
     end subroutine psb_@X@_base_transc_1mat
   end interface
@@ -801,7 +801,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_csmm(alpha,a,x,beta,y,info,trans)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:,:)
       @TYPE@(@FKIND@), intent(inout) :: y(:,:)
@@ -829,7 +829,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_csmv(alpha,a,x,beta,y,info,trans) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:)
       @TYPE@(@FKIND@), intent(inout) :: y(:)
@@ -864,7 +864,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_vect_mv(alpha,a,x,beta,y,info,trans) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, psb_@X@_base_vect_type
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, psb_@X@_base_vect_type, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)       :: alpha, beta
       class(psb_@X@_base_vect_type), intent(inout) :: x
@@ -896,7 +896,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_inner_cssm(alpha,a,x,beta,y,info,trans) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:,:)
       @TYPE@(@FKIND@), intent(inout) :: y(:,:)
@@ -931,7 +931,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_inner_cssv(alpha,a,x,beta,y,info,trans) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:)
       @TYPE@(@FKIND@), intent(inout) :: y(:)
@@ -966,7 +966,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_inner_vect_sv(alpha,a,x,beta,y,info,trans) 
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@,  psb_@X@_base_vect_type
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@,  psb_@X@_base_vect_type, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)       :: alpha, beta
       class(psb_@X@_base_vect_type), intent(inout) :: x, y
@@ -998,7 +998,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_cssm(alpha,a,x,beta,y,info,trans,scale,d)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:,:)
       @TYPE@(@FKIND@), intent(inout) :: y(:,:)
@@ -1031,7 +1031,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_cssv(alpha,a,x,beta,y,info,trans,scale,d)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:)
       @TYPE@(@FKIND@), intent(inout) :: y(:)
@@ -1065,7 +1065,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_base_vect_cssv(alpha,a,x,beta,y,info,trans,scale,d)
-      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@,psb_@X@_base_vect_type
+      import :: psb_ipk_, psb_@X@_base_sparse_mat, @FKIND@,psb_@X@_base_vect_type, @IXKIND@
       class(psb_@X@_base_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)       :: alpha, beta
       class(psb_@X@_base_vect_type), intent(inout) :: x,y
@@ -1229,7 +1229,7 @@ module psb_@X@_base_mat_mod
   !
   interface
     subroutine  psb_@X@_coo_reallocate_nz(nz,a) 
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
       integer(psb_ipk_), intent(in) :: nz
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
     end subroutine psb_@X@_coo_reallocate_nz
@@ -1265,7 +1265,7 @@ module psb_@X@_base_mat_mod
   !
   interface
     subroutine  psb_@X@_coo_clean_zeros(a,info)
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
       integer(psb_ipk_), intent(out)             :: info
     end subroutine psb_@X@_coo_clean_zeros
@@ -1278,8 +1278,8 @@ module psb_@X@_base_mat_mod
   !
   interface
     subroutine  psb_@X@_coo_allocate_mnnz(m,n,a,nz) 
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
-      integer(psb_ipk_), intent(in) :: m,n
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
+      integer(@IXKIND@), intent(in) :: m,n
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
       integer(psb_ipk_), intent(in), optional :: nz
     end subroutine psb_@X@_coo_allocate_mnnz
@@ -1312,12 +1312,12 @@ module psb_@X@_base_mat_mod
   !
   interface
     subroutine psb_@X@_coo_print(iout,a,iv,head,ivr,ivc)
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
       integer(psb_ipk_), intent(in)               :: iout
       class(psb_@X@_coo_sparse_mat), intent(in) :: a   
-      integer(psb_ipk_), intent(in), optional     :: iv(:)
+      integer(@IXKIND@), intent(in), optional     :: iv(:)
       character(len=*), optional        :: head
-      integer(psb_ipk_), intent(in), optional     :: ivr(:), ivc(:)
+      integer(@IXKIND@), intent(in), optional     :: ivr(:), ivc(:)
     end subroutine psb_@X@_coo_print
   end interface
   
@@ -1333,10 +1333,10 @@ module psb_@X@_base_mat_mod
   !
   interface 
     function  psb_@X@_coo_get_nz_row(idx,a) result(res)
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(in) :: a
       integer(psb_ipk_), intent(in)                  :: idx
-      integer(psb_ipk_) :: res
+      integer(@IXKIND@) :: res
     end function psb_@X@_coo_get_nz_row
   end interface
   
@@ -1357,11 +1357,12 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_fix_coo_inner(nr,nc,nzin,dupl,ia,ja,val,nzout,info,idir) 
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, @FKIND@, @IXKIND@
       integer(psb_ipk_), intent(in)           :: nr,nc,nzin,dupl
-      integer(psb_ipk_), intent(inout)        :: ia(:), ja(:)
+      integer(@IXKIND@), intent(inout)        :: ia(:), ja(:)
       @TYPE@(@FKIND@), intent(inout) :: val(:)
-      integer(psb_ipk_), intent(out)          :: nzout, info
+      integer(@IXKIND@), intent(out)          :: nzout
+      integer(psb_ipk_), intent(out)          :: info
       integer(psb_ipk_), intent(in), optional :: idir
     end subroutine psb_@X@_fix_coo_inner
   end interface
@@ -1376,7 +1377,7 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_fix_coo(a,info,idir) 
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
       integer(psb_ipk_), intent(out)                :: info
       integer(psb_ipk_), intent(in), optional :: idir
@@ -1516,13 +1517,13 @@ module psb_@X@_base_mat_mod
   !
   interface 
     subroutine psb_@X@_coo_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
-      integer(psb_ipk_), intent(in)             :: nz,ia(:), ja(:),&
+      integer(@IXKIND@), intent(in)             :: nz,ia(:), ja(:),&
            &  imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@X@_coo_csput_a
   end interface
   
@@ -1532,15 +1533,15 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_coo_csgetptn(imin,imax,a,nz,ia,ja,info,&
          & jmin,jmax,iren,append,nzin,rscale,cscale)
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(in) :: a
-      integer(psb_ipk_), intent(in)                  :: imin,imax
-      integer(psb_ipk_), intent(out)                 :: nz
-      integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      integer(@IXKIND@), intent(in)                  :: imin,imax
+      integer(@IXKIND@), intent(out)                 :: nz
+      integer(@IXKIND@), allocatable, intent(inout)  :: ia(:), ja(:)
       integer(psb_ipk_),intent(out)                  :: info
       logical, intent(in), optional        :: append
-      integer(psb_ipk_), intent(in), optional        :: iren(:)
-      integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+      integer(@IXKIND@), intent(in), optional        :: iren(:)
+      integer(@IXKIND@), intent(in), optional        :: jmin,jmax, nzin
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@X@_coo_csgetptn
   end interface
@@ -1551,16 +1552,16 @@ module psb_@X@_base_mat_mod
   interface 
     subroutine psb_@X@_coo_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
          & jmin,jmax,iren,append,nzin,rscale,cscale)
-      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@
+      import :: psb_ipk_, psb_@X@_coo_sparse_mat, @FKIND@, @IXKIND@
       class(psb_@X@_coo_sparse_mat), intent(in) :: a
-      integer(psb_ipk_), intent(in)                  :: imin,imax
-      integer(psb_ipk_), intent(out)                 :: nz
-      integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      integer(@IXKIND@), intent(in)                  :: imin,imax
+      integer(@IXKIND@), intent(out)                 :: nz
+      integer(@IXKIND@), allocatable, intent(inout)  :: ia(:), ja(:)
       @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
       integer(psb_ipk_),intent(out)                  :: info
       logical, intent(in), optional        :: append
-      integer(psb_ipk_), intent(in), optional        :: iren(:)
-      integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+      integer(@IXKIND@), intent(in), optional        :: iren(:)
+      integer(@IXKIND@), intent(in), optional        :: jmin,jmax, nzin
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@X@_coo_csgetrow
   end interface
@@ -1774,7 +1775,7 @@ contains
   function @X@_coo_get_size(a) result(res)
     implicit none 
     class(psb_@X@_coo_sparse_mat), intent(in) :: a
-    integer(psb_ipk_) :: res
+    integer(@IXKIND@) :: res
     res = -1
     
     if (allocated(a%ia)) res = size(a%ia)
@@ -1798,7 +1799,7 @@ contains
   function @X@_coo_get_nzeros(a) result(res)
     implicit none 
     class(psb_@X@_coo_sparse_mat), intent(in) :: a
-    integer(psb_ipk_) :: res
+    integer(@IXKIND@) :: res
     res  = a%nnz
   end function @X@_coo_get_nzeros
   
@@ -1841,7 +1842,7 @@ contains
   
   subroutine  @X@_coo_set_nzeros(nz,a)
     implicit none 
-    integer(psb_ipk_), intent(in) :: nz
+    integer(@IXKIND@), intent(in) :: nz
     class(psb_@X@_coo_sparse_mat), intent(inout) :: a
     
     a%nnz = nz
@@ -1933,7 +1934,7 @@ contains
     
     class(psb_@X@_coo_sparse_mat), intent(inout) :: a
     
-    integer(psb_ipk_), allocatable :: itemp(:) 
+    integer(@IXKIND@), allocatable :: itemp(:) 
     integer(psb_ipk_) :: info
     
     call a%psb_@X@_base_sparse_mat%psb_base_sparse_mat%transp()
