@@ -1,4 +1,6 @@
 s/@X@/m/g
+s/@SX@/m/g
+s/@S@//g
 s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g

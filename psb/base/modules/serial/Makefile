@@ -45,7 +45,7 @@ sint:
 	$(MAKE) vsrc isrc ARITH=i
 	$(MAKE) vsrc isrc ARITH=l
 sldbl:
-	$(MAKE) fsrc ARITH=ld
+	$(MAKE) fsrc vsrc ARITH=ld
 
 all:  single double complex dcompl
 

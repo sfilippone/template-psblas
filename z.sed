@@ -1,4 +1,6 @@
 s/@X@/z/g
+s/@SX@/z/g
+s/@S@//g
 s/@CONJG@/conjg/g
 s/@TYPE@/complex/g
 s/@RTYPE@/real/g
