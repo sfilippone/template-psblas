@@ -1,11 +1,14 @@
 s/@X@/s/g
 s/@SX@/s/g
+s/@IX@/s/g
+s/@LX@/ls/g
 s/@S@//g
 s/@CONJG@//g
 s/@TYPE@/real/g
 s/@RTYPE@/real/g
 s/@FKIND@/psb_spk_/g
 s/@IXKIND@/psb_ipk_/g	
+s/@LXKIND@/psb_lpk_/g	
 s/@RT@/s/g
 
 s/@SIZET@/psb_sizeof_sp/g 
