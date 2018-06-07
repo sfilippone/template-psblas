@@ -49,6 +49,7 @@ module psb_@X@_base_vect_mod
   use psb_realloc_mod
 @NOTINTS@
   use psb_i_base_vect_mod
+  use psb_l_base_vect_mod
 @NOTINTE@
 @INTS@
 @LINTS@

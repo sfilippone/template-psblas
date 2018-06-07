@@ -34,7 +34,6 @@
 module psb_@SX@_base_mat_mod
   
   use psb_base_mat_mod
-  use psb_lbase_mat_mod
   use psb_@SX@_base_vect_mod
 
 
@@ -80,6 +79,18 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: clone         => psb_@IX@_base_clone
     procedure, pass(a) :: make_nonunit  => psb_@IX@_base_make_nonunit
     procedure, pass(a) :: clean_zeros   => psb_@IX@_base_clean_zeros
+    !
+    ! Convert internal indices
+    !
+    procedure, pass(a) :: cp_to_lcoo     => psb_@IX@_base_cp_to_lcoo   
+    procedure, pass(a) :: cp_from_lcoo   => psb_@IX@_base_cp_from_lcoo 
+    procedure, pass(a) :: cp_to_lfmt     => psb_@IX@_base_cp_to_lfmt   
+    procedure, pass(a) :: cp_from_lfmt   => psb_@IX@_base_cp_from_lfmt 
+    procedure, pass(a) :: mv_to_lcoo     => psb_@IX@_base_mv_to_lcoo   
+    procedure, pass(a) :: mv_from_lcoo   => psb_@IX@_base_mv_from_lcoo 
+    procedure, pass(a) :: mv_to_lfmt     => psb_@IX@_base_mv_to_lfmt   
+    procedure, pass(a) :: mv_from_lfmt   => psb_@IX@_base_mv_from_lfmt 
+
     
     !
     ! Transpose methods: defined here but not implemented. 
@@ -159,6 +170,13 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: mv_from_coo  => psb_@IX@_mv_coo_from_coo
     procedure, pass(a) :: mv_to_fmt    => psb_@IX@_mv_coo_to_fmt
     procedure, pass(a) :: mv_from_fmt  => psb_@IX@_mv_coo_from_fmt
+
+    !
+    ! Convert internal indices
+    !
+    procedure, pass(a) :: cp_to_lcoo     => psb_@IX@_cp_coo_to_lcoo   
+    procedure, pass(a) :: cp_from_lcoo   => psb_@IX@_cp_coo_from_lcoo 
+    
     procedure, pass(a) :: csput_a      => psb_@IX@_coo_csput_a
     procedure, pass(a) :: get_diag     => psb_@IX@_coo_get_diag
     procedure, pass(a) :: csgetrow     => psb_@IX@_coo_csgetrow
@@ -215,6 +233,197 @@ module psb_@SX@_base_mat_mod
        & @IX@_coo_get_fmt,  @IX@_coo_free, @IX@_coo_sizeof, &
        & @IX@_coo_transp_1mat, @IX@_coo_transc_1mat
   
+  
+  !> \namespace  psb_base_mod  \class  psb_@LX@_base_sparse_mat
+  !! \extends psb_lbase_mat_mod::psb_lbase_sparse_mat
+  !! The psb_@LX@_base_sparse_mat type, extending psb_@S@base_sparse_mat,
+  !! defines a middle level  @TYPE@(@FKIND@) sparse matrix object.
+  !! This class object itself does not have any additional members
+  !! with respect to those of the base class. Most methods cannot be fully
+  !! implemented at this level, but we can define the interface for the
+  !! computational methods requiring the knowledge of the underlying
+  !! field, such as the matrix-vector product; this interface is defined,
+  !! but is supposed to be overridden at the leaf level.
+  !!
+  !! About the method MOLD: this has been defined for those compilers
+  !! not yet supporting ALLOCATE( ...,MOLD=...); it's otherwise silly to
+  !! duplicate "by hand" what is specified in the language (in this case F2008)
+  !!
+  type, extends(psb_lbase_sparse_mat) :: psb_@LX@_base_sparse_mat
+  contains
+    !
+    ! Data management methods: defined here, but (mostly) not implemented.
+    !    
+    procedure, pass(a) :: csput_a       => psb_@LX@_base_csput_a
+    procedure, pass(a) :: csput_v       => psb_@LX@_base_csput_v 
+    generic, public    :: csput         => csput_a,  csput_v
+    procedure, pass(a) :: csgetrow      => psb_@LX@_base_csgetrow
+    procedure, pass(a) :: csgetblk      => psb_@LX@_base_csgetblk
+    procedure, pass(a) :: get_diag      => psb_@LX@_base_get_diag
+    generic, public    :: csget         => csgetrow, csgetblk 
+    procedure, pass(a) :: tril          => psb_@LX@_base_tril
+    procedure, pass(a) :: triu          => psb_@LX@_base_triu
+    procedure, pass(a) :: csclip        => psb_@LX@_base_csclip 
+    procedure, pass(a) :: cp_to_coo     => psb_@LX@_base_cp_to_coo   
+    procedure, pass(a) :: cp_from_coo   => psb_@LX@_base_cp_from_coo 
+    procedure, pass(a) :: cp_to_fmt     => psb_@LX@_base_cp_to_fmt   
+    procedure, pass(a) :: cp_from_fmt   => psb_@LX@_base_cp_from_fmt 
+    procedure, pass(a) :: mv_to_coo     => psb_@LX@_base_mv_to_coo   
+    procedure, pass(a) :: mv_from_coo   => psb_@LX@_base_mv_from_coo 
+    procedure, pass(a) :: mv_to_fmt     => psb_@LX@_base_mv_to_fmt   
+    procedure, pass(a) :: mv_from_fmt   => psb_@LX@_base_mv_from_fmt 
+    procedure, pass(a) :: mold          => psb_@LX@_base_mold 
+    procedure, pass(a) :: clone         => psb_@LX@_base_clone
+    procedure, pass(a) :: make_nonunit  => psb_@LX@_base_make_nonunit
+    procedure, pass(a) :: clean_zeros   => psb_@LX@_base_clean_zeros
+    !
+    ! Convert internal indices
+    !
+    procedure, pass(a) :: cp_to_icoo     => psb_@LX@_base_cp_to_icoo   
+    procedure, pass(a) :: cp_from_icoo   => psb_@LX@_base_cp_from_icoo 
+    procedure, pass(a) :: cp_to_ifmt     => psb_@LX@_base_cp_to_ifmt   
+    procedure, pass(a) :: cp_from_ifmt   => psb_@LX@_base_cp_from_ifmt 
+    procedure, pass(a) :: mv_to_icoo     => psb_@LX@_base_mv_to_icoo   
+    procedure, pass(a) :: mv_from_icoo   => psb_@LX@_base_mv_from_icoo 
+    procedure, pass(a) :: mv_to_ifmt     => psb_@LX@_base_mv_to_ifmt   
+    procedure, pass(a) :: mv_from_ifmt   => psb_@LX@_base_mv_from_ifmt 
+    
+    !
+    ! Transpose methods: defined here but not implemented. 
+    !    
+    procedure, pass(a) :: transp_1mat => psb_@LX@_base_transp_1mat
+    procedure, pass(a) :: transp_2mat => psb_@LX@_base_transp_2mat
+    procedure, pass(a) :: transc_1mat => psb_@LX@_base_transc_1mat
+    procedure, pass(a) :: transc_2mat => psb_@LX@_base_transc_2mat
+    
+    !
+    ! Computational methods: defined here but not implemented. 
+    !    
+    procedure, pass(a) :: vect_mv     => psb_@LX@_base_vect_mv
+    procedure, pass(a) :: csmv        => psb_@LX@_base_csmv
+    procedure, pass(a) :: csmm        => psb_@LX@_base_csmm
+    generic, public    :: spmm        => csmm, csmv, vect_mv
+    procedure, pass(a) :: in_vect_sv  => psb_@LX@_base_inner_vect_sv
+    procedure, pass(a) :: inner_cssv  => psb_@LX@_base_inner_cssv    
+    procedure, pass(a) :: inner_cssm  => psb_@LX@_base_inner_cssm
+    generic, public    :: inner_spsm  => inner_cssm, inner_cssv, in_vect_sv
+    procedure, pass(a) :: vect_cssv   => psb_@LX@_base_vect_cssv
+    procedure, pass(a) :: cssv        => psb_@LX@_base_cssv
+    procedure, pass(a) :: cssm        => psb_@LX@_base_cssm
+    generic, public    :: spsm        => cssm, cssv, vect_cssv
+    procedure, pass(a) :: scals       => psb_@LX@_base_scals
+    procedure, pass(a) :: scalv       => psb_@LX@_base_scal
+    generic, public    :: scal        => scals, scalv
+    procedure, pass(a) :: maxval      => psb_@LX@_base_maxval
+    procedure, pass(a) :: spnmi       => psb_@LX@_base_csnmi
+    procedure, pass(a) :: spnm1       => psb_@LX@_base_csnm1
+    procedure, pass(a) :: rowsum      => psb_@LX@_base_rowsum
+    procedure, pass(a) :: arwsum      => psb_@LX@_base_arwsum
+    procedure, pass(a) :: colsum      => psb_@LX@_base_colsum
+    procedure, pass(a) :: aclsum      => psb_@LX@_base_aclsum
+  end type psb_@LX@_base_sparse_mat
+  
+  private :: @LX@_base_mat_sync, @LX@_base_mat_is_host, @LX@_base_mat_is_dev, &
+       & @LX@_base_mat_is_sync, @LX@_base_mat_set_host, @LX@_base_mat_set_dev,&
+       & @LX@_base_mat_set_sync
+  
+  !> \namespace  psb_base_mod  \class  psb_@LX@_coo_sparse_mat
+  !! \extends psb_@LX@_base_mat_mod::psb_@LX@_base_sparse_mat
+  !! 
+  !! psb_@LX@_coo_sparse_mat type and the related methods. This is the
+  !! reference type for all the format transitions, copies and mv unless
+  !! methods are implemented that allow the direct transition from one
+  !! format to another. It is defined here since all other classes must
+  !! refer to it per the MEDIATOR design pattern.
+  !!
+  type, extends(psb_@LX@_base_sparse_mat) :: psb_@LX@_coo_sparse_mat
+    !> Number of nonzeros.
+    integer(@LXKIND@) :: nnz
+    !> Row indices.
+    integer(@LXKIND@), allocatable :: ia(:)
+    !> Column indices.
+    integer(@LXKIND@), allocatable :: ja(:)
+    !> Coefficient values. 
+    @TYPE@(@FKIND@), allocatable :: val(:)
+
+    integer, private   :: sort_status=psb_unsorted_
+    
+  contains
+    !
+    ! Data management methods. 
+    !    
+    procedure, pass(a) :: get_size     => @LX@_coo_get_size
+    procedure, pass(a) :: get_nzeros   => @LX@_coo_get_nzeros
+    procedure, nopass  :: get_fmt      => @LX@_coo_get_fmt
+    procedure, pass(a) :: sizeof       => @LX@_coo_sizeof
+    procedure, pass(a) :: reallocate_nz => psb_@LX@_coo_reallocate_nz
+    procedure, pass(a) :: allocate_mnnz => psb_@LX@_coo_allocate_mnnz
+    procedure, pass(a) :: cp_to_coo    => psb_@LX@_cp_coo_to_coo
+    procedure, pass(a) :: cp_from_coo  => psb_@LX@_cp_coo_from_coo
+    procedure, pass(a) :: cp_to_fmt    => psb_@LX@_cp_coo_to_fmt
+    procedure, pass(a) :: cp_from_fmt  => psb_@LX@_cp_coo_from_fmt
+    procedure, pass(a) :: mv_to_coo    => psb_@LX@_mv_coo_to_coo
+    procedure, pass(a) :: mv_from_coo  => psb_@LX@_mv_coo_from_coo
+    procedure, pass(a) :: mv_to_fmt    => psb_@LX@_mv_coo_to_fmt
+    procedure, pass(a) :: mv_from_fmt  => psb_@LX@_mv_coo_from_fmt
+    procedure, pass(a) :: cp_to_icoo   => psb_@LX@_cp_coo_to_icoo
+    procedure, pass(a) :: cp_from_icoo => psb_@LX@_cp_coo_from_icoo
+    
+    procedure, pass(a) :: csput_a      => psb_@LX@_coo_csput_a
+    procedure, pass(a) :: get_diag     => psb_@LX@_coo_get_diag
+    procedure, pass(a) :: csgetrow     => psb_@LX@_coo_csgetrow
+    procedure, pass(a) :: csgetptn     => psb_@LX@_coo_csgetptn
+    procedure, pass(a) :: reinit       => psb_@LX@_coo_reinit
+    procedure, pass(a) :: get_nz_row   => psb_@LX@_coo_get_nz_row
+    procedure, pass(a) :: fix          => psb_@LX@_fix_coo
+    procedure, pass(a) :: trim         => psb_@LX@_coo_trim
+    procedure, pass(a) :: clean_zeros  => psb_@LX@_coo_clean_zeros
+    procedure, pass(a) :: print        => psb_@LX@_coo_print
+    procedure, pass(a) :: free         => @LX@_coo_free
+    procedure, pass(a) :: mold         => psb_@LX@_coo_mold
+    procedure, pass(a) :: is_sorted    => @LX@_coo_is_sorted
+    procedure, pass(a) :: is_by_rows   => @LX@_coo_is_by_rows
+    procedure, pass(a) :: is_by_cols   => @LX@_coo_is_by_cols
+    procedure, pass(a) :: set_by_rows  => @LX@_coo_set_by_rows
+    procedure, pass(a) :: set_by_cols  => @LX@_coo_set_by_cols
+    procedure, pass(a) :: set_sort_status => @LX@_coo_set_sort_status
+    procedure, pass(a) :: get_sort_status => @LX@_coo_get_sort_status
+
+    !
+    ! This is COO specific
+    !
+    procedure, pass(a) :: set_nzeros   => @LX@_coo_set_nzeros
+    
+    !
+    ! Transpose methods. These are the base of all
+    ! indirection in transpose, together with conversions
+    ! they are sufficient for all cases. 
+    !
+    procedure, pass(a) :: transp_1mat => @LX@_coo_transp_1mat
+    procedure, pass(a) :: transc_1mat => @LX@_coo_transc_1mat
+
+    !
+    ! Computational methods. 
+    !    
+    procedure, pass(a) :: csmm       => psb_@LX@_coo_csmm
+    procedure, pass(a) :: csmv       => psb_@LX@_coo_csmv
+    procedure, pass(a) :: inner_cssm => psb_@LX@_coo_cssm
+    procedure, pass(a) :: inner_cssv => psb_@LX@_coo_cssv
+    procedure, pass(a) :: scals      => psb_@LX@_coo_scals
+    procedure, pass(a) :: scalv      => psb_@LX@_coo_scal
+    procedure, pass(a) :: maxval     => psb_@LX@_coo_maxval
+    procedure, pass(a) :: spnmi      => psb_@LX@_coo_csnmi
+    procedure, pass(a) :: spnm1      => psb_@LX@_coo_csnm1
+    procedure, pass(a) :: rowsum     => psb_@LX@_coo_rowsum
+    procedure, pass(a) :: arwsum     => psb_@LX@_coo_arwsum
+    procedure, pass(a) :: colsum     => psb_@LX@_coo_colsum
+    procedure, pass(a) :: aclsum     => psb_@LX@_coo_aclsum
+    
+  end type psb_@LX@_coo_sparse_mat
+  
+  private :: @LX@_coo_get_nzeros, @LX@_coo_set_nzeros, &
+       & @LX@_coo_get_fmt,  @LX@_coo_free, @LX@_coo_sizeof, &
+       & @LX@_coo_transp_1mat, @LX@_coo_transc_1mat
   
   
   ! == =================
@@ -708,6 +917,147 @@ module psb_@SX@_base_mat_mod
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@IX@_base_mv_from_fmt
   end interface
+  !
+  !> Function  cp_to_coo:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Copy and convert to psb_@IX@_coo_sparse_mat
+  !!        Invoked from the source object.
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_cp_to_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(in) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_cp_to_lcoo
+  end interface
+  
+  !
+  !> Function  cp_from_coo:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Copy and convert from psb_@IX@_coo_sparse_mat
+  !!        Invoked from the target object.
+  !!   \param b The input variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_cp_from_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(in)     :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_cp_from_lcoo
+  end interface
+  
+  !
+  !> Function  cp_to_fmt:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Copy and convert to a class(psb_@IX@_base_sparse_mat)
+  !!        Invoked from the source object. Can be implemented by
+  !!        simply invoking a%cp_to_coo(tmp) and then b%cp_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_cp_to_lfmt(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(in) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_cp_to_lfmt
+  end interface
+  
+  !
+  !> Function  cp_from_fmt:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Copy and convert from a class(psb_@IX@_base_sparse_mat)
+  !!        Invoked from the target object. Can be implemented by
+  !!        simply invoking b%cp_to_coo(tmp) and then a%cp_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_cp_from_lfmt(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(in) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_cp_from_lfmt
+  end interface
+  
+  !
+  !> Function  mv_to_coo:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Convert to psb_@IX@_coo_sparse_mat, freeing the source.
+  !!        Invoked from the source object.
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_mv_to_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_mv_to_lcoo
+  end interface
+  
+  !
+  !> Function  mv_from_coo:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Convert from psb_@IX@_coo_sparse_mat, freeing the source.
+  !!        Invoked from the target object.
+  !!   \param b The input variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_mv_from_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(inout)  :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_mv_from_lcoo
+  end interface
+  
+  !
+  !> Function  mv_to_fmt:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Convert to a class(psb_@IX@_base_sparse_mat), freeing the source.
+  !!        Invoked from the source object. Can be implemented by
+  !!        simply invoking a%mv_to_coo(tmp) and then b%mv_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_mv_to_lfmt(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_mv_to_lfmt
+  end interface
+  
+  !
+  !> Function  mv_from_fmt:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Convert from a class(psb_@IX@_base_sparse_mat), freeing the source.
+  !!        Invoked from the target object. Can be implemented by
+  !!        simply invoking b%mv_to_coo(tmp) and then a%mv_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@IX@_base_mv_from_lfmt(a,b,info) 
+      import 
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_base_mv_from_lfmt
+  end interface
+
+
   !
   !> 
   !! \memberof  psb_@IX@_base_sparse_mat
@@ -1407,6 +1757,29 @@ module psb_@SX@_base_mat_mod
       integer(psb_ipk_), intent(out)               :: info
     end subroutine psb_@IX@_cp_coo_from_coo
   end interface
+  !> 
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@IX@_base_cp_to_coo
+  interface 
+    subroutine psb_@IX@_cp_coo_to_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_coo_sparse_mat), intent(in) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@IX@_cp_coo_to_lcoo
+  end interface
+  
+  !> 
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@IX@_base_cp_from_coo
+  interface 
+    subroutine psb_@IX@_cp_coo_from_lcoo(a,b,info) 
+      import 
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+      class(psb_@LX@_coo_sparse_mat), intent(in)    :: b
+      integer(psb_ipk_), intent(out)               :: info
+    end subroutine psb_@IX@_cp_coo_from_lcoo
+  end interface
   
   !> 
   !! \memberof  psb_@IX@_coo_sparse_mat
@@ -1735,185 +2108,6 @@ module psb_@SX@_base_mat_mod
     end subroutine psb_@IX@_coo_scals
   end interface
   
-  !> \namespace  psb_base_mod  \class  psb_@LX@_base_sparse_mat
-  !! \extends psb_lbase_mat_mod::psb_lbase_sparse_mat
-  !! The psb_@LX@_base_sparse_mat type, extending psb_@S@base_sparse_mat,
-  !! defines a middle level  @TYPE@(@FKIND@) sparse matrix object.
-  !! This class object itself does not have any additional members
-  !! with respect to those of the base class. Most methods cannot be fully
-  !! implemented at this level, but we can define the interface for the
-  !! computational methods requiring the knowledge of the underlying
-  !! field, such as the matrix-vector product; this interface is defined,
-  !! but is supposed to be overridden at the leaf level.
-  !!
-  !! About the method MOLD: this has been defined for those compilers
-  !! not yet supporting ALLOCATE( ...,MOLD=...); it's otherwise silly to
-  !! duplicate "by hand" what is specified in the language (in this case F2008)
-  !!
-  type, extends(psb_lbase_sparse_mat) :: psb_@LX@_base_sparse_mat
-  contains
-    !
-    ! Data management methods: defined here, but (mostly) not implemented.
-    !    
-    procedure, pass(a) :: csput_a       => psb_@LX@_base_csput_a
-    procedure, pass(a) :: csput_v       => psb_@LX@_base_csput_v 
-    generic, public    :: csput         => csput_a,  csput_v
-    procedure, pass(a) :: csgetrow      => psb_@LX@_base_csgetrow
-    procedure, pass(a) :: csgetblk      => psb_@LX@_base_csgetblk
-    procedure, pass(a) :: get_diag      => psb_@LX@_base_get_diag
-    generic, public    :: csget         => csgetrow, csgetblk 
-    procedure, pass(a) :: tril          => psb_@LX@_base_tril
-    procedure, pass(a) :: triu          => psb_@LX@_base_triu
-    procedure, pass(a) :: csclip        => psb_@LX@_base_csclip 
-    procedure, pass(a) :: cp_to_coo     => psb_@LX@_base_cp_to_coo   
-    procedure, pass(a) :: cp_from_coo   => psb_@LX@_base_cp_from_coo 
-    procedure, pass(a) :: cp_to_fmt     => psb_@LX@_base_cp_to_fmt   
-    procedure, pass(a) :: cp_from_fmt   => psb_@LX@_base_cp_from_fmt 
-    procedure, pass(a) :: mv_to_coo     => psb_@LX@_base_mv_to_coo   
-    procedure, pass(a) :: mv_from_coo   => psb_@LX@_base_mv_from_coo 
-    procedure, pass(a) :: mv_to_fmt     => psb_@LX@_base_mv_to_fmt   
-    procedure, pass(a) :: mv_from_fmt   => psb_@LX@_base_mv_from_fmt 
-    procedure, pass(a) :: mold          => psb_@LX@_base_mold 
-    procedure, pass(a) :: clone         => psb_@LX@_base_clone
-    procedure, pass(a) :: make_nonunit  => psb_@LX@_base_make_nonunit
-    procedure, pass(a) :: clean_zeros   => psb_@LX@_base_clean_zeros
-    
-    !
-    ! Transpose methods: defined here but not implemented. 
-    !    
-    procedure, pass(a) :: transp_1mat => psb_@LX@_base_transp_1mat
-    procedure, pass(a) :: transp_2mat => psb_@LX@_base_transp_2mat
-    procedure, pass(a) :: transc_1mat => psb_@LX@_base_transc_1mat
-    procedure, pass(a) :: transc_2mat => psb_@LX@_base_transc_2mat
-    
-    !
-    ! Computational methods: defined here but not implemented. 
-    !    
-    procedure, pass(a) :: vect_mv     => psb_@LX@_base_vect_mv
-    procedure, pass(a) :: csmv        => psb_@LX@_base_csmv
-    procedure, pass(a) :: csmm        => psb_@LX@_base_csmm
-    generic, public    :: spmm        => csmm, csmv, vect_mv
-    procedure, pass(a) :: in_vect_sv  => psb_@LX@_base_inner_vect_sv
-    procedure, pass(a) :: inner_cssv  => psb_@LX@_base_inner_cssv    
-    procedure, pass(a) :: inner_cssm  => psb_@LX@_base_inner_cssm
-    generic, public    :: inner_spsm  => inner_cssm, inner_cssv, in_vect_sv
-    procedure, pass(a) :: vect_cssv   => psb_@LX@_base_vect_cssv
-    procedure, pass(a) :: cssv        => psb_@LX@_base_cssv
-    procedure, pass(a) :: cssm        => psb_@LX@_base_cssm
-    generic, public    :: spsm        => cssm, cssv, vect_cssv
-    procedure, pass(a) :: scals       => psb_@LX@_base_scals
-    procedure, pass(a) :: scalv       => psb_@LX@_base_scal
-    generic, public    :: scal        => scals, scalv
-    procedure, pass(a) :: maxval      => psb_@LX@_base_maxval
-    procedure, pass(a) :: spnmi       => psb_@LX@_base_csnmi
-    procedure, pass(a) :: spnm1       => psb_@LX@_base_csnm1
-    procedure, pass(a) :: rowsum      => psb_@LX@_base_rowsum
-    procedure, pass(a) :: arwsum      => psb_@LX@_base_arwsum
-    procedure, pass(a) :: colsum      => psb_@LX@_base_colsum
-    procedure, pass(a) :: aclsum      => psb_@LX@_base_aclsum
-  end type psb_@LX@_base_sparse_mat
-  
-  private :: @LX@_base_mat_sync, @LX@_base_mat_is_host, @LX@_base_mat_is_dev, &
-       & @LX@_base_mat_is_sync, @LX@_base_mat_set_host, @LX@_base_mat_set_dev,&
-       & @LX@_base_mat_set_sync
-  
-  !> \namespace  psb_base_mod  \class  psb_@LX@_coo_sparse_mat
-  !! \extends psb_@LX@_base_mat_mod::psb_@LX@_base_sparse_mat
-  !! 
-  !! psb_@LX@_coo_sparse_mat type and the related methods. This is the
-  !! reference type for all the format transitions, copies and mv unless
-  !! methods are implemented that allow the direct transition from one
-  !! format to another. It is defined here since all other classes must
-  !! refer to it per the MEDIATOR design pattern.
-  !!
-  type, extends(psb_@LX@_base_sparse_mat) :: psb_@LX@_coo_sparse_mat
-    !> Number of nonzeros.
-    integer(@LXKIND@) :: nnz
-    !> Row indices.
-    integer(@LXKIND@), allocatable :: ia(:)
-    !> Column indices.
-    integer(@LXKIND@), allocatable :: ja(:)
-    !> Coefficient values. 
-    @TYPE@(@FKIND@), allocatable :: val(:)
-
-    integer, private   :: sort_status=psb_unsorted_
-    
-  contains
-    !
-    ! Data management methods. 
-    !    
-    procedure, pass(a) :: get_size     => @LX@_coo_get_size
-    procedure, pass(a) :: get_nzeros   => @LX@_coo_get_nzeros
-    procedure, nopass  :: get_fmt      => @LX@_coo_get_fmt
-    procedure, pass(a) :: sizeof       => @LX@_coo_sizeof
-    procedure, pass(a) :: reallocate_nz => psb_@LX@_coo_reallocate_nz
-    procedure, pass(a) :: allocate_mnnz => psb_@LX@_coo_allocate_mnnz
-    procedure, pass(a) :: cp_to_coo    => psb_@LX@_cp_coo_to_coo
-    procedure, pass(a) :: cp_from_coo  => psb_@LX@_cp_coo_from_coo
-    procedure, pass(a) :: cp_to_fmt    => psb_@LX@_cp_coo_to_fmt
-    procedure, pass(a) :: cp_from_fmt  => psb_@LX@_cp_coo_from_fmt
-    procedure, pass(a) :: mv_to_coo    => psb_@LX@_mv_coo_to_coo
-    procedure, pass(a) :: mv_from_coo  => psb_@LX@_mv_coo_from_coo
-    procedure, pass(a) :: mv_to_fmt    => psb_@LX@_mv_coo_to_fmt
-    procedure, pass(a) :: mv_from_fmt  => psb_@LX@_mv_coo_from_fmt
-    procedure, pass(a) :: csput_a      => psb_@LX@_coo_csput_a
-    procedure, pass(a) :: get_diag     => psb_@LX@_coo_get_diag
-    procedure, pass(a) :: csgetrow     => psb_@LX@_coo_csgetrow
-    procedure, pass(a) :: csgetptn     => psb_@LX@_coo_csgetptn
-    procedure, pass(a) :: reinit       => psb_@LX@_coo_reinit
-    procedure, pass(a) :: get_nz_row   => psb_@LX@_coo_get_nz_row
-    procedure, pass(a) :: fix          => psb_@LX@_fix_coo
-    procedure, pass(a) :: trim         => psb_@LX@_coo_trim
-    procedure, pass(a) :: clean_zeros  => psb_@LX@_coo_clean_zeros
-    procedure, pass(a) :: print        => psb_@LX@_coo_print
-    procedure, pass(a) :: free         => @LX@_coo_free
-    procedure, pass(a) :: mold         => psb_@LX@_coo_mold
-    procedure, pass(a) :: is_sorted    => @LX@_coo_is_sorted
-    procedure, pass(a) :: is_by_rows   => @LX@_coo_is_by_rows
-    procedure, pass(a) :: is_by_cols   => @LX@_coo_is_by_cols
-    procedure, pass(a) :: set_by_rows  => @LX@_coo_set_by_rows
-    procedure, pass(a) :: set_by_cols  => @LX@_coo_set_by_cols
-    procedure, pass(a) :: set_sort_status => @LX@_coo_set_sort_status
-    procedure, pass(a) :: get_sort_status => @LX@_coo_get_sort_status
-
-    !
-    ! This is COO specific
-    !
-    procedure, pass(a) :: set_nzeros   => @LX@_coo_set_nzeros
-    
-    !
-    ! Transpose methods. These are the base of all
-    ! indirection in transpose, together with conversions
-    ! they are sufficient for all cases. 
-    !
-    procedure, pass(a) :: transp_1mat => @LX@_coo_transp_1mat
-    procedure, pass(a) :: transc_1mat => @LX@_coo_transc_1mat
-
-    !
-    ! Computational methods. 
-    !    
-    procedure, pass(a) :: csmm       => psb_@LX@_coo_csmm
-    procedure, pass(a) :: csmv       => psb_@LX@_coo_csmv
-    procedure, pass(a) :: inner_cssm => psb_@LX@_coo_cssm
-    procedure, pass(a) :: inner_cssv => psb_@LX@_coo_cssv
-    procedure, pass(a) :: scals      => psb_@LX@_coo_scals
-    procedure, pass(a) :: scalv      => psb_@LX@_coo_scal
-    procedure, pass(a) :: maxval     => psb_@LX@_coo_maxval
-    procedure, pass(a) :: spnmi      => psb_@LX@_coo_csnmi
-    procedure, pass(a) :: spnm1      => psb_@LX@_coo_csnm1
-    procedure, pass(a) :: rowsum     => psb_@LX@_coo_rowsum
-    procedure, pass(a) :: arwsum     => psb_@LX@_coo_arwsum
-    procedure, pass(a) :: colsum     => psb_@LX@_coo_colsum
-    procedure, pass(a) :: aclsum     => psb_@LX@_coo_aclsum
-    
-  end type psb_@LX@_coo_sparse_mat
-  
-  private :: @LX@_coo_get_nzeros, @LX@_coo_set_nzeros, &
-       & @LX@_coo_get_fmt,  @LX@_coo_free, @LX@_coo_sizeof, &
-       & @LX@_coo_transp_1mat, @LX@_coo_transc_1mat
-  
-  
-  
   ! == =================
   !
   ! BASE interfaces
@@ -1972,7 +2166,7 @@ module psb_@SX@_base_mat_mod
       import 
       class(psb_@LX@_base_sparse_mat), intent(inout) :: a
       class(psb_@SX@_base_vect_type), intent(inout)  :: val
-      class(psb_i_base_vect_type), intent(inout)  :: ia, ja
+      class(psb_l_base_vect_type), intent(inout)  :: ia, ja
       integer(@LXKIND@), intent(in)             :: nz, imin, imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
       integer(@LXKIND@), intent(in), optional   :: gtl(:)
@@ -2405,6 +2599,150 @@ module psb_@SX@_base_mat_mod
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@LX@_base_mv_from_fmt
   end interface
+
+  
+  !
+  !> Function  cp_to_coo:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Copy and convert to psb_@LX@_coo_sparse_mat
+  !!        Invoked from the source object.
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_cp_to_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_cp_to_icoo
+  end interface
+  
+  !
+  !> Function  cp_from_coo:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Copy and convert from psb_@LX@_coo_sparse_mat
+  !!        Invoked from the target object.
+  !!   \param b The input variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_cp_from_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(in)     :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_cp_from_icoo
+  end interface
+  
+  !
+  !> Function  cp_to_fmt:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Copy and convert to a class(psb_@LX@_base_sparse_mat)
+  !!        Invoked from the source object. Can be implemented by
+  !!        simply invoking a%cp_to_coo(tmp) and then b%cp_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_cp_to_ifmt(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_cp_to_ifmt
+  end interface
+  
+  !
+  !> Function  cp_from_fmt:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Copy and convert from a class(psb_@LX@_base_sparse_mat)
+  !!        Invoked from the target object. Can be implemented by
+  !!        simply invoking b%cp_to_coo(tmp) and then a%cp_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_cp_from_ifmt(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(in) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_cp_from_ifmt
+  end interface
+  
+  !
+  !> Function  mv_to_coo:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Convert to psb_@LX@_coo_sparse_mat, freeing the source.
+  !!        Invoked from the source object.
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_mv_to_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_mv_to_icoo
+  end interface
+  
+  !
+  !> Function  mv_from_coo:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Convert from psb_@LX@_coo_sparse_mat, freeing the source.
+  !!        Invoked from the target object.
+  !!   \param b The input variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_mv_from_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(inout)  :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_mv_from_icoo
+  end interface
+  
+  !
+  !> Function  mv_to_fmt:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Convert to a class(psb_@LX@_base_sparse_mat), freeing the source.
+  !!        Invoked from the source object. Can be implemented by
+  !!        simply invoking a%mv_to_coo(tmp) and then b%mv_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_mv_to_ifmt(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_mv_to_ifmt
+  end interface
+  
+  !
+  !> Function  mv_from_fmt:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Convert from a class(psb_@LX@_base_sparse_mat), freeing the source.
+  !!        Invoked from the target object. Can be implemented by
+  !!        simply invoking b%mv_to_coo(tmp) and then a%mv_from_coo(tmp).
+  !!   \param b The output variable
+  !!   \param info return code
+  !  
+  interface 
+    subroutine psb_@LX@_base_mv_from_ifmt(a,b,info) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_base_mv_from_ifmt
+  end interface
+
+
+
   !
   !> 
   !! \memberof  psb_@LX@_base_sparse_mat
@@ -3055,7 +3393,8 @@ module psb_@SX@_base_mat_mod
   interface 
     subroutine psb_@LX@_fix_coo_inner(nr,nc,nzin,dupl,ia,ja,val,nzout,info,idir) 
       import 
-      integer(psb_ipk_), intent(in)           :: nr,nc,nzin,dupl
+      integer(psb_lpk_), intent(in)           :: nr,nc,nzin
+      integer(psb_ipk_), intent(in)           :: dupl
       integer(@LXKIND@), intent(inout)        :: ia(:), ja(:)
       @TYPE@(@FKIND@), intent(inout) :: val(:)
       integer(@LXKIND@), intent(out)          :: nzout
@@ -3103,6 +3442,31 @@ module psb_@SX@_base_mat_mod
       class(psb_@LX@_coo_sparse_mat), intent(in)    :: b
       integer(psb_ipk_), intent(out)               :: info
     end subroutine psb_@LX@_cp_coo_from_coo
+  end interface
+  
+  
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@LX@_base_mat_mod::psb_@LX@_base_cp_to_coo
+  interface 
+    subroutine psb_@LX@_cp_coo_to_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: b
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psb_@LX@_cp_coo_to_icoo
+  end interface
+  
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@LX@_base_mat_mod::psb_@LX@_base_cp_from_coo
+  interface 
+    subroutine psb_@LX@_cp_coo_from_icoo(a,b,info) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
+      class(psb_@IX@_coo_sparse_mat), intent(in)    :: b
+      integer(psb_ipk_), intent(out)               :: info
+    end subroutine psb_@LX@_cp_coo_from_icoo
   end interface
   
   !> 
@@ -3432,9 +3796,6 @@ module psb_@SX@_base_mat_mod
     end subroutine psb_@LX@_coo_scals
   end interface
   
-
-
-
   
 contains 
  
