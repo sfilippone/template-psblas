@@ -203,6 +203,69 @@ module psb_@X@_serial_mod
     end subroutine psb_@X@_aspxpby
   end interface psb_aspxpby
 
+  interface psb_spspmm
+!!$    subroutine psb_@X@spspmm(a,b,c,info)
+!!$      use psb_@X@_mat_mod, only : psb_@X@spmat_type
+!!$      import :: psb_ipk_
+!!$      implicit none 
+!!$      type(psb_@X@spmat_type), intent(in)  :: a,b
+!!$      type(psb_@X@spmat_type), intent(out) :: c
+!!$      integer(psb_ipk_), intent(out)                :: info
+!!$    end subroutine psb_@X@spspmm
+    subroutine psb_@LX@csrspspmm(a,b,c,info)
+      use psb_@X@_mat_mod, only : psb_@LX@_csr_sparse_mat
+      import :: psb_ipk_
+      implicit none 
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a,b
+      type(psb_@LX@_csr_sparse_mat), intent(out) :: c
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@LX@csrspspmm
+!!$    subroutine psb_@X@cscspspmm(a,b,c,info)
+!!$      use psb_@X@_mat_mod, only : psb_@X@_csc_sparse_mat
+!!$      import :: psb_ipk_
+!!$      implicit none 
+!!$      class(psb_@X@_csc_sparse_mat), intent(in) :: a,b
+!!$      type(psb_@X@_csc_sparse_mat), intent(out) :: c
+!!$      integer(psb_ipk_), intent(out)          :: info
+!!$    end subroutine psb_@X@cscspspmm
+  end interface psb_spspmm
+
+  interface psb_symbmm
+!!$    subroutine psb_@X@symbmm(a,b,c,info)
+!!$      use psb_@X@_mat_mod, only : psb_@X@spmat_type
+!!$      import :: psb_ipk_
+!!$      implicit none 
+!!$      type(psb_@X@spmat_type), intent(in)  :: a,b
+!!$      type(psb_@X@spmat_type), intent(out) :: c
+!!$      integer(psb_ipk_), intent(out)                :: info
+!!$    end subroutine psb_@X@symbmm
+    subroutine psb_@LX@base_symbmm(a,b,c,info)
+      use psb_@X@_mat_mod, only : psb_@LX@_base_sparse_mat, psb_@LX@_csr_sparse_mat
+      import :: psb_ipk_
+      implicit none 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a,b
+      type(psb_@LX@_csr_sparse_mat), intent(out)  :: c
+      integer(psb_ipk_), intent(out)                     :: info
+    end subroutine psb_@LX@base_symbmm
+  end interface psb_symbmm
+
+  interface psb_numbmm
+!!$    subroutine psb_@X@numbmm(a,b,c)
+!!$      use psb_@X@_mat_mod, only : psb_@X@spmat_type
+!!$      import :: psb_ipk_
+!!$      implicit none 
+!!$      type(psb_@X@spmat_type), intent(in) :: a,b
+!!$      type(psb_@X@spmat_type), intent(inout)  :: c
+!!$    end subroutine psb_@X@numbmm
+    subroutine psb_@LX@base_numbmm(a,b,c)
+      use psb_@X@_mat_mod, only : psb_@LX@_base_sparse_mat, psb_@LX@_csr_sparse_mat
+      import :: psb_ipk_
+      implicit none 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a,b
+      type(psb_@LX@_csr_sparse_mat), intent(inout)  :: c
+    end subroutine psb_@LX@base_numbmm
+  end interface psb_numbmm
+  
 contains
 
   subroutine psb_@X@csprt(iout,a,iv,head,ivr,ivc)
