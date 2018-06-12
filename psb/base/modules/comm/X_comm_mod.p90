@@ -32,7 +32,7 @@
 module psb_@X@_comm_mod
   @NOTINTS@  
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@
-  use psb_mat_mod, only  : psb_@X@spmat_type
+  use psb_mat_mod, only  : psb_@X@spmat_type, psb_@LX@spmat_type
   @NOTINTE@
   @INTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_lpk_, psb_epk_, psb_mpk_
@@ -111,6 +111,16 @@ module psb_@X@_comm_mod
       integer(psb_ipk_), intent(in), optional   :: root,dupl
       logical, intent(in), optional   :: keepnum,keeploc
     end subroutine psb_@X@sp_allgather
+    subroutine psb_@LX@sp_allgather(globa, loca, desc_a, info, root, dupl,keepnum,keeploc)
+      import
+      implicit none
+      type(psb_@X@spmat_type), intent(inout) :: loca
+      type(psb_@LX@spmat_type), intent(out)   :: globa
+      type(psb_desc_type), intent(in) :: desc_a
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: root,dupl
+      logical, intent(in), optional   :: keepnum,keeploc
+    end subroutine psb_@LX@sp_allgather
 @NOTINTE@
     subroutine psb_@X@gather_vect(globx, locx, desc_a, info, root)
       import
