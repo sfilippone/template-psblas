@@ -118,13 +118,13 @@ module psb_@X@_linmap_mod
   interface psb_linmap
     function psb_@X@_linmap(map_kind,desc_X, desc_Y, map_X2Y, map_Y2X,iaggr,naggr)
       use psb_@X@_mat_mod, only : psb_@X@spmat_type
-      import :: psb_ipk_, psb_@X@linmap_type, psb_desc_type
+      import :: psb_ipk_, psb_@X@linmap_type, psb_desc_type, psb_lpk_
       implicit none 
       type(psb_@X@linmap_type)                  :: psb_@X@_linmap    
       type(psb_desc_type), target             :: desc_X, desc_Y
       type(psb_@X@spmat_type), intent(inout)    :: map_X2Y, map_Y2X
       integer(psb_ipk_), intent(in)           :: map_kind
-      integer(psb_ipk_), intent(in), optional :: iaggr(:), naggr(:)
+      integer(psb_lpk_), intent(in), optional :: iaggr(:), naggr(:)
     end function psb_@X@_linmap
   end interface
 
@@ -185,7 +185,7 @@ contains
     type(psb_desc_type), target             :: desc_X, desc_Y
     type(psb_@X@spmat_type), intent(inout)    :: map_X2Y, map_Y2X
     integer(psb_ipk_), intent(in)           :: map_kind
-    integer(psb_ipk_), intent(in), optional :: iaggr(:), naggr(:)
+    integer(psb_lpk_), intent(in), optional :: iaggr(:), naggr(:)
     out_map = psb_linmap(map_kind,desc_X,desc_Y,map_X2Y,map_Y2X,iaggr,naggr)
   end subroutine psb_@X@_linmap_sub
 
