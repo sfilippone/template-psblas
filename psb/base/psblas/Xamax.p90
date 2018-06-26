@@ -64,7 +64,9 @@ function psb_@X@amax(x,desc_a, info, jx,global) result(res)
   character(len=20)      :: name, ch_err
 
   name='psb_@X@amax'
-  if(psb_get_errstatus() /= 0) return 
+  if (psb_get_errstatus() /= 0) then
+    info = psb_err_internal_error_ ;    goto 9999
+  end if
   info=psb_success_
   call psb_erractionsave(err_act)
 
@@ -190,7 +192,9 @@ function psb_@X@amaxv (x,desc_a, info,global) result(res)
   character(len=20)        :: name, ch_err
 
   name='psb_@X@amaxv'
-  if(psb_get_errstatus() /= 0) return 
+  if (psb_get_errstatus() /= 0) then
+    info = psb_err_internal_error_ ;    goto 9999
+  end if
   info=psb_success_
   call psb_erractionsave(err_act)
 
@@ -272,7 +276,9 @@ function psb_@X@amax_vect(x, desc_a, info,global) result(res)
   character(len=20)      :: name, ch_err
 
   name='psb_@X@amaxv'
-  if(psb_get_errstatus() /= 0) return 
+  if (psb_get_errstatus() /= 0) then
+    info = psb_err_internal_error_ ;    goto 9999
+  end if
   info=psb_success_
   call psb_erractionsave(err_act)
 
@@ -400,7 +406,9 @@ subroutine psb_@X@amaxvs(res,x,desc_a, info,global)
   character(len=20)      :: name, ch_err
 
   name='psb_@X@amaxvs'
-  if(psb_get_errstatus() /= 0) return 
+  if (psb_get_errstatus() /= 0) then
+    info = psb_err_internal_error_ ;    goto 9999
+  end if
   info=psb_success_
   call psb_erractionsave(err_act)
 
@@ -521,7 +529,9 @@ subroutine psb_@X@mamaxs(res,x,desc_a, info,jx,global)
   character(len=20)        :: name, ch_err
 
   name='psb_@X@mamaxs'
-  if (psb_get_errstatus() /= 0) return 
+  if  (psb_get_errstatus() /= 0) then
+    info = psb_err_internal_error_ ;    goto 9999
+  end if
   info=psb_success_
   call psb_erractionsave(err_act)
 
