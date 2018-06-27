@@ -538,6 +538,12 @@ module psb_@X@_csr_mat_mod
     procedure, pass(a) :: mold        => psb_@LX@_csr_mold
     procedure, pass(a) :: scals       => psb_@LX@_csr_scals
     procedure, pass(a) :: scalv       => psb_@LX@_csr_scal
+    procedure, pass(a) :: maxval      => psb_@LX@_csr_maxval
+    procedure, pass(a) :: spnmi       => psb_@LX@_csr_csnmi
+    procedure, pass(a) :: rowsum      => psb_@LX@_csr_rowsum
+    procedure, pass(a) :: arwsum      => psb_@LX@_csr_arwsum
+    procedure, pass(a) :: colsum      => psb_@LX@_csr_colsum
+    procedure, pass(a) :: aclsum      => psb_@LX@_csr_aclsum
 
   end type psb_@LX@_csr_sparse_mat
 
@@ -821,8 +827,67 @@ module psb_@X@_csr_mat_mod
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@LX@_csr_scals
   end interface
+  
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_maxval
+  interface 
+    function psb_@LX@_csr_maxval(a) result(res)
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_csr_maxval
+  end interface
+  
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_csnmi
+  interface 
+    function psb_@LX@_csr_csnmi(a) result(res)
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_csr_csnmi
+  end interface
+  
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_rowsum
+  interface 
+    subroutine psb_@LX@_csr_rowsum(d,a) 
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_csr_rowsum
+  end interface
 
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_arwsum
+  interface 
+    subroutine psb_@LX@_csr_arwsum(d,a) 
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_csr_arwsum
+  end interface
+  
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_colsum
+  interface 
+    subroutine psb_@LX@_csr_colsum(d,a) 
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_csr_colsum
+  end interface
 
+  !> \memberof psb_@LX@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@LX@_base_aclsum
+  interface 
+    subroutine psb_@LX@_csr_aclsum(d,a) 
+      import
+      class(psb_@LX@_csr_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_csr_aclsum
+  end interface
+    
 
 contains 
 

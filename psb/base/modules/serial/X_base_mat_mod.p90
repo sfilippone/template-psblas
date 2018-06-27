@@ -276,9 +276,20 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: clone         => psb_@LX@_base_clone
     procedure, pass(a) :: make_nonunit  => psb_@LX@_base_make_nonunit
     procedure, pass(a) :: clean_zeros   => psb_@LX@_base_clean_zeros
-    procedure, pass(a) :: scals         => psb_@LX@_base_scals
-    procedure, pass(a) :: scalv         => psb_@LX@_base_scal
-    generic, public    :: scal          => scals, scalv
+
+    !
+    ! Computational methods: defined here but not implemented. 
+    !    
+    procedure, pass(a) :: scals       => psb_@LX@_base_scals
+    procedure, pass(a) :: scalv       => psb_@LX@_base_scal
+    generic, public    :: scal        => scals, scalv
+    procedure, pass(a) :: maxval      => psb_@LX@_base_maxval
+    procedure, pass(a) :: spnmi       => psb_@LX@_base_csnmi
+    procedure, pass(a) :: spnm1       => psb_@LX@_base_csnm1
+    procedure, pass(a) :: rowsum      => psb_@LX@_base_rowsum
+    procedure, pass(a) :: arwsum      => psb_@LX@_base_arwsum
+    procedure, pass(a) :: colsum      => psb_@LX@_base_colsum
+    procedure, pass(a) :: aclsum      => psb_@LX@_base_aclsum
     !
     ! Convert internal indices
     !
@@ -366,8 +377,19 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: set_by_cols  => @LX@_coo_set_by_cols
     procedure, pass(a) :: set_sort_status => @LX@_coo_set_sort_status
     procedure, pass(a) :: get_sort_status => @LX@_coo_get_sort_status
-    procedure, pass(a) :: scals           => psb_@LX@_coo_scals
-    procedure, pass(a) :: scalv           => psb_@LX@_coo_scal
+
+    
+    ! Computational methods: defined here but not implemented. 
+    !    
+    procedure, pass(a) :: scals      => psb_@LX@_coo_scals
+    procedure, pass(a) :: scalv      => psb_@LX@_coo_scal
+    procedure, pass(a) :: maxval     => psb_@LX@_coo_maxval
+    procedure, pass(a) :: spnmi      => psb_@LX@_coo_csnmi
+    procedure, pass(a) :: spnm1      => psb_@LX@_coo_csnm1
+    procedure, pass(a) :: rowsum     => psb_@LX@_coo_rowsum
+    procedure, pass(a) :: arwsum     => psb_@LX@_coo_arwsum
+    procedure, pass(a) :: colsum     => psb_@LX@_coo_colsum
+    procedure, pass(a) :: aclsum     => psb_@LX@_coo_aclsum
 
     !
     ! This is COO specific
@@ -2719,7 +2741,83 @@ module psb_@SX@_base_mat_mod
       integer(psb_ipk_), intent(out)              :: info
     end subroutine psb_@LX@_base_clean_zeros
   end interface
+
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_maxval
+  interface 
+    function psb_@LX@_coo_maxval(a) result(res)
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_coo_maxval
+  end interface
+
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_csnmi
+  interface 
+    function psb_@LX@_coo_csnmi(a) result(res)
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_coo_csnmi
+  end interface
   
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_csnm1
+  interface 
+    function psb_@LX@_coo_csnm1(a) result(res)
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_coo_csnm1
+  end interface
+
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_rowsum
+  interface 
+    subroutine psb_@LX@_coo_rowsum(d,a) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_coo_rowsum
+  end interface
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_arwsum
+  interface 
+    subroutine psb_@LX@_coo_arwsum(d,a) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_coo_arwsum
+  end interface
+  
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_colsum
+  interface 
+    subroutine psb_@LX@_coo_colsum(d,a) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_coo_colsum
+  end interface
+
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@LX@_base_aclsum
+  interface 
+    subroutine psb_@LX@_coo_aclsum(d,a) 
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_coo_aclsum
+  end interface
+    
   !
   !> Function  base_scals:
   !! \memberof  psb_@LX@_base_sparse_mat
@@ -2756,6 +2854,110 @@ module psb_@SX@_base_mat_mod
     end subroutine psb_@LX@_base_scal
   end interface
   
+  !
+  !> Function  base_maxval:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Maximum absolute value of all coefficients;
+  !! 
+  !
+  interface 
+    function psb_@LX@_base_maxval(a) result(res)
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_base_maxval
+  end interface
+  
+  !
+  !
+  !> Function  base_csnmi:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Operator infinity norm
+  !! 
+  !
+  interface 
+    function psb_@LX@_base_csnmi(a) result(res)
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_base_csnmi
+  end interface
+
+  !
+  !
+  !> Function  base_csnmi:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Operator 1-norm
+  !! 
+  !
+  interface 
+    function psb_@LX@_base_csnm1(a) result(res)
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_base_csnm1
+  end interface
+
+  !
+  !
+  !> Function  base_rowsum:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Sum along the rows
+  !! \param d(:) The output row sums
+  !! 
+  !
+  interface 
+    subroutine psb_@LX@_base_rowsum(d,a) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_base_rowsum
+  end interface
+
+  !
+  !> Function  base_arwsum:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Absolute value sum along the rows
+  !! \param d(:) The output row sums
+  !! 
+  interface 
+    subroutine psb_@LX@_base_arwsum(d,a) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_base_arwsum
+  end interface
+  
+  !
+  !
+  !> Function  base_colsum:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Sum along the columns
+  !! \param d(:) The output col sums
+  !! 
+  !
+  interface 
+    subroutine psb_@LX@_base_colsum(d,a) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @TYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_base_colsum
+  end interface
+
+  !
+  !> Function  base_aclsum:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Absolute value sum along the columns
+  !! \param d(:) The output col sums
+  !! 
+  interface 
+    subroutine psb_@LX@_base_aclsum(d,a) 
+      import 
+      class(psb_@LX@_base_sparse_mat), intent(in) :: a
+      @RTYPE@(@FKIND@), intent(out)              :: d(:)
+    end subroutine psb_@LX@_base_aclsum
+  end interface
+
   
   !
   !> Function  transp:
