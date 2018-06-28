@@ -33,7 +33,7 @@ Module psb_@X@_tools_mod
   @NOTINTS@
   use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_, psb_lpk_
   use psb_@X@_vect_mod, only : psb_@X@_base_vect_type, psb_@X@_vect_type
-  use psb_@X@_mat_mod, only : psb_@X@spmat_type, psb_@X@_base_sparse_mat
+  use psb_@X@_mat_mod, only : psb_@X@spmat_type, psb_@LX@spmat_type, psb_@X@_base_sparse_mat
   use psb_l_vect_mod, only : psb_l_vect_type
   @NOTINTE@
   @INTS@
@@ -210,6 +210,18 @@ Module psb_@X@_tools_mod
       character(len=5), optional             :: outfmt 
       integer(psb_ipk_), intent(in), optional          :: data
     end Subroutine psb_@X@sphalo
+    Subroutine psb_@LX@sphalo(a,desc_a,blk,info,rowcnv,colcnv,&
+         & rowscale,colscale,outfmt,data)
+      import
+      implicit none
+      Type(psb_@LX@spmat_type),Intent(in)       :: a
+      Type(psb_@LX@spmat_type),Intent(inout)    :: blk
+      Type(psb_desc_type),Intent(in), target :: desc_a
+      integer(psb_ipk_), intent(out)                   :: info
+      logical, optional, intent(in)          :: rowcnv,colcnv,rowscale,colscale
+      character(len=5), optional             :: outfmt 
+      integer(psb_ipk_), intent(in), optional          :: data
+    end Subroutine psb_@LX@sphalo
   end interface
 
 
