@@ -368,8 +368,8 @@ module psb_@X@_csc_mat_mod
   !! \see psb_@X@_base_mat_mod::psb_@X@_base_csgetrow
   interface 
     subroutine psb_@X@_csc_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
-         & jmin,jmax,iren,append,nzin,rscale,cscale)
-      import
+         & jmin,jmax,iren,append,nzin,rscale,cscale,chksz)
+      import :: psb_ipk_, psb_@X@_csc_sparse_mat, @FKIND@
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
       integer(@IXKIND@), intent(in)                  :: imin,imax
       integer(@IXKIND@), intent(out)                 :: nz
@@ -379,7 +379,7 @@ module psb_@X@_csc_mat_mod
       logical, intent(in), optional        :: append
       integer(@IXKIND@), intent(in), optional        :: iren(:)
       integer(@IXKIND@), intent(in), optional        :: jmin,jmax, nzin
-      logical, intent(in), optional        :: rscale,cscale
+      logical, intent(in), optional        :: rscale,cscale,chksz
     end subroutine psb_@X@_csc_csgetrow
   end interface
 
@@ -387,7 +387,7 @@ module psb_@X@_csc_mat_mod
   !! \see psb_@X@_base_mat_mod::psb_@X@_base_csgetblk
   interface 
     subroutine psb_@X@_csc_csgetblk(imin,imax,a,b,info,&
-       & jmin,jmax,iren,append,rscale,cscale)
+       & jmin,jmax,iren,append,rscale,cscale,chksz)
       import
       class(psb_@X@_csc_sparse_mat), intent(in) :: a
       class(psb_@X@_coo_sparse_mat), intent(inout) :: b
@@ -396,7 +396,7 @@ module psb_@X@_csc_mat_mod
       logical, intent(in), optional        :: append
       integer(@IXKIND@), intent(in), optional        :: iren(:)
       integer(@IXKIND@), intent(in), optional        :: jmin,jmax
-      logical, intent(in), optional        :: rscale,cscale
+      logical, intent(in), optional        :: rscale,cscale,chksz
     end subroutine psb_@X@_csc_csgetblk
   end interface
     
