@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -17,14 +17,16 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
 src: sfileread spargen
+
+cpy: 
+	cd fileread && $(MAKE) cpy
+	cd pargen && $(MAKE) cpy
 
 ssingle:
 	$(MAKE) bsrc ARITH=s

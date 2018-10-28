@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -70,6 +70,9 @@ $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/comm *.f90 *.F90)
 
 
 clean:

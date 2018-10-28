@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -48,7 +48,9 @@ simpl:
 iclean:
 	cd impl && $(MAKE) clean
 
-
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/serial *.f90 *.F90)
+	cd impl && $(MAKE) cpy
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90

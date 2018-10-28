@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -24,8 +24,6 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
@@ -65,6 +63,10 @@ isrc: $(FSRCI)
 fsrc: $(FSRC)
 
 lib: $(FOBJS)
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/serial *.f90 *.F90)
+
 
 X_base_mat_mod.p90: X_base_vect_mod.p90
 	touch $@

@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -22,8 +22,6 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
@@ -68,6 +66,8 @@ $(FSRCI2): psi_$(ARITH)%.F90 : Xi%.P90
 $(FSRCE): psb_$(ARITH)%.f90 : X%.p90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/tools *.f90 *.F90)
 
 clean:
 	/bin/rm -f *.f90 *.F90 *.o 

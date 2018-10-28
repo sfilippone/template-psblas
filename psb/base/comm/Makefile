@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -48,6 +48,10 @@ lib: $(FOBJS)
 
 sinternals:
 	cd internals && $(MAKE) src
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/comm *.f90 *.F90)
+	cd internals && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@

@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -25,7 +25,6 @@ FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
 src: ssingle sdouble scomplex sdcompl
-#sint sinternals
 
 sint:
 	$(MAKE) bsrc ARITH=i
@@ -42,6 +41,8 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/cbind/krylov *.f90 *.F90)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@

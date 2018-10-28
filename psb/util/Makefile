@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -34,6 +34,8 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
+cpy:
+	$(TOP)/cpy.sh $(TOP) $(TARGET)
 
 
 all:  single double complex dcompl
@@ -52,6 +54,8 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/util *.f90 *.F90)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90

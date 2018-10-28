@@ -1,4 +1,5 @@
-#include ../../Make.inc
+TOP=../..
+include $(TOP)/Make.inc
 
 BASIC_MODS=
 UTIL_MODS =
@@ -15,6 +16,11 @@ sprec:
 
 skrylov:
 	cd krylov && $(MAKE) src
+
+cpy:
+	cd base && $(MAKE) cpy
+	cd prec && $(MAKE) cpy
+	cd krylov && $(MAKE) cpy	
 
 
 clean:
