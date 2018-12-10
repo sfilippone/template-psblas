@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC= X_hsort_impl.p90  X_msort_impl.p90  X_qsort_impl.p90 X_isort_impl.p90
+SRC=X_hsort_impl.p90  X_msort_impl.p90  X_qsort_impl.p90 X_isort_impl.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
@@ -23,9 +23,11 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint 
+src: ssingle sdouble scomplex sdcompl sint lint
 sint:
-	$(MAKE) bsrc ARITH=i
+	$(MAKE) bsrc ARITH=m
+lint:
+	$(MAKE) bsrc ARITH=e
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:

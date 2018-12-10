@@ -1,0 +1,2740 @@
+!   
+!                Parallel Sparse BLAS  version 3.5
+!      (C) Copyright 2006-2018
+!        Salvatore Filippone    
+!        Alfredo Buttari      
+!   
+!    Redistribution and use in source and binary forms, with or without
+!    modification, are permitted provided that the following conditions
+!    are met:
+!      1. Redistributions of source code must retain the above copyright
+!         notice, this list of conditions and the following disclaimer.
+!      2. Redistributions in binary form must reproduce the above copyright
+!         notice, this list of conditions, and the following disclaimer in the
+!         documentation and/or other materials provided with the distribution.
+!      3. The name of the PSBLAS group or the names of its contributors may
+!         not be used to endorse or promote products derived from this
+!         software without specific written permission.
+!   
+!    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!    POSSIBILITY OF SUCH DAMAGE.
+!   
+!    
+!
+! package: psb_@X@_mat_mod
+!
+! This module contains the definition of the psb_@X@_sparse type which
+! is a generic container for a sparse matrix and it is mostly meant to
+! provide a mean of switching, at run-time, among different formats,
+! potentially unknown at the library compile-time by adding a layer of
+! indirection. This type encapsulates the psb_@X@_base_sparse_mat class
+! inside another class which is the one visible to the user. 
+! Most methods of the psb_@X@_mat_mod simply call the methods of the
+! encapsulated class.
+! The exceptions are mainly cscnv and cp_from/cp_to; these provide
+! the functionalities to have the encapsulated class change its
+! type dynamically, and to extract/input an inner object.
+!
+! A sparse matrix has a state corresponding to its progression
+! through the application life.
+! In particular, computational methods can only be invoked when
+! the matrix is in the ASSEMBLED state, whereas the other states are
+! dedicated to operations on the internal matrix data. 
+! A sparse matrix can move between states according to the 
+! following state transition table. Associated with these states are
+! the possible dynamic types of the inner matrix object.
+! Only COO matrices can ever be in the BUILD state, whereas
+! the ASSEMBLED and UPDATE state can be entered by any class. 
+! 
+! In           Out        Method    
+!| ----------------------------------
+!| Null         Build      csall
+!| Build        Build      csput
+!| Build        Assembled  cscnv
+!| Assembled    Assembled  cscnv
+!| Assembled    Update     reinit
+!| Update       Update     csput
+!| Update       Assembled  cscnv
+!| *            unchanged  reall 
+!| Assembled    Null       free
+!
+!
+!
+! We are also introducing the type psb_@LX@spmat_type.
+! The basic difference with psb_@X@spmat_type is in the type
+! of the indices, which are PSB_LPK_ so that the entries
+! are guaranteed to be able to contain global indices.
+! This type only supports data handling and preprocessing, it is
+! not supposed to be used for computations. 
+!
+module psb_@X@_mat_mod
+
+  use psb_@X@_base_mat_mod
+  use psb_@X@_csr_mat_mod,  only : psb_@X@_csr_sparse_mat, psb_@LX@_csr_sparse_mat
+  use psb_@X@_csc_mat_mod,  only : psb_@X@_csc_sparse_mat, psb_@LX@_csc_sparse_mat
+
+  type :: psb_@X@spmat_type
+
+    class(psb_@X@_base_sparse_mat), allocatable  :: a 
+
+  contains
+    ! Getters
+    procedure, pass(a) :: get_nrows   => psb_@X@_get_nrows
+    procedure, pass(a) :: get_ncols   => psb_@X@_get_ncols
+    procedure, pass(a) :: get_nzeros  => psb_@X@_get_nzeros
+    procedure, pass(a) :: get_nz_row  => psb_@X@_get_nz_row
+    procedure, pass(a) :: get_size    => psb_@X@_get_size
+    procedure, pass(a) :: get_dupl    => psb_@X@_get_dupl
+    procedure, pass(a) :: is_null     => psb_@X@_is_null
+    procedure, pass(a) :: is_bld      => psb_@X@_is_bld
+    procedure, pass(a) :: is_upd      => psb_@X@_is_upd
+    procedure, pass(a) :: is_asb      => psb_@X@_is_asb
+    procedure, pass(a) :: is_sorted   => psb_@X@_is_sorted
+    procedure, pass(a) :: is_by_rows  => psb_@X@_is_by_rows
+    procedure, pass(a) :: is_by_cols  => psb_@X@_is_by_cols
+    procedure, pass(a) :: is_upper    => psb_@X@_is_upper
+    procedure, pass(a) :: is_lower    => psb_@X@_is_lower
+    procedure, pass(a) :: is_triangle => psb_@X@_is_triangle
+    procedure, pass(a) :: is_unit     => psb_@X@_is_unit
+    procedure, pass(a) :: is_repeatable_updates => psb_@X@_is_repeatable_updates
+    procedure, pass(a) :: get_fmt     => psb_@X@_get_fmt
+    procedure, pass(a) :: sizeof      => psb_@X@_sizeof
+
+    ! Setters
+    procedure, pass(a) :: set_nrows    => psb_@X@_set_nrows
+    procedure, pass(a) :: set_ncols    => psb_@X@_set_ncols
+    procedure, pass(a) :: set_dupl     => psb_@X@_set_dupl
+    procedure, pass(a) :: set_null     => psb_@X@_set_null
+    procedure, pass(a) :: set_bld      => psb_@X@_set_bld
+    procedure, pass(a) :: set_upd      => psb_@X@_set_upd
+    procedure, pass(a) :: set_asb      => psb_@X@_set_asb
+    procedure, pass(a) :: set_sorted   => psb_@X@_set_sorted
+    procedure, pass(a) :: set_upper    => psb_@X@_set_upper
+    procedure, pass(a) :: set_lower    => psb_@X@_set_lower
+    procedure, pass(a) :: set_triangle => psb_@X@_set_triangle
+    procedure, pass(a) :: set_unit     => psb_@X@_set_unit
+    procedure, pass(a) :: set_repeatable_updates => psb_@X@_set_repeatable_updates
+
+    ! Memory/data management 
+    procedure, pass(a) :: csall       => psb_@X@_csall
+    procedure, pass(a) :: free        => psb_@X@_free
+    procedure, pass(a) :: trim        => psb_@X@_trim
+    procedure, pass(a) :: csput_a     => psb_@X@_csput_a
+    procedure, pass(a) :: csput_v     => psb_@X@_csput_v 
+    generic, public    :: csput       => csput_a,  csput_v
+    procedure, pass(a) :: csgetptn    => psb_@X@_csgetptn
+    procedure, pass(a) :: csgetrow    => psb_@X@_csgetrow
+    procedure, pass(a) :: csgetblk    => psb_@X@_csgetblk
+    generic, public    :: csget       => csgetptn, csgetrow, csgetblk
+#if defined(IPK4) && defined(LPK8)
+    procedure, pass(a) :: lcsgetptn    => psb_@X@_lcsgetptn
+    procedure, pass(a) :: lcsgetrow    => psb_@X@_lcsgetrow
+    generic, public    :: csget        => lcsgetptn, lcsgetrow
+#endif    
+    procedure, pass(a) :: tril        => psb_@X@_tril
+    procedure, pass(a) :: triu        => psb_@X@_triu
+    procedure, pass(a) :: m_csclip    => psb_@X@_csclip
+    procedure, pass(a) :: b_csclip    => psb_@X@_b_csclip
+    generic, public    :: csclip      => b_csclip, m_csclip
+    procedure, pass(a) :: clean_zeros => psb_@X@_clean_zeros
+    procedure, pass(a) :: reall       => psb_@X@_reallocate_nz
+    procedure, pass(a) :: get_neigh   => psb_@X@_get_neigh
+    procedure, pass(a) :: reinit      => psb_@X@_reinit
+    procedure, pass(a) :: print_i     => psb_@X@_sparse_print
+    procedure, pass(a) :: print_n     => psb_@X@_n_sparse_print
+    generic, public    :: print       => print_i, print_n
+    procedure, pass(a) :: mold        => psb_@X@_mold
+    procedure, pass(a) :: asb         => psb_@X@_asb
+    procedure, pass(a) :: transp_1mat => psb_@X@_transp_1mat
+    procedure, pass(a) :: transp_2mat => psb_@X@_transp_2mat
+    generic, public    :: transp      => transp_1mat, transp_2mat
+    procedure, pass(a) :: transc_1mat => psb_@X@_transc_1mat
+    procedure, pass(a) :: transc_2mat => psb_@X@_transc_2mat
+    generic, public    :: transc      => transc_1mat, transc_2mat
+
+    !
+    ! Sync: centerpiece of handling of external storage.
+    ! Any derived class having extra storage upon sync
+    ! will guarantee that both fortran/host side and
+    ! external side contain the same data. The base
+    ! version is only a placeholder. 
+    !
+    procedure, pass(a) :: sync        => @X@_mat_sync
+    procedure, pass(a) :: is_host     => @X@_mat_is_host
+    procedure, pass(a) :: is_dev      => @X@_mat_is_dev
+    procedure, pass(a) :: is_sync     => @X@_mat_is_sync
+    procedure, pass(a) :: set_host    => @X@_mat_set_host
+    procedure, pass(a) :: set_dev     => @X@_mat_set_dev
+    procedure, pass(a) :: set_sync    => @X@_mat_set_sync
+
+
+    ! These are specific to this level of encapsulation.
+    procedure, pass(a) :: mv_from_b   => psb_@X@_mv_from
+    generic, public    :: mv_from     => mv_from_b
+    procedure, pass(a) :: mv_to_b     => psb_@X@_mv_to
+    generic, public    :: mv_to       => mv_to_b
+    procedure, pass(a) :: cp_from_b   => psb_@X@_cp_from
+    generic, public    :: cp_from     => cp_from_b
+    procedure, pass(a) :: cp_to_b     => psb_@X@_cp_to
+    generic, public    :: cp_to       => cp_to_b
+    procedure, pass(a) :: clip_d_ip   => psb_@X@_clip_d_ip
+    procedure, pass(a) :: clip_d      => psb_@X@_clip_d
+    generic, public    :: clip_diag   => clip_d_ip, clip_d
+    procedure, pass(a) :: cscnv_np    => psb_@X@_cscnv
+    procedure, pass(a) :: cscnv_ip    => psb_@X@_cscnv_ip
+    procedure, pass(a) :: cscnv_base  => psb_@X@_cscnv_base
+    generic, public    :: cscnv       => cscnv_np, cscnv_ip, cscnv_base
+    procedure, pass(a) :: clone       => psb_@X@spmat_clone
+    !
+    ! To/from @LX@
+    !
+    procedure, pass(a) :: mv_from_lb  => psb_@X@_mv_from_lb
+    procedure, pass(a) :: mv_to_lb    => psb_@X@_mv_to_lb
+    procedure, pass(a) :: cp_from_lb  => psb_@X@_cp_from_lb
+    procedure, pass(a) :: cp_to_lb    => psb_@X@_cp_to_lb
+    procedure, pass(a) :: mv_from_l   => psb_@X@_mv_from_l 
+    procedure, pass(a) :: mv_to_l     => psb_@X@_mv_to_l 
+    procedure, pass(a) :: cp_from_l   => psb_@X@_cp_from_l 
+    procedure, pass(a) :: cp_to_l     => psb_@X@_cp_to_l 
+    generic, public    :: mv_from     => mv_from_lb, mv_from_l
+    generic, public    :: mv_to       => mv_to_lb, mv_to_l
+    generic, public    :: cp_from     => cp_from_lb, cp_from_l
+    generic, public    :: cp_to       => cp_to_lb, cp_to_l
+    
+    ! Computational routines 
+    procedure, pass(a) :: get_diag => psb_@X@_get_diag
+    procedure, pass(a) :: maxval   => psb_@X@_maxval
+    procedure, pass(a) :: spnmi    => psb_@X@_csnmi
+    procedure, pass(a) :: spnm1    => psb_@X@_csnm1
+    procedure, pass(a) :: rowsum   => psb_@X@_rowsum
+    procedure, pass(a) :: arwsum   => psb_@X@_arwsum
+    procedure, pass(a) :: colsum   => psb_@X@_colsum
+    procedure, pass(a) :: aclsum   => psb_@X@_aclsum
+    procedure, pass(a) :: csmv_v   => psb_@X@_csmv_vect
+    procedure, pass(a) :: csmv     => psb_@X@_csmv
+    procedure, pass(a) :: csmm     => psb_@X@_csmm
+    generic, public    :: spmm     => csmm, csmv, csmv_v
+    procedure, pass(a) :: scals    => psb_@X@_scals
+    procedure, pass(a) :: scalv    => psb_@X@_scal
+    generic, public    :: scal     => scals, scalv
+    procedure, pass(a) :: cssv_v   => psb_@X@_cssv_vect
+    procedure, pass(a) :: cssv     => psb_@X@_cssv
+    procedure, pass(a) :: cssm     => psb_@X@_cssm
+    generic, public    :: spsm     => cssm, cssv, cssv_v
+
+  end type psb_@X@spmat_type
+
+  private :: psb_@X@_get_nrows, psb_@X@_get_ncols, &
+       & psb_@X@_get_nzeros, psb_@X@_get_size, &
+       & psb_@X@_get_dupl, psb_@X@_is_null, psb_@X@_is_bld, &
+       & psb_@X@_is_upd, psb_@X@_is_asb, psb_@X@_is_sorted, &
+       & psb_@X@_is_by_rows, psb_@X@_is_by_cols, psb_@X@_is_upper, &
+       & psb_@X@_is_lower, psb_@X@_is_triangle, psb_@X@_get_nz_row, &
+       & @X@_mat_sync, @X@_mat_is_host, @X@_mat_is_dev, &
+       & @X@_mat_is_sync, @X@_mat_set_host, @X@_mat_set_dev,&
+       & @X@_mat_set_sync
+
+
+
+  class(psb_@X@_base_sparse_mat), allocatable, target, &
+       & save, private :: psb_@X@_base_mat_default
+
+  interface psb_set_mat_default
+    module procedure psb_@X@_set_mat_default
+  end interface
+
+  interface psb_get_mat_default
+    module procedure psb_@X@_get_mat_default
+  end interface
+
+  interface psb_sizeof
+    module procedure psb_@X@_sizeof
+  end interface
+
+
+  type :: psb_@LX@spmat_type
+
+    class(psb_@LX@_base_sparse_mat), allocatable  :: a 
+
+  contains
+    ! Getters
+    procedure, pass(a) :: get_nrows   => psb_@LX@_get_nrows
+    procedure, pass(a) :: get_ncols   => psb_@LX@_get_ncols
+    procedure, pass(a) :: get_nzeros  => psb_@LX@_get_nzeros
+    procedure, pass(a) :: get_nz_row  => psb_@LX@_get_nz_row
+    procedure, pass(a) :: get_size    => psb_@LX@_get_size
+    procedure, pass(a) :: get_dupl    => psb_@LX@_get_dupl
+    procedure, pass(a) :: is_null     => psb_@LX@_is_null
+    procedure, pass(a) :: is_bld      => psb_@LX@_is_bld
+    procedure, pass(a) :: is_upd      => psb_@LX@_is_upd
+    procedure, pass(a) :: is_asb      => psb_@LX@_is_asb
+    procedure, pass(a) :: is_sorted   => psb_@LX@_is_sorted
+    procedure, pass(a) :: is_by_rows  => psb_@LX@_is_by_rows
+    procedure, pass(a) :: is_by_cols  => psb_@LX@_is_by_cols
+    procedure, pass(a) :: is_upper    => psb_@LX@_is_upper
+    procedure, pass(a) :: is_lower    => psb_@LX@_is_lower
+    procedure, pass(a) :: is_triangle => psb_@LX@_is_triangle
+    procedure, pass(a) :: is_unit     => psb_@LX@_is_unit
+    procedure, pass(a) :: is_repeatable_updates => psb_@LX@_is_repeatable_updates
+    procedure, pass(a) :: get_fmt     => psb_@LX@_get_fmt
+    procedure, pass(a) :: sizeof      => psb_@LX@_sizeof
+
+    ! Setters
+    procedure, pass(a) :: set_nrows    => psb_@LX@_set_nrows
+    procedure, pass(a) :: set_ncols    => psb_@LX@_set_ncols
+    procedure, pass(a) :: set_dupl     => psb_@LX@_set_dupl
+    procedure, pass(a) :: set_null     => psb_@LX@_set_null
+    procedure, pass(a) :: set_bld      => psb_@LX@_set_bld
+    procedure, pass(a) :: set_upd      => psb_@LX@_set_upd
+    procedure, pass(a) :: set_asb      => psb_@LX@_set_asb
+    procedure, pass(a) :: set_sorted   => psb_@LX@_set_sorted
+    procedure, pass(a) :: set_upper    => psb_@LX@_set_upper
+    procedure, pass(a) :: set_lower    => psb_@LX@_set_lower
+    procedure, pass(a) :: set_triangle => psb_@LX@_set_triangle
+    procedure, pass(a) :: set_unit     => psb_@LX@_set_unit
+    procedure, pass(a) :: set_repeatable_updates => psb_@LX@_set_repeatable_updates
+
+    ! Memory/data management 
+    procedure, pass(a) :: csall       => psb_@LX@_csall
+    procedure, pass(a) :: free        => psb_@LX@_free
+    procedure, pass(a) :: trim        => psb_@LX@_trim
+    procedure, pass(a) :: csput_a     => psb_@LX@_csput_a
+    procedure, pass(a) :: csput_v     => psb_@LX@_csput_v 
+    generic, public    :: csput       => csput_a,  csput_v
+    procedure, pass(a) :: csgetptn    => psb_@LX@_csgetptn
+    procedure, pass(a) :: csgetrow    => psb_@LX@_csgetrow
+    procedure, pass(a) :: csgetblk    => psb_@LX@_csgetblk
+    generic, public    :: csget       => csgetptn, csgetrow, csgetblk
+#if defined(IPK4) && defined(LPK8)
+    procedure, pass(a) :: icsgetptn    => psb_@LX@_icsgetptn
+    procedure, pass(a) :: icsgetrow    => psb_@LX@_icsgetrow
+    generic, public    :: csget        => icsgetptn, icsgetrow
+#endif    
+    procedure, pass(a) :: tril        => psb_@LX@_tril
+    procedure, pass(a) :: triu        => psb_@LX@_triu
+    procedure, pass(a) :: m_csclip    => psb_@LX@_csclip
+    procedure, pass(a) :: b_csclip    => psb_@LX@_b_csclip
+    generic, public    :: csclip      => b_csclip, m_csclip
+    procedure, pass(a) :: clean_zeros => psb_@LX@_clean_zeros
+    procedure, pass(a) :: reall       => psb_@LX@_reallocate_nz
+    procedure, pass(a) :: get_neigh   => psb_@LX@_get_neigh
+    procedure, pass(a) :: reinit      => psb_@LX@_reinit
+    procedure, pass(a) :: print_i     => psb_@LX@_sparse_print
+    procedure, pass(a) :: print_n     => psb_@LX@_n_sparse_print
+    generic, public    :: print       => print_i, print_n
+    procedure, pass(a) :: mold        => psb_@LX@_mold
+    procedure, pass(a) :: asb         => psb_@LX@_asb
+    procedure, pass(a) :: transp_1mat => psb_@LX@_transp_1mat
+    procedure, pass(a) :: transp_2mat => psb_@LX@_transp_2mat
+    generic, public    :: transp      => transp_1mat, transp_2mat
+    procedure, pass(a) :: transc_1mat => psb_@LX@_transc_1mat
+    procedure, pass(a) :: transc_2mat => psb_@LX@_transc_2mat
+    generic, public    :: transc      => transc_1mat, transc_2mat
+
+    !
+    ! Sync: centerpiece of handling of external storage.
+    ! Any derived class having extra storage upon sync
+    ! will guarantee that both fortran/host side and
+    ! external side contain the same data. The base
+    ! version is only a placeholder. 
+    !
+    procedure, pass(a) :: sync        => @LX@_mat_sync
+    procedure, pass(a) :: is_host     => @LX@_mat_is_host
+    procedure, pass(a) :: is_dev      => @LX@_mat_is_dev
+    procedure, pass(a) :: is_sync     => @LX@_mat_is_sync
+    procedure, pass(a) :: set_host    => @LX@_mat_set_host
+    procedure, pass(a) :: set_dev     => @LX@_mat_set_dev
+    procedure, pass(a) :: set_sync    => @LX@_mat_set_sync
+
+
+    ! These are specific to this level of encapsulation.
+    procedure, pass(a) :: mv_from_b   => psb_@LX@_mv_from
+    generic, public    :: mv_from     => mv_from_b
+    procedure, pass(a) :: mv_to_b     => psb_@LX@_mv_to
+    generic, public    :: mv_to       => mv_to_b
+    procedure, pass(a) :: cp_from_b   => psb_@LX@_cp_from
+    generic, public    :: cp_from     => cp_from_b
+    procedure, pass(a) :: cp_to_b     => psb_@LX@_cp_to
+    generic, public    :: cp_to       => cp_to_b
+    procedure, pass(a) :: cscnv_np    => psb_@LX@_cscnv
+    procedure, pass(a) :: cscnv_ip    => psb_@LX@_cscnv_ip
+    procedure, pass(a) :: cscnv_base  => psb_@LX@_cscnv_base
+    generic, public    :: cscnv       => cscnv_np, cscnv_ip, cscnv_base
+    procedure, pass(a) :: clone       => psb_@LX@spmat_clone
+    !
+    ! To/from @IX@
+    !
+    procedure, pass(a) :: mv_from_ib  => psb_@LX@_mv_from_ib
+    procedure, pass(a) :: mv_to_ib    => psb_@LX@_mv_to_ib
+    procedure, pass(a) :: cp_from_ib  => psb_@LX@_cp_from_ib
+    procedure, pass(a) :: cp_to_ib    => psb_@LX@_cp_to_ib
+    procedure, pass(a) :: mv_from_i   => psb_@LX@_mv_from_i 
+    procedure, pass(a) :: mv_to_i     => psb_@LX@_mv_to_i 
+    procedure, pass(a) :: cp_from_i   => psb_@LX@_cp_from_i 
+    procedure, pass(a) :: cp_to_i     => psb_@LX@_cp_to_i 
+    generic, public    :: mv_from     => mv_from_ib, mv_from_i
+    generic, public    :: mv_to       => mv_to_ib, mv_to_i
+    generic, public    :: cp_from     => cp_from_ib, cp_from_i
+    generic, public    :: cp_to       => cp_to_ib, cp_to_i
+
+    ! Computational routines 
+    procedure, pass(a) :: get_diag => psb_@LX@_get_diag
+    procedure, pass(a) :: maxval   => psb_@LX@_maxval
+    procedure, pass(a) :: spnmi    => psb_@LX@_csnmi
+    procedure, pass(a) :: spnm1    => psb_@LX@_csnm1
+    procedure, pass(a) :: rowsum   => psb_@LX@_rowsum
+    procedure, pass(a) :: arwsum   => psb_@LX@_arwsum
+    procedure, pass(a) :: colsum   => psb_@LX@_colsum
+    procedure, pass(a) :: aclsum   => psb_@LX@_aclsum
+    procedure, pass(a) :: scals    => psb_@LX@_scals
+    procedure, pass(a) :: scalv    => psb_@LX@_scal
+    generic, public    :: scal     => scals, scalv
+
+  end type psb_@LX@spmat_type
+
+  private :: psb_@LX@_get_nrows, psb_@LX@_get_ncols, &
+       & psb_@LX@_get_nzeros, psb_@LX@_get_size, &
+       & psb_@LX@_get_dupl, psb_@LX@_is_null, psb_@LX@_is_bld, &
+       & psb_@LX@_is_upd, psb_@LX@_is_asb, psb_@LX@_is_sorted, &
+       & psb_@LX@_is_by_rows, psb_@LX@_is_by_cols, psb_@LX@_is_upper, &
+       & psb_@LX@_is_lower, psb_@LX@_is_triangle, psb_@LX@_get_nz_row, &
+       & @LX@_mat_sync, @LX@_mat_is_host, @LX@_mat_is_dev, &
+       & @LX@_mat_is_sync, @LX@_mat_set_host, @LX@_mat_set_dev,&
+       & @LX@_mat_set_sync
+
+
+
+  class(psb_@LX@_base_sparse_mat), allocatable, target, &
+       & save, private :: psb_@LX@_base_mat_default
+
+  interface psb_set_mat_default
+    module procedure psb_@LX@_set_mat_default
+  end interface
+
+  interface psb_get_mat_default
+    module procedure psb_@LX@_get_mat_default
+  end interface
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Setters 
+  !
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+
+  interface 
+    subroutine  psb_@X@_set_nrows(m,a) 
+      import :: psb_ipk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in) :: m
+    end subroutine psb_@X@_set_nrows
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_ncols(n,a) 
+      import :: psb_ipk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in) :: n
+    end subroutine psb_@X@_set_ncols
+  end interface
+  
+  interface 
+    subroutine  psb_@X@_set_dupl(n,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in) :: n
+    end subroutine psb_@X@_set_dupl
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_null(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_set_null
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_bld(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_set_bld
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_upd(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_set_upd
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_asb(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_set_asb
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_sorted(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@X@_set_sorted
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_triangle(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@X@_set_triangle
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_unit(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@X@_set_unit
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_lower(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@X@_set_lower
+  end interface
+  
+  interface 
+    subroutine psb_@X@_set_upper(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@X@_set_upper
+  end interface
+  
+  interface 
+    subroutine psb_@X@_sparse_print(iout,a,iv,head,ivr,ivc)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      integer(psb_ipk_), intent(in)               :: iout
+      class(psb_@X@spmat_type), intent(in) :: a   
+      integer(psb_ipk_), intent(in), optional     :: iv(:)
+      character(len=*), optional        :: head
+      integer(psb_ipk_), intent(in), optional     :: ivr(:), ivc(:)
+    end subroutine psb_@X@_sparse_print
+  end interface
+
+  interface 
+    subroutine psb_@X@_n_sparse_print(fname,a,iv,head,ivr,ivc)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      character(len=*), intent(in)      :: fname
+      class(psb_@X@spmat_type), intent(in) :: a   
+      integer(psb_ipk_), intent(in), optional     :: iv(:)
+      character(len=*), optional        :: head
+      integer(psb_ipk_), intent(in), optional     :: ivr(:), ivc(:)
+    end subroutine psb_@X@_n_sparse_print
+  end interface
+  
+  interface 
+    subroutine psb_@X@_get_neigh(a,idx,neigh,n,info,lev)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(in) :: a   
+      integer(psb_ipk_), intent(in)                :: idx 
+      integer(psb_ipk_), intent(out)               :: n   
+      integer(psb_ipk_), allocatable, intent(out)  :: neigh(:)
+      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_ipk_), optional, intent(in)      :: lev 
+    end subroutine psb_@X@_get_neigh
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csall(nr,nc,a,info,nz) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in)             :: nr,nc
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: nz
+    end subroutine psb_@X@_csall
+  end interface
+  
+  interface 
+    subroutine psb_@X@_reallocate_nz(nz,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      integer(psb_ipk_), intent(in) :: nz
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_reallocate_nz
+  end interface
+  
+  interface 
+    subroutine psb_@X@_free(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_free
+  end interface
+  
+  interface 
+    subroutine psb_@X@_trim(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_trim
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: val(:)
+      integer(psb_ipk_), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+    end subroutine psb_@X@_csput_a
+  end interface
+
+  
+  interface 
+    subroutine psb_@X@_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      use psb_@X@_vect_mod, only : psb_@X@_vect_type
+      use psb_i_vect_mod, only : psb_i_vect_type
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      type(psb_@X@_vect_type), intent(inout)  :: val
+      type(psb_i_vect_type), intent(inout)  :: ia, ja
+      integer(psb_ipk_), intent(in)             :: nz, imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_ipk_), intent(in), optional   :: gtl(:)
+    end subroutine psb_@X@_csput_v
+  end interface
+ 
+  interface 
+    subroutine psb_@X@_csgetptn(imin,imax,a,nz,ia,ja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      integer(psb_ipk_), intent(in)                  :: imin,imax
+      integer(psb_ipk_), intent(out)                 :: nz
+      integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_ipk_), intent(in), optional        :: iren(:)
+      integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csgetptn
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
+         & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      integer(psb_ipk_), intent(in)                  :: imin,imax
+      integer(psb_ipk_), intent(out)                 :: nz
+      integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_ipk_), intent(in), optional        :: iren(:)
+      integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csgetrow
+  end interface
+  
+  interface 
+    subroutine psb_@X@_csgetblk(imin,imax,a,b,info,&
+       & jmin,jmax,iren,append,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in)    :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+      integer(psb_ipk_), intent(in)                  :: imin,imax
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_ipk_), intent(in), optional        :: iren(:)
+      integer(psb_ipk_), intent(in), optional        :: jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csgetblk
+  end interface
+  
+  interface 
+    subroutine psb_@X@_tril(a,l,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,u)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in)      :: a
+      class(psb_@X@spmat_type), intent(inout)   :: l
+      integer(psb_ipk_),intent(out)           :: info
+      integer(psb_ipk_), intent(in), optional :: diag,imin,imax,jmin,jmax
+      logical, intent(in), optional           :: rscale,cscale
+      class(psb_@X@spmat_type), optional, intent(inout)   :: u
+    end subroutine psb_@X@_tril
+  end interface
+  
+  interface 
+    subroutine psb_@X@_triu(a,u,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,l)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in)      :: a
+      class(psb_@X@spmat_type), intent(inout)   :: u
+      integer(psb_ipk_),intent(out)           :: info
+      integer(psb_ipk_), intent(in), optional :: diag,imin,imax,jmin,jmax
+      logical, intent(in), optional           :: rscale,cscale
+      class(psb_@X@spmat_type), optional, intent(inout)   :: l
+    end subroutine psb_@X@_triu
+  end interface
+
+
+  interface 
+    subroutine psb_@X@_csclip(a,b,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_ipk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csclip
+  end interface
+  
+  interface 
+    subroutine psb_@X@_b_csclip(a,b,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_coo_sparse_mat
+      class(psb_@X@spmat_type), intent(in) :: a
+      type(psb_@X@_coo_sparse_mat), intent(out) :: b
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_ipk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_b_csclip
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mold(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout)     :: a
+      class(psb_@X@_base_sparse_mat), allocatable, intent(out) :: b
+    end subroutine psb_@X@_mold
+  end interface
+  
+  interface 
+    subroutine psb_@X@_asb(a,mold) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), optional, intent(in) :: mold
+    end subroutine psb_@X@_asb
+  end interface
+  
+  interface 
+    subroutine psb_@X@_transp_1mat(a)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_transp_1mat
+  end interface
+  
+  interface 
+    subroutine psb_@X@_transp_2mat(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(in)  :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+    end subroutine psb_@X@_transp_2mat
+  end interface
+  
+  interface 
+    subroutine psb_@X@_transc_1mat(a)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+    end subroutine psb_@X@_transc_1mat
+  end interface
+  
+  interface 
+    subroutine psb_@X@_transc_2mat(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(in)  :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+    end subroutine psb_@X@_transc_2mat
+  end interface
+  
+  interface 
+    subroutine psb_@X@_reinit(a,clear)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a   
+      logical, intent(in), optional :: clear
+    end subroutine psb_@X@_reinit
+    
+  end interface
+
+
+  !
+  ! These methods are specific to the outer SPMAT_TYPE level, since
+  ! they tamper with the inner BASE_SPARSE_MAT object.
+  !
+  !
+
+  !
+  ! CSCNV: switches to a different internal derived type.
+  !   3 versions: copying to target
+  !               copying to a base_sparse_mat object.
+  !               in place
+  !                 
+  !
+  interface 
+    subroutine psb_@X@_cscnv(a,b,info,type,mold,upd,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(in)      :: a
+      class(psb_@X@spmat_type), intent(inout)   :: b
+      integer(psb_ipk_), intent(out)                   :: info
+      integer(psb_ipk_),optional, intent(in)           :: dupl, upd
+      character(len=*), optional, intent(in) :: type
+      class(psb_@X@_base_sparse_mat), intent(in), optional :: mold
+    end subroutine psb_@X@_cscnv
+  end interface
+  
+
+  interface 
+    subroutine psb_@X@_cscnv_ip(a,iinfo,type,mold,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(out)                   :: iinfo
+      integer(psb_ipk_),optional, intent(in)           :: dupl
+      character(len=*), optional, intent(in) :: type
+      class(psb_@X@_base_sparse_mat), intent(in), optional :: mold
+    end subroutine psb_@X@_cscnv_ip
+  end interface
+  
+
+  interface 
+    subroutine psb_@X@_cscnv_base(a,b,info,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(in)       :: a
+      class(psb_@X@_base_sparse_mat), intent(out) :: b
+      integer(psb_ipk_), intent(out)                   :: info
+      integer(psb_ipk_),optional, intent(in)           :: dupl
+    end subroutine psb_@X@_cscnv_base
+  end interface
+  
+  !
+  ! Produce a version of the matrix with diagonal cut
+  ! out; passes through a COO buffer. 
+  !
+  interface 
+    subroutine psb_@X@_clip_d(a,b,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(in)    :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+      integer(psb_ipk_),intent(out)                  :: info
+    end subroutine psb_@X@_clip_d
+  end interface
+  
+  interface 
+    subroutine psb_@X@_clip_d_ip(a,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_),intent(out)                  :: info
+    end subroutine psb_@X@_clip_d_ip
+  end interface
+  
+  !
+  ! These four interfaces cut through the
+  ! encapsulation between spmat_type and base_sparse_mat.
+  !
+  interface 
+    subroutine psb_@X@_mv_from(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_mv_from
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_from(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(out) :: a
+      class(psb_@X@_base_sparse_mat), intent(in) :: b
+    end subroutine psb_@X@_cp_from
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_to(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_mv_to
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_to(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat    
+      class(psb_@X@spmat_type), intent(in) :: a
+      class(psb_@X@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_cp_to
+  end interface
+  !
+  ! Mixed type conversions
+  !
+  interface 
+    subroutine psb_@X@_mv_from_lb(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_mv_from_lb
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_from_lb(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(out) :: a
+      class(psb_@LX@_base_sparse_mat), intent(in) :: b
+    end subroutine psb_@X@_cp_from_lb
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_to_lb(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_mv_to_lb
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_to_lb(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat    
+      class(psb_@X@spmat_type), intent(in) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@X@_cp_to_lb
+  end interface
+
+    interface 
+    subroutine psb_@X@_mv_from_l(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+    end subroutine psb_@X@_mv_from_l
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_from_l(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@spmat_type
+      class(psb_@X@spmat_type), intent(out) :: a
+      class(psb_@LX@spmat_type), intent(in) :: b
+    end subroutine psb_@X@_cp_from_l
+  end interface
+  
+  interface 
+    subroutine psb_@X@_mv_to_l(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+    end subroutine psb_@X@_mv_to_l
+  end interface
+  
+  interface 
+    subroutine psb_@X@_cp_to_l(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@spmat_type
+      class(psb_@X@spmat_type), intent(in) :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+    end subroutine psb_@X@_cp_to_l
+  end interface
+
+  !
+  ! Transfer the internal allocation to the target.
+  !  
+  interface psb_move_alloc 
+    subroutine psb_@X@spmat_type_move(a,b,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@spmat_type), intent(inout)   :: b
+      integer(psb_ipk_), intent(out)                   :: info
+    end subroutine psb_@X@spmat_type_move
+  end interface
+  
+  interface 
+    subroutine psb_@X@spmat_clone(a,b,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@X@spmat_type), intent(inout) :: b
+      integer(psb_ipk_), intent(out)        :: info
+    end subroutine psb_@X@spmat_clone
+  end interface
+
+
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Computational routines
+  !
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+  interface psb_csmm
+    subroutine psb_@X@_csmm(alpha,a,x,beta,y,info,trans) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:,:)
+      @TYPE@(@FKIND@), intent(inout) :: y(:,:)
+      integer(psb_ipk_), intent(out)            :: info
+      character, optional, intent(in) :: trans
+    end subroutine psb_@X@_csmm
+    subroutine psb_@X@_csmv(alpha,a,x,beta,y,info,trans) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:)
+      @TYPE@(@FKIND@), intent(inout) :: y(:)
+      integer(psb_ipk_), intent(out)            :: info
+      character, optional, intent(in) :: trans
+    end subroutine psb_@X@_csmv
+    subroutine psb_@X@_csmv_vect(alpha,a,x,beta,y,info,trans) 
+      use psb_@X@_vect_mod, only : psb_@X@_vect_type
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in)   :: a
+      @TYPE@(@FKIND@), intent(in)        :: alpha, beta
+      type(psb_@X@_vect_type), intent(inout) :: x
+      type(psb_@X@_vect_type), intent(inout) :: y
+      integer(psb_ipk_), intent(out)                 :: info
+      character, optional, intent(in)      :: trans
+    end subroutine psb_@X@_csmv_vect
+  end interface
+  
+  interface psb_cssm
+    subroutine psb_@X@_cssm(alpha,a,x,beta,y,info,trans,scale,d) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:,:)
+      @TYPE@(@FKIND@), intent(inout) :: y(:,:)
+      integer(psb_ipk_), intent(out)            :: info
+      character, optional, intent(in) :: trans, scale
+      @TYPE@(@FKIND@), intent(in), optional :: d(:)
+    end subroutine psb_@X@_cssm
+    subroutine psb_@X@_cssv(alpha,a,x,beta,y,info,trans,scale,d) 
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), intent(in)    :: alpha, beta, x(:)
+      @TYPE@(@FKIND@), intent(inout) :: y(:)
+      integer(psb_ipk_), intent(out)            :: info
+      character, optional, intent(in) :: trans, scale
+      @TYPE@(@FKIND@), intent(in), optional :: d(:)
+    end subroutine psb_@X@_cssv
+    subroutine psb_@X@_cssv_vect(alpha,a,x,beta,y,info,trans,scale,d) 
+      use psb_@X@_vect_mod, only : psb_@X@_vect_type
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in)   :: a
+      @TYPE@(@FKIND@), intent(in)        :: alpha, beta
+      type(psb_@X@_vect_type), intent(inout) :: x
+      type(psb_@X@_vect_type), intent(inout) :: y
+      integer(psb_ipk_), intent(out)                 :: info
+      character, optional, intent(in)      :: trans, scale
+      type(psb_@X@_vect_type), optional, intent(inout)   :: d
+    end subroutine psb_@X@_cssv_vect
+  end interface
+  
+  interface 
+    function psb_@X@_maxval(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@X@_maxval
+  end interface
+  
+  interface 
+    function psb_@X@_csnmi(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@X@_csnmi
+  end interface
+  
+  interface 
+    function psb_@X@_csnm1(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@X@_csnm1
+  end interface
+
+  interface 
+    function psb_@X@_rowsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable      :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@_rowsum
+  end interface
+
+  interface 
+    function psb_@X@_arwsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@_arwsum
+  end interface
+  
+  interface 
+    function psb_@X@_colsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable      :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@X@_colsum
+  end interface
+
+  interface 
+    function psb_@X@_aclsum(a,info)  result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
+      integer(psb_ipk_), intent(out)        :: info
+    end function psb_@X@_aclsum
+  end interface
+
+  interface 
+    function psb_@X@_get_diag(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable         :: d(:)
+      integer(psb_ipk_), intent(out)       :: info
+    end function psb_@X@_get_diag
+  end interface
+  
+  interface psb_scal
+    subroutine psb_@X@_scal(d,a,info,side)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)             :: d(:)
+      integer(psb_ipk_), intent(out)                    :: info
+      character, intent(in), optional :: side
+    end subroutine psb_@X@_scal
+    subroutine psb_@X@_scals(d,a,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)             :: d
+      integer(psb_ipk_), intent(out)                    :: info
+    end subroutine psb_@X@_scals
+  end interface
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Setters 
+  !
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+
+  interface 
+    subroutine  psb_@LX@_set_nrows(m,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_lpk_), intent(in) :: m
+    end subroutine psb_@LX@_set_nrows
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_ncols(n,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_lpk_), intent(in) :: n
+    end subroutine psb_@LX@_set_ncols
+  end interface
+  
+  interface 
+    subroutine  psb_@LX@_set_dupl(n,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in) :: n
+    end subroutine psb_@LX@_set_dupl
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_null(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_set_null
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_bld(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_set_bld
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_upd(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_set_upd
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_asb(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_set_asb
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_sorted(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@LX@_set_sorted
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_triangle(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@LX@_set_triangle
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_unit(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@LX@_set_unit
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_lower(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@LX@_set_lower
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_set_upper(a,val) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      logical, intent(in), optional :: val
+    end subroutine psb_@LX@_set_upper
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_sparse_print(iout,a,iv,head,ivr,ivc)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      integer(psb_ipk_), intent(in)               :: iout
+      class(psb_@LX@spmat_type), intent(in) :: a   
+      integer(psb_lpk_), intent(in), optional     :: iv(:)
+      character(len=*), optional        :: head
+      integer(psb_lpk_), intent(in), optional     :: ivr(:), ivc(:)
+    end subroutine psb_@LX@_sparse_print
+  end interface
+
+  interface 
+    subroutine psb_@LX@_n_sparse_print(fname,a,iv,head,ivr,ivc)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      character(len=*), intent(in)      :: fname
+      class(psb_@LX@spmat_type), intent(in) :: a   
+      integer(psb_lpk_), intent(in), optional     :: iv(:)
+      character(len=*), optional        :: head
+      integer(psb_lpk_), intent(in), optional     :: ivr(:), ivc(:)
+    end subroutine psb_@LX@_n_sparse_print
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_get_neigh(a,idx,neigh,n,info,lev)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(in) :: a   
+      integer(psb_lpk_), intent(in)                :: idx 
+      integer(psb_lpk_), intent(out)               :: n   
+      integer(psb_lpk_), allocatable, intent(out)  :: neigh(:)
+      integer(psb_ipk_), intent(out)               :: info
+      integer(psb_lpk_), optional, intent(in)      :: lev 
+    end subroutine psb_@LX@_get_neigh
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_csall(nr,nc,a,info,nz) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_lpk_), intent(in)             :: nr,nc
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_lpk_), intent(in), optional   :: nz
+    end subroutine psb_@LX@_csall
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_reallocate_nz(nz,a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      integer(psb_lpk_), intent(in) :: nz
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_reallocate_nz
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_free(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_free
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_trim(a) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_trim
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)      :: val(:)
+      integer(psb_lpk_), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_lpk_), intent(in), optional   :: gtl(:)
+    end subroutine psb_@LX@_csput_a
+  end interface
+
+  
+  interface 
+    subroutine psb_@LX@_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+      use psb_@X@_vect_mod, only : psb_@X@_vect_type
+      use psb_l_vect_mod, only : psb_l_vect_type
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      type(psb_@X@_vect_type), intent(inout)  :: val
+      type(psb_l_vect_type), intent(inout)  :: ia, ja
+      integer(psb_lpk_), intent(in)             :: nz, imin,imax,jmin,jmax
+      integer(psb_ipk_), intent(out)            :: info
+      integer(psb_lpk_), intent(in), optional   :: gtl(:)
+    end subroutine psb_@LX@_csput_v
+  end interface
+ 
+  interface 
+    subroutine psb_@LX@_csgetptn(imin,imax,a,nz,ia,ja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      integer(psb_lpk_), intent(in)                  :: imin,imax
+      integer(psb_lpk_), intent(out)                 :: nz
+      integer(psb_lpk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_lpk_), intent(in), optional        :: iren(:)
+      integer(psb_lpk_), intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_csgetptn
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_csgetrow(imin,imax,a,nz,ia,ja,val,info,&
+         & jmin,jmax,iren,append,nzin,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      integer(psb_lpk_), intent(in)                  :: imin,imax
+      integer(psb_lpk_), intent(out)                 :: nz
+      integer(psb_lpk_), allocatable, intent(inout)  :: ia(:), ja(:)
+      @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_lpk_), intent(in), optional        :: iren(:)
+      integer(psb_lpk_), intent(in), optional        :: jmin,jmax, nzin
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_csgetrow
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_csgetblk(imin,imax,a,b,info,&
+       & jmin,jmax,iren,append,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in)    :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+      integer(psb_lpk_), intent(in)                  :: imin,imax
+      integer(psb_ipk_),intent(out)                  :: info
+      logical, intent(in), optional        :: append
+      integer(psb_lpk_), intent(in), optional        :: iren(:)
+      integer(psb_lpk_), intent(in), optional        :: jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_csgetblk
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_tril(a,l,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,u)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in)      :: a
+      class(psb_@LX@spmat_type), intent(inout)   :: l
+      integer(psb_ipk_),intent(out)           :: info
+      integer(psb_lpk_), intent(in), optional :: diag,imin,imax,jmin,jmax
+      logical, intent(in), optional           :: rscale,cscale
+      class(psb_@LX@spmat_type), optional, intent(inout)   :: u
+    end subroutine psb_@LX@_tril
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_triu(a,u,info,diag,imin,imax,&
+         & jmin,jmax,rscale,cscale,l)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in)      :: a
+      class(psb_@LX@spmat_type), intent(inout)   :: u
+      integer(psb_ipk_),intent(out)           :: info
+      integer(psb_lpk_), intent(in), optional :: diag,imin,imax,jmin,jmax
+      logical, intent(in), optional           :: rscale,cscale
+      class(psb_@LX@spmat_type), optional, intent(inout)   :: l
+    end subroutine psb_@LX@_triu
+  end interface
+
+
+  interface 
+    subroutine psb_@LX@_csclip(a,b,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_lpk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_csclip
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_b_csclip(a,b,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_coo_sparse_mat
+      class(psb_@LX@spmat_type), intent(in) :: a
+      type(psb_@LX@_coo_sparse_mat), intent(out) :: b
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_lpk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_b_csclip
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_mold(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout)     :: a
+      class(psb_@LX@_base_sparse_mat), allocatable, intent(out) :: b
+    end subroutine psb_@LX@_mold
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_asb(a,mold) 
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), optional, intent(in) :: mold
+    end subroutine psb_@LX@_asb
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_transp_1mat(a)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_transp_1mat
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_transp_2mat(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(in)  :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+    end subroutine psb_@LX@_transp_2mat
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_transc_1mat(a)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+    end subroutine psb_@LX@_transc_1mat
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_transc_2mat(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(in)  :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+    end subroutine psb_@LX@_transc_2mat
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_reinit(a,clear)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a   
+      logical, intent(in), optional :: clear
+    end subroutine psb_@LX@_reinit
+    
+  end interface
+
+
+  !
+  ! These methods are specific to the outer SPMAT_TYPE level, since
+  ! they tamper with the inner BASE_SPARSE_MAT object.
+  !
+  !
+
+  !
+  ! CSCNV: switches to a different internal derived type.
+  !   3 versions: copying to target
+  !               copying to a base_sparse_mat object.
+  !               in place
+  !                 
+  !
+  interface 
+    subroutine psb_@LX@_cscnv(a,b,info,type,mold,upd,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(in)      :: a
+      class(psb_@LX@spmat_type), intent(inout)   :: b
+      integer(psb_ipk_), intent(out)                   :: info
+      integer(psb_ipk_),optional, intent(in)           :: dupl, upd
+      character(len=*), optional, intent(in) :: type
+      class(psb_@LX@_base_sparse_mat), intent(in), optional :: mold
+    end subroutine psb_@LX@_cscnv
+  end interface
+  
+
+  interface 
+    subroutine psb_@LX@_cscnv_ip(a,iinfo,type,mold,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(out)                   :: iinfo
+      integer(psb_ipk_),optional, intent(in)           :: dupl
+      character(len=*), optional, intent(in) :: type
+      class(psb_@LX@_base_sparse_mat), intent(in), optional :: mold
+    end subroutine psb_@LX@_cscnv_ip
+  end interface
+  
+
+  interface 
+    subroutine psb_@LX@_cscnv_base(a,b,info,dupl)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(in)       :: a
+      class(psb_@LX@_base_sparse_mat), intent(out) :: b
+      integer(psb_ipk_), intent(out)                   :: info
+      integer(psb_ipk_),optional, intent(in)           :: dupl
+    end subroutine psb_@LX@_cscnv_base
+  end interface
+  
+  
+  !
+  ! These four interfaces cut through the
+  ! encapsulation between spmat_type and base_sparse_mat.
+  !
+  interface 
+    subroutine psb_@LX@_mv_from(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_mv_from
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_from(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(out) :: a
+      class(psb_@LX@_base_sparse_mat), intent(in) :: b
+    end subroutine psb_@LX@_cp_from
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_mv_to(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_mv_to
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_to(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat    
+      class(psb_@LX@spmat_type), intent(in) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_cp_to
+  end interface
+  !
+  ! Mixed type conversions
+  !
+  interface 
+    subroutine psb_@LX@_mv_from_ib(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_mv_from_ib
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_from_ib(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(out) :: a
+      class(psb_@IX@_base_sparse_mat), intent(in) :: b
+    end subroutine psb_@LX@_cp_from_ib
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_mv_to_ib(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@_base_sparse_mat
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_mv_to_ib
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_to_ib(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@_base_sparse_mat    
+      class(psb_@LX@spmat_type), intent(in) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+    end subroutine psb_@LX@_cp_to_ib
+  end interface
+
+    interface 
+    subroutine psb_@LX@_mv_from_i(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@IX@spmat_type), intent(inout) :: b
+    end subroutine psb_@LX@_mv_from_i
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_from_i(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@spmat_type
+      class(psb_@LX@spmat_type), intent(out) :: a
+      class(psb_@IX@spmat_type), intent(in) :: b
+    end subroutine psb_@LX@_cp_from_i
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_mv_to_i(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@IX@spmat_type), intent(inout) :: b
+    end subroutine psb_@LX@_mv_to_i
+  end interface
+  
+  interface 
+    subroutine psb_@LX@_cp_to_i(a,b)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@spmat_type
+      class(psb_@LX@spmat_type), intent(in) :: a
+      class(psb_@IX@spmat_type), intent(inout) :: b
+    end subroutine psb_@LX@_cp_to_i
+  end interface
+
+  
+  !
+  ! Transfer the internal allocation to the target.
+  !  
+  interface psb_move_alloc 
+    subroutine psb_@LX@spmat_type_move(a,b,info)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@LX@spmat_type), intent(inout)   :: b
+      integer(psb_ipk_), intent(out)                   :: info
+    end subroutine psb_@LX@spmat_type_move
+  end interface
+  
+  interface 
+    subroutine psb_@LX@spmat_clone(a,b,info)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@LX@spmat_type), intent(inout) :: b
+      integer(psb_ipk_), intent(out)        :: info
+    end subroutine psb_@LX@spmat_clone
+  end interface
+
+
+
+  interface 
+    function psb_@LX@_get_diag(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable         :: d(:)
+      integer(psb_ipk_), intent(out)       :: info
+    end function psb_@LX@_get_diag
+  end interface
+  
+  interface psb_scal
+    subroutine psb_@LX@_scal(d,a,info,side)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)             :: d(:)
+      integer(psb_ipk_), intent(out)                    :: info
+      character, intent(in), optional :: side
+    end subroutine psb_@LX@_scal
+    subroutine psb_@LX@_scals(d,a,info)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      @TYPE@(@FKIND@), intent(in)             :: d
+      integer(psb_ipk_), intent(out)                    :: info
+    end subroutine psb_@LX@_scals
+  end interface
+
+  interface 
+    function psb_@LX@_maxval(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_maxval
+  end interface
+  
+  interface 
+    function psb_@LX@_csnmi(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_csnmi
+  end interface
+  
+  interface 
+    function psb_@LX@_csnm1(a) result(res)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@)         :: res
+    end function psb_@LX@_csnm1
+  end interface
+
+  interface 
+    function psb_@LX@_rowsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable      :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@LX@_rowsum
+  end interface
+
+  interface 
+    function psb_@LX@_arwsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@LX@_arwsum
+  end interface
+  
+  interface 
+    function psb_@LX@_colsum(a,info) result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @TYPE@(@FKIND@), allocatable      :: d(:)
+      integer(psb_ipk_), intent(out)               :: info
+    end function psb_@LX@_colsum
+  end interface
+
+  interface 
+    function psb_@LX@_aclsum(a,info)  result(d)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(in) :: a
+      @RTYPE@(@FKIND@), allocatable        :: d(:)
+      integer(psb_ipk_), intent(out)        :: info
+    end function psb_@LX@_aclsum
+  end interface
+  
+contains 
+
+  subroutine  psb_@X@_set_mat_default(a) 
+    implicit none 
+    class(psb_@X@_base_sparse_mat), intent(in) :: a
+    
+    if (allocated(psb_@X@_base_mat_default)) then 
+      deallocate(psb_@X@_base_mat_default)
+    end if
+    allocate(psb_@X@_base_mat_default, mold=a)
+
+  end subroutine psb_@X@_set_mat_default
+  
+  function psb_@X@_get_mat_default(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    class(psb_@X@_base_sparse_mat), pointer :: res
+    
+    res => psb_@X@_get_base_mat_default()
+    
+  end function psb_@X@_get_mat_default
+
+  
+  function psb_@X@_get_base_mat_default() result(res)
+    implicit none 
+    class(psb_@X@_base_sparse_mat), pointer :: res
+    
+    if (.not.allocated(psb_@X@_base_mat_default)) then 
+      allocate(psb_@X@_csr_sparse_mat :: psb_@X@_base_mat_default)
+    end if
+
+    res => psb_@X@_base_mat_default
+    
+  end function psb_@X@_get_base_mat_default
+
+
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Getters 
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+  
+  function psb_@X@_sizeof(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_epk_) :: res
+    
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%sizeof()
+    end if
+    
+  end function psb_@X@_sizeof
+
+
+  function psb_@X@_get_fmt(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    character(len=5) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_fmt()
+    else
+      res = 'NULL'
+    end if
+
+  end function psb_@X@_get_fmt
+
+
+  function psb_@X@_get_dupl(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_dupl()
+    else
+      res = psb_invalid_
+    end if
+  end function psb_@X@_get_dupl
+
+  function psb_@X@_get_nrows(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_nrows()
+    else
+      res = 0
+    end if
+
+  end function psb_@X@_get_nrows
+
+  function psb_@X@_get_ncols(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_ncols()
+    else
+      res = 0
+    end if
+
+  end function psb_@X@_get_ncols
+
+  function psb_@X@_is_triangle(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_triangle()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_triangle
+
+  function psb_@X@_is_unit(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_unit()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_unit
+
+  function psb_@X@_is_upper(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_upper()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_upper
+
+  function psb_@X@_is_lower(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = .not. a%a%is_upper()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_lower
+
+  function psb_@X@_is_null(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_null() 
+    else
+      res = .true.
+    end if
+
+  end function psb_@X@_is_null
+
+  function psb_@X@_is_bld(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_bld()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_bld
+
+  function psb_@X@_is_upd(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_upd()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_upd
+
+  function psb_@X@_is_asb(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_asb()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_asb
+
+  function psb_@X@_is_sorted(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_sorted()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_sorted
+
+  function psb_@X@_is_by_rows(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_by_rows()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_by_rows
+
+  function psb_@X@_is_by_cols(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_by_cols()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_by_cols
+
+
+  !
+  subroutine @X@_mat_sync(a)
+    implicit none 
+    class(psb_@X@spmat_type), target, intent(in) :: a
+    
+    if (allocated(a%a))  call a%a%sync()
+
+  end subroutine @X@_mat_sync
+
+  !
+  subroutine @X@_mat_set_host(a)
+    implicit none 
+    class(psb_@X@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_host()
+    
+  end subroutine @X@_mat_set_host
+
+
+  !
+  subroutine @X@_mat_set_dev(a)
+    implicit none 
+    class(psb_@X@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_dev()
+    
+  end subroutine @X@_mat_set_dev
+
+  !
+  subroutine @X@_mat_set_sync(a)
+    implicit none 
+    class(psb_@X@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_sync()
+    
+  end subroutine @X@_mat_set_sync
+
+  !
+  function @X@_mat_is_dev(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical  :: res
+  
+    if (allocated(a%a)) then
+      res = a%a%is_dev()
+    else
+      res = .false.
+    end if
+  end function @X@_mat_is_dev
+  
+  !
+  function @X@_mat_is_host(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical  :: res
+
+  
+    if (allocated(a%a)) then
+      res = a%a%is_host()
+    else
+      res = .true.
+    end if
+  end function @X@_mat_is_host
+
+  !
+  function @X@_mat_is_sync(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical  :: res
+
+  
+    if (allocated(a%a)) then
+      res = a%a%is_sync()
+    else
+      res = .true.
+    end if
+
+  end function @X@_mat_is_sync
+
+
+  function psb_@X@_is_repeatable_updates(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_repeatable_updates()
+    else
+      res = .false.
+    end if
+
+  end function psb_@X@_is_repeatable_updates
+
+  subroutine psb_@X@_set_repeatable_updates(a,val) 
+    implicit none 
+    class(psb_@X@spmat_type), intent(inout) :: a
+    logical, intent(in), optional :: val
+    
+    if (allocated(a%a)) then 
+      call a%a%set_repeatable_updates(val)
+    end if
+    
+  end subroutine psb_@X@_set_repeatable_updates
+
+
+  function psb_@X@_get_nzeros(a) result(res)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%get_nzeros()
+    end if
+
+  end function psb_@X@_get_nzeros
+
+  function psb_@X@_get_size(a) result(res)
+
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%get_size()
+    end if
+
+  end function psb_@X@_get_size
+
+
+  function psb_@X@_get_nz_row(idx,a) result(res)
+    implicit none 
+    integer(psb_ipk_), intent(in)               :: idx
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    res = 0
+    
+    if (allocated(a%a)) res = a%a%get_nz_row(idx)
+
+  end function psb_@X@_get_nz_row
+
+  subroutine psb_@X@_clean_zeros(a,info)
+    implicit none 
+    integer(psb_ipk_), intent(out)        :: info
+    class(psb_@X@spmat_type), intent(inout) :: a
+
+    info = 0 
+    if (allocated(a%a)) call a%a%clean_zeros(info)
+
+  end subroutine psb_@X@_clean_zeros
+
+#if defined(IPK4) && defined(LPK8)
+  subroutine psb_@X@_lcsgetptn(imin,imax,a,nz,ia,ja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_), intent(in)                  :: imin,imax
+    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_lpk_), allocatable, intent(inout)  :: ia(:), ja(:)
+    integer(psb_ipk_),intent(out)                  :: info
+    logical, intent(in), optional        :: append
+    integer(psb_ipk_), intent(in), optional        :: iren(:)
+    integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+    logical, intent(in), optional        :: rscale,cscale
+
+    ! Local
+    integer(psb_ipk_), allocatable :: lia(:), lja(:)
+
+    info = psb_success_
+    !
+    ! Note: in principle we could use reallocate on assignment,
+    ! but GCC bug 52162 forces us to take defensive programming.
+    !
+    if (allocated(ia)) then
+      call psb_realloc(size(ia),lia,info)
+      if (info == psb_success_) lia(:) = ia(:)
+    end if
+    if (allocated(ja)) then
+      call psb_realloc(size(ja),lja,info)
+      if (info == psb_success_) lja(:) = ja(:)
+    end if
+    call a%csget(imin,imax,nz,lia,lja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+   
+    call psb_ensure_size(size(lia),ia,info)
+    if (info == psb_success_) ia(:) = lia(:)
+    call psb_ensure_size(size(lja),ja,info)
+    if (info == psb_success_) ja(:) = lja(:)
+    
+  end subroutine psb_@X@_lcsgetptn
+  
+  subroutine psb_@X@_lcsgetrow(imin,imax,a,nz,ia,ja,val,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+    implicit none 
+    class(psb_@X@spmat_type), intent(in) :: a
+    integer(psb_ipk_), intent(in)                  :: imin,imax
+    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_lpk_), allocatable, intent(inout)  :: ia(:), ja(:)
+    @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
+    integer(psb_ipk_),intent(out)                  :: info
+    logical, intent(in), optional        :: append
+    integer(psb_ipk_), intent(in), optional        :: iren(:)
+    integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+    logical, intent(in), optional        :: rscale,cscale
+    ! Local
+    integer(psb_ipk_), allocatable :: lia(:), lja(:)
+
+    !
+    ! Note: in principle we could use reallocate on assignment,
+    ! but GCC bug 52162 forces us to take defensive programming.
+    !
+    if (allocated(ia)) then
+      call psb_realloc(size(ia),lia,info)
+      if (info == psb_success_) lia(:) = ia(:)
+    end if
+    if (allocated(ja)) then
+      call psb_realloc(size(ja),lja,info)
+      if (info == psb_success_) lja(:) = ja(:)
+    end if
+
+    call a%csget(imin,imax,nz,lia,lja,val,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+   
+    call psb_ensure_size(size(lia),ia,info)
+    if (info == psb_success_) ia(:) = lia(:)
+    call psb_ensure_size(size(lja),ja,info)
+    if (info == psb_success_) ja(:) = lja(:)
+        
+  end subroutine psb_@X@_lcsgetrow
+#endif
+
+  !
+  ! @LX@ methods
+  !
+
+  
+  subroutine  psb_@LX@_set_mat_default(a) 
+    implicit none 
+    class(psb_@LX@_base_sparse_mat), intent(in) :: a
+    
+    if (allocated(psb_@LX@_base_mat_default)) then 
+      deallocate(psb_@LX@_base_mat_default)
+    end if
+    allocate(psb_@LX@_base_mat_default, mold=a)
+
+  end subroutine psb_@LX@_set_mat_default
+  
+  function psb_@LX@_get_mat_default(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    class(psb_@LX@_base_sparse_mat), pointer :: res
+    
+    res => psb_@LX@_get_base_mat_default()
+    
+  end function psb_@LX@_get_mat_default
+
+  
+  function psb_@LX@_get_base_mat_default() result(res)
+    implicit none 
+    class(psb_@LX@_base_sparse_mat), pointer :: res
+    
+    if (.not.allocated(psb_@LX@_base_mat_default)) then 
+      allocate(psb_@LX@_csr_sparse_mat :: psb_@LX@_base_mat_default)
+    end if
+
+    res => psb_@LX@_base_mat_default
+    
+  end function psb_@LX@_get_base_mat_default
+
+
+
+
+  ! == ===================================
+  !
+  !
+  !
+  ! Getters 
+  !
+  !
+  !
+  !
+  !
+  ! == ===================================
+
+  
+  function psb_@LX@_sizeof(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_epk_) :: res
+    
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%sizeof()
+    end if
+    
+  end function psb_@LX@_sizeof
+
+
+  function psb_@LX@_get_fmt(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    character(len=5) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_fmt()
+    else
+      res = 'NULL'
+    end if
+
+  end function psb_@LX@_get_fmt
+
+
+  function psb_@LX@_get_dupl(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_ipk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_dupl()
+    else
+      res = psb_invalid_
+    end if
+  end function psb_@LX@_get_dupl
+
+  function psb_@LX@_get_nrows(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_lpk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_nrows()
+    else
+      res = 0
+    end if
+
+  end function psb_@LX@_get_nrows
+
+  function psb_@LX@_get_ncols(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_lpk_) :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%get_ncols()
+    else
+      res = 0
+    end if
+
+  end function psb_@LX@_get_ncols
+
+  function psb_@LX@_is_triangle(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_triangle()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_triangle
+
+  function psb_@LX@_is_unit(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_unit()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_unit
+
+  function psb_@LX@_is_upper(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_upper()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_upper
+
+  function psb_@LX@_is_lower(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = .not. a%a%is_upper()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_lower
+
+  function psb_@LX@_is_null(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_null() 
+    else
+      res = .true.
+    end if
+
+  end function psb_@LX@_is_null
+
+  function psb_@LX@_is_bld(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_bld()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_bld
+
+  function psb_@LX@_is_upd(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_upd()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_upd
+
+  function psb_@LX@_is_asb(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_asb()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_asb
+
+  function psb_@LX@_is_sorted(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_sorted()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_sorted
+
+  function psb_@LX@_is_by_rows(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_by_rows()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_by_rows
+
+  function psb_@LX@_is_by_cols(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_by_cols()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_by_cols
+
+
+  !
+  subroutine @LX@_mat_sync(a)
+    implicit none 
+    class(psb_@LX@spmat_type), target, intent(in) :: a
+    
+    if (allocated(a%a))  call a%a%sync()
+
+  end subroutine @LX@_mat_sync
+
+  !
+  subroutine @LX@_mat_set_host(a)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_host()
+    
+  end subroutine @LX@_mat_set_host
+
+
+  !
+  subroutine @LX@_mat_set_dev(a)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_dev()
+    
+  end subroutine @LX@_mat_set_dev
+
+  !
+  subroutine @LX@_mat_set_sync(a)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(inout) :: a
+
+    if (allocated(a%a))  call a%a%set_sync()
+    
+  end subroutine @LX@_mat_set_sync
+
+  !
+  function @LX@_mat_is_dev(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical  :: res
+  
+    if (allocated(a%a)) then
+      res = a%a%is_dev()
+    else
+      res = .false.
+    end if
+  end function @LX@_mat_is_dev
+  
+  !
+  function @LX@_mat_is_host(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical  :: res
+
+  
+    if (allocated(a%a)) then
+      res = a%a%is_host()
+    else
+      res = .true.
+    end if
+  end function @LX@_mat_is_host
+
+  !
+  function @LX@_mat_is_sync(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical  :: res
+
+  
+    if (allocated(a%a)) then
+      res = a%a%is_sync()
+    else
+      res = .true.
+    end if
+
+  end function @LX@_mat_is_sync
+
+
+  function psb_@LX@_is_repeatable_updates(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    logical :: res
+
+    if (allocated(a%a)) then 
+      res = a%a%is_repeatable_updates()
+    else
+      res = .false.
+    end if
+
+  end function psb_@LX@_is_repeatable_updates
+
+  subroutine psb_@LX@_set_repeatable_updates(a,val) 
+    implicit none 
+    class(psb_@LX@spmat_type), intent(inout) :: a
+    logical, intent(in), optional :: val
+    
+    if (allocated(a%a)) then 
+      call a%a%set_repeatable_updates(val)
+    end if
+    
+  end subroutine psb_@LX@_set_repeatable_updates
+
+
+  function psb_@LX@_get_nzeros(a) result(res)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_lpk_) :: res
+
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%get_nzeros()
+    end if
+
+  end function psb_@LX@_get_nzeros
+
+  function psb_@LX@_get_size(a) result(res)
+
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_lpk_) :: res
+
+
+    res = 0
+    if (allocated(a%a)) then 
+      res = a%a%get_size()
+    end if
+
+  end function psb_@LX@_get_size
+
+
+  function psb_@LX@_get_nz_row(idx,a) result(res)
+    implicit none 
+    integer(psb_lpk_), intent(in)               :: idx
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_lpk_) :: res
+
+    res = 0
+    
+    if (allocated(a%a)) res = a%a%get_nz_row(idx)
+
+  end function psb_@LX@_get_nz_row
+
+  subroutine psb_@LX@_clean_zeros(a,info)
+    implicit none 
+    integer(psb_ipk_), intent(out)        :: info
+    class(psb_@LX@spmat_type), intent(inout) :: a
+
+    info = 0 
+    if (allocated(a%a)) call a%a%clean_zeros(info)
+
+  end subroutine psb_@LX@_clean_zeros
+
+#if defined(IPK4) && defined(LPK8)
+  subroutine psb_@LX@_icsgetptn(imin,imax,a,nz,ia,ja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_ipk_), intent(in)                  :: imin,imax
+    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+    integer(psb_ipk_),intent(out)                  :: info
+    logical, intent(in), optional        :: append
+    integer(psb_ipk_), intent(in), optional        :: iren(:)
+    integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+    logical, intent(in), optional        :: rscale,cscale
+
+    ! Local
+    integer(psb_ipk_), allocatable :: lia(:), lja(:)
+
+    info = psb_success_
+    !
+    ! Note: in principle we could use reallocate on assignment,
+    ! but GCC bug 52162 forces us to take defensive programming.
+    !
+    if (allocated(ia)) then
+      call psb_realloc(size(ia),lia,info)
+      if (info == psb_success_) lia(:) = ia(:)
+    end if
+    if (allocated(ja)) then
+      call psb_realloc(size(ja),lja,info)
+      if (info == psb_success_) lja(:) = ja(:)
+    end if
+    call a%csget(imin,imax,nz,lia,lja,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+   
+    call psb_ensure_size(size(lia),ia,info)
+    if (info == psb_success_) ia(:) = lia(:)
+    call psb_ensure_size(size(lja),ja,info)
+    if (info == psb_success_) ja(:) = lja(:)
+    
+  end subroutine psb_@LX@_icsgetptn
+  
+  subroutine psb_@LX@_icsgetrow(imin,imax,a,nz,ia,ja,val,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+    implicit none 
+    class(psb_@LX@spmat_type), intent(in) :: a
+    integer(psb_ipk_), intent(in)                  :: imin,imax
+    integer(psb_ipk_), intent(out)                 :: nz
+    integer(psb_ipk_), allocatable, intent(inout)  :: ia(:), ja(:)
+    @TYPE@(@FKIND@), allocatable,  intent(inout)    :: val(:)
+    integer(psb_ipk_),intent(out)                  :: info
+    logical, intent(in), optional        :: append
+    integer(psb_ipk_), intent(in), optional        :: iren(:)
+    integer(psb_ipk_), intent(in), optional        :: jmin,jmax, nzin
+    logical, intent(in), optional        :: rscale,cscale
+    ! Local
+    integer(psb_ipk_), allocatable :: lia(:), lja(:)
+
+    !
+    ! Note: in principle we could use reallocate on assignment,
+    ! but GCC bug 52162 forces us to take defensive programming.
+    !
+    if (allocated(ia)) then
+      call psb_realloc(size(ia),lia,info)
+      if (info == psb_success_) lia(:) = ia(:)
+    end if
+    if (allocated(ja)) then
+      call psb_realloc(size(ja),lja,info)
+      if (info == psb_success_) lja(:) = ja(:)
+    end if
+
+    call a%csget(imin,imax,nz,lia,lja,val,info,&
+       & jmin,jmax,iren,append,nzin,rscale,cscale)
+   
+    call psb_ensure_size(size(lia),ia,info)
+    if (info == psb_success_) ia(:) = lia(:)
+    call psb_ensure_size(size(lja),ja,info)
+    if (info == psb_success_) ja(:) = lja(:)
+        
+  end subroutine psb_@LX@_icsgetrow
+#endif
+
+end module psb_@X@_mat_mod

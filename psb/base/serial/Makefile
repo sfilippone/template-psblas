@@ -1,9 +1,9 @@
-#include ../../Make.inc
 TOP=../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
-SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xspspmm.p90
+SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xspspmm.p90 Xrwextd.p90
 SRCI=Xi_serial_impl.p90
 
 
@@ -29,7 +29,8 @@ sdcompl:
 	$(MAKE) bsrc ARITH=z
 
 sint:
-	$(MAKE) isrc ARITH=i
+	$(MAKE) isrc ARITH=m
+	$(MAKE) isrc ARITH=e
 
 bsrc: $(FSRC)
 
@@ -47,7 +48,9 @@ simpl:
 iclean:
 	cd impl && $(MAKE) clean
 
-
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/serial *.f90 *.F90)
+	cd impl && $(MAKE) cpy
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90

@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -7,7 +7,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 VSRC=X_base_vect_mod.p90  X_vect_mod.P90  
 SRC=X_base_mat_mod.p90 X_csc_mat_mod.p90 \
-    X_csr_mat_mod.p90  X_mat_mod.p90  X_serial_mod.p90
+    X_csr_mat_mod.p90  X_mat_mod.P90  X_serial_mod.p90 
 SRCI=
 
 
@@ -24,14 +24,13 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint 
+src: ssingle sdouble scomplex sdcompl sint
+
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -43,6 +42,9 @@ sdcompl:
 
 sint:
 	$(MAKE) vsrc isrc ARITH=i
+	$(MAKE) vsrc isrc ARITH=l
+sldbl:
+	$(MAKE) fsrc vsrc ARITH=ld
 
 all:  single double complex dcompl
 
@@ -55,11 +57,16 @@ complex:
 dcompl:
 	$(MAKE) lib ARITH=z
 
-bsrc: vsrc isrc $(FSRC)
+bsrc: vsrc isrc fsrc
 vsrc: $(FVSRC)
 isrc: $(FSRCI)
+fsrc: $(FSRC)
 
 lib: $(FOBJS)
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/serial *.f90 *.F90)
+
 
 X_base_mat_mod.p90: X_base_vect_mod.p90
 	touch $@

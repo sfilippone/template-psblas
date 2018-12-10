@@ -1,8 +1,14 @@
 s/@X@/d/g
+s/@SX@/d/g
+s/@IX@/d/g
+s/@LX@/ld/g
+s/@S@//g
 s/@CONJG@//g
 s/@TYPE@/real/g
 s/@RTYPE@/real/g
 s/@FKIND@/psb_dpk_/g
+s/@IXKIND@/psb_ipk_/g
+s/@LXKIND@/psb_lpk_/g	
 s/@RT@/d/g
 
 s/@SIZET@/psb_sizeof_dp/g 
@@ -16,9 +22,12 @@ s/@RONE@/done/g
 s/@DOT@/ddot/g
 s/@NRM2@/dnrm2/g
 /^ *@INTS@ *$/,/^ *@INTE@ *$/d
+/^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@NOTINTS@ *$/d
 /^ *@NOTINTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
+/^ *@NOTCPLXS@ *$/d
+/^ *@NOTCPLXE@ *$/d
 /^ *@REALS@ *$/d
 /^ *@REALE@ *$/d
 /^ *@DPKS@ *$/d
@@ -27,7 +36,8 @@ s/@NRM2@/dnrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_r_dpk_/g
-s/@PSB_SWAP_TAG@/psb_double_swap_tag/g
+s/@PSB_TAG@/psb_double_tag/g
+s/@PSB_SWAP_TAG@/psb_double_swap_tag/g	
 
 s/@SPGPU_TYPE@/spgpu_type_double/g
 

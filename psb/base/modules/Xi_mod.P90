@@ -1,0 +1,235 @@
+!   
+!                Parallel Sparse BLAS  version 3.5
+!      (C) Copyright 2006-2018
+!        Salvatore Filippone    
+!        Alfredo Buttari      
+!   
+!    Redistribution and use in source and binary forms, with or without
+!    modification, are permitted provided that the following conditions
+!    are met:
+!      1. Redistributions of source code must retain the above copyright
+!         notice, this list of conditions and the following disclaimer.
+!      2. Redistributions in binary form must reproduce the above copyright
+!         notice, this list of conditions, and the following disclaimer in the
+!         documentation and/or other materials provided with the distribution.
+!      3. The name of the PSBLAS group or the names of its contributors may
+!         not be used to endorse or promote products derived from this
+!         software without specific written permission.
+!   
+!    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!    POSSIBILITY OF SUCH DAMAGE.
+!   
+!    
+module psi_@X@_mod
+
+@INTS@
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_epk_, psb_lpk_
+  use psi_m_comm_a_mod
+  use psi_e_comm_a_mod
+@INTE@
+@NOTINTS@
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type
+  use psi_@X@_comm_a_mod
+@NOTINTE@
+  use psb_@X@_base_vect_mod, only : psb_@X@_base_vect_type 
+  use psb_@X@_base_multivect_mod, only : psb_@X@_base_multivect_type 
+  use psi_@X@_comm_v_mod
+  
+@INTS@
+@IINTS@
+  interface psi_compute_size
+    subroutine psi_@X@_compute_size(desc_data,&
+         & index_in, dl_lda, info)
+      import
+      implicit none 
+      integer(psb_ipk_) :: info
+      @TYPE@(@FKIND@) :: dl_lda
+      @TYPE@(@FKIND@) :: desc_data(:), index_in(:)
+    end subroutine psi_@X@_compute_size
+  end interface
+
+  interface psi_crea_bnd_elem
+    subroutine psi_@X@_crea_bnd_elem(bndel,desc_a,info)
+      import
+      implicit none 
+      @TYPE@(@FKIND@), allocatable            :: bndel(:)
+      type(psb_desc_type), intent(in) :: desc_a
+      integer(psb_ipk_), intent(out)            :: info
+    end subroutine psi_@X@_crea_bnd_elem
+  end interface
+
+  interface psi_crea_index
+    subroutine psi_@X@_crea_index(desc_a,index_in,index_out,nxch,nsnd,nrcv,info)
+      import
+      implicit none 
+      type(psb_desc_type), intent(in)     :: desc_a
+      @TYPE@(@FKIND@), intent(out)                :: nxch,nsnd,nrcv
+      @TYPE@(@FKIND@), intent(in)                 :: index_in(:)
+      @TYPE@(@FKIND@), allocatable, intent(inout) :: index_out(:)
+      integer(psb_ipk_), intent(out)      :: info
+    end subroutine psi_@X@_crea_index
+  end interface
+
+  interface psi_crea_ovr_elem
+    subroutine psi_@X@_crea_ovr_elem(me,desc_overlap,ovr_elem,info)
+      import
+      implicit none 
+      @TYPE@(@FKIND@), intent(in)               :: me, desc_overlap(:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: ovr_elem(:,:)
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psi_@X@_crea_ovr_elem
+  end interface
+
+  interface psi_desc_index
+    subroutine psi_@X@_desc_index(desc,index_in,dep_list,&
+         & length_dl,nsnd,nrcv,desc_index,info)
+      import
+      implicit none 
+      type(psb_desc_type) :: desc
+      @TYPE@(@FKIND@) :: index_in(:),dep_list(:)
+      @TYPE@(@FKIND@),allocatable  :: desc_index(:)
+      @TYPE@(@FKIND@) :: length_dl,nsnd,nrcv
+      integer(psb_ipk_) :: info
+    end subroutine psi_@X@_desc_index
+  end interface
+
+  interface psi_dl_check
+    subroutine psi_@X@_dl_check(dep_list,dl_lda,np,length_dl)
+      import
+      implicit none 
+      @TYPE@(@FKIND@) :: np,dl_lda,length_dl(0:np)
+      @TYPE@(@FKIND@) :: dep_list(dl_lda,0:np)
+    end subroutine psi_@X@_dl_check
+  end interface
+
+  interface psi_sort_dl
+    subroutine psi_@X@_sort_dl(dep_list,l_dep_list,np,info)
+      import
+      implicit none 
+      @TYPE@(@FKIND@) :: dep_list(:,:), l_dep_list(:)
+      integer(psb_ipk_) :: np
+      integer(psb_ipk_) :: info
+    end subroutine psi_@X@_sort_dl
+  end interface
+
+  interface psi_extract_dep_list
+    subroutine psi_@X@_extract_dep_list(ictxt,is_bld,is_upd,desc_str,dep_list,&
+         & length_dl,np,dl_lda,mode,info)
+      import
+      implicit none 
+      logical :: is_bld, is_upd
+      @TYPE@(@FKIND@) :: ictxt
+      @TYPE@(@FKIND@) :: dl_lda,mode
+      @TYPE@(@FKIND@) :: desc_str(*),dep_list(dl_lda,0:np),length_dl(0:np)
+      integer(psb_ipk_) :: np
+      integer(psb_ipk_) :: info
+    end subroutine psi_@X@_extract_dep_list
+  end interface
+
+  interface psi_fnd_owner
+    subroutine psi_@X@_fnd_owner(nv,idx,iprc,desc,info)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in) :: nv
+      @TYPE@(@FKIND@), intent(in) ::  idx(:)
+      @TYPE@(@FKIND@), allocatable, intent(out) ::  iprc(:)
+      type(psb_desc_type), intent(in) :: desc
+      integer(psb_ipk_), intent(out) :: info
+    end subroutine psi_@X@_fnd_owner
+  end interface psi_fnd_owner
+
+  interface psi_bld_tmphalo
+    subroutine psi_bld_tmphalo(desc,info)
+      import
+      implicit none       
+      type(psb_desc_type), intent(inout) :: desc
+      integer(psb_ipk_), intent(out) :: info
+    end subroutine psi_bld_tmphalo
+  end interface psi_bld_tmphalo
+
+
+  interface psi_bld_tmpovrl
+    subroutine psi_@X@_bld_tmpovrl(iv,desc,info)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)  :: iv(:)
+      type(psb_desc_type), intent(inout) :: desc
+      integer(psb_ipk_), intent(out) :: info
+    end subroutine psi_@X@_bld_tmpovrl
+  end interface psi_bld_tmpovrl
+
+  interface psi_cnv_dsc
+    subroutine psi_@X@_cnv_dsc(halo_in,ovrlap_in,ext_in,cdesc, info, mold)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)        :: halo_in(:), ovrlap_in(:),ext_in(:)
+      type(psb_desc_type), intent(inout) :: cdesc
+      integer(psb_ipk_), intent(out)               :: info
+      class(psb_@X@_base_vect_type), optional, intent(in) :: mold
+    end subroutine psi_@X@_cnv_dsc
+  end interface psi_cnv_dsc
+
+  interface psi_renum_index
+    subroutine psi_@X@_renum_index(iperm,idx,info)
+      import
+      implicit none       
+      integer(psb_ipk_), intent(out)   :: info
+      @TYPE@(@FKIND@), intent(in)    :: iperm(:)
+      @TYPE@(@FKIND@), intent(inout) :: idx(:)
+    end subroutine psi_@X@_renum_index
+  end interface psi_renum_index
+
+  interface psi_inner_cnv
+    subroutine psi_@X@_inner_cnvs(x,hashmask,hashv,glb_lc)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)    :: hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(inout) :: x
+    end subroutine psi_@X@_inner_cnvs
+    subroutine psi_@X@_inner_cnvs2(x,y,hashmask,hashv,glb_lc)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)  :: hashmask,hashv(0:),glb_lc(:,:)
+      @TYPE@(@FKIND@), intent(in)  :: x
+      @TYPE@(@FKIND@), intent(out) :: y
+    end subroutine psi_@X@_inner_cnvs2
+    subroutine psi_@X@_inner_cnv1(n,x,hashmask,hashv,glb_lc,mask)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)    :: n,hashmask,hashv(0:),glb_lc(:,:)
+      logical, intent(in), optional    :: mask(:)
+      @TYPE@(@FKIND@), intent(inout) :: x(:)
+    end subroutine psi_@X@_inner_cnv1
+    subroutine psi_@X@_inner_cnv2(n,x,y,hashmask,hashv,glb_lc,mask)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)  :: n, hashmask,hashv(0:),glb_lc(:,:)
+      logical, intent(in),optional  :: mask(:)
+      @TYPE@(@FKIND@), intent(in)  :: x(:)
+      @TYPE@(@FKIND@), intent(out) :: y(:)
+    end subroutine psi_@X@_inner_cnv2
+  end interface psi_inner_cnv
+
+  interface psi_bld_ovr_mst
+    subroutine psi_@X@_bld_ovr_mst(me,ovrlap_elem,mst_idx,info)
+      import
+      implicit none       
+      @TYPE@(@FKIND@), intent(in)               :: me, ovrlap_elem(:,:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: mst_idx(:) 
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psi_@X@_bld_ovr_mst
+  end interface
+
+@IINTE@
+@INTE@
+end module psi_@X@_mod
+
