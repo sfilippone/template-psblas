@@ -455,25 +455,23 @@ module psb_@SX@_base_mat_mod
   !!
   !
   interface 
-    subroutine psb_@IX@_base_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@IX@_base_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@IX@_base_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
       integer(@IXKIND@), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@IX@_base_csput_a
   end interface
   
   interface 
-    subroutine psb_@IX@_base_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@IX@_base_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@IX@_base_sparse_mat), intent(inout) :: a
       class(psb_@SX@_base_vect_type), intent(inout)  :: val
       class(psb_i_base_vect_type), intent(inout)  :: ia, ja
       integer(@IXKIND@), intent(in)             :: nz, imin, imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@IX@_base_csput_v
   end interface
   
@@ -1875,14 +1873,13 @@ module psb_@SX@_base_mat_mod
   !!
   !
   interface 
-    subroutine psb_@IX@_coo_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@IX@_coo_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
       integer(@IXKIND@), intent(in)             :: nz,ia(:), ja(:),&
            &  imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@IXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@IX@_coo_csput_a
   end interface
   
@@ -2137,25 +2134,23 @@ module psb_@SX@_base_mat_mod
   !!
   !
   interface 
-    subroutine psb_@LX@_base_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@LX@_base_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@LX@_base_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
       integer(@LXKIND@), intent(in)             :: nz, ia(:), ja(:), imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@LXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@LX@_base_csput_a
   end interface
   
   interface 
-    subroutine psb_@LX@_base_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@LX@_base_csput_v(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@LX@_base_sparse_mat), intent(inout) :: a
       class(psb_@SX@_base_vect_type), intent(inout)  :: val
       class(psb_l_base_vect_type), intent(inout)  :: ia, ja
       integer(@LXKIND@), intent(in)             :: nz, imin, imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@LXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@LX@_base_csput_v
   end interface
   
@@ -3345,14 +3340,13 @@ module psb_@SX@_base_mat_mod
   !!
   !
   interface 
-    subroutine psb_@LX@_coo_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info,gtl) 
+    subroutine psb_@LX@_coo_csput_a(nz,ia,ja,val,a,imin,imax,jmin,jmax,info) 
       import 
       class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
       @TYPE@(@FKIND@), intent(in)      :: val(:)
       integer(@LXKIND@), intent(in)             :: nz,ia(:), ja(:),&
            &  imin,imax,jmin,jmax
       integer(psb_ipk_), intent(out)            :: info
-      integer(@LXKIND@), intent(in), optional   :: gtl(:)
     end subroutine psb_@LX@_coo_csput_a
   end interface
   
