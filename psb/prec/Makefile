@@ -41,9 +41,6 @@ simpl:
 iclean:
 	cd impl && $(MAKE) clean
 
-cpy:
-	$(TOP)/cpy.sh $(TOP) $(TARGET)
-
 
 all:  single double complex dcompl
 
