@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -36,6 +36,8 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
+cpy:
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/krylov *.f90 *.F90)
 
 
 

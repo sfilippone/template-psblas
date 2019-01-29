@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -18,14 +18,13 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
 src: ssingle sdouble scomplex sdcompl simpl
+
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -41,7 +40,6 @@ simpl:
 
 iclean:
 	cd impl && $(MAKE) clean
-
 
 
 all:  single double complex dcompl
@@ -60,7 +58,9 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
-
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/prec *.f90 *.F90)
+	cd impl && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@

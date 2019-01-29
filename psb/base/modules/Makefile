@@ -1,11 +1,12 @@
-#include ../../Make.inc
 TOP=../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_tools_mod.p90 
+VSRC=
+#X_tools_mod.p90 
 SRC=
 SRCI=Xi_mod.p90 
 
@@ -23,8 +24,6 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
-# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
-# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
@@ -66,7 +65,13 @@ bsrc: vsrc isrc $(FSRC)
 vsrc: $(FVSRC)
 isrc: $(FSRCI)
 
-lib: $(FOBJS)
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules *.f90 *.F90)
+	cd auxil && $(MAKE) cpy
+	cd comm && $(MAKE) cpy
+	cd psblas && $(MAKE) cpy
+	cd serial && $(MAKE) cpy
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90

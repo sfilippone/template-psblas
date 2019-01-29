@@ -6,7 +6,6 @@ UTIL_MODS =
 
 src: smodules stools sser scomm spsb
 
-
 spsb scomm sinter stools sser: smodules
 
 smodules:
@@ -20,6 +19,14 @@ spsb:
 
 sser: 
 	cd serial && $(MAKE) src
+
+cpy: 
+	cd modules && $(MAKE) cpy
+	cd comm && $(MAKE) cpy
+	cd tools && $(MAKE) cpy
+	cd serial && $(MAKE) cpy
+	cd psblas && $(MAKE) cpy
+
 clean:
 	cd modules && $(MAKE) clean
 	cd tools && $(MAKE) clean

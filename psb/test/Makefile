@@ -1,12 +1,11 @@
-TOP=../../..
+TOP=../..
 include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_prec_type_impl.p90 X_diagprec_impl.p90 Xprecinit.p90\
-    X_bjacprec_impl.p90 X_nullprec_impl.p90 Xprecbld.p90
+SRC=
 
 
 
@@ -23,7 +22,12 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl 
+src: sfileread spargen
+
+cpy: 
+	cd fileread && $(MAKE) cpy
+	cd pargen && $(MAKE) cpy
+
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -34,25 +38,20 @@ sdcompl:
 	$(MAKE) bsrc ARITH=z
 
 
+sfileread:
+	cd fileread && $(MAKE) src
+spargen:
+	cd pargen && $(MAKE) src
 
-all:  single double complex dcompl
+cfileread:
+	cd fileread && $(MAKE) clean
+cpargen:
+	cd pargen && $(MAKE) clean
 
-single:
-	$(MAKE) lib ARITH=s
-double:
-	$(MAKE) lib ARITH=d
-complex:
-	$(MAKE) lib ARITH=c
-dcompl:
-	$(MAKE) lib ARITH=z
 
 
 bsrc: $(FSRC)
 
-lib: $(FOBJS)
-
-cpy: 
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/prec/impl *.f90 *.F90)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
@@ -60,7 +59,7 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: 
+clean: cfileread cpargen
 	/bin/rm -f *.f90 *.F90 *.o
 
 

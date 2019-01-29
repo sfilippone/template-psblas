@@ -1,5 +1,5 @@
-#include ../../Make.inc
 TOP=../../../..
+include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
@@ -60,6 +60,10 @@ vsrc: $(FVSRC)
 isrc: $(FSRCI)
 
 lib: $(FOBJS)
+
+cpy: 
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/serial *.f90 *.F90)
+
 
 X_base_mat_mod.p90: X_base_vect_mod.p90
 	touch $@
