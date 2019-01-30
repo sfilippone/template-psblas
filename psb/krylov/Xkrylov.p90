@@ -78,7 +78,7 @@
 !                                           where r is the (preconditioned, recursive
 !                                           estimate of) residual 
 ! 
-Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
+recursive Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
      & itmax,iter,err,itrace,irst,istop,cond)
 
   use psb_base_mod
@@ -99,7 +99,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
 
 
   abstract interface
-    subroutine psb_@X@kryl_vect(a,prec,b,x,eps,&
+    recursive subroutine psb_@X@kryl_vect(a,prec,b,x,eps,&
          & desc_a,info,itmax,iter,err,itrace,istop)
       import :: psb_ipk_, @FKIND@, psb_desc_type, &
            & psb_@X@spmat_type, psb_@X@prec_type, psb_@X@_vect_type
@@ -114,7 +114,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
       integer(psb_ipk_), optional, intent(out)       :: iter
       real(@FKIND@), optional, intent(out) :: err
     end subroutine psb_@X@kryl_vect
-    Subroutine psb_@X@kryl_rest_vect(a,prec,b,x,eps,desc_a,info,&
+    recursive Subroutine psb_@X@kryl_rest_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err, itrace,irst,istop)
       import :: psb_ipk_, @FKIND@, psb_desc_type, &
            & psb_@X@spmat_type, psb_@X@prec_type, psb_@X@_vect_type
@@ -129,7 +129,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
       integer(psb_ipk_), Optional, Intent(out)       :: iter
       Real(@FKIND@), Optional, Intent(out) :: err
     end subroutine psb_@X@kryl_rest_vect
-    Subroutine psb_@X@kryl_cond_vect(a,prec,b,x,eps,desc_a,info,&
+    recursive Subroutine psb_@X@kryl_cond_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err, itrace,istop,cond)
       import :: psb_ipk_, @FKIND@, psb_desc_type, &
            & psb_@X@spmat_type, psb_@X@prec_type, psb_@X@_vect_type
