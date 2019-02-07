@@ -1,4 +1,3 @@
-#include ../../Make.inc
 TOP=../../..
 include $(TOP)/Make.inc
 

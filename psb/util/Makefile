@@ -34,8 +34,6 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-cpy:
-	$(TOP)/cpy.sh $(TOP) $(TARGET)
 
 
 all:  single double complex dcompl

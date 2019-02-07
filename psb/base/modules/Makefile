@@ -67,6 +67,10 @@ esrc: $(FSRCE)
 cpy: 
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules *.f90 *.F90)
 	cd auxil && $(MAKE) cpy
+	cd comm && $(MAKE) cpy
+	cd penv && $(MAKE) cpy
+	cd psblas && $(MAKE) cpy
+	cd serial && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@

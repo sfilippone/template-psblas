@@ -1,5 +1,5 @@
-TOP=../..
-include $(TOP)/Make.inc
+#include ../../Make.inc
+
 BASIC_MODS=
 UTIL_MODS =
 
