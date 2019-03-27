@@ -90,6 +90,7 @@ module psb_@X@_csr_mat_mod
     procedure, pass(a) :: mv_from_coo => psb_@X@_mv_csr_from_coo
     procedure, pass(a) :: mv_to_fmt   => psb_@X@_mv_csr_to_fmt
     procedure, pass(a) :: mv_from_fmt => psb_@X@_mv_csr_from_fmt
+    procedure, pass(a) :: clean_zeros => psb_@X@_csr_clean_zeros
     procedure, pass(a) :: csput_a     => psb_@X@_csr_csput_a
     procedure, pass(a) :: get_diag    => psb_@X@_csr_get_diag
     procedure, pass(a) :: csgetptn    => psb_@X@_csr_csgetptn
@@ -257,6 +258,19 @@ module psb_@X@_csr_mat_mod
       logical, intent(in), optional              :: rscale,cscale
       class(psb_@X@_coo_sparse_mat), optional, intent(out) :: l
     end subroutine psb_@X@_csr_triu
+  end interface
+  
+  !
+  !> 
+  !! \memberof  psb_@X@_csr_sparse_mat
+  !! \see psb_@X@_base_mat_mod::psb_@X@_base_clean_zeros
+  !
+  interface
+    subroutine  psb_@X@_csr_clean_zeros(a, info)
+      import :: psb_ipk_, psb_@X@_csr_sparse_mat
+      class(psb_@X@_csr_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)              :: info
+    end subroutine psb_@X@_csr_clean_zeros
   end interface
   
   
