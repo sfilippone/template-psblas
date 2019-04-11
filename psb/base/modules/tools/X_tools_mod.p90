@@ -267,11 +267,11 @@ Module psb_@X@_tools_mod
       implicit none
       Type(psb_@X@spmat_type),Intent(in)       :: a
       Type(psb_@X@spmat_type),Intent(inout)    :: blk
-      Type(psb_desc_type),Intent(in), target :: desc_a
-      integer(psb_ipk_), intent(out)                   :: info
-      logical, optional, intent(in)          :: rowcnv,colcnv,rowscale,colscale
-      character(len=5), optional             :: outfmt 
-      integer(psb_ipk_), intent(in), optional          :: data
+      Type(psb_desc_type),Intent(in), target  :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+      logical, optional, intent(in)           :: rowcnv,colcnv,rowscale,colscale
+      character(len=5), optional              :: outfmt 
+      integer(psb_ipk_), intent(in), optional :: data
     end Subroutine psb_@X@sphalo
   end interface
 
