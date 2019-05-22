@@ -3287,13 +3287,17 @@ subroutine psb_@X@csrspspmm(a,b,c,info)
     goto 9999
   endif
 
+  ! Estimate number of nonzeros on output.
   nza = a%get_nzeros()
   nzb = b%get_nzeros()
   nzc = 2*(nza+nzb)
+  ma = max(ma,1)
+  ma = max(na,1)
+  mb = max(mb,1)
+  nb = max(nb,1)
   nze = ma*(((nza+ma-1)/ma)*((nzb+mb-1)/mb) )
   nzeb = (((nza+na-1)/na)*((nzb+nb-1)/nb))*nb
-  ! Estimate number of nonzeros on output.
-  ! Turns out this is often a large  overestimate.
+  nzc = min(nzc, nze+nzeb)
   call c%allocate(ma,nb,nzc)
 
   call csr_spspmm(a,b,c,info)
@@ -5419,8 +5423,13 @@ subroutine psb_@LX@csrspspmm(a,b,c,info)
   nza = a%get_nzeros()
   nzb = b%get_nzeros()
   nzc = 2*(nza+nzb)
+  ma = max(ma,1)
+  ma = max(na,1)
+  mb = max(mb,1)
+  nb = max(nb,1)
   nze = ma*(((nza+ma-1)/ma)*((nzb+mb-1)/mb) )
   nzeb = (((nza+na-1)/na)*((nzb+nb-1)/nb))*nb
+  nzc = min(nzc, nze+nzeb)
   ! Estimate number of nonzeros on output.
   ! Turns out this is often a large  overestimate.
   call c%allocate(ma,nb,nzc)
