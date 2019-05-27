@@ -227,7 +227,7 @@ contains
       f_ => @X@_null_func_2d
     end if
 
-    deltah   = @RONE@/(idim+2)
+    deltah   = @RONE@/(idim+1)
     sqdeltah = deltah*deltah
     deltah2  = (2*@RONE@)* deltah
 
