@@ -223,7 +223,7 @@ contains
       f_ => @X@_null_func_2d
     end if
 
-    deltah   = @XONE@/(idim+2)
+    deltah   = @XONE@/(idim+1)
     sqdeltah = deltah*deltah
     deltah2  = (2*@XONE@)* deltah
 
