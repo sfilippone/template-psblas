@@ -29,7 +29,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint saux scomm spsb sser
+src: ssingle sdouble scomplex sdcompl sint saux scomm spsb sser stl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -50,6 +50,9 @@ spsb:
 	cd psblas && $(MAKE) src
 sser:
 	cd serial && $(MAKE) src
+stl:
+	cd tools && $(MAKE) src
+
 all:  single double complex dcompl
 
 single:
@@ -68,11 +71,11 @@ isrc: $(FSRCI)
 
 cpy: 
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules *.f90 *.F90)
-	cd auxil && $(MAKE) cpy
-	cd comm && $(MAKE) cpy
+	cd auxil  && $(MAKE) cpy
+	cd comm   && $(MAKE) cpy
 	cd psblas && $(MAKE) cpy
 	cd serial && $(MAKE) cpy
-
+	cd tools  && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
