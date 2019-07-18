@@ -3417,14 +3417,14 @@ subroutine psb_@X@_fix_coo_inner(nr,nc,nzin,dupl,ia,ja,val,nzout,info,idir)
 
 
 
-  allocate(iaux(max(nr,nc,nzin)+2),stat=info) 
+  allocate(iaux(nzin+2),stat=info) 
   if (info /= psb_success_) then 
     info = psb_err_alloc_dealloc_
     call psb_errpush(info,name)
     goto 9999
   end if
 
-  allocate(ias(nzin),jas(nzin),vs(nzin),ix2(max(nr,nc,nzin)+2), stat=info)
+  allocate(ias(nzin),jas(nzin),vs(nzin),ix2(nzin+2), stat=info)
   use_buffers = (info == 0)
   
   select case(idir_) 
