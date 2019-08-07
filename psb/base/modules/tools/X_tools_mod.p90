@@ -370,7 +370,6 @@ Module psb_@X@_tools_mod
     end subroutine psb_@X@spins_2desc
   end interface
 
-
   interface psb_sprn
     subroutine psb_@X@sprn(a, desc_a,info,clear)
       import
@@ -381,6 +380,20 @@ Module psb_@X@_tools_mod
       logical, intent(in), optional        :: clear
     end subroutine psb_@X@sprn
   end interface
+
+  interface psb_par_spspmm
+    subroutine psb_@X@_par_csr_spspmm(acsr,desc_a,bcsr,ccsr,desc_c,info,data)
+      import :: psb_@X@_csr_sparse_mat, psb_desc_type, psb_ipk_
+      Implicit None
+      type(psb_@X@_csr_sparse_mat),intent(in)    :: acsr
+      type(psb_@X@_csr_sparse_mat),intent(inout) :: bcsr
+      type(psb_@X@_csr_sparse_mat),intent(out)   :: ccsr      
+      type(psb_desc_type),intent(in)           :: desc_a
+      type(psb_desc_type),intent(inout)        :: desc_c
+      integer(psb_ipk_), intent(out)           :: info
+      integer(psb_ipk_), intent(in), optional  :: data
+    End Subroutine psb_@X@_par_csr_spspmm
+  end interface psb_par_spspmm
   @NOTINTE@
   
   @INTS@
