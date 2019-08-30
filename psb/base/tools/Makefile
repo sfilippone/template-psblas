@@ -8,7 +8,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 VSRC=  Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
 SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.p90 \
-	Xsprn.p90 Xspasb.p90 Xspfree.p90 $(VSRC)
+	Xsprn.p90 Xspasb.p90 Xspfree.p90 X_par_csr_spspmm.p90 $(VSRC)
 
 
 
