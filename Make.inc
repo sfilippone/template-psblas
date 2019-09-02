@@ -1,1 +1,1 @@
-TARGET=../psblas-paraggr
+TARGET=../psblas-3.6-maint
