@@ -68,13 +68,13 @@ cpy:
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/serial *.f90 *.F90)
 
 
-X_base_mat_mod.p90: X_base_vect_mod.p90
+X_base_mat_mod.P90: X_base_vect_mod.p90
 	touch $@
 X_vect_mod.P90: X_base_vect_mod.p90
 	touch $@
-X_csc_mat_mod.p90 X_csr_mat_mod.p90: X_base_mat_mod.p90 
+X_csc_mat_mod.p90 X_csr_mat_mod.p90: X_base_mat_mod.P90 
 	touch $@
-X_mat_mod.p90: X_base_mat_mod.p90 X_csc_mat_mod.p90 X_csr_mat_mod.p90 
+X_mat_mod.p90: X_base_mat_mod.P90 X_csc_mat_mod.p90 X_csr_mat_mod.p90 
 	touch $@
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
