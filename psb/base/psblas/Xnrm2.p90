@@ -344,7 +344,7 @@ function psb_@X@nrm2_vect(x, desc_a, info,global)  result(res)
         res = res - sqrt(@XONE@ - dd*(abs(x%v%v(idx))/res)**2)
       end do
     end if
-    else 	    
+  else 	    
     res = @RZERO@
   end if
 
