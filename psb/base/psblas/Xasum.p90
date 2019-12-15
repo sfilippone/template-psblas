@@ -135,6 +135,19 @@ function psb_@X@asum (x,desc_a, info, jx,global) result(res)
   return
 end function psb_@X@asum
 
+! Function: psb_@X@asum_vect
+!    Computes norm1 of X
+!
+!    norm1 := sum(sub( X )(i))
+!
+!    where sub( X ) denotes X(1:N,JX:).
+!
+! Arguments:
+!    x      - type(psb_@X@_vect_type) The input vector.
+!    desc_a -  type(psb_desc_type).   The communication descriptor.
+!    info   -  integer.               Return code
+!    jx     -  integer(optional).     The column offset.
+!
 
 function psb_@X@asum_vect(x, desc_a, info,global) result(res)
   use psb_base_mod, psb_protect_name => psb_@X@asum_vect
