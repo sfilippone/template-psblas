@@ -123,15 +123,15 @@ module psi_@X@_mod
 
   interface psi_extract_dep_list
     subroutine psi_@X@_extract_dep_list(ictxt,is_bld,is_upd,desc_str,dep_list,&
-         & length_dl,np,dl_lda,mode,info)
+         & length_dl,dl_lda,mode,info)
       import
       implicit none 
-      logical :: is_bld, is_upd
-      @TYPE@(@FKIND@) :: ictxt
-      @TYPE@(@FKIND@) :: dl_lda,mode
-      @TYPE@(@FKIND@) :: desc_str(*),dep_list(dl_lda,0:np),length_dl(0:np)
-      integer(psb_ipk_) :: np
-      integer(psb_ipk_) :: info
+      logical,  intent(in)    :: is_bld, is_upd
+      @TYPE@(@FKIND@), intent(in)  :: ictxt, mode
+      @TYPE@(@FKIND@), intent(out) :: dl_lda
+      @TYPE@(@FKIND@), intent(in)  :: desc_str(*)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:), length_dl(:)
+      integer(psb_ipk_), intent(out) :: info
     end subroutine psi_@X@_extract_dep_list
   end interface
 
