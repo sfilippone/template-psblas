@@ -186,6 +186,7 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: fix          => psb_@IX@_fix_coo
     procedure, pass(a) :: trim         => psb_@IX@_coo_trim
     procedure, pass(a) :: clean_zeros  => psb_@IX@_coo_clean_zeros
+    procedure, pass(a) :: clean_negidx => psb_@IX@_coo_clean_negidx
     procedure, pass(a) :: print        => psb_@IX@_coo_print
     procedure, pass(a) :: free         => @IX@_coo_free
     procedure, pass(a) :: mold         => psb_@IX@_coo_mold
@@ -367,6 +368,7 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: fix          => psb_@LX@_fix_coo
     procedure, pass(a) :: trim         => psb_@LX@_coo_trim
     procedure, pass(a) :: clean_zeros  => psb_@LX@_coo_clean_zeros
+    procedure, pass(a) :: clean_negidx => psb_@LX@_coo_clean_negidx
     procedure, pass(a) :: print        => psb_@LX@_coo_print
     procedure, pass(a) :: free         => @LX@_coo_free
     procedure, pass(a) :: mold         => psb_@LX@_coo_mold
@@ -1613,6 +1615,46 @@ module psb_@SX@_base_mat_mod
       integer(psb_ipk_), intent(out)             :: info
     end subroutine psb_@IX@_coo_clean_zeros
   end interface
+
+  !
+  !> 
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !! \brief Take out any entries with negative row or column index
+  !!   May happen when converting local/global numbering
+  !! \param info   return code
+  !! 
+  !
+  interface
+    subroutine  psb_@IX@_coo_clean_negidx(a,info)
+      import 
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)             :: info
+    end subroutine psb_@IX@_coo_clean_negidx
+  end interface
+
+  !
+  !> Funtion: coo_clean_negidx_inner
+  !! \brief Take out any entries with negative row or column index
+  !!   Used internally by coo_clean_negidx
+  !! \param nzin  Number of entries on input to be  handled
+  !! \param ia(:) Row indices
+  !! \param ja(:) Col indices
+  !! \param val(:) Coefficients
+  !! \param nzout  Number of entries after sorting/duplicate handling
+  !! \param info   return code
+  !! 
+  !
+  interface psb_coo_clean_negidx_inner
+    subroutine psb_@IX@_coo_clean_negidx_inner(nzin,ia,ja,val,nzout,info) 
+      import 
+      integer(@IXKIND@), intent(in)           :: nzin
+      integer(@IXKIND@), intent(inout)        :: ia(:), ja(:)
+      @TYPE@(@FKIND@), intent(inout) :: val(:)
+      integer(@IXKIND@), intent(out)          :: nzout
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@IX@_coo_clean_negidx_inner
+  end interface psb_coo_clean_negidx_inner
+
   
   !
   !> 
@@ -1701,7 +1743,7 @@ module psb_@SX@_base_mat_mod
   interface 
     subroutine psb_@IX@_fix_coo_inner(nr,nc,nzin,dupl,ia,ja,val,nzout,info,idir) 
       import 
-      integer(psb_ipk_), intent(in)           :: nr,nc,nzin,dupl
+      integer(@IXKIND@), intent(in)           :: nr,nc,nzin,dupl
       integer(@IXKIND@), intent(inout)        :: ia(:), ja(:)
       @TYPE@(@FKIND@), intent(inout) :: val(:)
       integer(@IXKIND@), intent(out)          :: nzout
@@ -3081,6 +3123,45 @@ module psb_@SX@_base_mat_mod
   !
   !> 
   !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \brief Take out any entries with negative row or column index
+  !!   May happen when converting local/global numbering
+  !! \param info   return code
+  !! 
+  !
+  interface
+    subroutine  psb_@LX@_coo_clean_negidx(a,info)
+      import 
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
+      integer(psb_ipk_), intent(out)             :: info
+    end subroutine psb_@LX@_coo_clean_negidx
+  end interface
+
+  !
+  !> Funtion: coo_clean_negidx_inner
+  !! \brief Take out any entries with negative row or column index
+  !!   Used internally by coo_clean_negidx
+  !! \param nzin  Number of entries on input to be  handled
+  !! \param ia(:) Row indices
+  !! \param ja(:) Col indices
+  !! \param val(:) Coefficients
+  !! \param nzout  Number of entries after sorting/duplicate handling
+  !! \param info   return code
+  !! 
+  !
+  interface  psb_coo_clean_negidx_inner
+    subroutine psb_@LX@_coo_clean_negidx_inner(nzin,ia,ja,val,nzout,info) 
+      import 
+      integer(@LXKIND@), intent(in)           :: nzin
+      integer(@LXKIND@), intent(inout)        :: ia(:), ja(:)
+      @TYPE@(@FKIND@), intent(inout) :: val(:)
+      integer(@LXKIND@), intent(out)          :: nzout
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@LX@_coo_clean_negidx_inner
+  end interface psb_coo_clean_negidx_inner
+  
+  !
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
   !! \see psb_base_mat_mod::psb_base_allocate_mnnz
   !
   interface
@@ -3165,7 +3246,7 @@ module psb_@SX@_base_mat_mod
   interface 
     subroutine psb_@LX@_fix_coo_inner(nr,nc,nzin,dupl,ia,ja,val,nzout,info,idir) 
       import 
-      integer(psb_lpk_), intent(in)           :: nr,nc,nzin
+      integer(@LXKIND@), intent(in)           :: nr,nc,nzin
       integer(psb_ipk_), intent(in)           :: dupl
       integer(@LXKIND@), intent(inout)        :: ia(:), ja(:)
       @TYPE@(@FKIND@), intent(inout) :: val(:)

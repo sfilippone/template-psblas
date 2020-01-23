@@ -344,7 +344,44 @@ subroutine  psb_@X@_coo_clean_zeros(a, info)
   call a%trim()
 end subroutine psb_@X@_coo_clean_zeros
 
+subroutine  psb_@IX@_coo_clean_negidx(a,info)
+  use psb_error_mod
+  use psb_@X@_base_mat_mod, psb_protect_name => psb_@IX@_coo_clean_negidx
+  implicit none 
+  class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_), intent(out)             :: info
+  !
+  !
+  integer(@IXKIND@)  :: nz
+  call psb_coo_clean_negidx_inner(a%get_nzeros(),a%ia,a%ja,a%val,nz,info)
+  if (info == 0) call a%set_nzeros(nz)
+  
+end subroutine psb_@IX@_coo_clean_negidx
 
+subroutine psb_@IX@_coo_clean_negidx_inner(nzin,ia,ja,val,nzout,info) 
+  use psb_error_mod
+  use psb_@X@_base_mat_mod, psb_protect_name => psb_@IX@_coo_clean_negidx_inner
+  implicit none 
+  integer(@IXKIND@), intent(in)           :: nzin
+  integer(@IXKIND@), intent(inout)        :: ia(:), ja(:)
+  @TYPE@(@FKIND@), intent(inout) :: val(:)
+  integer(@IXKIND@), intent(out)          :: nzout
+  integer(psb_ipk_), intent(out)          :: info
+  !
+  !
+  integer(@IXKIND@)  :: i
+  info = 0 
+  nzout = 0 
+  do i=1, nzin
+    if ((ia(i)>0).and.(ja(i)>0)) then
+      nzout = nzout + 1 
+      val(nzout) = val(i)
+      ia(nzout)  = ia(i)
+      ja(nzout)  = ja(i)
+    end if
+  end do
+  
+end subroutine psb_@IX@_coo_clean_negidx_inner
 
 subroutine  psb_@X@_coo_allocate_mnnz(m,n,a,nz) 
   use psb_@X@_base_mat_mod, psb_protect_name => psb_@X@_coo_allocate_mnnz
@@ -4652,7 +4689,44 @@ subroutine  psb_@LX@_coo_clean_zeros(a, info)
   call a%trim()
 end subroutine psb_@LX@_coo_clean_zeros
 
+subroutine  psb_@LX@_coo_clean_negidx(a,info)
+  use psb_error_mod
+  use psb_@X@_base_mat_mod, psb_protect_name => psb_@LX@_coo_clean_negidx
+  implicit none 
+  class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
+  integer(psb_ipk_), intent(out)             :: info
+  !
+  !
+  integer(@LXKIND@)  :: nz
+  call psb_coo_clean_negidx_inner(a%get_nzeros(),a%ia,a%ja,a%val,nz,info)
+  if (info == 0) call a%set_nzeros(nz)
+  
+end subroutine psb_@LX@_coo_clean_negidx
 
+subroutine psb_@LX@_coo_clean_negidx_inner(nzin,ia,ja,val,nzout,info) 
+  use psb_error_mod
+  use psb_@X@_base_mat_mod, psb_protect_name => psb_@LX@_coo_clean_negidx_inner
+  implicit none 
+  integer(@LXKIND@), intent(in)           :: nzin
+  integer(@LXKIND@), intent(inout)        :: ia(:), ja(:)
+  @TYPE@(@FKIND@), intent(inout) :: val(:)
+  integer(@LXKIND@), intent(out)          :: nzout
+  integer(psb_ipk_), intent(out)          :: info
+  !
+  !
+  integer(@LXKIND@)  :: i
+  info = 0 
+  nzout = 0 
+  do i=1, nzin
+    if ((ia(i)>0).and.(ja(i)>0)) then
+      nzout = nzout + 1 
+      val(nzout) = val(i)
+      ia(nzout)  = ia(i)
+      ja(nzout)  = ja(i)
+    end if
+  end do
+  
+end subroutine psb_@LX@_coo_clean_negidx_inner
 
 subroutine  psb_@LX@_coo_allocate_mnnz(m,n,a,nz) 
   use psb_@X@_base_mat_mod, psb_protect_name => psb_@LX@_coo_allocate_mnnz
