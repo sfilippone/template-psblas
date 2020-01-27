@@ -162,6 +162,7 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: sizeof       => @IX@_coo_sizeof
     procedure, pass(a) :: reallocate_nz => psb_@IX@_coo_reallocate_nz
     procedure, pass(a) :: allocate_mnnz => psb_@IX@_coo_allocate_mnnz
+    procedure, pass(a) :: ensure_size  => psb_@IX@_coo_ensure_size
     procedure, pass(a) :: cp_to_coo    => psb_@IX@_cp_coo_to_coo
     procedure, pass(a) :: cp_from_coo  => psb_@IX@_cp_coo_from_coo
     procedure, pass(a) :: cp_to_fmt    => psb_@IX@_cp_coo_to_fmt
@@ -348,6 +349,7 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: sizeof       => @LX@_coo_sizeof
     procedure, pass(a) :: reallocate_nz => psb_@LX@_coo_reallocate_nz
     procedure, pass(a) :: allocate_mnnz => psb_@LX@_coo_allocate_mnnz
+    procedure, pass(a) :: ensure_size  => psb_@LX@_coo_ensure_size
     procedure, pass(a) :: cp_to_coo    => psb_@LX@_cp_coo_to_coo
     procedure, pass(a) :: cp_from_coo  => psb_@LX@_cp_coo_from_coo
     procedure, pass(a) :: cp_to_fmt    => psb_@LX@_cp_coo_to_fmt
@@ -1578,6 +1580,17 @@ module psb_@SX@_base_mat_mod
       integer(@IXKIND@), intent(in) :: nz
       class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
     end subroutine psb_@IX@_coo_reallocate_nz
+  end interface
+  !
+  !> 
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !
+  interface
+    subroutine  psb_@IX@_coo_ensure_size(nz,a) 
+      import 
+      integer(@IXKIND@), intent(in) :: nz
+      class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+    end subroutine psb_@IX@_coo_ensure_size
   end interface
   
   !
@@ -3082,6 +3095,17 @@ module psb_@SX@_base_mat_mod
       integer(@LXKIND@), intent(in) :: nz
       class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
     end subroutine psb_@LX@_coo_reallocate_nz
+  end interface
+  !
+  !> 
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !
+  interface
+    subroutine  psb_@LX@_coo_ensure_size(nz,a) 
+      import 
+      integer(@LXKIND@), intent(in) :: nz
+      class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
+    end subroutine psb_@LX@_coo_ensure_size
   end interface
   
   !
