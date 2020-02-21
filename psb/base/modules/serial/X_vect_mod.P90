@@ -118,17 +118,15 @@ module psb_@X@_vect_mod
     generic, public    :: absval   => absval1, absval2
     procedure, pass(x) :: nrm2std  => @X@_vect_nrm2
     procedure, pass(x) :: nrm2weight => @X@_vect_nrm2_weight
-    generic, public    :: nrm2     => nrm2std, nrm2weight
+    procedure, pass(x) :: nrm2weightmask => @X@_vect_nrm2_weight_mask
+    generic, public    :: nrm2     => nrm2std, nrm2weight, nrm2weightmask
     procedure, pass(x) :: amax     => @X@_vect_amax
     procedure, pass(x) :: asum     => @X@_vect_asum
-    @NOTINTE@
-    @NOTCPLXS@
-    @NOTINTS@
     procedure, pass(z) :: cmp_a2   => @X@_vect_cmp_a2
     procedure, pass(z) :: cmp_v2   => @X@_vect_cmp_v2
     generic, public    :: cmp      => cmp_a2, cmp_v2
     @NOTINTE@
-    @NOTCPLXE@
+
   end type psb_@X@_vect_type
 
   public  :: psb_@X@_vect
@@ -881,11 +879,10 @@ contains
 
   end subroutine @X@_vect_inv_a2_check
 
-  @NOTCPLXS@
   subroutine @X@_vect_cmp_a2(x,c,z,info)
     use psi_serial_mod
     implicit none
-    @TYPE@(@FKIND@), intent(in)              :: c
+    @RTYPE@(@FKIND@), intent(in)              :: c
     @TYPE@(@FKIND@), intent(inout)           :: x(:)
     class(psb_@X@_vect_type), intent(inout)  :: z
     integer(psb_ipk_), intent(out)           :: info
@@ -899,7 +896,7 @@ contains
   subroutine @X@_vect_cmp_v2(x,c,z,info)
     use psi_serial_mod
     implicit none
-    @TYPE@(@FKIND@), intent(in)              :: c
+    @RTYPE@(@FKIND@), intent(in)              :: c
     class(psb_@X@_vect_type), intent(inout)  :: x
     class(psb_@X@_vect_type), intent(inout)  :: z
     integer(psb_ipk_), intent(out)           :: info
@@ -909,7 +906,6 @@ contains
          & call z%v%cmp(x%v,c,info)
 
   end subroutine @X@_vect_cmp_v2
-  @NOTCPLXE@
 
   subroutine @X@_vect_scal(alpha, x)
     use psi_serial_mod
@@ -969,6 +965,25 @@ contains
     end if
 
   end function @X@_vect_nrm2_weight
+
+  function @X@_vect_nrm2_weight_mask(n,x,w,id) result(res)
+    implicit none
+    class(psb_@X@_vect_type), intent(inout) :: x
+    class(psb_@X@_vect_type), intent(inout) :: w
+    class(psb_@X@_vect_type), intent(inout) :: id
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                        :: res
+    integer(psb_ipk_)                       :: info
+
+    if (allocated(x%v).and.allocated(w%v).and.allocated(id%v)) then
+      call w%v%cmp(id%v,@RZERO@,info)
+      call w%v%mlt(x%v,info)
+      res = w%v%nrm2(n)
+    else
+      res = @RZERO@
+    end if
+
+  end function @X@_vect_nrm2_weight_mask
 
   function @X@_vect_amax(n,x) result(res)
     implicit none

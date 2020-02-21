@@ -36,7 +36,7 @@ subroutine psb_@X@cmp_vect(x,c,z,desc_a,info)
   implicit none
   type(psb_@X@_vect_type), intent (inout) :: x
   type(psb_@X@_vect_type), intent (inout) :: z
-  @TYPE@(@FKIND@), intent(in)             :: c
+  @RTYPE@(@FKIND@), intent(in)             :: c
   type(psb_desc_type), intent (in)        :: desc_a
   integer(psb_ipk_), intent(out)          :: info
 
