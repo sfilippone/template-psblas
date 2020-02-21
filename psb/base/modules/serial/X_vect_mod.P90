@@ -127,6 +127,14 @@ module psb_@X@_vect_mod
     generic, public    :: acmp      => acmp_a2, acmp_v2
     @NOTINTE@
 
+    @NOTINTS@
+    @NOTCPLXS@
+    procedure, pass(m) :: mask_v => @X@_vect_mask_v
+    procedure, pass(m) :: mask_a => @X@_vect_mask_a
+    generic, public    :: mask => mask_a, mask_v
+    @NOTCPLXE@
+    @NOTINTE@
+
   end type psb_@X@_vect_type
 
   public  :: psb_@X@_vect
@@ -1014,6 +1022,40 @@ contains
   end function @X@_vect_asum
 
   @NOTINTE@
+
+  @NOTINTS@
+  @NOTCPLXS@
+  subroutine @X@_vect_mask_a(c,x,m,t,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(inout)          :: c(:)
+    @RTYPE@(@FKIND@), intent(inout)          :: x(:)
+    logical, intent(out)                     :: t;
+    class(psb_@X@_vect_type), intent(inout)  :: m
+    integer(psb_ipk_), intent(out)           :: info
+
+    info = 0
+    if (allocated(m%v)) &
+         & call m%mask(c,x,t,info)
+
+  end subroutine @X@_vect_mask_a
+
+  subroutine @X@_vect_mask_v(c,x,m,t,info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_vect_type), intent(inout)  :: c
+    class(psb_@X@_vect_type), intent(inout)  :: x
+    class(psb_@X@_vect_type), intent(inout)  :: m
+    logical, intent(out)                     :: t;
+    integer(psb_ipk_), intent(out)           :: info
+
+    info = 0
+    if (allocated(x%v).and.allocated(c%v)) &
+         & call m%v%mask(x%v,c%v,t,info)
+
+  end subroutine @X@_vect_mask_v
+  @NOTINTE@
+  @NOTCPLXE@
 
 end module psb_@X@_vect_mod
 

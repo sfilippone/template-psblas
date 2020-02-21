@@ -525,4 +525,21 @@ module psb_@X@_psblas_mod
   end interface
   @NOTINTE@
 
+  @NOTINTS@
+  @NOTCPLXS@
+  interface psb_mask
+    subroutine psb_@X@mask_vect(c,x,m,t,desc_a,info)
+      import :: psb_desc_type, psb_ipk_, &
+           & psb_@X@_vect_type, @FKIND@
+      type(psb_@X@_vect_type), intent (inout) :: c
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_@X@_vect_type), intent (inout) :: m
+      logical, intent(out)                    :: t
+      type(psb_desc_type), intent (in)        :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@mask_vect
+  end interface
+  @NOTCPLXE@
+  @NOTINTE@
+
 end module psb_@X@_psblas_mod
