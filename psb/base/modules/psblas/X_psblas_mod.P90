@@ -273,11 +273,21 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), intent(out)      :: info
       logical, intent(in), optional       :: global
     end function psb_@X@nrm2_vect
+    function psb_@X@nrm2_weight_vect(x,w, desc_a, info,global) result(res)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @RTYPE@(@FKIND@)                      :: res
+      type(psb_@X@_vect_type), intent (inout)   :: x
+      type(psb_@X@_vect_type), intent (inout)   :: w
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)      :: info
+      logical, intent(in), optional       :: global
+    end function psb_@X@nrm2_weight_vect
   end interface
 
 #if ! defined(HAVE_BUGGY_GENERICS)
   interface psb_norm2
-    procedure psb_@X@nrm2, psb_@X@nrm2v, psb_@X@nrm2_vect
+    procedure psb_@X@nrm2, psb_@X@nrm2v, psb_@X@nrm2_vect, psb_@X@nrm2_weight_vect
   end interface
 #endif
 
