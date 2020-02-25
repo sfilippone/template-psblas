@@ -207,6 +207,7 @@ module psb_@X@_base_vect_mod
 
 @NOTINTS@
 @NOTCPLXS@
+procedure, pass(x) :: minreal    => @X@_base_min
 procedure, pass(m) :: mask_v => @X@_base_mask_v
 procedure, pass(m) :: mask_a => @X@_base_mask_a
 generic, public    :: mask => mask_a, mask_v
@@ -1537,6 +1538,24 @@ contains
     res =  maxval(abs(x%v(1:n)))
 
   end function @X@_base_amax
+
+  @NOTCPLXS@
+  !
+  !> Function  base_min
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief min x(1:n)
+  !! \param n  how many entries to consider
+  function @X@_base_min(n,x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                :: res
+
+    if (x%is_dev()) call x%sync()
+    res =  minval(x%v(1:n))
+
+  end function @X@_base_min
+  @NOTCPLXE@
 
   !
   !> Function  base_asum
