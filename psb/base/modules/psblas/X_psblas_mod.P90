@@ -605,6 +605,18 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), intent(out)          :: info
     end subroutine psb_@X@mask_vect
   end interface
+  interface psb_minquotient
+    function psb_@X@minquotient_vect(x,y,desc_a,info,global) result(res)
+      import :: psb_desc_type, psb_ipk_, &
+           & psb_@X@_vect_type, @FKIND@
+      @RTYPE@(@FKIND@)                        :: res
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_@X@_vect_type), intent (inout) :: y
+      type(psb_desc_type), intent (in)        :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+      logical, intent(in), optional           :: global
+    end function
+  end interface
   @NOTCPLXE@
   @NOTINTE@
 

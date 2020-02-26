@@ -220,10 +220,13 @@ module psb_@X@_base_vect_mod
 
 @NOTINTS@
 @NOTCPLXS@
-procedure, pass(x) :: minreal    => @X@_base_min
-procedure, pass(m) :: mask_v => @X@_base_mask_v
-procedure, pass(m) :: mask_a => @X@_base_mask_a
-generic, public    :: mask => mask_a, mask_v
+    procedure, pass(x) :: minreal    => @X@_base_min
+    procedure, pass(m) :: mask_v => @X@_base_mask_v
+    procedure, pass(m) :: mask_a => @X@_base_mask_a
+    generic, public    :: mask => mask_a, mask_v
+    procedure, pass(x) :: minquotient_v  => @X@_base_minquotient_v
+    procedure, pass(x) :: minquotient_a2 => @X@_base_minquotient_a2
+    generic, public    :: minquotient    => minquotient_v, minquotient_a2
 @NOTCPLXE@
 @NOTINTE@
 
@@ -1665,6 +1668,62 @@ contains
     res =  minval(x%v(1:n))
 
   end function @X@_base_min
+
+  !
+  !> Function  base_minquotient_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Minimum entry of the vector entry-by-entry divide  x/y
+  !! \param x The numerator vector
+  !! \param y The denumerator vector
+  !! \param info   return code
+  !!
+  function @X@_base_minquotient_v(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @RTYPE@(@FKIND@)                              :: z
+    integer(psb_ipk_), intent(out)                :: info
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    if (y%is_dev()) call y%sync()
+
+    z = x%minquotient(y%v,info)
+
+  end function @X@_base_minquotient_v
+
+  !
+  !> Function  base_minquotient_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Minimum entry of the array entry-by-entry divide  x/y
+  !! \param x The numerator array
+  !! \param y The denumerator array
+  !! \param info   return code
+  !!
+  function @X@_base_minquotient_a2(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    @RTYPE@(@FKIND@), intent(in)                 :: y(:)
+    @RTYPE@(@FKIND@)                             :: z
+    integer(psb_ipk_), intent(out)               :: info
+    integer(psb_ipk_) :: i, n
+    @RTYPE@(@FKIND@)                             :: temp
+
+    info = 0
+
+    z = huge(z)
+    n = min(size(y), size(x%v))
+    do i=1, n
+      if ( y(i) /= @RZERO@ ) then
+        temp = x%v(i)/y(i)
+        if (temp <= z)  z = temp
+      end if
+    end do
+
+  end function @X@_base_minquotient_a2
+
   @NOTCPLXE@
 
   !

@@ -142,6 +142,9 @@ module psb_@X@_vect_mod
     procedure, pass(m) :: mask_v => @X@_vect_mask_v
     procedure, pass(m) :: mask_a => @X@_vect_mask_a
     generic, public    :: mask => mask_a, mask_v
+    procedure, pass(x) :: minquotient_v  => @X@_vect_minquotient_v
+    procedure, pass(x) :: minquotient_a2 => @X@_vect_minquotient_a2
+    generic, public    :: minquotient    => minquotient_v, minquotient_a2
     @NOTCPLXE@
     @NOTINTE@
 
@@ -1133,6 +1136,36 @@ contains
          & call m%v%mask(x%v,c%v,t,info)
 
   end subroutine @X@_vect_mask_v
+
+  function @X@_vect_minquotient_v(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_vect_type), intent(inout)  :: x
+    class(psb_@X@_vect_type), intent(inout)  :: y
+    @RTYPE@(@FKIND@)                         :: z
+    integer(psb_ipk_), intent(out)           :: info
+
+
+    info = 0
+    if (allocated(x%v).and.allocated(y%v)) &
+         & z = x%v%minquotient(y%v,info)
+
+  end function @X@_vect_minquotient_v
+
+  function @X@_vect_minquotient_a2(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_vect_type), intent(inout)  :: x
+    @TYPE@(@FKIND@), intent(inout)           :: y(:)
+    integer(psb_ipk_), intent(out)           :: info
+    @RTYPE@(@FKIND@)                         :: z
+
+    info = 0
+    z =  x%v%minquotient(y,info)
+
+  end function @X@_vect_minquotient_a2
+
+
   @NOTINTE@
   @NOTCPLXE@
 
