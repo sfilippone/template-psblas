@@ -128,6 +128,9 @@ module psb_@X@_vect_mod
     procedure, pass(z) :: acmp_a2   => @X@_vect_acmp_a2
     procedure, pass(z) :: acmp_v2   => @X@_vect_acmp_v2
     generic, public    :: acmp      => acmp_a2, acmp_v2
+    procedure, pass(z) :: addconst_a2   => @X@_vect_addconst_a2
+    procedure, pass(z) :: addconst_v2   => @X@_vect_addconst_v2
+    generic, public    :: addconst      => addconst_a2, addconst_v2
     @NOTINTE@
 
     @NOTINTS@
@@ -164,12 +167,6 @@ module psb_@X@_vect_mod
        & @X@_vect_absval2, @X@_vect_nrm2, @X@_vect_amax, @X@_vect_asum
 
   @NOTINTE@
-
-!  @NOTCPLXS@
-!  @NOTINTS@
-!  private :: @X@_vect_acmp_a2, @X@_vect_acmp_v2
-!  @NOTINTE@
-!  @NOTCPLXE@
 
   class(psb_@X@_base_vect_type), allocatable, target,&
        & save, private :: psb_@X@_base_vect_default
@@ -1107,6 +1104,36 @@ contains
   end subroutine @X@_vect_mask_v
   @NOTINTE@
   @NOTCPLXE@
+
+  @NOTINTS@
+  subroutine @X@_vect_addconst_a2(x,b,z,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(in)             :: b
+    @TYPE@(@FKIND@), intent(inout)           :: x(:)
+    class(psb_@X@_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)           :: info
+
+    info = 0
+    if (allocated(z%v)) &
+         & call z%addconst(x,b,info)
+
+  end subroutine @X@_vect_addconst_a2
+
+  subroutine @X@_vect_addconst_v2(x,b,z,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(in)             :: b
+    class(psb_@X@_vect_type), intent(inout)  :: x
+    class(psb_@X@_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)           :: info
+
+    info = 0
+    if (allocated(x%v).and.allocated(z%v)) &
+         & call z%v%addconst(x%v,b,info)
+
+  end subroutine @X@_vect_addconst_v2
+  @NOTINTE@
 
 end module psb_@X@_vect_mod
 

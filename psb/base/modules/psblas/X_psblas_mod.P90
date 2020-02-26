@@ -567,6 +567,17 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), intent(out)          :: info
     end subroutine psb_@X@cmp_vect
   end interface
+  interface psb_geaddconst
+    subroutine psb_@X@addconst_vect(x,b,z,desc_a,info)
+      import :: psb_desc_type, psb_ipk_, &
+           & psb_@X@_vect_type, @FKIND@
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_@X@_vect_type), intent (inout) :: z
+      @RTYPE@(@FKIND@), intent(in)            :: b
+      type(psb_desc_type), intent (in)        :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@addconst_vect
+  end interface
   @NOTINTE@
 
   @NOTINTS@
