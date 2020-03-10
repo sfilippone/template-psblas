@@ -98,6 +98,17 @@ module psb_@X@_psblas_mod
       type(psb_desc_type), intent (in)      :: desc_a
       integer(psb_ipk_), intent(out)        :: info
     end subroutine psb_@X@axpby_vect
+    subroutine psb_@X@axpby_vect_out(alpha, x, beta, y,&
+         & z, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      type(psb_@X@_vect_type), intent (inout) :: x
+      type(psb_@X@_vect_type), intent (inout) :: y
+      type(psb_@X@_vect_type), intent (inout) :: z
+      @TYPE@(@FKIND@), intent (in)        :: alpha, beta
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)        :: info
+    end subroutine psb_@X@axpby_vect_out
     subroutine psb_@X@axpbyv(alpha, x, beta, y,&
          & desc_a, info)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
@@ -108,6 +119,17 @@ module psb_@X@_psblas_mod
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)                :: info
     end subroutine psb_@X@axpbyv
+    subroutine psb_@X@axpbyvout(alpha, x, beta, y,&
+         & z, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+           & psb_@X@_vect_type, psb_@X@spmat_type
+      @TYPE@(@FKIND@), intent (in)       ::  x(:)
+      @TYPE@(@FKIND@), intent (in)       ::  y(:)
+      @TYPE@(@FKIND@), intent (inout)    ::  z(:)
+      @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+      type(psb_desc_type), intent (in)    :: desc_a
+      integer(psb_ipk_), intent(out)                :: info
+    end subroutine psb_@X@axpbyvout
     subroutine psb_@X@axpby(alpha, x, beta, y,&
          & desc_a, info, n, jx, jy)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
