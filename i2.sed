@@ -5,7 +5,7 @@ s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g
 s/@FKIND@/psb_i2pk_/g
-s/@IXKIND@/psb_i2pk_/g	
+s/@IXKIND@/psb_ipk_/g	
 s/@RT@/m/g
 
 s/@SIZET@/psb_sizeof_i2p/g 

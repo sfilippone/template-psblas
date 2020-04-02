@@ -31,6 +31,7 @@ sint:
 	$(MAKE) bsrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
+	$(MAKE) esrc ARITH=i2
 
 ssingle:
 	$(MAKE) bsrc esrc ARITH=s

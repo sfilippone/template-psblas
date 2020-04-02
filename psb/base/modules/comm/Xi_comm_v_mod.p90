@@ -31,7 +31,8 @@
 !    
 module psi_@X@_comm_v_mod
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_lpk_, psb_epk_
+  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, &
+       & psb_lpk_, psb_epk_, psb_i2pk_
   @INTE@
   @LINTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_lpk_, psb_epk_, psb_i_base_vect_type

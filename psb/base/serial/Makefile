@@ -31,6 +31,7 @@ sdcompl:
 sint:
 	$(MAKE) isrc ARITH=m
 	$(MAKE) isrc ARITH=e
+	$(MAKE) isrc ARITH=i2
 
 bsrc: $(FSRC)
 

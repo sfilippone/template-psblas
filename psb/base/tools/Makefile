@@ -47,6 +47,7 @@ sint:
 	$(MAKE) vsrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
+	$(MAKE) esrc ARITH=i2
 
 
 bsrc: $(FSRC) $(FESRC) 
