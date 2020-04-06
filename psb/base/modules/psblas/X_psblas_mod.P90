@@ -30,7 +30,7 @@
 !
 !
 module psb_@X@_psblas_mod
-  use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_
+  use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_, psb_lpk_
   use psb_@X@_vect_mod, only : psb_@X@_vect_type
   use psb_@X@_mat_mod, only : psb_@X@spmat_type
 
@@ -630,5 +630,16 @@ module psb_@X@_psblas_mod
   end interface
   @NOTCPLXE@
   @NOTINTE@
+
+  interface psb_nnz
+    function  psb_@X@get_nnz(a,desc_a,info) result(res)
+      import :: psb_desc_type, psb_ipk_, psb_lpk_, &
+        & psb_@X@spmat_type, @FKIND@
+      integer(psb_lpk_)                     :: res
+      type(psb_@X@spmat_type), intent(in)   :: a
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)        :: info
+    end function
+  end interface
 
 end module psb_@X@_psblas_mod
