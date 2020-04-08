@@ -2486,6 +2486,41 @@ subroutine psb_@X@_scalplusidentity(d,a,info)
 
 end subroutine psb_@X@_scalplusidentity
 
+subroutine psb_@X@_spaxpby(alpha,a,beta,b,info)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@X@_spaxpby
+  implicit none
+  @TYPE@(@FKIND@), intent(in)             :: alpha
+  class(psb_@X@spmat_type), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)             :: beta
+  class(psb_@X@spmat_type), intent(inout) :: b
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='spaxby'
+  logical, parameter :: debug=.false.
+
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  call a%a%spaxpby(alpha,beta,b%a,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end subroutine psb_@X@_spaxpby
+
 subroutine psb_@X@_mv_from_lb(a,b)
   use psb_error_mod
   use psb_const_mod
@@ -4616,6 +4651,74 @@ subroutine psb_@LX@_scals(d,a,info)
   return
 
 end subroutine psb_@LX@_scals
+
+subroutine psb_@LX@_scalplusidentity(d,a,info)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_scalplusidentity
+  implicit none
+  class(psb_@LX@spmat_type), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)              :: d
+  integer(psb_ipk_), intent(out)                    :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='scalplusidentity'
+  logical, parameter :: debug=.false.
+
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  call a%a%scalpid(d,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end subroutine psb_@LX@_scalplusidentity
+
+subroutine psb_@LX@_spaxpby(alpha,a,beta,b,info)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_spaxpby
+  implicit none
+  @TYPE@(@FKIND@), intent(in)             :: alpha
+  class(psb_@LX@spmat_type), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)             :: beta
+  class(psb_@LX@spmat_type), intent(inout) :: b
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='spaxby'
+  logical, parameter :: debug=.false.
+
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  call a%a%spaxpby(alpha,beta,b%a,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end subroutine psb_@LX@_spaxpby
 
 function psb_@LX@_maxval(a) result(res)
   use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_maxval
