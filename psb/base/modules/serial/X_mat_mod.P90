@@ -234,6 +234,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: cssm     => psb_@X@_cssm
     generic, public    :: spsm     => cssm, cssv, cssv_v
     procedure, pass(a) :: scalpid  => psb_@X@_scalplusidentity
+    procedure, pass(a) :: spaxpby  => psb_@X@_spaxpby
 
   end type psb_@X@spmat_type
 
@@ -419,6 +420,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: scalv    => psb_@LX@_scal
     generic, public    :: scal     => scals, scalv
     procedure, pass(a) :: scalpid  => psb_@LX@_scalplusidentity
+    procedure, pass(a) :: spaxpby  => psb_@LX@_spaxpby
 
   end type psb_@LX@spmat_type
 
@@ -1168,6 +1170,17 @@ module psb_@X@_mat_mod
       end subroutine psb_@X@_scalplusidentity
   end interface
 
+  interface psb_spaxpby
+      subroutine psb_@X@_spaxpby(alpha,a,beta,b,info)
+          import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+          class(psb_@X@spmat_type), intent(inout) :: a
+          class(psb_@X@spmat_type), intent(inout) :: b
+          @TYPE@(@FKIND@), intent(in)             :: alpha
+          @TYPE@(@FKIND@), intent(in)             :: beta
+          integer(psb_ipk_), intent(out)          :: info
+      end subroutine psb_@X@_spaxpby
+  end interface
+
   ! == ===================================
   !
   !
@@ -1770,6 +1783,17 @@ module psb_@X@_mat_mod
         @TYPE@(@FKIND@), intent(in)             :: d
         integer(psb_ipk_), intent(out)                    :: info
     end subroutine psb_@LX@_scalplusidentity
+  end interface
+
+  interface psb_spaxpby
+      subroutine psb_@LX@_spaxpby(alpha,a,beta,b,info)
+          import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+          class(psb_@LX@spmat_type), intent(inout) :: a
+          class(psb_@LX@spmat_type), intent(inout) :: b
+          @TYPE@(@FKIND@), intent(in)             :: alpha
+          @TYPE@(@FKIND@), intent(in)             :: beta
+          integer(psb_ipk_), intent(out)          :: info
+      end subroutine psb_@LX@_spaxpby
   end interface
 
   interface
