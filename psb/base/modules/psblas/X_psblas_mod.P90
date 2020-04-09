@@ -588,6 +588,26 @@ module psb_@X@_psblas_mod
       type(psb_desc_type), intent (in)        :: desc_a
       integer(psb_ipk_), intent(out)          :: info
     end subroutine psb_@X@cmp_vect
+    subroutine psb_@X@cmp_spmatval(a,val,tol,desc_a,res,info)
+      import :: psb_desc_type, psb_ipk_, &
+           & psb_lpk_, psb_@X@spmat_type, @FKIND@
+      type(psb_@X@spmat_type), intent(inout)  :: a
+      @TYPE@(@FKIND@), intent(in)             :: val
+      @RTYPE@(@FKIND@), intent(in)            :: tol
+      type(psb_desc_type), intent (in)        :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+      logical, intent(out)                    :: res
+    end subroutine psb_@X@cmp_spmatval
+    subroutine psb_@X@cmp_spmat(a,b,tol,desc_a,res,info)
+      import :: psb_desc_type, psb_ipk_, &
+           & psb_lpk_, psb_@X@spmat_type, @FKIND@
+      type(psb_@X@spmat_type), intent(inout)  :: a
+      type(psb_@X@spmat_type), intent(inout)  :: b
+      @RTYPE@(@FKIND@), intent(in)            :: tol
+      type(psb_desc_type), intent (in)        :: desc_a
+      integer(psb_ipk_), intent(out)          :: info
+      logical, intent(out)                    :: res
+    end subroutine psb_@X@cmp_spmat
   end interface
   interface psb_geaddconst
     subroutine psb_@X@addconst_vect(x,b,z,desc_a,info)

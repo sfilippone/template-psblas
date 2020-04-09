@@ -235,6 +235,9 @@ module psb_@X@_mat_mod
     generic, public    :: spsm     => cssm, cssv, cssv_v
     procedure, pass(a) :: scalpid  => psb_@X@_scalplusidentity
     procedure, pass(a) :: spaxpby  => psb_@X@_spaxpby
+    procedure, pass(a) :: cmpval   => psb_@X@_cmpval
+    procedure, pass(a) :: cmpmat   => psb_@X@_cmpmat
+    generic, public    :: spcmp    => cmpval, cmpmat
 
   end type psb_@X@spmat_type
 
@@ -421,6 +424,9 @@ module psb_@X@_mat_mod
     generic, public    :: scal     => scals, scalv
     procedure, pass(a) :: scalpid  => psb_@LX@_scalplusidentity
     procedure, pass(a) :: spaxpby  => psb_@LX@_spaxpby
+    procedure, pass(a) :: cmpval   => psb_@LX@_cmpval
+    procedure, pass(a) :: cmpmat   => psb_@LX@_cmpmat
+    generic, public    :: spcmp    => cmpval, cmpmat
 
   end type psb_@LX@spmat_type
 
@@ -1181,6 +1187,28 @@ module psb_@X@_mat_mod
       end subroutine psb_@X@_spaxpby
   end interface
 
+  interface
+      function psb_@X@_cmpval(a,val,tol,info) result(res)
+          import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+          class(psb_@X@spmat_type), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)             :: val
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@X@_cmpval
+  end interface
+
+  interface
+      function psb_@X@_cmpmat(a,b,tol,info) result(res)
+          import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+          class(psb_@X@spmat_type), intent(inout) :: a
+          class(psb_@X@spmat_type), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@X@_cmpmat
+  end interface
+
   ! == ===================================
   !
   !
@@ -1854,6 +1882,25 @@ module psb_@X@_mat_mod
       @RTYPE@(@FKIND@), allocatable        :: d(:)
       integer(psb_ipk_), intent(out)        :: info
     end function psb_@LX@_aclsum
+  end interface
+
+  interface  psb_cmpmat
+      function psb_@LX@_cmpval(a,val,tol,info) result(res)
+          import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+          class(psb_@LX@spmat_type), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)              :: val
+          @RTYPE@(@FKIND@), intent(in)             :: tol
+          logical                                  :: res
+          integer(psb_ipk_), intent(out)           :: info
+      end function psb_@LX@_cmpval
+      function psb_@LX@_cmpmat(a,b,tol,info) result(res)
+          import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+          class(psb_@LX@spmat_type), intent(inout) :: a
+          class(psb_@LX@spmat_type), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)             :: tol
+          logical                                  :: res
+          integer(psb_ipk_), intent(out)           :: info
+      end function psb_@LX@_cmpmat
   end interface
 
 contains

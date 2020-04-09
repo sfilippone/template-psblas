@@ -127,6 +127,9 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: aclsum      => psb_@IX@_base_aclsum
     procedure, pass(a) :: scalpid     => psb_@IX@_base_scalplusidentity
     procedure, pass(a) :: spaxpby     => psb_@IX@_base_spaxpby
+    procedure, pass(a) :: cmpval      => psb_@IX@_base_cmpval
+    procedure, pass(a) :: cmpmat      => psb_@IX@_base_cmpmat
+    generic, public    :: spcmp       => cmpval, cmpmat
   end type psb_@IX@_base_sparse_mat
 
   private :: @IX@_base_mat_sync, @IX@_base_mat_is_host, @IX@_base_mat_is_dev, &
@@ -230,6 +233,8 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: aclsum     => psb_@IX@_coo_aclsum
     procedure, pass(a) :: scalpid    => psb_@IX@_coo_scalplusidentity
     procedure, pass(a) :: spaxpby    => psb_@IX@_coo_spaxpby
+    procedure, pass(a) :: cmpval     => psb_@IX@_coo_cmpval
+    procedure, pass(a) :: cmpmat     => psb_@IX@_coo_cmpmat
   end type psb_@IX@_coo_sparse_mat
 
   private :: @IX@_coo_get_nzeros, @IX@_coo_set_nzeros, &
@@ -295,6 +300,9 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: aclsum      => psb_@LX@_base_aclsum
     procedure, pass(a) :: scalpid     => psb_@LX@_base_scalplusidentity
     procedure, pass(a) :: spaxpby     => psb_@LX@_base_spaxpby
+    procedure, pass(a) :: cmpval      => psb_@LX@_base_cmpval
+    procedure, pass(a) :: cmpmat      => psb_@LX@_base_cmpmat
+    generic, public    :: spcmp         => cmpval, cmpmat
     !
     ! Convert internal indices
     !
@@ -397,6 +405,8 @@ module psb_@SX@_base_mat_mod
     procedure, pass(a) :: aclsum     => psb_@LX@_coo_aclsum
     procedure, pass(a) :: scalpid    => psb_@LX@_coo_scalplusidentity
     procedure, pass(a) :: spaxpby    => psb_@LX@_coo_spaxpby
+    procedure, pass(a) :: cmpval     => psb_@LX@_coo_cmpval
+    procedure, pass(a) :: cmpmat     => psb_@LX@_coo_cmpmat
     !
     ! This is COO specific
     !
@@ -1500,6 +1510,52 @@ module psb_@SX@_base_mat_mod
   end interface
 
   !
+  !> Function  base_cmpval:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Compare the element of A with the value val |A(i,j) -val| < tol
+  !!
+  !! \param alpha  scaling for A
+  !! \param A      sparse matrix A (intent inout)
+  !! \param val    comparing element for the entries of A
+  !! \param tol    tolerance to which the comparison is done
+  !! \param res    return logical
+  !! \param info   return code
+  !
+  interface
+      function psb_@IX@_base_cmpval(a,val,tol,info) result(res)
+          import
+          class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)             :: val
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@IX@_base_cmpval
+  end interface
+
+  !
+  !> Function  base_cmpmat:
+  !! \memberof  psb_@IX@_base_sparse_mat
+  !! \brief Compare the element of A with the ones of B |A(i,j) - B(i,j)| < tol
+  !!
+  !! \param alpha  scaling for A
+  !! \param A      sparse matrix A (intent inout)
+  !! \param A      sparse matrix B (intent inout)
+  !! \param tol    tolerance to which the comparison is done
+  !! \param res    return logical
+  !! \param info   return code
+  !
+  interface
+      function psb_@IX@_base_cmpmat(a,b,tol,info) result(res)
+          import
+          class(psb_@IX@_base_sparse_mat), intent(inout) :: a
+          class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@IX@_base_cmpmat
+  end interface
+
+  !
   !> Function  base_maxval:
   !! \memberof  psb_@IX@_base_sparse_mat
   !! \brief Maximum absolute value of all coefficients;
@@ -2167,6 +2223,34 @@ module psb_@SX@_base_mat_mod
       @TYPE@(@FKIND@), intent(in)      :: beta
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@IX@_coo_spaxpby
+  end interface
+
+  !
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@IX@_base_cmpval
+  interface
+      function psb_@IX@_coo_cmpval(a,val,tol,info) result(res)
+          import
+          class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)             :: val
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@IX@_coo_cmpval
+  end interface
+
+  !
+  !! \memberof  psb_@IX@_coo_sparse_mat
+  !! \see psb_@IX@_base_mat_mod::psb_@IX@_base_cmpmat
+  interface
+      function psb_@IX@_coo_cmpmat(a,b,tol,info) result(res)
+          import
+          class(psb_@IX@_coo_sparse_mat), intent(inout) :: a
+          class(psb_@IX@_base_sparse_mat), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@IX@_coo_cmpmat
   end interface
 
   ! == =================
@@ -2967,6 +3051,52 @@ module psb_@SX@_base_mat_mod
   end interface
 
   !
+  !> Function  base_cmpval:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Compare the element of A with the value val |A(i,j) -val| < tol
+  !!
+  !! \param alpha  scaling for A
+  !! \param A      sparse matrix A (intent inout)
+  !! \param val    comparing element for the entries of A
+  !! \param tol    tolerance to which the comparison is done
+  !! \param res    return logical
+  !! \param info   return code
+  !
+  interface
+      function psb_@LX@_base_cmpval(a,val,tol,info) result(res)
+          import
+          class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)             :: val
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@LX@_base_cmpval
+  end interface
+
+  !
+  !> Function  base_cmpmat:
+  !! \memberof  psb_@LX@_base_sparse_mat
+  !! \brief Compare the element of A with the ones of B |A(i,j) - B(i,j)| < tol
+  !!
+  !! \param alpha  scaling for A
+  !! \param A      sparse matrix A (intent inout)
+  !! \param A      sparse matrix B (intent inout)
+  !! \param tol    tolerance to which the comparison is done
+  !! \param res    return logical
+  !! \param info   return code
+  !
+  interface
+      function psb_@LX@_base_cmpmat(a,b,tol,info) result(res)
+          import
+          class(psb_@LX@_base_sparse_mat), intent(inout) :: a
+          class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@LX@_base_cmpmat
+  end interface
+
+  !
   !> Function  base_maxval:
   !! \memberof  psb_@LX@_base_sparse_mat
   !! \brief Maximum absolute value of all coefficients;
@@ -3567,6 +3697,34 @@ module psb_@SX@_base_mat_mod
       @TYPE@(@FKIND@), intent(in)      :: beta
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@LX@_coo_spaxpby
+  end interface
+
+  !
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@LX@_base_mat_mod::psb_@LX@_base_cmpval
+  interface
+      function psb_@LX@_coo_cmpval(a,val,tol,info) result(res)
+          import
+          class(psb_@LX@_coo_sparse_mat), intent(inout) :: a
+          @TYPE@(@FKIND@), intent(in)             :: val
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@LX@_coo_cmpval
+  end interface
+
+  !
+  !! \memberof  psb_@LX@_coo_sparse_mat
+  !! \see psb_@LX@_base_mat_mod::psb_@LX@_base_cmpmat
+  interface
+      function psb_@LX@_coo_cmpmat(a,b,tol,info) result(res)
+          import
+          class(psb_@LX@_coo_sparse_mat), intent(inout)  :: a
+          class(psb_@LX@_base_sparse_mat), intent(inout) :: b
+          @RTYPE@(@FKIND@), intent(in)            :: tol
+          logical                                 :: res
+          integer(psb_ipk_), intent(out)          :: info
+      end function psb_@LX@_coo_cmpmat
   end interface
 
 contains

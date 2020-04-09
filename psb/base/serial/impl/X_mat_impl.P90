@@ -2521,6 +2521,78 @@ subroutine psb_@X@_spaxpby(alpha,a,beta,b,info)
 
 end subroutine psb_@X@_spaxpby
 
+function psb_@X@_cmpval(a,val,tol,info) result(res)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@X@_cmpval
+  implicit none
+  class(psb_@X@spmat_type), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)             :: val
+  @RTYPE@(@FKIND@), intent(in)            :: tol
+  logical                                 :: res
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='cmpval'
+  logical, parameter :: debug=.false.
+
+  res = .false.
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  res = a%a%spcmp(val,tol,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end function psb_@X@_cmpval
+
+function psb_@X@_cmpmat(a,b,tol,info) result(res)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@X@_cmpmat
+  implicit none
+  class(psb_@X@spmat_type), intent(inout) :: a
+  class(psb_@X@spmat_type), intent(inout) :: b
+  @RTYPE@(@FKIND@), intent(in)            :: tol
+  logical                                 :: res
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='cmpmat'
+  logical, parameter :: debug=.false.
+
+  res = .false.
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  res = a%a%spcmp(b%a,tol,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end function psb_@X@_cmpmat
+
 subroutine psb_@X@_mv_from_lb(a,b)
   use psb_error_mod
   use psb_const_mod
@@ -4719,6 +4791,78 @@ subroutine psb_@LX@_spaxpby(alpha,a,beta,b,info)
   return
 
 end subroutine psb_@LX@_spaxpby
+
+function psb_@LX@_cmpval(a,val,tol,info) result(res)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_cmpval
+  implicit none
+  class(psb_@LX@spmat_type), intent(inout) :: a
+  @TYPE@(@FKIND@), intent(in)             :: val
+  @RTYPE@(@FKIND@), intent(in)            :: tol
+  logical                                 :: res
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='cmpval'
+  logical, parameter :: debug=.false.
+
+  res = .false.
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  res = a%a%spcmp(val,tol,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end function psb_@LX@_cmpval
+
+function psb_@LX@_cmpmat(a,b,tol,info) result(res)
+  use psb_error_mod
+  use psb_const_mod
+  use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_cmpmat
+  implicit none
+  class(psb_@LX@spmat_type), intent(inout) :: a
+  class(psb_@LX@spmat_type), intent(inout) :: b
+  @RTYPE@(@FKIND@), intent(in)            :: tol
+  logical                                 :: res
+  integer(psb_ipk_), intent(out)          :: info
+
+  integer(psb_ipk_) :: err_act
+  character(len=20)  :: name='cmpmat'
+  logical, parameter :: debug=.false.
+
+  res = .false.
+  info = psb_success_
+  call psb_erractionsave(err_act)
+  if (.not.allocated(a%a)) then
+    info = psb_err_invalid_mat_state_
+    call psb_errpush(info,name)
+    goto 9999
+  endif
+
+  res = a%a%spcmp(b%a,tol,info)
+  if (info /= psb_success_) goto 9999
+
+  call psb_erractionrestore(err_act)
+  return
+
+9999 call psb_error_handler(err_act)
+
+  return
+
+end function psb_@LX@_cmpmat
 
 function psb_@LX@_maxval(a) result(res)
   use psb_@X@_mat_mod, psb_protect_name => psb_@LX@_maxval

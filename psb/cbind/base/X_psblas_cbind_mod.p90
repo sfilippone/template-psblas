@@ -464,6 +464,66 @@ contains
 
   end function psb_c_@X@gecmp
 
+  function psb_c_@X@gecmpmat(ah,bh,tol,cdh) bind(c) result(res)
+    implicit none
+    logical               :: res
+
+    type(psb_c_@X@spmat)  :: ah,bh
+    type(psb_c_descriptor) :: cdh
+
+    type(psb_desc_type), pointer :: descp
+    type(psb_@X@spmat_type), pointer :: ap,bp
+    integer(psb_c_ipk_)          :: info
+    @RTYPE@(@FCKIND@), value :: tol
+
+    if (c_associated(cdh%item)) then
+      call c_f_pointer(cdh%item,descp)
+    else
+      return
+    end if
+    if (c_associated(ah%item)) then
+      call c_f_pointer(ah%item,ap)
+    else
+      return
+    end if
+    if (c_associated(bh%item)) then
+      call c_f_pointer(bh%item,bp)
+    else
+      return
+    end if
+
+    call psb_gecmp(ap,bp,tol,descp,res,info)
+
+  end function psb_c_@X@gecmpmat
+
+  function psb_c_@X@gecmpmat_val(ah,val,tol,cdh) bind(c) result(res)
+    implicit none
+    logical               :: res
+
+    type(psb_c_@X@spmat)  :: ah
+    type(psb_c_descriptor) :: cdh
+
+    type(psb_desc_type), pointer :: descp
+    type(psb_@X@spmat_type), pointer :: ap
+    integer(psb_c_ipk_)          :: info
+    @TYPE@(@FCKIND@), value :: val
+    @RTYPE@(@FCKIND@), value :: tol
+
+    if (c_associated(cdh%item)) then
+      call c_f_pointer(cdh%item,descp)
+    else
+      return
+    end if
+    if (c_associated(ah%item)) then
+      call c_f_pointer(ah%item,ap)
+    else
+      return
+    end if
+
+    call psb_gecmp(ap,val,tol,descp,res,info)
+
+  end function psb_c_@X@gecmpmat_val
+
   function psb_c_@X@geaddconst(xh,bh,zh,cdh) bind(c) result(res)
     implicit none
     integer(psb_c_ipk_)    :: res
