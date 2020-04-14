@@ -466,7 +466,7 @@ contains
 
   function psb_c_@X@gecmpmat(ah,bh,tol,cdh) bind(c) result(res)
     implicit none
-    logical               :: res
+    logical(c_bool)       :: res
 
     type(psb_c_@X@spmat)  :: ah,bh
     type(psb_c_descriptor) :: cdh
@@ -475,6 +475,7 @@ contains
     type(psb_@X@spmat_type), pointer :: ap,bp
     integer(psb_c_ipk_)          :: info
     @RTYPE@(@FCKIND@), value :: tol
+    logical                  :: isequal
 
     if (c_associated(cdh%item)) then
       call c_f_pointer(cdh%item,descp)
@@ -492,13 +493,15 @@ contains
       return
     end if
 
-    call psb_gecmp(ap,bp,tol,descp,res,info)
+    call psb_gecmp(ap,bp,tol,descp,isequal,info)
+
+    res = isequal
 
   end function psb_c_@X@gecmpmat
 
   function psb_c_@X@gecmpmat_val(ah,val,tol,cdh) bind(c) result(res)
     implicit none
-    logical               :: res
+    logical(c_bool)   :: res
 
     type(psb_c_@X@spmat)  :: ah
     type(psb_c_descriptor) :: cdh
@@ -508,6 +511,7 @@ contains
     integer(psb_c_ipk_)          :: info
     @TYPE@(@FCKIND@), value :: val
     @RTYPE@(@FCKIND@), value :: tol
+    logical                  :: isequal
 
     if (c_associated(cdh%item)) then
       call c_f_pointer(cdh%item,descp)
@@ -520,7 +524,9 @@ contains
       return
     end if
 
-    call psb_gecmp(ap,val,tol,descp,res,info)
+    call psb_gecmp(ap,val,tol,descp,isequal,info)
+
+    res = isequal
 
   end function psb_c_@X@gecmpmat_val
 
