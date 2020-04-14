@@ -73,7 +73,6 @@ module psb_@X@_csr_mat_mod
     procedure, pass(a) :: inner_cssv  => psb_@X@_csr_cssv
     procedure, pass(a) :: scals       => psb_@X@_csr_scals
     procedure, pass(a) :: scalv       => psb_@X@_csr_scal
-    procedure, pass(a) :: scalpid     => psb_@X@_csr_scalplusidentity
     procedure, pass(a) :: maxval      => psb_@X@_csr_maxval
     procedure, pass(a) :: spnmi       => psb_@X@_csr_csnmi
     procedure, pass(a) :: rowsum      => psb_@X@_csr_rowsum
@@ -579,18 +578,6 @@ module psb_@X@_csr_mat_mod
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@X@_csr_scals
   end interface
-
-  !> \memberof psb_@X@_csr_sparse_mat
-  !! \see psb_@X@_base_mat_mod::psb_@X@_base_scalplusidentity
-  interface
-    subroutine psb_@X@_csr_scalplusidentity(d,a,info)
-      import
-      class(psb_@X@_csr_sparse_mat), intent(inout) :: a
-      @TYPE@(@FKIND@), intent(in)      :: d
-      integer(psb_ipk_), intent(out)            :: info
-    end subroutine psb_@X@_csr_scalplusidentity
-  end interface
-
 
     !> \namespace  psb_base_mod  \class  psb_@LX@_csr_sparse_mat
   !! \extends psb_@LX@_base_mat_mod::psb_@LX@_base_sparse_mat
