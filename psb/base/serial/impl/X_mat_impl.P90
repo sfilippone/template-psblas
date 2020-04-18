@@ -4918,6 +4918,8 @@ subroutine psb_@LX@_mv_from_ib(a,b)
   class(psb_@LX@spmat_type), intent(inout) :: a
   class(psb_@IX@_base_sparse_mat), intent(inout) :: b
   integer(psb_ipk_) :: info
+
+  info = psb_success_
   if (.not.allocated(a%a)) allocate(psb_@LX@_csr_sparse_mat :: a%a, stat=info)
   if (info == psb_success_) call a%a%mv_from_ifmt(b,info)
   
@@ -4933,6 +4935,7 @@ subroutine psb_@LX@_cp_from_ib(a,b)
   class(psb_@IX@_base_sparse_mat), intent(inout) :: b
   integer(psb_ipk_) :: info
 
+  info = psb_success_
   if (.not.allocated(a%a)) allocate(psb_@LX@_csr_sparse_mat :: a%a, stat=info)
   if (info == psb_success_) call a%a%cp_from_ifmt(b,info)
 
