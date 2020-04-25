@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_tools_mod.p90 
+VSRC=X_tools_mod.P90 
 SRCE=X_tools_a_mod.p90 
 
 
@@ -43,6 +43,7 @@ sint:
 	$(MAKE) vsrc isrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
+	$(MAKE) esrc ARITH=i2
 
 bsrc: vsrc isrc $(FSRC)
 vsrc: $(FVSRC) 

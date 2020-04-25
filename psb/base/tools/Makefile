@@ -8,8 +8,9 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 VSRC=Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
 ESRC=Xallc_a.p90 Xins_a.p90 Xasb_a.p90 Xfree_a.p90
-SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.p90 \
-	Xsprn.p90 Xspasb.p90 Xspfree.p90 X_par_csr_spspmm.p90 $(VSRC)
+SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.P90 \
+	Xsprn.p90 Xspasb.p90 Xspfree.p90 X_par_csr_spspmm.p90 X_glob_transpose.P90 \
+	$(VSRC)
 
 
 
@@ -46,6 +47,7 @@ sint:
 	$(MAKE) vsrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
+	$(MAKE) esrc ARITH=i2
 
 
 bsrc: $(FSRC) $(FESRC) 

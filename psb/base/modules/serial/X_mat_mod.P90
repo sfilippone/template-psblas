@@ -145,8 +145,9 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: tril        => psb_@X@_tril
     procedure, pass(a) :: triu        => psb_@X@_triu
     procedure, pass(a) :: m_csclip    => psb_@X@_csclip
+    procedure, pass(a) :: m_csclip_ip => psb_@X@_csclip_ip
     procedure, pass(a) :: b_csclip    => psb_@X@_b_csclip
-    generic, public    :: csclip      => b_csclip, m_csclip
+    generic, public    :: csclip      => b_csclip, m_csclip, m_csclip_ip
     procedure, pass(a) :: clean_zeros => psb_@X@_clean_zeros
     procedure, pass(a) :: reall       => psb_@X@_reallocate_nz
     procedure, pass(a) :: get_neigh   => psb_@X@_get_neigh
@@ -342,8 +343,9 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: tril        => psb_@LX@_tril
     procedure, pass(a) :: triu        => psb_@LX@_triu
     procedure, pass(a) :: m_csclip    => psb_@LX@_csclip
+    procedure, pass(a) :: m_csclip_ip => psb_@LX@_csclip_ip
     procedure, pass(a) :: b_csclip    => psb_@LX@_b_csclip
-    generic, public    :: csclip      => b_csclip, m_csclip
+    generic, public    :: csclip      => b_csclip, m_csclip, m_csclip_ip
     procedure, pass(a) :: clean_zeros => psb_@LX@_clean_zeros
     procedure, pass(a) :: reall       => psb_@LX@_reallocate_nz
     procedure, pass(a) :: get_neigh   => psb_@LX@_get_neigh
@@ -573,9 +575,9 @@ module psb_@X@_mat_mod
       import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
       integer(psb_ipk_), intent(in)               :: iout
       class(psb_@X@spmat_type), intent(in) :: a
-      integer(psb_ipk_), intent(in), optional     :: iv(:)
+      integer(psb_lpk_), intent(in), optional     :: iv(:)
       character(len=*), optional        :: head
-      integer(psb_ipk_), intent(in), optional     :: ivr(:), ivc(:)
+      integer(psb_lpk_), intent(in), optional     :: ivr(:), ivc(:)
     end subroutine psb_@X@_sparse_print
   end interface
 
@@ -584,9 +586,9 @@ module psb_@X@_mat_mod
       import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type
       character(len=*), intent(in)      :: fname
       class(psb_@X@spmat_type), intent(in) :: a
-      integer(psb_ipk_), intent(in), optional     :: iv(:)
+      integer(psb_lpk_), intent(in), optional     :: iv(:)
       character(len=*), optional        :: head
-      integer(psb_ipk_), intent(in), optional     :: ivr(:), ivc(:)
+      integer(psb_lpk_), intent(in), optional     :: ivr(:), ivc(:)
     end subroutine psb_@X@_n_sparse_print
   end interface
 
@@ -743,6 +745,17 @@ module psb_@X@_mat_mod
       integer(psb_ipk_), intent(in), optional        :: imin,imax,jmin,jmax
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@X@_csclip
+  end interface
+
+  interface
+    subroutine psb_@X@_csclip_ip(a,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_ipk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@X@_csclip_ip
   end interface
 
   interface
@@ -1512,6 +1525,17 @@ module psb_@X@_mat_mod
       integer(psb_lpk_), intent(in), optional        :: imin,imax,jmin,jmax
       logical, intent(in), optional        :: rscale,cscale
     end subroutine psb_@LX@_csclip
+  end interface
+
+  interface
+    subroutine psb_@LX@_csclip_ip(a,info,&
+       & imin,imax,jmin,jmax,rscale,cscale)
+      import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      integer(psb_ipk_),intent(out)                  :: info
+      integer(psb_lpk_), intent(in), optional        :: imin,imax,jmin,jmax
+      logical, intent(in), optional        :: rscale,cscale
+    end subroutine psb_@LX@_csclip_ip
   end interface
 
   interface

@@ -45,6 +45,7 @@ sint:
 	$(MAKE) vsrc isrc ARITH=l
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
+	$(MAKE) esrc ARITH=i2
 
 sauxil:
 	cd auxil && $(MAKE) src
