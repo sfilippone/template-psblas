@@ -172,6 +172,14 @@ contains
 
   end function psb_@X@_get_vect_default
 
+  subroutine  psb_@X@_clear_vect_default() 
+    implicit none 
+
+    if (allocated(psb_@X@_base_vect_default)) then 
+      deallocate(psb_@X@_base_vect_default)
+    end if
+
+  end subroutine psb_@X@_clear_vect_default
 
   function psb_@X@_get_base_vect_default() result(res)
     implicit none 
@@ -184,7 +192,6 @@ contains
     res => psb_@X@_base_vect_default
 
   end function psb_@X@_get_base_vect_default
-
 
   subroutine @X@_vect_clone(x,y,info)
     implicit none 
@@ -239,7 +246,6 @@ contains
     if (info == psb_success_) call x%v%bld(n)
 
   end subroutine @X@_vect_bld_mn
-
 
   subroutine @X@_vect_bld_en(x,n,mold)
     integer(psb_epk_), intent(in) :: n
