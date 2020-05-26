@@ -127,7 +127,7 @@ module psi_@X@_mod
       import
       implicit none 
       logical,  intent(in)    :: is_bld, is_upd
-      @TYPE@(@FKIND@), intent(in)  :: ictxt, mode
+      integer(psb_ipk_), intent(in)  :: ictxt, mode
       @TYPE@(@FKIND@), intent(out) :: dl_lda
       @TYPE@(@FKIND@), intent(in)  :: desc_str(*)
       @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:), length_dl(:)
@@ -135,6 +135,28 @@ module psi_@X@_mod
     end subroutine psi_@X@_extract_dep_list
   end interface
 
+  interface  psi_bld_glb_dep_list
+    subroutine psi_i_bld_glb_dep_list(ictxt,loc_dl,length_dl,dep_list,dl_lda,info)
+      import
+      integer(psb_ipk_), intent(in)  :: ictxt
+      @TYPE@(@FKIND@), intent(out) :: dl_lda
+      @TYPE@(@FKIND@), intent(in)  :: loc_dl(:), length_dl(0:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:)
+      integer(psb_ipk_), intent(out) :: info
+    end subroutine psi_i_bld_glb_dep_list
+  end interface
+
+  interface  psi_extract_loc_dl
+    subroutine psi_i_xtr_loc_dl(ictxt,is_bld,is_upd,desc_str,loc_dl,length_dl,info)
+      import
+      logical,  intent(in)           :: is_bld, is_upd
+      integer(psb_ipk_), intent(in)  :: ictxt
+      @TYPE@(@FKIND@), intent(in)  :: desc_str(:)
+      @TYPE@(@FKIND@), allocatable, intent(out) :: loc_dl(:), length_dl(:)
+      integer(psb_ipk_), intent(out) :: info
+    end subroutine psi_i_xtr_loc_dl
+  end interface
+  
   interface psi_fnd_owner
     subroutine psi_@X@_fnd_owner(nv,idx,iprc,desc,info)
       import
