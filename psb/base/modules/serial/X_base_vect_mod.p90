@@ -135,6 +135,9 @@ module psb_@X@_base_vect_mod
     procedure, pass(x) :: set_scal => @X@_base_set_scal
     procedure, pass(x) :: set_vect => @X@_base_set_vect
     generic, public    :: set      => set_vect, set_scal
+    @NOTINTS@
+    procedure, pass(x) :: get_entry=> @X@_base_get_entry
+    @NOTINTE@
     !
     ! Gather/scatter. These are needed for MPI interfacing.
     ! May have to be reworked.
@@ -876,8 +879,28 @@ contains
 
   end subroutine @X@_base_set_vect
 
-
 @NOTINTS@
+
+  !
+  ! Get entry.
+  !
+  !
+  !> Function  base_get_entry
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Get one entry from the vector
+  !!
+  !
+  function @X@_base_get_entry(x, index) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    integer(psb_ipk_), intent(in)             :: index
+    @TYPE@(@FKIND@)                           :: res
+
+    res = 0
+    if (allocated(x%v)) res = x%v(index)
+
+  end function @X@_base_get_entry
+
   !
   ! Overwrite with absolute value
   !

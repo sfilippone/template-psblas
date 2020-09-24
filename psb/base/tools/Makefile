@@ -10,20 +10,20 @@ VSRC=Xallc.p90 Xins.p90 Xasb.p90 Xfree.p90
 ESRC=Xallc_a.p90 Xins_a.p90 Xasb_a.p90 Xfree_a.p90
 SRC=X_map.p90 Xsphalo.P90 Xcdbldext.P90 Xspalloc.p90 Xspins.P90 \
 	Xsprn.p90 Xspasb.p90 Xspfree.p90 X_par_csr_spspmm.p90 X_glob_transpose.P90 \
-	$(VSRC)
+	$(VSRC) Xgetelem.p90
 
 
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
-FSRC=$(FSRC1) $(FSRC2) 
+FSRC=$(FSRC1) $(FSRC2)
 FVSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(VSRC))))
 FVSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(VSRC))))
-FVSRC=$(FVSRC1) $(FVSRC2) 
+FVSRC=$(FVSRC1) $(FVSRC2)
 FESRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(ESRC))))
 FESRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(ESRC))))
-FESRC=$(FESRC1) $(FESRC2) 
+FESRC=$(FESRC1) $(FESRC2)
 
 
 
@@ -50,31 +50,29 @@ sint:
 	$(MAKE) esrc ARITH=i2
 
 
-bsrc: $(FSRC) $(FESRC) 
+bsrc: $(FSRC) $(FESRC)
 vsrc: $(FVSRC)
 esrc: $(FESRC)
 
 lib: $(FOBJS)
 
-cpy: 
+cpy:
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/tools *.f90 *.F90)
 
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../$(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f ../../../$(ARITH).sed $< >$@
 # $(FVSRC1): psb_$(ARITH)%.f90 : X%.p90
 # 	sed -f ../../../$(ARITH).sed $< >$@
-# $(FVSRC2): psb_$(ARITH)%.F90 : X%.P90 
+# $(FVSRC2): psb_$(ARITH)%.F90 : X%.P90
 # 	sed -f ../../../$(ARITH).sed $< >$@
 $(FESRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../$(ARITH).sed $< >$@
-$(FESRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FESRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f ../../../$(ARITH).sed $< >$@
 
 clean:
-	/bin/rm -f *.f90 *.F90 *.o 
-
-
+	/bin/rm -f *.f90 *.F90 *.o

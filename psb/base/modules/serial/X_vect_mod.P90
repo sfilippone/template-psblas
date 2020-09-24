@@ -88,6 +88,8 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: set_sync => @X@_vect_set_sync
 
     @NOTINTS@
+    procedure, pass(x) :: get_entry => @X@_vect_get_entry
+
     procedure, pass(x) :: dot_v    => @X@_vect_dot_v
     procedure, pass(x) :: dot_a    => @X@_vect_dot_a
     generic, public    :: dot      => dot_v, dot_a
@@ -208,10 +210,10 @@ contains
 
   end function psb_@X@_get_vect_default
 
-  subroutine  psb_@X@_clear_vect_default() 
-    implicit none 
+  subroutine  psb_@X@_clear_vect_default()
+    implicit none
 
-    if (allocated(psb_@X@_base_vect_default)) then 
+    if (allocated(psb_@X@_base_vect_default)) then
       deallocate(psb_@X@_base_vect_default)
     end if
 
@@ -625,6 +627,15 @@ contains
   end function @X@_vect_is_dev
 
   @NOTINTS@
+
+  function @X@_vect_get_entry(x,index) result(res)
+    implicit none
+    class(psb_@X@_vect_type), intent(in) :: x
+    integer(psb_ipk_), intent(in)        :: index
+    @TYPE@(@FKIND@) :: res
+    res = 0
+    if (allocated(x%v)) res = x%v%get_entry(index)
+  end function @X@_vect_get_entry
 
   function @X@_vect_dot_v(n,x,y) result(res)
     implicit none
