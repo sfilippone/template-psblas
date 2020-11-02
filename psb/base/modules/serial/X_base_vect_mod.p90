@@ -290,13 +290,21 @@ contains
     @TYPE@(@FKIND@), intent(in) :: this(:)
     class(psb_@X@_base_vect_type), intent(inout) :: x
     integer(psb_ipk_) :: info
-
+    integer(psb_ipk_) :: i
+    
     call psb_realloc(size(this),x%v,info)
     if (info /= 0) then
       call psb_errpush(psb_err_alloc_dealloc_,'base_vect_bld')
       return
     end if
-    x%v(:)  = this(:)
+    if (.false.) then 
+      x%v(:)  = this(:)
+    else
+      !$omp parallel do private(i)
+      do i = 1, size(this)
+        x%v(i) = this(i)
+      end do
+    end if
 
   end subroutine @X@_base_bld_x
 
@@ -427,7 +435,6 @@ contains
       case(psb_dupl_ovwrt_)
         do i = 1, n
           !loop over all val's rows
-
           ! row actual block row
           if ((1 <= irl(i)).and.(irl(i) <= isz)) then
             ! this row belongs to me
@@ -807,7 +814,7 @@ contains
     integer(psb_ipk_) :: info
     integer(psb_ipk_), optional :: n
     ! Local variables
-    integer(psb_ipk_) :: isz
+    integer(psb_ipk_) :: isz, i
 
     if (.not.allocated(x%v)) return
     if (.not.x%is_host()) call x%sync()
@@ -818,7 +825,15 @@ contains
       call psb_errpush(psb_err_alloc_dealloc_,'base_get_vect')
       return
     end if
-    res(1:isz) = x%v(1:isz)
+    if (.false.) then 
+      res(1:isz) = x%v(1:isz)
+    else
+      !$omp parallel do private(i)
+      do i=1, isz
+        res(i) = x%v(i)
+      end do
+    end if
+    
   end function @X@_base_get_vect
 
   !
@@ -836,7 +851,7 @@ contains
     @TYPE@(@FKIND@), intent(in) :: val
     integer(psb_ipk_), optional :: first, last
 
-    integer(psb_ipk_) :: first_, last_
+    integer(psb_ipk_) :: first_, last_, i
 
     first_=1
     last_=size(x%v)
@@ -844,7 +859,14 @@ contains
     if (present(last))  last_  = min(last,last_)
 
     if (x%is_dev()) call x%sync()
-    x%v(first_:last_) = val
+    if (.false.) then
+      x%v(first_:last_) = val
+    else
+      !$omp parallel do private(i)
+      do i = first_, last_        
+        x%v(i) = val
+      end do
+    end if    
     call x%set_host()
 
   end subroutine @X@_base_set_scal
@@ -862,18 +884,30 @@ contains
     @TYPE@(@FKIND@), intent(in) :: val(:)
     integer(psb_ipk_), optional :: first, last
 
-    integer(psb_ipk_) :: first_, last_
+    integer(psb_ipk_) :: first_, last_, i
 
     first_                     = 1
     if (present(first)) first_ = max(1,first)
     last_                      = min(psb_size(x%v),first_+size(val)-1)
     if (present(last))  last_  = min(last,last_)
 
-    if (allocated(x%v)) then
-      if (x%is_dev()) call x%sync()
-      x%v(first_:last_) = val(1:last_-first_+1)
+    if (.false.) then 
+      if (allocated(x%v)) then
+        if (x%is_dev()) call x%sync()
+        x%v(first_:last_) = val(1:last_-first_+1)
+      else
+        x%v = val
+      end if
     else
-      x%v = val
+      if (allocated(x%v)) then
+        if (x%is_dev()) call x%sync()
+        !$omp parallel do private(i)
+        do i  = first_, last_
+          x%(i) = val(i-first_+1)
+        end do
+      else
+        x%v = val
+      end if
     end if
     call x%set_host()
 
@@ -913,9 +947,18 @@ contains
     implicit none
     class(psb_@X@_base_vect_type), intent(inout)  :: x
 
+    integer(psb_ipk_) :: i
+    
     if (allocated(x%v)) then
       if (x%is_dev()) call x%sync()
-      x%v =  abs(x%v)
+      if (.false.) then 
+        x%v =  abs(x%v)
+      else
+        !$omp parallel do private(i)
+        do i=1, size(x%v)
+          x%v(i) =  abs(x%v(i))
+        end do
+      end if
       call x%set_host()
     end if
 
@@ -1157,6 +1200,7 @@ contains
     info = 0
     if (y%is_dev()) call y%sync()
     n = min(size(y%v), size(x))
+    !$omp parallel do private(i)    
     do i=1, n
       y%v(i) = y%v(i)*x(i)
     end do
@@ -1194,6 +1238,7 @@ contains
       if (beta == @XONE@) then
         return
       else
+        !$omp parallel do private(i)    
         do i=1, n
           z%v(i) = beta*z%v(i)
         end do
@@ -1201,42 +1246,51 @@ contains
     else
       if (alpha == @XONE@) then
         if (beta == @XZERO@) then
+          !$omp parallel do private(i)    
           do i=1, n
             z%v(i) = y(i)*x(i)
           end do
         else if (beta == @XONE@) then
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = z%v(i) + y(i)*x(i)
           end do
         else
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = beta*z%v(i) + y(i)*x(i)
           end do
         end if
       else if (alpha == -@XONE@) then
         if (beta == @XZERO@) then
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = -y(i)*x(i)
           end do
         else if (beta == @XONE@) then
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = z%v(i) - y(i)*x(i)
           end do
         else
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = beta*z%v(i) - y(i)*x(i)
           end do
         end if
       else
         if (beta == @XZERO@) then
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = alpha*y(i)*x(i)
           end do
         else if (beta == @XONE@) then
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = z%v(i) + alpha*y(i)*x(i)
           end do
         else
+          !$omp parallel do private(i)
           do i=1, n
             z%v(i) = beta*z%v(i) + alpha*y(i)*x(i)
           end do
@@ -1339,7 +1393,6 @@ contains
     if (x%is_dev()) call x%sync()
     call x%div(x%v,y%v,info)
 
-
   end subroutine @X@_base_div_v
   !
   !> Function  base_div_v2
@@ -1383,7 +1436,6 @@ contains
     if (x%is_dev()) call x%sync()
     call x%div(x%v,y%v,info,flag)
 
-
   end subroutine @X@_base_div_v_check
   !
   !> Function  base_div_v2_check
@@ -1406,7 +1458,6 @@ contains
     if (z%is_dev()) call z%sync()
     call z%div(x%v,y%v,info,flag)
 
-
   end subroutine @X@_base_div_v2_check
   !
   !> Function  base_div_a2
@@ -1428,6 +1479,7 @@ contains
     if (z%is_dev()) call z%sync()
 
     n = min(size(y), size(x))
+    !$omp parallel do private(i)
     do i=1, n
       z%v(i) = x(i)/y(i)
     end do
@@ -1458,6 +1510,7 @@ contains
       if (z%is_dev()) call z%sync()
 
       n = min(size(y), size(x))
+      !$omp parallel do private(i)
       do i=1, n
         if (y(i) /= 0) then
           z%v(i) = x(i)/y(i)
@@ -1512,7 +1565,6 @@ contains
     if (y%is_dev()) call y%sync()
     call y%inv(x%v,info,flag)
 
-
   end subroutine @X@_base_inv_v_check
   !
   !> Function  base_inv_a2
@@ -1534,6 +1586,7 @@ contains
     if (y%is_dev()) call y%sync()
 
     n = size(x)
+    !$omp parallel do private(i)
     do i=1, n
       y%v(i) = 1_@FKIND@/x(i)
     end do
@@ -1564,6 +1617,7 @@ contains
       if (y%is_dev()) call y%sync()
 
       n = size(x)
+      !$omp parallel do private(i)
       do i=1, n
         if (x(i) /= 0) then
           y%v(i) = 1_@FKIND@/x(i)
@@ -1598,6 +1652,7 @@ contains
     if (z%is_dev()) call z%sync()
 
     n = size(x)
+    !$omp parallel do private(i)
     do i = 1, n, 1
       if ( abs(x(i)).ge.c ) then
         z%v(i) = 1_@FKIND@
@@ -1643,13 +1698,23 @@ contains
     implicit none
     class(psb_@X@_base_vect_type), intent(inout)  :: x
     @TYPE@(@FKIND@), intent (in)       :: alpha
+    integer(psb_ipk_) :: i
 
-    if (allocated(x%v)) then
-      x%v = alpha*x%v
-      call x%set_host()
+    if (.false.) then 
+      if (allocated(x%v)) then
+        x%v = alpha*x%v
+        call x%set_host()
+      end if
+    else
+      if (allocated(x%v)) then
+        !$omp parallel do private(i)
+        do i=1,size(x%v)
+          x%v(i) = alpha*x%v(i)
+        end do
+        call x%set_host()
+      end if
     end if
-
-  end subroutine @X@_base_scal
+end subroutine @X@_base_scal
 
   !
   ! Norms 1, 2 and infinity
@@ -1680,10 +1745,17 @@ contains
     class(psb_@X@_base_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
     @RTYPE@(@FKIND@)                :: res
-
+    integer(psb_ipk_) :: i
     if (x%is_dev()) call x%sync()
-    res =  maxval(abs(x%v(1:n)))
-
+    res = @RZERO@
+    if (.false.) then
+      res =  maxval(abs(x%v(1:n)))
+    else
+      !$omp parallel do private(i) reduction(max: res)
+      do i=1, n
+        res = max(res,abs(x%v(i))
+      end do
+    end if
   end function @X@_base_amax
 
   @NOTCPLXS@
@@ -1697,9 +1769,18 @@ contains
     class(psb_@X@_base_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
     @RTYPE@(@FKIND@)                :: res
+    integer(psb_ipk_) :: i
 
     if (x%is_dev()) call x%sync()
-    res =  minval(x%v(1:n))
+    if (.false.) then 
+      res =  minval(x%v(1:n))
+    else
+      res = HUGE(@RONE@)
+      !$omp parallel do private(i) reduction(min: res)
+      do i=1, n
+        res = min(res,abs(x%v(i))
+      end do
+    end if    
 
   end function @X@_base_min
 
@@ -1748,11 +1829,12 @@ contains
     info = 0
 
     z = huge(z)
+    !$omp parallel do private(i,temp) reduction(min: z)
     n = min(size(y), size(x%v))
     do i=1, n
       if ( y(i) /= @RZERO@ ) then
         temp = x%v(i)/y(i)
-        if (temp <= z)  z = temp
+        z = min(z,temp)
       end if
     end do
 
@@ -1770,10 +1852,19 @@ contains
     class(psb_@X@_base_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)           :: n
     @RTYPE@(@FKIND@)                :: res
-
+    integer(psb_ipk_) :: i
+    
     if (x%is_dev()) call x%sync()
-    res =  sum(abs(x%v(1:n)))
-
+    if (.false.) then
+      res =  sum(abs(x%v(1:n)))
+    else
+      res=@RZERO@
+      !$omp parallel do private(i) reduction(sum: res)
+      do i= 1, size(x%v)
+        res = res + abs(x%v(i)
+      end do
+    end if
+    
   end function @X@_base_asum
 @NOTINTE@
 
@@ -2078,11 +2169,2028 @@ contains
     integer(psb_ipk_) :: i, n
 
     if (z%is_dev()) call z%sync()
+    if (.false.) then 
+      n = size(x)
+      do i = 1, n, 1
+        z%v(i) = x(i) + b
+      end do
+    else
+      pby_v  => @X@_base_axpby_v
+    procedure, pass(y) :: axpby_a  => @X@_base_axpby_a
+    procedure, pass(z) :: axpby_v2  => @X@_base_axpby_v2
+    procedure, pass(z) :: axpby_a2  => @X@_base_axpby_a2
+    generic, public    :: axpby    => axpby_v, axpby_a, axpby_v2, axpby_a2
+    !
+    ! Vector by vector multiplication. Need all variants
+    ! to handle multiple requirements from preconditioners
+    !
+    procedure, pass(y) :: mlt_v    => @X@_base_mlt_v
+    procedure, pass(y) :: mlt_a    => @X@_base_mlt_a
+    procedure, pass(z) :: mlt_a_2  => @X@_base_mlt_a_2
+    procedure, pass(z) :: mlt_v_2  => @X@_base_mlt_v_2
+    procedure, pass(z) :: mlt_va   => @X@_base_mlt_va
+    procedure, pass(z) :: mlt_av   => @X@_base_mlt_av
+    generic, public    :: mlt      => mlt_v, mlt_a, mlt_a_2, mlt_v_2, mlt_av, &
+                                        mlt_va
+    !
+    ! Vector-Vector operations
+    !
+    procedure, pass(x) :: div_v         => @X@_base_div_v
+    procedure, pass(x) :: div_v_check   => @X@_base_div_v_check
+    procedure, pass(z) :: div_v2         => @X@_base_div_v2
+    procedure, pass(z) :: div_v2_check   => @X@_base_div_v2_check
+    procedure, pass(z) :: div_a2        => @X@_base_div_a2
+    procedure, pass(z) :: div_a2_check  => @X@_base_div_a2_check
+    generic, public    :: div           => div_v, div_v2, div_v_check, &
+                                            div_v2_check, div_a2, div_a2_check
+    procedure, pass(y) :: inv_v    => @X@_base_inv_v
+    procedure, pass(y) :: inv_v_check => @X@_base_inv_v_check
+    procedure, pass(y) :: inv_a2   => @X@_base_inv_a2
+    procedure, pass(y) :: inv_a2_check => @X@_base_inv_a2_check
+    generic, public    :: inv      => inv_v, inv_v_check, inv_a2, inv_a2_check
+    !
+    ! Scaling and norms
+    !
+    procedure, pass(x) :: scal     => @X@_base_scal
+    procedure, pass(x) :: absval1  => @X@_base_absval1
+    procedure, pass(x) :: absval2  => @X@_base_absval2
+    generic, public    :: absval   => absval1, absval2
+    procedure, pass(x) :: nrm2     => @X@_base_nrm2
+    procedure, pass(x) :: amax     => @X@_base_amax
+    procedure, pass(x) :: asum     => @X@_base_asum
+@NOTINTE@
+
+@NOTINTS@
+    !
+    ! Comparison and mask operation
+    !
+    procedure, pass(z) :: acmp_a2   => @X@_base_acmp_a2
+    procedure, pass(z) :: acmp_v2   => @X@_base_acmp_v2
+    generic, public    :: acmp      => acmp_a2,acmp_v2
+    !
+    ! Add constant value to all entry of a vector
+    !
+    procedure, pass(z) :: addconst_a2   => @X@_base_addconst_a2
+    procedure, pass(z) :: addconst_v2   => @X@_base_addconst_v2
+    generic, public    :: addconst      => addconst_a2,addconst_v2
+@NOTINTE@
+
+@NOTINTS@
+@NOTCPLXS@
+    procedure, pass(x) :: minreal    => @X@_base_min
+    procedure, pass(m) :: mask_v => @X@_base_mask_v
+    procedure, pass(m) :: mask_a => @X@_base_mask_a
+    generic, public    :: mask => mask_a, mask_v
+    procedure, pass(x) :: minquotient_v  => @X@_base_minquotient_v
+    procedure, pass(x) :: minquotient_a2 => @X@_base_minquotient_a2
+    generic, public    :: minquotient    => minquotient_v, minquotient_a2
+@NOTCPLXE@
+@NOTINTE@
+
+
+
+  end type psb_@X@_base_vect_type
+
+  public  :: psb_@X@_base_vect
+  private :: constructor, size_const
+  interface psb_@X@_base_vect
+    module procedure constructor, size_const
+  end interface psb_@X@_base_vect
+
+contains
+
+  !
+  ! Constructors.
+  !
+
+  !> Function  constructor:
+  !! \brief     Constructor from an array
+  !!  \param   x(:)  input array to be copied
+  !!
+  function constructor(x) result(this)
+    @TYPE@(@FKIND@)   :: x(:)
+    type(psb_@X@_base_vect_type) :: this
+    integer(psb_ipk_) :: info
+
+    this%v = x
+    call this%asb(size(x,kind=psb_ipk_),info)
+  end function constructor
+
+
+  !> Function  constructor:
+  !! \brief     Constructor from size
+  !!  \param    n   Size of vector to be built.
+  !!
+  function size_const(n) result(this)
+    integer(psb_ipk_), intent(in) :: n
+    type(psb_@X@_base_vect_type) :: this
+    integer(psb_ipk_) :: info
+
+    call this%asb(n,info)
+
+  end function size_const
+
+  !
+  ! Build from a sample
+  !
+
+  !> Function  bld_x:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief     Build method from an array
+  !!  \param   x(:)  input array to be copied
+  !!
+  subroutine @X@_base_bld_x(x,this)
+    use psb_realloc_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in) :: this(:)
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_) :: info
+    integer(psb_ipk_) :: i
+    
+    call psb_realloc(size(this),x%v,info)
+    if (info /= 0) then
+      call psb_errpush(psb_err_alloc_dealloc_,'base_vect_bld')
+      return
+    end if
+    if (.false.) then 
+      x%v(:)  = this(:)
+    else
+      !$omp parallel do private(i)
+      do i = 1, size(this)
+        x%v(i) = this(i)
+      end do
+    end if
+
+  end subroutine @X@_base_bld_x
+
+  !
+  ! Create with size, but no initialization
+  !
+
+  !> Function  bld_mn:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief     Build method with size (uninitialized data)
+  !!  \param    n    size to be allocated.
+  !!
+  subroutine @X@_base_bld_mn(x,n)
+    use psb_realloc_mod
+    implicit none
+    integer(psb_mpk_), intent(in) :: n
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_) :: info
+
+    call psb_realloc(n,x%v,info)
+    call x%asb(n,info)
+
+  end subroutine @X@_base_bld_mn
+
+  !> Function  bld_en:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief     Build method with size (uninitialized data)
+  !!  \param    n    size to be allocated.
+  !!
+  subroutine @X@_base_bld_en(x,n)
+    use psb_realloc_mod
+    implicit none
+    integer(psb_epk_), intent(in) :: n
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_) :: info
+
+    call psb_realloc(n,x%v,info)
+    call x%asb(n,info)
+
+  end subroutine @X@_base_bld_en
+
+  !> Function  base_all:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief     Build method with size (uninitialized data) and
+  !!            allocation return code.
+  !!  \param    n    size to be allocated.
+  !!  \param info  return code
+  !!
+  subroutine @X@_base_all(n, x, info)
+    use psi_serial_mod
+    use psb_realloc_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: n
+    class(psb_@X@_base_vect_type), intent(out)    :: x
+    integer(psb_ipk_), intent(out)              :: info
+
+    call psb_realloc(n,x%v,info)
+
+  end subroutine @X@_base_all
+
+  !> Function  base_mold:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief     Mold method: return a variable with the same dynamic type
+  !!  \param    y returned variable
+  !!  \param info  return code
+  !!
+  subroutine @X@_base_mold(x, y, info)
+    use psi_serial_mod
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in)   :: x
+    class(psb_@X@_base_vect_type), intent(out), allocatable :: y
+    integer(psb_ipk_), intent(out)              :: info
+
+    allocate(psb_@X@_base_vect_type :: y, stat=info)
+
+  end subroutine @X@_base_mold
+
+  !
+  ! Insert a bunch of values at specified positions.
+  !
+  !> Function  base_ins:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Insert coefficients.
+  !!
+  !!
+  !!         Given  a list of N pairs
+  !!           (IRL(i),VAL(i))
+  !!         record a new coefficient in X such that
+  !!            X(IRL(1:N)) = VAL(1:N).
+  !!
+  !!         - the update operation will perform either
+  !!               X(IRL(1:n)) = VAL(1:N)
+  !!           or
+  !!               X(IRL(1:n)) = X(IRL(1:n))+VAL(1:N)
+  !!           according to the value of DUPLICATE.
+  !!
+  !!
+  !!  \param n     number of pairs in input
+  !!  \param irl(:)  the input row indices
+  !!  \param val(:)  the input coefficients
+  !!  \param dupl    how to treat duplicate entries
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_ins_a(n,irl,val,dupl,x,info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    integer(psb_ipk_), intent(in)               :: n, dupl
+    integer(psb_ipk_), intent(in)               :: irl(:)
+    @TYPE@(@FKIND@), intent(in)        :: val(:)
+    integer(psb_ipk_), intent(out)              :: info
+
+    integer(psb_ipk_) :: i, isz
+
+    info = 0
+    if (psb_errstatus_fatal()) return
+
+    if (.not.allocated(x%v)) then
+      info = psb_err_invalid_vect_state_
+    else if (n > min(size(irl),size(val))) then
+      info = psb_err_invalid_input_
+
+    else
+      isz = size(x%v)
+      select case(dupl)
+      case(psb_dupl_ovwrt_)
+        do i = 1, n
+          !loop over all val's rows
+          ! row actual block row
+          if ((1 <= irl(i)).and.(irl(i) <= isz)) then
+            ! this row belongs to me
+            ! copy i-th row of block val in x
+            x%v(irl(i)) = val(i)
+          end if
+        enddo
+
+      case(psb_dupl_add_)
+
+        do i = 1, n
+          !loop over all val's rows
+          if ((1 <= irl(i)).and.(irl(i) <= isz)) then
+            ! this row belongs to me
+            ! copy i-th row of block val in x
+            x%v(irl(i)) = x%v(irl(i)) +  val(i)
+          end if
+        enddo
+
+      case default
+        info = 321
+        ! !$      call psb_errpush(info,name)
+        ! !$      goto 9999
+      end select
+    end if
+    call x%set_host()
+    if (info /= 0) then
+      call psb_errpush(info,'base_vect_ins')
+      return
+    end if
+
+  end subroutine @X@_base_ins_a
+
+  subroutine @X@_base_ins_v(n,irl,val,dupl,x,info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    integer(psb_ipk_), intent(in)               :: n, dupl
+    class(psb_i_base_vect_type), intent(inout)  :: irl
+    class(psb_@X@_base_vect_type), intent(inout)  :: val
+    integer(psb_ipk_), intent(out)              :: info
+
+    integer(psb_ipk_) :: isz
+
+    info = 0
+    if (psb_errstatus_fatal()) return
+
+    if (irl%is_dev()) call irl%sync()
+    if (val%is_dev()) call val%sync()
+    if (x%is_dev())   call x%sync()
+    call x%ins(n,irl%v,val%v,dupl,info)
+
+    if (info /= 0) then
+      call psb_errpush(info,'base_vect_ins')
+      return
+    end if
+
+  end subroutine @X@_base_ins_v
+
+
+  !
+  !> Function  base_zero
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Zero out contents
+  !!
+  !
+  subroutine @X@_base_zero(x)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)    :: x
+
+    if (allocated(x%v)) x%v=@XZERO@
+    call x%set_host()
+  end subroutine @X@_base_zero
+
+
+  !
+  ! Assembly.
+  ! For derived classes: after this the vector
+  ! storage is supposed to be in sync.
+  !
+  !> Function  base_asb:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Assemble vector: reallocate as necessary.
+  !!
+  !!  \param n     final size
+  !!  \param info  return code
+  !!
+  !
+
+  subroutine @X@_base_asb_m(n, x, info)
+    use psi_serial_mod
+    use psb_realloc_mod
+    implicit none
+    integer(psb_mpk_), intent(in)              :: n
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    info = 0
+    if (x%get_nrows() < n) &
+         & call psb_realloc(n,x%v,info)
+    if (info /= 0) &
+         & call psb_errpush(psb_err_alloc_dealloc_,'vect_asb')
+    call x%sync()
+  end subroutine @X@_base_asb_m
+
+  !
+  ! Assembly.
+  ! For derived classes: after this the vector
+  ! storage is supposed to be in sync.
+  !
+  !> Function  base_asb:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Assemble vector: reallocate as necessary.
+  !!
+  !!  \param n     final size
+  !!  \param info  return code
+  !!
+  !
+
+  subroutine @X@_base_asb_e(n, x, info)
+    use psi_serial_mod
+    use psb_realloc_mod
+    implicit none
+    integer(psb_epk_), intent(in)              :: n
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    info = 0
+    if (x%get_nrows() < n) &
+         & call psb_realloc(n,x%v,info)
+    if (info /= 0) &
+         & call psb_errpush(psb_err_alloc_dealloc_,'vect_asb')
+    call x%sync()
+  end subroutine @X@_base_asb_e
+
+  !
+  !> Function  base_free:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Free vector
+  !!
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_free(x, info)
+    use psi_serial_mod
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    integer(psb_ipk_), intent(out)              :: info
+
+    info = 0
+    if (allocated(x%v)) deallocate(x%v, stat=info)
+    if (info == 0) call x%free_buffer(info)
+    if (info == 0) call x%free_comid(info)
+    if (info /= 0) call &
+         & psb_errpush(psb_err_alloc_dealloc_,'vect_free')
+
+  end subroutine @X@_base_free
+
+
+
+  !
+  !> Function  base_free_buffer:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Free aux buffer
+  !!
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_free_buffer(x,info)
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    if (allocated(x%combuf)) &
+         &  deallocate(x%combuf,stat=info)
+  end subroutine @X@_base_free_buffer
+
+  !
+  !> Function  base_maybe_free_buffer:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Conditionally Free aux buffer.
+  !!        In some derived classes, e.g. GPU,
+  !!        does not really frees to avoid  runtime
+  !!        costs
+  !!
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_maybe_free_buffer(x,info)
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    info = 0
+    if (psb_get_maybe_free_buffer())&
+         &  call x%free_buffer(info)
+
+  end subroutine @X@_base_maybe_free_buffer
+
+  !
+  !> Function  base_free_comid:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Free aux MPI communication id buffer
+  !!
+  !!  \param info  return code
+  !!
+  !
+  subroutine @X@_base_free_comid(x,info)
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(out)             :: info
+
+    if (allocated(x%comid)) &
+         &  deallocate(x%comid,stat=info)
+  end subroutine @X@_base_free_comid
+
+
+  !
+  ! The base version of SYNC & friends does nothing, it's just
+  ! a placeholder.
+  !
+  !
+  !> Function  base_sync:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Sync: base version is a no-op.
+  !!
+  !
+  subroutine @X@_base_sync(x)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+
+  end subroutine @X@_base_sync
+
+  !
+  !> Function  base_set_host:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Set_host: base version is a no-op.
+  !!
+  !
+  subroutine @X@_base_set_host(x)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+
+  end subroutine @X@_base_set_host
+
+  !
+  !> Function  base_set_dev:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Set_dev: base version is a no-op.
+  !!
+  !
+  subroutine @X@_base_set_dev(x)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+
+  end subroutine @X@_base_set_dev
+
+  !
+  !> Function  base_set_sync:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Set_sync: base version is a no-op.
+  !!
+  !
+  subroutine @X@_base_set_sync(x)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+
+  end subroutine @X@_base_set_sync
+
+  !
+  !> Function  base_is_dev:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Is  vector on external device    .
+  !!
+  !
+  function @X@_base_is_dev(x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+
+    res = .false.
+  end function @X@_base_is_dev
+
+  !
+  !> Function  base_is_host
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Is  vector on standard memory    .
+  !!
+  !
+  function @X@_base_is_host(x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+
+    res = .true.
+  end function @X@_base_is_host
+
+  !
+  !> Function  base_is_sync
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Is  vector on sync               .
+  !!
+  !
+  function @X@_base_is_sync(x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    logical  :: res
+
+    res = .true.
+  end function @X@_base_is_sync
+
+
+  !
+  ! Size info.
+  !
+  !
+  !> Function  base_get_nrows
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Number of entries
+  !!
+  !
+  function @X@_base_get_nrows(x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    integer(psb_ipk_) :: res
+
+    res = 0
+    if (allocated(x%v)) res = size(x%v)
+
+  end function @X@_base_get_nrows
+
+  !
+  !> Function  base_get_sizeof
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Size in bytes
+  !!
+  !
+  function @X@_base_sizeof(x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    integer(psb_epk_) :: res
+
+    ! Force 8-byte integers.
+    res = (1_psb_epk_ * @SIZET@) * x%get_nrows()
+
+  end function @X@_base_sizeof
+
+  !
+  !> Function  base_get_fmt
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Format
+  !!
+  !
+  function @X@_base_get_fmt() result(res)
+    implicit none
+    character(len=5) :: res
+    res = 'BASE'
+  end function @X@_base_get_fmt
+
+
+  !
+  !
+  !
+  !> Function  base_get_vect
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Extract a copy of the contents
+  !!
+  !
+  function  @X@_base_get_vect(x,n) result(res)
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    @TYPE@(@FKIND@), allocatable                 :: res(:)
+    integer(psb_ipk_) :: info
+    integer(psb_ipk_), optional :: n
+    ! Local variables
+    integer(psb_ipk_) :: isz, i
+
+    if (.not.allocated(x%v)) return
+    if (.not.x%is_host()) call x%sync()
+    isz = x%get_nrows()
+    if (present(n)) isz = max(0,min(isz,n))
+    allocate(res(isz),stat=info)
+    if (info /= 0) then
+      call psb_errpush(psb_err_alloc_dealloc_,'base_get_vect')
+      return
+    end if
+    if (.false.) then 
+      res(1:isz) = x%v(1:isz)
+    else
+      !$omp parallel do private(i)
+      do i=1, isz
+        res(i) = x%v(i)
+      end do
+    end if
+    
+  end function @X@_base_get_vect
+
+  !
+  ! Reset all values
+  !
+  !
+  !> Function  base_set_scal
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Set all entries
+  !! \param val   The value to set
+  !!
+  subroutine @X@_base_set_scal(x,val,first,last)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    @TYPE@(@FKIND@), intent(in) :: val
+    integer(psb_ipk_), optional :: first, last
+
+    integer(psb_ipk_) :: first_, last_, i
+
+    first_=1
+    last_=size(x%v)
+    if (present(first)) first_ = max(1,first)
+    if (present(last))  last_  = min(last,last_)
+
+    if (x%is_dev()) call x%sync()
+    if (.false.) then
+      x%v(first_:last_) = val
+    else
+      !$omp parallel do private(i)
+      do i = first_, last_        
+        x%v(i) = val
+      end do
+    end if    
+    call x%set_host()
+
+  end subroutine @X@_base_set_scal
+
+
+  !
+  !> Function  base_set_vect
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Set all entries
+  !! \param val(:)  The vector to be copied in
+  !!
+  subroutine @X@_base_set_vect(x,val,first,last)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    @TYPE@(@FKIND@), intent(in) :: val(:)
+    integer(psb_ipk_), optional :: first, last
+
+    integer(psb_ipk_) :: first_, last_, i
+
+    first_                     = 1
+    if (present(first)) first_ = max(1,first)
+    last_                      = min(psb_size(x%v),first_+size(val)-1)
+    if (present(last))  last_  = min(last,last_)
+
+    if (.false.) then 
+      if (allocated(x%v)) then
+        if (x%is_dev()) call x%sync()
+        x%v(first_:last_) = val(1:last_-first_+1)
+      else
+        x%v = val
+      end if
+    else
+      if (allocated(x%v)) then
+        if (x%is_dev()) call x%sync()
+        !$omp parallel do private(i)
+        do i  = first_, last_
+          x%(i) = val(i-first_+1)
+        end do
+      else
+        x%v = val
+      end if
+    end if
+    call x%set_host()
+
+  end subroutine @X@_base_set_vect
+
+@NOTINTS@
+
+  !
+  ! Get entry.
+  !
+  !
+  !> Function  base_get_entry
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Get one entry from the vector
+  !!
+  !
+  function @X@_base_get_entry(x, index) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(in) :: x
+    integer(psb_ipk_), intent(in)             :: index
+    @TYPE@(@FKIND@)                           :: res
+
+    res = 0
+    if (allocated(x%v)) res = x%v(index)
+
+  end function @X@_base_get_entry
+
+  !
+  ! Overwrite with absolute value
+  !
+  !
+  !> Function  base_absval1
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Set all entries to their respective absolute values.
+  !!
+  subroutine @X@_base_absval1(x)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+
+    integer(psb_ipk_) :: i
+    
+    if (allocated(x%v)) then
+      if (x%is_dev()) call x%sync()
+      if (.false.) then 
+        x%v =  abs(x%v)
+      else
+        !$omp parallel do private(i)
+        do i=1, size(x%v)
+          x%v(i) =  abs(x%v(i))
+        end do
+      end if
+      call x%set_host()
+    end if
+
+  end subroutine @X@_base_absval1
+
+  subroutine @X@_base_absval2(x,y)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    class(psb_@X@_base_vect_type), intent(inout) :: y
+    integer(psb_ipk_) :: info
+    if (.not.x%is_host()) call x%sync()
+    if (allocated(x%v)) then
+      call y%axpby(ione*min(x%get_nrows(),y%get_nrows()),@XONE@,x,@XZERO@,info)
+      call y%absval()
+    end if
+
+  end subroutine @X@_base_absval2
+
+  !
+  ! Dot products
+  !
+  !
+  !> Function  base_dot_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Dot product by another base_vector
+  !! \param n    Number of entries to be considered
+  !! \param y    The other (base_vect) to be multiplied by
+  !!
+  function @X@_base_dot_v(n,x,y) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x, y
+    integer(psb_ipk_), intent(in)           :: n
+    @TYPE@(@FKIND@)                :: res
+    @TYPE@(@FKIND@), external      :: @DOT@
+
+    res = @XZERO@
+    !
+    ! Note: this is the base implementation.
+    !  When we get here, we are sure that X is of
+    !  TYPE psb_@X@_base_vect.
+    !  If Y is not, throw the burden on it, implicitly
+    !  calling dot_a
+    !
+    select type(yy => y)
+    type is (psb_@X@_base_vect_type)
+      res = @DOT@(n,x%v,1,y%v,1)
+    class default
+      res = y%dot(n,x%v)
+    end select
+
+  end function @X@_base_dot_v
+
+  !
+  ! Base workhorse is good old BLAS1
+  !
+  !
+  !> Function  base_dot_a
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief  Dot product by a normal array
+  !! \param n    Number of entries to be considered
+  !! \param y(:) The array to be multiplied by
+  !!
+  function @X@_base_dot_a(n,x,y) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    @TYPE@(@FKIND@), intent(in)    :: y(:)
+    integer(psb_ipk_), intent(in)           :: n
+    @TYPE@(@FKIND@)                :: res
+    @TYPE@(@FKIND@), external      :: @DOT@
+
+    res = @DOT@(n,y,1,x%v,1)
+
+  end function @X@_base_dot_a
+
+  !
+  ! AXPBY is invoked via Y, hence the structure below.
+  !
+  !
+  !
+  !> Function  base_axpby_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY  by a (base_vect) y=alpha*x+beta*y
+  !! \param m    Number of entries to be considered
+  !! \param alpha scalar alpha
+  !! \param x     The class(base_vect) to be added
+  !! \param beta scalar alpha
+  !! \param info   return code
+  !!
+  subroutine @X@_base_axpby_v(m,alpha, x, beta, y, info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: m
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+    integer(psb_ipk_), intent(out)              :: info
+
+    if (x%is_dev()) call x%sync()
+
+    call y%axpby(m,alpha,x%v,beta,info)
+
+  end subroutine @X@_base_axpby_v
+
+  !
+  ! AXPBY is invoked via Z, hence the structure below.
+  !
+  !
+  !
+  !> Function  base_axpby_v2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY  by a (base_vect) z=alpha*x+beta*y
+  !! \param m    Number of entries to be considered
+  !! \param alpha scalar alpha
+  !! \param x     The class(base_vect) to be added
+  !! \param beta scalar alpha
+  !! \param y     The class(base_vect) to be added
+  !! \param z     The class(base_vect) to be returned
+  !! \param info   return code
+  !!
+  subroutine @X@_base_axpby_v2(m,alpha, x, beta, y, z, info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: m
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+    integer(psb_ipk_), intent(out)              :: info
+
+    if (x%is_dev()) call x%sync()
+
+    call z%axpby(m,alpha,x%v,beta,y%v,info)
+
+  end subroutine @X@_base_axpby_v2
+
+  !
+  ! AXPBY is invoked via Y, hence the structure below.
+  !
+  !
+  !> Function  base_axpby_a
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY  by a normal array y=alpha*x+beta*y
+  !! \param m    Number of entries to be considered
+  !! \param alpha scalar alpha
+  !! \param x(:) The array to be added
+  !! \param beta scalar alpha
+  !! \param info   return code
+  !!
+  subroutine @X@_base_axpby_a(m,alpha, x, beta, y, info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: m
+    @TYPE@(@FKIND@), intent(in)        :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+    integer(psb_ipk_), intent(out)              :: info
+
+    if (y%is_dev()) call y%sync()
+    call psb_geaxpby(m,alpha,x,beta,y%v,info)
+    call y%set_host()
+
+  end subroutine @X@_base_axpby_a
+
+  !
+  ! AXPBY is invoked via Z, hence the structure below.
+  !
+  !
+  !> Function  base_axpby_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY  by a normal array y=alpha*x+beta*y
+  !! \param m    Number of entries to be considered
+  !! \param alpha scalar alpha
+  !! \param x(:) The array to be added
+  !! \param beta scalar beta
+  !! \param y(:) The array to be added
+  !! \param info   return code
+  !!
+  subroutine @X@_base_axpby_a2(m,alpha, x, beta, y, z, info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)                :: m
+    @TYPE@(@FKIND@), intent(in)                  :: x(:)
+    @TYPE@(@FKIND@), intent(in)                  :: y(:)
+    class(psb_@X@_base_vect_type), intent(inout) :: z
+    @TYPE@(@FKIND@), intent (in)                 :: alpha, beta
+    integer(psb_ipk_), intent(out)               :: info
+
+    if (z%is_dev()) call z%sync()
+    call psb_geaxpby(m,alpha,x,beta,y,z%v,info)
+    call z%set_host()
+
+  end subroutine @X@_base_axpby_a2
+
+
+  !
+  !  Multiple variants of two operations:
+  !  Simple multiplication  Y(:) = X(:)*Y(:)
+  !  blas-like:   Z(:) = alpha*X(:)*Y(:)+beta*Z(:)
+  !
+  !  Variants expanded according to the dynamic type
+  !  of the involved entities
+  !
+  !
+  !> Function  base_mlt_a
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry multiply  by a base_vect array y=x*y
+  !! \param x   The class(base_vect) to be multiplied by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_mlt_v(x, y, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    call y%mlt(x%v,info)
+
+  end subroutine @X@_base_mlt_v
+
+  !
+  !> Function  base_mlt_a
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry multiply  by a normal array y=x*y
+  !! \param x(:) The array to be multiplied by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_mlt_a(x, y, info)
+    use psi_serial_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in)        :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+    n = min(size(y%v), size(x))
+    !$omp parallel do private(i)    
+    do i=1, n
+      y%v(i) = y%v(i)*x(i)
+    end do
+    call y%set_host()
+
+  end subroutine @X@_base_mlt_a
+
+
+  !
+  !> Function  base_mlt_a_2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY-like Vector entry-by-entry multiply  by normal arrays
+  !!        z=beta*z+alpha*x*y
+  !! \param alpha
+  !! \param beta
+  !! \param x(:) The array to be multiplied b
+  !! \param y(:) The array to be multiplied by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_mlt_a_2(alpha,x,y,beta,z,info)
+    use psi_serial_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in)        :: alpha,beta
+    @TYPE@(@FKIND@), intent(in)        :: y(:)
+    @TYPE@(@FKIND@), intent(in)        :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (z%is_dev()) call z%sync()
+
+    n = min(size(z%v), size(x), size(y))
+    if (alpha == @XZERO@) then
+      if (beta == @XONE@) then
+        return
+      else
+        !$omp parallel do private(i)    
+        do i=1, n
+          z%v(i) = beta*z%v(i)
+        end do
+      end if
+    else
+      if (alpha == @XONE@) then
+        if (beta == @XZERO@) then
+          !$omp parallel do private(i)    
+          do i=1, n
+            z%v(i) = y(i)*x(i)
+          end do
+        else if (beta == @XONE@) then
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = z%v(i) + y(i)*x(i)
+          end do
+        else
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = beta*z%v(i) + y(i)*x(i)
+          end do
+        end if
+      else if (alpha == -@XONE@) then
+        if (beta == @XZERO@) then
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = -y(i)*x(i)
+          end do
+        else if (beta == @XONE@) then
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = z%v(i) - y(i)*x(i)
+          end do
+        else
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = beta*z%v(i) - y(i)*x(i)
+          end do
+        end if
+      else
+        if (beta == @XZERO@) then
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = alpha*y(i)*x(i)
+          end do
+        else if (beta == @XONE@) then
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = z%v(i) + alpha*y(i)*x(i)
+          end do
+        else
+          !$omp parallel do private(i)
+          do i=1, n
+            z%v(i) = beta*z%v(i) + alpha*y(i)*x(i)
+          end do
+        end if
+      end if
+    end if
+    call z%set_host()
+
+  end subroutine @X@_base_mlt_a_2
+
+  !
+  !> Function  base_mlt_v_2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief AXPBY-like Vector entry-by-entry multiply  by class(base_vect)
+  !!        z=beta*z+alpha*x*y
+  !! \param alpha
+  !! \param beta
+  !! \param x  The class(base_vect) to be multiplied b
+  !! \param y  The class(base_vect) to be multiplied by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_mlt_v_2(alpha,x,y,beta,z,info,conjgx,conjgy)
+    use psi_serial_mod
+    use psb_string_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in)        :: alpha,beta
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    character(len=1), intent(in), optional     :: conjgx, conjgy
+    integer(psb_ipk_) :: i, n
+    logical :: conjgx_, conjgy_
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+    if (x%is_dev()) call x%sync()
+    if (.not.psb_@X@_is_complex_) then
+      call z%mlt(alpha,x%v,y%v,beta,info)
+    else
+      conjgx_=.false.
+      if (present(conjgx)) conjgx_ = (psb_toupper(conjgx)=='C')
+      conjgy_=.false.
+      if (present(conjgy)) conjgy_ = (psb_toupper(conjgy)=='C')
+      if (conjgx_) x%v=@CONJG@(x%v)
+      if (conjgy_) y%v=@CONJG@(y%v)
+      call z%mlt(alpha,x%v,y%v,beta,info)
+      if (conjgx_) x%v=@CONJG@(x%v)
+      if (conjgy_) y%v=@CONJG@(y%v)
+    end if
+  end subroutine @X@_base_mlt_v_2
+
+  subroutine @X@_base_mlt_av(alpha,x,y,beta,z,info)
+    use psi_serial_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in)        :: alpha,beta
+    @TYPE@(@FKIND@), intent(in)        :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+    call z%mlt(alpha,x,y%v,beta,info)
+
+  end subroutine @X@_base_mlt_av
+
+  subroutine @X@_base_mlt_va(alpha,x,y,beta,z,info)
+    use psi_serial_mod
+    implicit none
+    @TYPE@(@FKIND@), intent(in)        :: alpha,beta
+    @TYPE@(@FKIND@), intent(in)        :: y(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    call z%mlt(alpha,y,x,beta,info)
+
+  end subroutine @X@_base_mlt_va
+  !
+  !> Function  base_div_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry divide  by a vector x=x/y
+  !! \param y The array to be divided by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_v(x, y, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    call x%div(x%v,y%v,info)
+
+  end subroutine @X@_base_div_v
+  !
+  !> Function  base_div_v2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry divide  by a vector z=x/y
+  !! \param y The array to be divided by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_v2(x, y, z, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (z%is_dev()) call z%sync()
+    call z%div(x%v,y%v,info)
+
+
+  end subroutine @X@_base_div_v2
+  !
+  !> Function  base_div_v_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry divide  by a vector x=x/y
+  !! \param y The array to be divided by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_v_check(x, y, info, flag)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+    logical, intent(in) :: flag
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    call x%div(x%v,y%v,info,flag)
+
+  end subroutine @X@_base_div_v_check
+  !
+  !> Function  base_div_v2_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Vector entry-by-entry divide  by a vector z=x/y
+  !! \param y The array to be divided by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_v2_check(x, y, z, info, flag)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+    logical, intent(in) :: flag
+
+    info = 0
+    if (z%is_dev()) call z%sync()
+    call z%div(x%v,y%v,info,flag)
+
+  end subroutine @X@_base_div_v2_check
+  !
+  !> Function  base_div_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Entry-by-entry divide  between normal array z=x/y
+  !! \param y(:) The array to be divided by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_a2(x, y, z, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    @TYPE@(@FKIND@), intent(in) :: x(:)
+    @TYPE@(@FKIND@), intent(in)    :: y(:)
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (z%is_dev()) call z%sync()
+
+    n = min(size(y), size(x))
+    !$omp parallel do private(i)
+    do i=1, n
+      z%v(i) = x(i)/y(i)
+    end do
+
+  end subroutine @X@_base_div_a2
+  !
+  !> Function  base_div_a2_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Entry-by-entry divide  between normal array x=x/y and check if y(i)
+  !! is different from zero
+  !! \param y(:) The array to be dived by
+  !! \param info   return code
+  !!
+  subroutine @X@_base_div_a2_check(x, y, z, info, flag)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    @TYPE@(@FKIND@), intent(in) :: x(:)
+    @TYPE@(@FKIND@), intent(in)    :: y(:)
+    integer(psb_ipk_), intent(out)              :: info
+    logical, intent(in)              :: flag
+    integer(psb_ipk_) :: i, n
+
+    if (flag .eqv. .false.) then
+      call @X@_base_div_a2(x, y, z, info)
+    else
+      info = 0
+      if (z%is_dev()) call z%sync()
+
+      n = min(size(y), size(x))
+      !$omp parallel do private(i)
+      do i=1, n
+        if (y(i) /= 0) then
+          z%v(i) = x(i)/y(i)
+        else
+          info = 1
+          exit
+        end if
+      end do
+    end if
+
+
+  end subroutine @X@_base_div_a2_check
+  !
+  !> Function  base_inv_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compute the entry-by-entry inverse of x and put it in y
+  !! \param x The vector to be inverted
+  !! \param y The vector containing the inverted vector
+  !! \param info return code
+  subroutine @X@_base_inv_v(x, y, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+    call y%inv(x%v,info)
+
+
+  end subroutine @X@_base_inv_v
+  !
+  !> Function  base_inv_v_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compute the entry-by-entry inverse of x and put it in y, with 0 check
+  !! \param x The vector to be inverted
+  !! \param y The vector containing the inverted vector
+  !! \param info return code
+  !! \param flag if true does the check, otherwise call base_inv_v
+  subroutine @X@_base_inv_v_check(x, y, info, flag)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+    logical, intent(in) :: flag
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+    call y%inv(x%v,info,flag)
+
+  end subroutine @X@_base_inv_v_check
+  !
+  !> Function  base_inv_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compute the entry-by-entry inverse of x and put it in y,
+  !! \param x(:) The array to be inverted
+  !! \param y The vector containing the inverted vector
+  !! \param info return code
+  !
+  subroutine @X@_base_inv_a2(x, y, info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @TYPE@(@FKIND@), intent(in) :: x(:)
+    integer(psb_ipk_), intent(out)              :: info
+    integer(psb_ipk_) :: i, n
+
+    info = 0
+    if (y%is_dev()) call y%sync()
+
+    n = size(x)
+    !$omp parallel do private(i)
+    do i=1, n
+      y%v(i) = 1_@FKIND@/x(i)
+    end do
+
+  end subroutine @X@_base_inv_a2
+  !
+  !> Function  base_inv_a2_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compute the entry-by-entry inverse of x and put it in y, with 0 check
+  !! \param x(:) The array to be inverted
+  !! \param y The vector containing the inverted vector
+  !! \param info return code
+  !! \param flag if true does the check, otherwise call base_inv_v
+  !
+  subroutine @X@_base_inv_a2_check(x, y, info, flag)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @TYPE@(@FKIND@), intent(inout) :: x(:)
+    integer(psb_ipk_), intent(out)              :: info
+    logical, intent(in)              :: flag
+    integer(psb_ipk_) :: i, n
+
+    if (flag .eqv. .false.) then
+      call @X@_base_inv_a2(x, y, info)
+    else
+      info = 0
+      if (y%is_dev()) call y%sync()
+
+      n = size(x)
+      !$omp parallel do private(i)
+      do i=1, n
+        if (x(i) /= 0) then
+          y%v(i) = 1_@FKIND@/x(i)
+        else
+          info = 1
+          y%v(i) = 0_@FKIND@
+        end if
+      end do
+    end if
+
+
+  end subroutine @X@_base_inv_a2_check
+
+  !
+  !> Function  base_inv_a2_check
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compare entry-by-entry the vector x with the scalar c
+  !! \param x The array to be compared
+  !! \param z The vector containing in position i 1 if |x(i)| > c, 0 otherwise
+  !! \param c The comparison term
+  !! \param info return code
+  !
+  subroutine @X@_base_acmp_a2(x,c,z,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(in)             :: c
+    @TYPE@(@FKIND@), intent(inout)           :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)           :: info
+    integer(psb_ipk_) :: i, n
+
+    if (z%is_dev()) call z%sync()
+
+    n = size(x)
+    !$omp parallel do private(i)
+    do i = 1, n, 1
+      if ( abs(x(i)).ge.c ) then
+        z%v(i) = 1_@FKIND@
+      else
+        z%v(i) = 0_@FKIND@
+      end if
+    end do
+    info = 0
+
+  end subroutine @X@_base_acmp_a2
+  !
+  !> Function  base_cmp_v2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Compare entry-by-entry the vector x with the scalar c
+  !! \param x The vector to be compared
+  !! \param z The vector containing in position i 1 if |x(i)| > c, 0 otherwise
+  !! \param c The comparison term
+  !! \param info return code
+  !
+  subroutine @X@_base_acmp_v2(x,c,z,info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    @RTYPE@(@FKIND@), intent(in)                  :: c
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)           :: info
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    call z%acmp(x%v,c,info)
+  end subroutine @X@_base_acmp_v2
+
+  !
+  ! Simple scaling
+  !
+  !> Function  base_scal
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Scale all entries  x = alpha*x
+  !! \param alpha   The multiplier
+  !!
+  subroutine @X@_base_scal(alpha, x)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    @TYPE@(@FKIND@), intent (in)       :: alpha
+    integer(psb_ipk_) :: i
+
+    if (.false.) then 
+      if (allocated(x%v)) then
+        x%v = alpha*x%v
+        call x%set_host()
+      end if
+    else
+      if (allocated(x%v)) then
+        !$omp parallel do private(i)
+        do i=1,size(x%v)
+          x%v(i) = alpha*x%v(i)
+        end do
+        call x%set_host()
+      end if
+    end if
+end subroutine @X@_base_scal
+
+  !
+  ! Norms 1, 2 and infinity
+  !
+  !> Function  base_nrm2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief 2-norm |x(1:n)|_2
+  !! \param n  how many entries to consider
+  function @X@_base_nrm2(n,x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                :: res
+    @RTYPE@(@FKIND@), external      :: @NRM2@
+
+    if (x%is_dev()) call x%sync()
+    res =  @NRM2@(n,x%v,1)
+
+  end function @X@_base_nrm2
+
+  !
+  !> Function  base_amax
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief infinity-norm |x(1:n)|_\infty
+  !! \param n  how many entries to consider
+  function @X@_base_amax(n,x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                :: res
+    integer(psb_ipk_) :: i
+    if (x%is_dev()) call x%sync()
+    res = @RZERO@
+    if (.false.) then
+      res =  maxval(abs(x%v(1:n)))
+    else
+      !$omp parallel do private(i) reduction(max: res)
+      do i=1, n
+        res = max(res,abs(x%v(i))
+      end do
+    end if
+  end function @X@_base_amax
+
+  @NOTCPLXS@
+  !
+  !> Function  base_min
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief min x(1:n)
+  !! \param n  how many entries to consider
+  function @X@_base_min(n,x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                :: res
+    integer(psb_ipk_) :: i
+
+    if (x%is_dev()) call x%sync()
+    if (.false.) then 
+      res =  minval(x%v(1:n))
+    else
+      res = HUGE(@RONE@)
+      !$omp parallel do private(i) reduction(min: res)
+      do i=1, n
+        res = min(res,abs(x%v(i))
+      end do
+    end if    
+
+  end function @X@_base_min
+
+  !
+  !> Function  base_minquotient_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Minimum entry of the vector entry-by-entry divide  x/y
+  !! \param x The numerator vector
+  !! \param y The denumerator vector
+  !! \param info   return code
+  !!
+  function @X@_base_minquotient_v(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    @RTYPE@(@FKIND@)                              :: z
+    integer(psb_ipk_), intent(out)                :: info
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    if (y%is_dev()) call y%sync()
+
+    z = x%minquotient(y%v,info)
+
+  end function @X@_base_minquotient_v
+
+  !
+  !> Function  base_minquotient_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Minimum entry of the array entry-by-entry divide  x/y
+  !! \param x The numerator array
+  !! \param y The denumerator array
+  !! \param info   return code
+  !!
+  function @X@_base_minquotient_a2(x, y, info) result(z)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    @RTYPE@(@FKIND@), intent(in)                 :: y(:)
+    @RTYPE@(@FKIND@)                             :: z
+    integer(psb_ipk_), intent(out)               :: info
+    integer(psb_ipk_) :: i, n
+    @RTYPE@(@FKIND@)                             :: temp
+
+    info = 0
+
+    z = huge(z)
+    !$omp parallel do private(i,temp) reduction(min: z)
+    n = min(size(y), size(x%v))
+    do i=1, n
+      if ( y(i) /= @RZERO@ ) then
+        temp = x%v(i)/y(i)
+        z = min(z,temp)
+      end if
+    end do
+
+  end function @X@_base_minquotient_a2
+
+  @NOTCPLXE@
+
+  !
+  !> Function  base_asum
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief 1-norm |x(1:n)|_1
+  !! \param n  how many entries to consider
+  function @X@_base_asum(n,x) result(res)
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)           :: n
+    @RTYPE@(@FKIND@)                :: res
+    integer(psb_ipk_) :: i
+    
+    if (x%is_dev()) call x%sync()
+    if (.false.) then
+      res =  sum(abs(x%v(1:n)))
+    else
+      res=@RZERO@
+      !$omp parallel do private(i) reduction(sum: res)
+      do i= 1, size(x%v)
+        res = res + abs(x%v(i)
+      end do
+    end if
+    
+  end function @X@_base_asum
+@NOTINTE@
+
+
+  !
+  ! Gather: Y = beta * Y + alpha * X(IDX(:))
+  !
+  !
+  !> Function  base_gthab
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief gather into an array
+  !!    Y = beta * Y + alpha * X(IDX(:))
+  !! \param n  how many entries to consider
+  !! \param idx(:) indices
+  !! \param alpha
+  !! \param beta
+  subroutine @X@_base_gthab(n,idx,alpha,x,beta,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) :: alpha, beta, y(:)
+    class(psb_@X@_base_vect_type) :: x
+
+    if (x%is_dev()) call x%sync()
+    call psi_gth(n,idx,alpha,x%v,beta,y)
+
+  end subroutine @X@_base_gthab
+  !
+  ! shortcut alpha=1 beta=0
+  !
+  !> Function  base_gthzv
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief gather into an array special alpha=1 beta=0
+  !!    Y = X(IDX(:))
+  !! \param n  how many entries to consider
+  !! \param idx(:) indices
+  subroutine @X@_base_gthzv_x(i,n,idx,x,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: i,n
+    class(psb_i_base_vect_type) :: idx
+    @TYPE@(@FKIND@) ::  y(:)
+    class(psb_@X@_base_vect_type) :: x
+
+    if (idx%is_dev()) call idx%sync()
+    call x%gth(n,idx%v(i:),y)
+
+  end subroutine @X@_base_gthzv_x
+
+  !
+  ! New comm internals impl.
+  !
+  subroutine @X@_base_gthzbuf(i,n,idx,x)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: i,n
+    class(psb_i_base_vect_type) :: idx
+    class(psb_@X@_base_vect_type) :: x
+
+    if (.not.allocated(x%combuf)) then
+      call psb_errpush(psb_err_alloc_dealloc_,'gthzbuf')
+      return
+    end if
+    if (idx%is_dev()) call idx%sync()
+    if (x%is_dev()) call x%sync()
+    call x%gth(n,idx%v(i:),x%combuf(i:))
+
+  end subroutine @X@_base_gthzbuf
+  !
+  !> Function  base_device_wait:
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief device_wait: base version is a no-op.
+  !!
+  !
+  subroutine @X@_base_device_wait()
+    implicit none
+
+  end subroutine @X@_base_device_wait
+
+  function @X@_base_use_buffer() result(res)
+    logical :: res
+
+    res = .true.
+  end function @X@_base_use_buffer
+
+  subroutine @X@_base_new_buffer(n,x,info)
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)              :: n
+    integer(psb_ipk_), intent(out)             :: info
+
+    call psb_realloc(n,x%combuf,info)
+  end subroutine @X@_base_new_buffer
+
+  subroutine @X@_base_new_comid(n,x,info)
+    use psb_realloc_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)              :: n
+    integer(psb_ipk_), intent(out)             :: info
+
+    call psb_realloc(n,2_psb_ipk_,x%comid,info)
+  end subroutine @X@_base_new_comid
+
+
+  !
+  ! shortcut alpha=1 beta=0
+  !
+  !> Function  base_gthzv
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief gather into an array special alpha=1 beta=0
+  !!    Y = X(IDX(:))
+  !! \param n  how many entries to consider
+  !! \param idx(:) indices
+  subroutine @X@_base_gthzv(n,idx,x,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) ::  y(:)
+    class(psb_@X@_base_vect_type) :: x
+
+    if (x%is_dev()) call x%sync()
+    call psi_gth(n,idx,x%v,y)
+
+  end subroutine @X@_base_gthzv
+
+  !
+  ! Scatter:
+  ! Y(IDX(:)) = beta*Y(IDX(:)) + X(:)
+  !
+  !
+  !> Function  base_sctb
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief scatter into a class(base_vect)
+  !!    Y(IDX(:)) = beta * Y(IDX(:)) +  X(:)
+  !! \param n  how many entries to consider
+  !! \param idx(:) indices
+  !! \param beta
+  !! \param x(:)
+  subroutine @X@_base_sctb(n,idx,x,beta,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: n, idx(:)
+    @TYPE@(@FKIND@) :: beta, x(:)
+    class(psb_@X@_base_vect_type) :: y
+
+    if (y%is_dev()) call y%sync()
+    call psi_sct(n,idx,x,beta,y%v)
+    call y%set_host()
+
+  end subroutine @X@_base_sctb
+
+  subroutine @X@_base_sctb_x(i,n,idx,x,beta,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: i, n
+    class(psb_i_base_vect_type) :: idx
+    @TYPE@(@FKIND@) :: beta, x(:)
+    class(psb_@X@_base_vect_type) :: y
+
+    if (idx%is_dev()) call idx%sync()
+    call y%sct(n,idx%v(i:),x,beta)
+    call y%set_host()
+
+  end subroutine @X@_base_sctb_x
+
+  subroutine @X@_base_sctb_buf(i,n,idx,beta,y)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_) :: i, n
+    class(psb_i_base_vect_type) :: idx
+    @TYPE@(@FKIND@) :: beta
+    class(psb_@X@_base_vect_type) :: y
+
+
+    if (.not.allocated(y%combuf)) then
+      call psb_errpush(psb_err_alloc_dealloc_,'sctb_buf')
+      return
+    end if
+    if (y%is_dev()) call y%sync()
+    if (idx%is_dev()) call idx%sync()
+    call y%sct(n,idx%v(i:),y%combuf(i:),beta)
+    call y%set_host()
+
+  end subroutine @X@_base_sctb_buf
+
+  @NOTINTS@
+  @NOTCPLXS@
+  !
+  !> Function  base_mask_a
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Peform constraint tests looking at the value of c
+  !! \param x The array to be compared
+  !! \param c The array containing the information on the type of test to be
+  !! performed, if c(i) = 2 ">0", if c(i) = 1 ">=0", if c(i) = 0 no test, if
+  !! c(i) =-1 "<=0", if c(i) = -2 "< 0"
+  !! \param m The vector containing the result of the comparison 1.0 for a
+  !! failed test, and 0.0 for a passed one.
+  !! \param t logical resulting from an and operation on all the tests
+  !! \param info return code
+  !
+  subroutine @X@_base_mask_a(c,x,m,t,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(inout)               :: c(:)
+    @RTYPE@(@FKIND@), intent(inout)               :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: m
+    integer(psb_ipk_), intent(out)                :: info
+    logical, intent(out)                          :: t
+    integer(psb_ipk_) :: i, n
+
+    if (m%is_dev()) call m%sync()
+    t = .true.
 
     n = size(x)
     do i = 1, n, 1
-        z%v(i) = x(i) + b
+      if (c(i).eq.2_@FKIND@) then
+        if ( x(i) > @RZERO@ ) then
+          m%v(i) = 0_@FKIND@
+        else
+          m%v(i) = 1_@FKIND@
+          t = .false.
+        end if
+      elseif (c(i).eq.1_@FKIND@) then
+        if ( x(i) >= @RZERO@ ) then
+          m%v(i) = 0_@FKIND@
+        else
+          m%v(i) = 1_@FKIND@
+          t = .false.
+        end if
+      elseif (c(i).eq.-1_@FKIND@) then
+        if ( x(i) <= @RZERO@ ) then
+          m%v(i) = 0_@FKIND@
+        else
+          m%v(i) = 1_@FKIND@
+          t = .false.
+        end if
+      elseif (c(i).eq.-2_@FKIND@) then
+        if ( x(i) < @RZERO@ ) then
+          m%v(i) = 0_@FKIND@
+        else
+          m%v(i) = 1_@FKIND@
+          t = .false.
+        end if
+      else
+          m%v(i) = 0_@FKIND@
+      end if
     end do
+    info = 0
+
+  end subroutine @X@_base_mask_a
+  !
+  !> Function  base_mask_v
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Peform constraint tests looking at the value of c
+  !! \param x The vector to be compared
+  !! \param c The vector containing the information on the type of test to be
+  !! performed, if c(i) = 2 ">0", if c(i) = 1 ">=0", if c(i) = 0 no test, if
+  !! c(i) =-1 "<=0", if c(i) = -2 "< 0"
+  !! \param m The vector containing the result of the comparison 1.0 for a
+  !! failed test, and 0.0 for a passed one.
+  !! \param t logical resulting from an and operation on all the tests
+  !! \param info return code
+  !
+  subroutine @X@_base_mask_v(c,x,m,t,info)
+    use psi_serial_mod
+    implicit none
+    class(psb_@X@_base_vect_type), intent(inout)  :: c
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: m
+    integer(psb_ipk_), intent(out)                :: info
+    logical, intent(out)                          :: t
+
+    info = 0
+    if (x%is_dev()) call x%sync()
+    if (c%is_dev()) call c%sync()
+
+    call m%mask(x%v,c%v,t,info)
+  end subroutine @X@_base_mask_v
+
+  @NOTCPLXE@
+  @NOTINTE@
+
+  @NOTINTS@
+  !
+  !> Function  _base_addconst_a2
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief Add the constant b to every entry of the array x
+  !! \param x The input array
+  !! \param z The vector containing the x(i) + b
+  !! \param b The added term
+  !! \param info return code
+  !
+  subroutine @X@_base_addconst_a2(x,b,z,info)
+    use psi_serial_mod
+    implicit none
+    @RTYPE@(@FKIND@), intent(in)                  :: b
+    @TYPE@(@FKIND@), intent(inout)                :: x(:)
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    integer(psb_ipk_), intent(out)                :: info
+    integer(psb_ipk_) :: i, n
+
+    if (z%is_dev()) call z%sync()
+    if (.false.) then 
+      n = size(x)
+      !$omp parallel do private(i)
+      do i = 1, n
+        z%v(i) = x(i) + b
+      end do
+    end if
     info = 0
 
   end subroutine @X@_base_addconst_a2
