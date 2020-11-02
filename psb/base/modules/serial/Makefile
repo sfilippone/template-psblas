@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_base_vect_mod.p90  X_vect_mod.P90  
+VSRC=X_base_vect_mod.P90  X_vect_mod.P90  
 SRC=X_base_mat_mod.P90 X_csc_mat_mod.p90 \
     X_csr_mat_mod.p90  X_mat_mod.P90  X_serial_mod.p90 
 SRCI=
@@ -68,9 +68,9 @@ cpy:
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/serial *.f90 *.F90)
 
 
-X_base_mat_mod.P90: X_base_vect_mod.p90
+X_base_mat_mod.P90: X_base_vect_mod.P90
 	touch $@
-X_vect_mod.P90: X_base_vect_mod.p90
+X_vect_mod.P90: X_base_vect_mod.P90
 	touch $@
 X_csc_mat_mod.p90 X_csr_mat_mod.p90: X_base_mat_mod.P90 
 	touch $@
