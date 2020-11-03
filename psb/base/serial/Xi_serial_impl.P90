@@ -739,6 +739,7 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
   if (alpha.eq.@XZERO@) then
     if (beta.eq.@XZERO@) then
       do j=1, n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = @XZERO@
         enddo
@@ -750,12 +751,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) =  beta*y(i,j)
         enddo
@@ -766,12 +769,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = x(i,j) + y(i,j)
         enddo
@@ -779,12 +784,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = x(i,j) + beta*y(i,j)
         enddo
@@ -795,12 +802,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = -x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = -x(i,j) + y(i,j)
         enddo
@@ -808,12 +817,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = -x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = -x(i,j) + beta*y(i,j)
         enddo
@@ -824,12 +835,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = alpha*x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = alpha*x(i,j) + y(i,j)
         enddo
@@ -837,12 +850,14 @@ subroutine  @X@axpby(m, n, alpha, X, lldx, beta, Y, lldy, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = alpha*x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           y(i,j) = alpha*x(i,j) + beta*y(i,j)
         enddo
@@ -928,12 +943,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) =  beta*y(i,j)
         enddo
@@ -944,12 +961,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = x(i,j) + y(i,j)
         enddo
@@ -957,12 +976,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = x(i,j) + beta*y(i,j)
         enddo
@@ -973,12 +994,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = -x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = -x(i,j) + y(i,j)
         enddo
@@ -986,12 +1009,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = -x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = -x(i,j) + beta*y(i,j)
         enddo
@@ -1002,12 +1027,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     if (beta.eq.@XZERO@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = alpha*x(i,j)
         enddo
       enddo
     else if (beta.eq.@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = alpha*x(i,j) + y(i,j)
         enddo
@@ -1015,12 +1042,14 @@ subroutine  @X@axpbyv2(m, n, alpha, X, lldx, beta, Y, lldy, Z, lldz, info)
 
     else if (beta.eq.-@XONE@) then
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = alpha*x(i,j) - y(i,j)
         enddo
       enddo
     else
       do j=1,n
+        !$omp parallel do private(i)
         do i=1,m
           Z(i,j) = alpha*x(i,j) + beta*y(i,j)
         enddo
