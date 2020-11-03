@@ -11,8 +11,9 @@ SRCI=Xi_serial_impl.P90
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
 FSRCI=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCI))))
+FSRCI2=$(patsubst %.P90, %.F90, $(subst Xi, psi_$(ARITH), $(filter %.P90, $(SRCI))))
 
-FSRC=$(FSRC1) $(FSRC2) $(FSRCI)
+FSRC=$(FSRC1) $(FSRC2) $(FSRCI) $(FSRCI2)
 FOBJS1=$(FSRC1:.f90=.o)
 FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
@@ -59,6 +60,8 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90 
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRCI2): psi_$(ARITH)%.F90 : Xi%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean: iclean sclean
