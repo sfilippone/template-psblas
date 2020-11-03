@@ -6,7 +6,7 @@ UTIL_MODS =
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=X_base_prec_mod.p90 X_prec_mod.p90 X_prec_type.p90 X_diagprec.p90\
-    X_bjacprec.p90 X_nullprec.p90 X_ilu_fact_mod.p90
+    X_bjacprec.p90 X_nullprec.p90 X_ilu_fact_mod.p90 X_ainv_tools_mod.p90\
 
 
 
@@ -58,16 +58,14 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
-cpy: 
+cpy:
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/prec *.f90 *.F90)
 	cd impl && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean: iclean
 	/bin/rm -f *.f90 *.F90 *.o
-
-
