@@ -8,7 +8,10 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 SRC=X_prec_type_impl.p90 X_diagprec_impl.p90 Xprecinit.p90\
     X_bjacprec_impl.p90 X_nullprec_impl.p90 Xprecbld.p90 \
     X_ilu0_fact.p90 X_iluk_fact.p90 X_ilut_fact.p90 \
-		X_sp_drop.p90 X_sparsify.p90 Xrwclip.p90 
+		X_sp_drop.p90 X_sparsify.p90 Xrwclip.p90 \
+		Xsparse_biconjg_llk_noth.P90 Xsparse_biconjg_llk.P90 \
+		Xsparse_biconjg_mlk.P90 Xsparse_biconjg_s_llk.P90 \
+		Xsparse_biconjg_s_ft_llk.P90
 
 
 
