@@ -32,22 +32,18 @@
 
 module psi_@X@_p2p_mod
   use psi_penv_mod
-  use psi_comm_buffers_mod
 
   interface psb_snd
-    module procedure psb_@X@snds, psb_@X@sndv, psb_@X@sndm, &
-         & psb_@X@snds_ec, psb_@X@sndv_ec, psb_@X@sndm_ec 
+    module procedure psb_@X@snds, psb_@X@sndv, psb_@X@sndm
   end interface
 
   interface psb_rcv
-    module procedure psb_@X@rcvs, psb_@X@rcvv, psb_@X@rcvm, &
-         & psb_@X@rcvs_ec, psb_@X@rcvv_ec, psb_@X@rcvm_ec 
+    module procedure psb_@X@rcvs, psb_@X@rcvv, psb_@X@rcvm
   end interface
 
 contains
 
   subroutine psb_@X@snds(ictxt,dat,dst)
-    use psi_comm_buffers_mod 
 #ifdef MPI_MOD
     use mpi
 #endif
@@ -55,7 +51,7 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(in)  :: dat
     integer(psb_mpk_), intent(in)  :: dst
     @TYPE@(@FKIND@), allocatable :: dat_(:)
@@ -70,7 +66,6 @@ contains
   end subroutine psb_@X@snds
 
   subroutine psb_@X@sndv(ictxt,dat,dst)
-    use psi_comm_buffers_mod 
 
 #ifdef MPI_MOD
     use mpi
@@ -79,11 +74,11 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(in)  :: dat(:)
     integer(psb_mpk_), intent(in)  :: dst
     @TYPE@(@FKIND@), allocatable :: dat_(:)
-    integer(psb_mpk_) :: info 
+    integer(psb_mpk_) :: info
 
 #if defined(SERIAL_MPI) 
 #else
@@ -95,7 +90,6 @@ contains
   end subroutine psb_@X@sndv
 
   subroutine psb_@X@sndm(ictxt,dat,dst,m)
-    use psi_comm_buffers_mod 
 
 #ifdef MPI_MOD
     use mpi
@@ -104,13 +98,13 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(in)  :: dat(:,:)
     integer(psb_mpk_), intent(in)  :: dst
     integer(psb_ipk_), intent(in), optional :: m
     @TYPE@(@FKIND@), allocatable :: dat_(:)
     integer(psb_ipk_) :: i,j,k,m_,n_
-    integer(psb_mpk_) :: info 
+    integer(psb_mpk_) :: info
 
 #if defined(SERIAL_MPI) 
 #else
@@ -133,7 +127,6 @@ contains
   end subroutine psb_@X@sndm
 
   subroutine psb_@X@rcvs(ictxt,dat,src)
-    use psi_comm_buffers_mod 
 #ifdef MPI_MOD
     use mpi
 #endif
@@ -141,21 +134,21 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(out)  :: dat
     integer(psb_mpk_), intent(in)  :: src
-    integer(psb_mpk_) :: info 
+    integer(psb_mpk_) :: info, icomm
     integer(psb_mpk_) :: status(mpi_status_size)
 #if defined(SERIAL_MPI) 
     ! do nothing
 #else
-    call mpi_recv(dat,1,@MPI_TYPE@,src,@PSB_TAG@,ictxt,status,info)
+    icomm = psb_get_mpi_comm(ictxt)
+    call mpi_recv(dat,1,@MPI_TYPE@,src,@PSB_TAG@,icomm,status,info)
     call psb_test_nodes(psb_mesg_queue)
 #endif    
   end subroutine psb_@X@rcvs
 
   subroutine psb_@X@rcvv(ictxt,dat,src)
-    use psi_comm_buffers_mod 
 
 #ifdef MPI_MOD
     use mpi
@@ -164,22 +157,22 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(out)  :: dat(:)
     integer(psb_mpk_), intent(in)  :: src
     @TYPE@(@FKIND@), allocatable :: dat_(:)
-    integer(psb_mpk_) :: info 
+    integer(psb_mpk_) :: info, icomm
     integer(psb_mpk_) :: status(mpi_status_size)
 #if defined(SERIAL_MPI) 
 #else
-    call mpi_recv(dat,size(dat),@MPI_TYPE@,src,@PSB_TAG@,ictxt,status,info)
+    icomm = psb_get_mpi_comm(ictxt)
+    call mpi_recv(dat,size(dat),@MPI_TYPE@,src,@PSB_TAG@,icomm,status,info)
     call psb_test_nodes(psb_mesg_queue)
 #endif    
 
   end subroutine psb_@X@rcvv
 
   subroutine psb_@X@rcvm(ictxt,dat,src,m)
-    use psi_comm_buffers_mod 
 
 #ifdef MPI_MOD
     use mpi
@@ -188,14 +181,14 @@ contains
 #ifdef MPI_H
     include 'mpif.h'
 #endif
-    integer(psb_mpk_), intent(in)  :: ictxt
+    type(psb_ctxt_type), intent(in)  :: ictxt
     @TYPE@(@FKIND@), intent(out)  :: dat(:,:)
     integer(psb_mpk_), intent(in)  :: src
     integer(psb_ipk_), intent(in), optional :: m
     @TYPE@(@FKIND@), allocatable :: dat_(:)
     integer(psb_mpk_) :: info ,m_,n_, ld, mp_rcv_type
     integer(psb_mpk_) :: i,j,k
-    integer(psb_mpk_) :: status(mpi_status_size)
+    integer(psb_mpk_) :: status(mpi_status_size), icomm
 #if defined(SERIAL_MPI) 
     ! What should we do here?? 
 #else
@@ -205,11 +198,13 @@ contains
       n_ = size(dat,2)
       call mpi_type_vector(n_,m_,ld,@MPI_TYPE@,mp_rcv_type,info)
       if (info == mpi_success) call mpi_type_commit(mp_rcv_type,info)
+      icomm = psb_get_mpi_comm(ictxt)
       if (info == mpi_success) call mpi_recv(dat,1,mp_rcv_type,src,&
-           & @PSB_TAG@,ictxt,status,info)
+           & @PSB_TAG@,icomm,status,info)
       if (info == mpi_success) call mpi_type_free(mp_rcv_type,info)
     else
-      call mpi_recv(dat,size(dat),@MPI_TYPE@,src,@PSB_TAG@,ictxt,status,info)
+      icomm = psb_get_mpi_comm(ictxt) 
+      call mpi_recv(dat,size(dat),@MPI_TYPE@,src,@PSB_TAG@,icomm,status,info)
     end if
     if (info /= mpi_success) then 
       write(psb_err_unit,*) 'Error in psb_recv', info
@@ -217,91 +212,5 @@ contains
     call psb_test_nodes(psb_mesg_queue)
 #endif    
   end subroutine psb_@X@rcvm
-
-
-  subroutine psb_@X@snds_ec(ictxt,dat,dst)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(in)  :: dat
-    integer(psb_epk_), intent(in)  :: dst
-    
-    integer(psb_mpk_) :: iictxt, idst 
-
-    iictxt = ictxt
-    idst   = dst 
-    call psb_snd(iictxt, dat, idst)
-
-  end subroutine psb_@X@snds_ec
-
-  subroutine psb_@X@sndv_ec(ictxt,dat,dst)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(in)  :: dat(:)
-    integer(psb_epk_), intent(in)  :: dst
-    
-    integer(psb_mpk_) :: iictxt, idst 
-
-    iictxt = ictxt
-    idst   = dst 
-    call psb_snd(iictxt, dat, idst)
-
-  end subroutine psb_@X@sndv_ec
-
-  subroutine psb_@X@sndm_ec(ictxt,dat,dst,m)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(in)  :: dat(:,:)
-    integer(psb_epk_), intent(in)  :: dst
-    
-    integer(psb_mpk_) :: iictxt, idst 
-
-    iictxt = ictxt
-    idst   = dst 
-    call psb_snd(iictxt, dat, idst)
-
-  end subroutine psb_@X@sndm_ec
-
-  subroutine psb_@X@rcvs_ec(ictxt,dat,src)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(out) :: dat
-    integer(psb_epk_), intent(in)  :: src
-    
-    integer(psb_mpk_) :: iictxt, isrc 
-
-    iictxt = ictxt
-    isrc   = src 
-    call psb_rcv(iictxt, dat, isrc)
-
-  end subroutine psb_@X@rcvs_ec
-
-  subroutine psb_@X@rcvv_ec(ictxt,dat,src)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(out) :: dat(:)
-    integer(psb_epk_), intent(in)  :: src
-    
-    integer(psb_mpk_) :: iictxt, isrc 
-
-    iictxt = ictxt
-    isrc   = src 
-    call psb_rcv(iictxt, dat, isrc)
-
-  end subroutine psb_@X@rcvv_ec
-
-  subroutine psb_@X@rcvm_ec(ictxt,dat,src,m)
-
-    integer(psb_epk_), intent(in)  :: ictxt
-    @TYPE@(@FKIND@), intent(out) :: dat(:,:)
-    integer(psb_epk_), intent(in)  :: src
-    
-    integer(psb_mpk_) :: iictxt, isrc 
-
-    iictxt = ictxt
-    isrc   = src 
-    call psb_rcv(iictxt, dat, isrc)
-
-  end subroutine psb_@X@rcvm_ec
-
 
 end module psi_@X@_p2p_mod
