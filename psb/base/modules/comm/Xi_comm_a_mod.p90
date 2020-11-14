@@ -30,11 +30,12 @@
 !   
 !    
 module psi_@X@_comm_a_mod
+  use psi_penv_mod, only : psb_ctxt_type
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_mpk_, psb_epk_
+  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, psb_epk_
   @INTE@
   @NOTINTS@
-  use psb_desc_mod, only : psb_desc_type, psb_ipk_, @FKIND@, psb_i_base_vect_type
+  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, @FKIND@, psb_i_base_vect_type
   @NOTINTE@
 
   interface psi_swapdata
@@ -59,8 +60,10 @@ module psi_@X@_comm_a_mod
       subroutine psi_@X@swapidxm(ictxt,icomm,flag,n,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
-      integer(psb_ipk_), intent(in)      :: ictxt,icomm,flag, n
-      integer(psb_ipk_), intent(out)     :: info
+      type(psb_ctxt_type), intent(in) :: ictxt
+      integer(psb_mpk_), intent(in)   :: icomm
+      integer(psb_ipk_), intent(in)   :: flag, n
+      integer(psb_ipk_), intent(out)  :: info
       @TYPE@(@FKIND@)        :: y(:,:), beta
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
@@ -68,8 +71,10 @@ module psi_@X@_comm_a_mod
     subroutine psi_@X@swapidxv(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
-      integer(psb_ipk_), intent(in)      :: ictxt,icomm,flag
-      integer(psb_ipk_), intent(out)     :: info
+      type(psb_ctxt_type), intent(in) :: ictxt
+      integer(psb_Mpk_), intent(in)   :: icomm
+      integer(psb_ipk_), intent(in)   :: flag
+      integer(psb_ipk_), intent(out)  :: info
       @TYPE@(@FKIND@)        :: y(:), beta
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
@@ -99,8 +104,10 @@ module psi_@X@_comm_a_mod
     subroutine psi_@X@tranidxm(ictxt,icomm,flag,n,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
-      integer(psb_ipk_), intent(in)      :: ictxt,icomm,flag, n
-      integer(psb_ipk_), intent(out)     :: info
+      type(psb_ctxt_type), intent(in) :: ictxt
+      integer(psb_mpk_), intent(in)   :: icomm
+      integer(psb_ipk_), intent(in)   :: flag, n
+      integer(psb_ipk_), intent(out)  :: info
       @TYPE@(@FKIND@)        :: y(:,:), beta
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)       :: idx(:),totxch,totsnd,totrcv
@@ -108,8 +115,10 @@ module psi_@X@_comm_a_mod
     subroutine psi_@X@tranidxv(ictxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
-      integer(psb_ipk_), intent(in)      :: ictxt,icomm,flag
-      integer(psb_ipk_), intent(out)     :: info
+      type(psb_ctxt_type), intent(in) :: ictxt
+      integer(psb_mpk_), intent(in)   :: icomm
+      integer(psb_ipk_), intent(in)   :: flag
+      integer(psb_ipk_), intent(out)  :: info
       @TYPE@(@FKIND@)        :: y(:), beta
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
@@ -120,16 +129,16 @@ module psi_@X@_comm_a_mod
     subroutine  psi_@X@ovrl_updr1(x,desc_a,update,info)
       import 
       @TYPE@(@FKIND@), intent(inout), target :: x(:)
-      type(psb_desc_type), intent(in)          :: desc_a
-      integer(psb_ipk_), intent(in)                      :: update
-      integer(psb_ipk_), intent(out)                     :: info
+      type(psb_desc_type), intent(in)  :: desc_a
+      integer(psb_ipk_), intent(in)    :: update
+      integer(psb_ipk_), intent(out)   :: info
     end subroutine psi_@X@ovrl_updr1
     subroutine  psi_@X@ovrl_updr2(x,desc_a,update,info)
       import 
       @TYPE@(@FKIND@), intent(inout), target :: x(:,:)
-      type(psb_desc_type), intent(in)          :: desc_a
-      integer(psb_ipk_), intent(in)                      :: update
-      integer(psb_ipk_), intent(out)                     :: info
+      type(psb_desc_type), intent(in)    :: desc_a
+      integer(psb_ipk_), intent(in)      :: update
+      integer(psb_ipk_), intent(out)     :: info
     end subroutine psi_@X@ovrl_updr2
   end interface psi_ovrl_upd
 
@@ -139,14 +148,14 @@ module psi_@X@_comm_a_mod
       @TYPE@(@FKIND@), intent(inout) :: x(:)
       @TYPE@(@FKIND@), allocatable   :: xs(:)
       type(psb_desc_type), intent(in)  :: desc_a
-      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(out)   :: info
     end subroutine psi_@X@ovrl_saver1
     subroutine  psi_@X@ovrl_saver2(x,xs,desc_a,info)
       import 
       @TYPE@(@FKIND@), intent(inout) :: x(:,:)
       @TYPE@(@FKIND@), allocatable   :: xs(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
-      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(out)   :: info
     end subroutine psi_@X@ovrl_saver2
   end interface psi_ovrl_save
 
@@ -156,14 +165,14 @@ module psi_@X@_comm_a_mod
       @TYPE@(@FKIND@), intent(inout)  :: x(:)
       @TYPE@(@FKIND@)                 :: xs(:)
       type(psb_desc_type), intent(in)  :: desc_a
-      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(out)   :: info
     end subroutine psi_@X@ovrl_restrr1
     subroutine  psi_@X@ovrl_restrr2(x,xs,desc_a,info)
       import 
       @TYPE@(@FKIND@), intent(inout) :: x(:,:)
       @TYPE@(@FKIND@)                :: xs(:,:)
       type(psb_desc_type), intent(in)  :: desc_a
-      integer(psb_ipk_), intent(out)             :: info
+      integer(psb_ipk_), intent(out)   :: info
     end subroutine psi_@X@ovrl_restrr2
   end interface psi_ovrl_restore
 

@@ -46,17 +46,6 @@ module psi_@X@_mod
   
 @INTS@
 @IINTS@
-  interface psi_compute_size
-    subroutine psi_@X@_compute_size(desc_data,&
-         & index_in, dl_lda, info)
-      import
-      implicit none 
-      integer(psb_ipk_) :: info
-      @TYPE@(@FKIND@) :: dl_lda
-      @TYPE@(@FKIND@) :: desc_data(:), index_in(:)
-    end subroutine psi_@X@_compute_size
-  end interface
-
   interface psi_crea_bnd_elem
     subroutine psi_@X@_crea_bnd_elem(bndel,desc_a,info)
       import
@@ -108,7 +97,7 @@ module psi_@X@_mod
       implicit none 
       @TYPE@(@FKIND@), intent(in) :: c_dep_list(:), dl_ptr(0:)
       @TYPE@(@FKIND@), intent(inout) :: l_dep_list(0:)
-      integer(psb_ipk_) :: ictxt
+      type(psb_ctxt_type) :: ictxt
       integer(psb_ipk_) :: info
     end subroutine psi_@X@_csr_sort_dl
   end interface
@@ -118,24 +107,25 @@ module psi_@X@_mod
          & length_dl,dl_lda,mode,info)
       import
       implicit none 
-      logical,  intent(in)    :: is_bld, is_upd
-      integer(psb_ipk_), intent(in)  :: ictxt, mode
-      @TYPE@(@FKIND@), intent(out) :: dl_lda
-      @TYPE@(@FKIND@), intent(in)  :: desc_str(*)
+      logical,  intent(in) :: is_bld, is_upd
+      type(psb_ctxt_type)  :: ictxt
+      integer(psb_ipk_), intent(in) :: mode
+      @TYPE@(@FKIND@), intent(out)  :: dl_lda
+      @TYPE@(@FKIND@), intent(in)   :: desc_str(*)
       @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:), length_dl(:)
       integer(psb_ipk_), intent(out) :: info
     end subroutine psi_@X@_extract_dep_list
   end interface
 
   interface  psi_bld_glb_dep_list
-    subroutine psi_@X@_bld_glb_dep_list(ictxt,loc_dl,length_dl,dep_list,dl_lda,info)
-      import
-      integer(psb_ipk_), intent(in)  :: ictxt
-      @TYPE@(@FKIND@), intent(out) :: dl_lda
-      @TYPE@(@FKIND@), intent(in)  :: loc_dl(:), length_dl(0:)
-      @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:)
-      integer(psb_ipk_), intent(out) :: info
-    end subroutine psi_@X@_bld_glb_dep_list
+!!$    subroutine psi_@X@_bld_glb_dep_list(ictxt,loc_dl,length_dl,dep_list,dl_lda,info)
+!!$      import 
+!!$      type(psb_ctxt_type), intent(in) :: ictxt
+!!$      @TYPE@(@FKIND@), intent(out) :: dl_lda
+!!$      @TYPE@(@FKIND@), intent(in)  :: loc_dl(:), length_dl(0:)
+!!$      @TYPE@(@FKIND@), allocatable, intent(out) :: dep_list(:,:)
+!!$      integer(psb_ipk_), intent(out) :: info
+!!$    end subroutine psi_@X@_bld_glb_dep_list
     subroutine psi_@X@_bld_glb_csr_dep_list(ictxt,loc_dl,length_dl,c_dep_list,dl_ptr,info)
       import
       integer(psb_ipk_), intent(in)  :: ictxt
@@ -149,7 +139,7 @@ module psi_@X@_mod
     subroutine psi_i_xtr_loc_dl(ictxt,is_bld,is_upd,desc_str,loc_dl,length_dl,info)
       import
       logical,  intent(in)           :: is_bld, is_upd
-      integer(psb_ipk_), intent(in)  :: ictxt
+      type(psb_ctxt_type), intent(in) :: ictxt
       @TYPE@(@FKIND@), intent(in)  :: desc_str(:)
       @TYPE@(@FKIND@), allocatable, intent(out) :: loc_dl(:), length_dl(:)
       integer(psb_ipk_), intent(out) :: info
