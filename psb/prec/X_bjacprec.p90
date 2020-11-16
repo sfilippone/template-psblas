@@ -57,13 +57,11 @@ module psb_@X@_bjacprec
     procedure, pass(prec) :: is_allocated_wrk => psb_@X@_bjac_is_allocated_wrk
   end type psb_@X@_bjac_prec_type
 
-  private :: psb_@X@_bjac_sizeof, psb_@X@_bjac_precdescr, psb_@X@_bjac_get_nzeros
-
-
   character(len=15), parameter, private :: &
-       &  fact_names(0:2)=(/'None          ','ILU(n)        ',&
-       &  'ILU(eps)      '/)
+       &  fact_names(0:3)=(/'None          ','ILU(0)        ',&
+       &  'ILU(n)        ','ILU(eps)      '/)
 
+  private :: psb_@X@_bjac_sizeof, psb_@X@_bjac_precdescr, psb_@X@_bjac_get_nzeros
 
   interface
     subroutine psb_@X@_bjac_dump(prec,info,prefix,head)
