@@ -44,7 +44,7 @@ module psb_@X@_comm_a_mod
       implicit none
       @TYPE@(@FKIND@), intent(inout), target   :: x(:,:)
       type(psb_desc_type), intent(in)            :: desc_a
-      integer(psb_ipk_), intent(out)                       :: info
+      integer(psb_ipk_), intent(out)             :: info
       @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
       integer(psb_ipk_), intent(in), optional              :: update,jx,ik,mode
     end subroutine psb_@X@ovrlm
@@ -53,7 +53,7 @@ module psb_@X@_comm_a_mod
       implicit none
       @TYPE@(@FKIND@), intent(inout), target   :: x(:)
       type(psb_desc_type), intent(in)            :: desc_a
-      integer(psb_ipk_), intent(out)                       :: info
+      integer(psb_ipk_), intent(out)             :: info
       @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
       integer(psb_ipk_), intent(in), optional              :: update,mode
     end subroutine psb_@X@ovrlv
@@ -74,8 +74,8 @@ module psb_@X@_comm_a_mod
       import
       implicit none
       @TYPE@(@FKIND@), intent(inout)        :: x(:)
-      type(psb_desc_type), intent(in)         :: desc_a
-      integer(psb_ipk_), intent(out)                    :: info
+      type(psb_desc_type), intent(in)       :: desc_a
+      integer(psb_ipk_), intent(out)        :: info
       @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
       integer(psb_ipk_), intent(in), optional           :: mode,data
       character, intent(in), optional         :: tran
