@@ -7,7 +7,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=X_base_prec_mod.p90 X_prec_mod.p90 X_prec_type.p90 X_diagprec.p90\
     X_bjacprec.p90 X_nullprec.p90 X_ilu_fact_mod.p90 X_ainv_tools_mod.p90\
-		X_biconjg_mod.P90 
+		X_biconjg_mod.P90 X_ainv_fact_mod.p90
 
 
 

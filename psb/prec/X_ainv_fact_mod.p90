@@ -82,7 +82,7 @@ module psb_@X@_ainv_fact_mod
 
   interface psb_ainv_fact
     subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscale)
-      import psb_@X@spmat_type, @FKIND@, psb_ipk_
+      import psb_@X@spmat_type, @FKIND@, psb_ipk_, psb_desc_type
       type(psb_@X@spmat_type), intent(in), target   :: a
       integer(psb_ipk_), intent(in)                 :: fillin,alg
       @RTYPE@(@FKIND@), intent(in)                  :: thresh

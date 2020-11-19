@@ -67,11 +67,8 @@
 subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscale)
 
   use psb_base_mod
-  use psb_base_prec_mod
+  use psb_prec_const_mod
   use psb_@X@_biconjg_mod
-#if 0
-  use amg_d_orthbase_mod
-#endif
 
   implicit none
 
@@ -90,11 +87,13 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
   type(psb_@X@_coo_sparse_mat)  :: acoo
   type(psb_@X@_csr_sparse_mat)  :: acsr
   type(psb_@X@spmat_type)       :: atmp
-  @TYPE@(@FKIND@), allocatable  :: pq(:), arws(:), acls(:), ad(:)
+  @RTYPE@(@FKIND@), allocatable :: arws(:), acls(:)
+  @TYPE@(@FKIND@), allocatable  :: pq(:), ad(:)
   integer(psb_ipk_)             :: debug_level, debug_unit
   integer(psb_ipk_)             :: ictxt,np,me
   integer(psb_ipk_)             :: nzrmax, iscale_
-  @RTYPE@(@FKIND@)              :: sp_thresh, weight
+  @RTYPE@(@FKIND@)              :: sp_thresh
+  @TYPE@(@FKIND@)               :: weight
   character(len=20)             :: name, ch_err
 
 
@@ -113,7 +112,7 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
 
   iscale_ = psb_ilu_scale_none_
   if (present(iscale)) iscale_ = iscale
-  weight = done
+  weight = @XONE@
   !
   ! Check the memory available to hold the W and Z factors
   ! and allocate it if needed
@@ -146,15 +145,15 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
   call a%csclip(acoo,info,imax=n_row,jmax=n_row)
   call acsr%mv_from_coo(acoo,info)
   select case(iscale_)
-  case(amg_ilu_scale_none_)
+  case(psb_ilu_scale_none_)
     ! Ok, do nothing.
 
-  case(amg_ilu_scale_maxval_)
+  case(psb_ilu_scale_maxval_)
     weight = acsr%maxval()
-    weight = done/weight
+    weight = @XONE@/weight
     call acsr%scal(weight,info)
 
-  case(amg_ilu_scale_arcsum_)
+  case(psb_ilu_scale_arcsum_)
     allocate(arws(n_row),acls(n_row),ad(n_row),stat=info)
     if (info /= psb_success_) then
       call psb_errpush(psb_err_from_subroutine_,name,a_err='Allocate')
@@ -163,7 +162,7 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
     call acsr%arwsum(arws)
     call acsr%aclsum(acls)
     ad(1:n_row) = sqrt(sqrt(arws(1:n_row)*acls(1:n_row)))
-    ad(1:n_row) = done/ad(1:n_row)
+    ad(1:n_row) = @XONE@/ad(1:n_row)
     call acsr%scal(ad,info,side='L')
     call acsr%scal(ad,info,side='R')
   case default
@@ -175,7 +174,7 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
   ! Here for the actual workhorses.
   ! Only biconjg is surviving for now....
   !
-    call amg_sparse_biconjg(alg,n_row,acsr,pq,&
+    call psb_sparse_biconjg(alg,n_row,acsr,pq,&
          &   zmat,wmat,nzrmax,sp_thresh,info)
   ! Done. Hopefully....
 
@@ -191,19 +190,19 @@ subroutine psb_@X@_ainv_bld(a,alg,fillin,thresh,wmat,d,zmat,desc,info,blck,iscal
   !
   do i=1, n_row
     if (abs(pq(i)) < d_epstol) then
-      pq(i) = done
+      pq(i) = @XONE@
     else
-      pq(i) = done/pq(i)
+      pq(i) = @XONE@/pq(i)
     end if
   end do
 
   select case(iscale_)
-  case(amg_ilu_scale_none_)
+  case(psb_ilu_scale_none_)
     ! Ok, do nothing.
-  case(amg_ilu_scale_maxval_)
+  case(psb_ilu_scale_maxval_)
     pq(:) = pq(:)*weight
 
-  case(amg_ilu_scale_arcsum_)
+  case(psb_ilu_scale_arcsum_)
     call zmat%scal(ad,info,side='L')
     call wmat%scal(ad,info,side='R')
 

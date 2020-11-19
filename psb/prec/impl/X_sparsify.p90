@@ -63,7 +63,7 @@
 !    POSSIBILITY OF SUCH DAMAGE.
 !
 !
-subroutine amg_@X@_sparsify(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,info,istart,iheap,ikr)
+subroutine psb_@X@_sparsify(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,info,istart,iheap,ikr)
   use psb_base_mod
   implicit none
 
@@ -177,10 +177,10 @@ subroutine amg_@X@_sparsify(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,info,istart,i
 
   return
 
-end subroutine amg_@X@_sparsify
+end subroutine psb_@X@_sparsify
 
 
-subroutine amg_@X@_sparsify_list(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,lhead,listv,ikr,info)
+subroutine psb_@X@_sparsify_list(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,lhead,listv,ikr,info)
   use psb_base_mod
   implicit none
 
@@ -258,4 +258,4 @@ subroutine amg_@X@_sparsify_list(idiag,nzrmax,sp_thresh,n,zw,nz,iz,valz,lhead,li
 
   return
 
-end subroutine amg_@X@_sparsify_list
+end subroutine psb_@X@_sparsify_list

@@ -34,7 +34,7 @@
 !
 subroutine psb_@X@sparse_biconjg_mlk(n,a,p,z,w,nzrmax,sp_thresh,info)
   use psb_base_mod
-  use psb_ainv_tools_mod
+  use psb_@X@_ainv_tools_mod
   use psb_@X@_biconjg_mod, psb_protect_name => psb_@X@sparse_biconjg_mlk
   !
   ! Left-looking variant
