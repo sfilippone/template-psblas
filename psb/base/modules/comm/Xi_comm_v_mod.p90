@@ -65,11 +65,11 @@ module psi_@X@_comm_v_mod
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional :: data
     end subroutine psi_@X@swapdata_multivect
-    subroutine psi_@X@swap_vidx_vect(ctxt,iicomm,flag,beta,y,idx,&
+    subroutine psi_@X@swap_vidx_vect(ctxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
       type(psb_ctxt_type), intent(in)         :: ctxt
-      integer(psb_mpk_), intent(in)           :: iicomm
+      integer(psb_mpk_), intent(in)           :: icomm
       integer(psb_ipk_), intent(in)           :: flag
       integer(psb_ipk_), intent(out)          :: info
       class(psb_@X@_base_vect_type)             :: y
@@ -78,11 +78,11 @@ module psi_@X@_comm_v_mod
       class(psb_i_base_vect_type), intent(inout) :: idx
       integer(psb_ipk_), intent(in)           :: totxch,totsnd, totrcv
     end subroutine psi_@X@swap_vidx_vect
-    subroutine psi_@X@swap_vidx_multivect(ctxt,iicomm,flag,beta,y,idx,&
+    subroutine psi_@X@swap_vidx_multivect(ctxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
       type(psb_ctxt_type), intent(in)       :: ctxt
-      integer(psb_mpk_), intent(in)         :: iicomm
+      integer(psb_mpk_), intent(in)         :: icomm
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
       class(psb_@X@_base_multivect_type)    :: y
@@ -115,11 +115,11 @@ module psi_@X@_comm_v_mod
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
     end subroutine psi_@X@swaptran_multivect
-    subroutine psi_@X@tran_vidx_vect(ctxt,iicomm,flag,beta,y,idx,&
+    subroutine psi_@X@tran_vidx_vect(ctxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
       type(psb_ctxt_type), intent(in)       :: ctxt
-      integer(psb_mpk_), intent(in)         :: iicomm
+      integer(psb_mpk_), intent(in)         :: icomm
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
       class(psb_@X@_base_vect_type)          :: y
@@ -128,11 +128,11 @@ module psi_@X@_comm_v_mod
       class(psb_i_base_vect_type), intent(inout) :: idx
       integer(psb_ipk_), intent(in)           :: totxch,totsnd, totrcv
     end subroutine psi_@X@tran_vidx_vect
-    subroutine psi_@X@tran_vidx_multivect(ctxt,iicomm,flag,beta,y,idx,&
+    subroutine psi_@X@tran_vidx_multivect(ctxt,icomm,flag,beta,y,idx,&
          & totxch,totsnd,totrcv,work,info)
       import 
       type(psb_ctxt_type), intent(in)       :: ctxt
-      integer(psb_mpk_), intent(in)         :: iicomm
+      integer(psb_mpk_), intent(in)         :: icomm
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
       class(psb_@X@_base_multivect_type)      :: y
