@@ -120,7 +120,7 @@ module psi_@X@_mod
   interface  psi_bld_glb_dep_list
     subroutine psi_@X@_bld_glb_csr_dep_list(ctxt,loc_dl,length_dl,c_dep_list,dl_ptr,info)
       import
-      integer(psb_ipk_), intent(in)  :: ctxt
+      type(psb_ctxt_type), intent(in)  :: ctxt
       @TYPE@(@FKIND@), intent(in)  :: loc_dl(:), length_dl(0:)
       @TYPE@(@FKIND@), allocatable, intent(out) :: c_dep_list(:), dl_ptr(:)
       integer(psb_ipk_), intent(out) :: info
