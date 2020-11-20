@@ -59,8 +59,9 @@ module psb_@X@_bjacprec
   end type psb_@X@_bjac_prec_type
 
   character(len=15), parameter, private :: &
-       &  fact_names(0:4)=(/'None          ','ILU(0)        ',&
-       &  'ILU(n)        ','ILU(eps)      ','AINV(eps)     '/)
+       &  fact_names(0:5)=(/'None          ','ILU(0)        ',&
+       &  'ILU(n)        ','ILU(eps)      ','AINV(eps)     ',&
+       &  'INVT          '/)
 
   private :: psb_@X@_bjac_sizeof, psb_@X@_bjac_precdescr, psb_@X@_bjac_get_nzeros
 

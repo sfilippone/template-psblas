@@ -11,7 +11,8 @@ SRC=X_prec_type_impl.p90 X_diagprec_impl.p90 Xprecinit.p90\
 		X_sp_drop.p90 X_sparsify.p90 Xrwclip.p90 \
 		Xsparse_biconjg_llk_noth.P90 Xsparse_biconjg_llk.P90 \
 		Xsparse_biconjg_mlk.P90 Xsparse_biconjg_s_llk.P90 \
-		Xsparse_biconjg_s_ft_llk.P90 X_ainv_bld.p90
+		Xsparse_biconjg_s_ft_llk.P90 X_ainv_bld.p90 \
+		X_invt_fact.p90 X_invk_fact.p90
 
 
 
