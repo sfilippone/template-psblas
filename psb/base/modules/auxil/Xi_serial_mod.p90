@@ -37,34 +37,60 @@ module psi_@X@_serial_mod
   use psb_const_mod, only :  psb_ipk_, psb_lpk_, psb_mpk_, psb_epk_, @FKIND@
   @NOTINTE@
 
-  interface psb_gelp
+  interface psb_gelp 
     ! 2-D version
-    subroutine psb_@X@gelp(trans,iperm,x,info)
+    subroutine psb_m_@X@gelp(trans,iperm,x,info)
       @INTS@
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
       @TYPE@(@FKIND@), intent(inout)     ::  x(:,:)
-      integer(psb_ipk_), intent(in)      ::  iperm(:)
+      integer(psb_mpk_), intent(in)      ::  iperm(:)
       integer(psb_ipk_), intent(out)     ::  info
       character, intent(in)              :: trans
-    end subroutine psb_@X@gelp
-    subroutine psb_@X@gelpv(trans,iperm,x,info)
+    end subroutine psb_m_@X@gelp
+    subroutine psb_m_@X@gelpv(trans,iperm,x,info)
       @INTS@
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_,@FKIND@
       @NOTINTE@
       implicit none
       @TYPE@(@FKIND@), intent(inout)     ::  x(:)
-      integer(psb_ipk_), intent(in)      ::  iperm(:)
+      integer(psb_mpk_), intent(in)      ::  iperm(:)
       integer(psb_ipk_), intent(out)     ::  info
       character, intent(in)              :: trans
-    end subroutine psb_@X@gelpv
+    end subroutine psb_m_@X@gelpv
+    subroutine psb_e_@X@gelp(trans,iperm,x,info)
+      @INTS@
+      import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
+      @INTE@
+      @NOTINTS@
+      import :: psb_ipk_, psb_epk_, @FKIND@
+      @NOTINTE@
+      implicit none
+      @TYPE@(@FKIND@), intent(inout)     ::  x(:,:)
+      integer(psb_epk_), intent(in)      ::  iperm(:)
+      integer(psb_ipk_), intent(out)     ::  info
+      character, intent(in)              :: trans
+    end subroutine psb_e_@X@gelp
+    subroutine psb_e_@X@gelpv(trans,iperm,x,info)
+      @INTS@
+      import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
+      @INTE@
+      @NOTINTS@
+      import :: psb_ipk_, psb_epk_, @FKIND@
+      @NOTINTE@
+      implicit none
+      @TYPE@(@FKIND@), intent(inout)     ::  x(:)
+      integer(psb_epk_), intent(in)      ::  iperm(:)
+      integer(psb_ipk_), intent(out)     ::  info
+      character, intent(in)              :: trans
+    end subroutine psb_e_@X@gelpv
   end interface psb_gelp
 
   interface psb_geaxpby
