@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_mat_dist_impl.p90 X_mat_dist_mod.p90
+SRC=X_mat_dist_impl.p90 X_mat_dist_mod.p90 X_renum_mod.p90 X_renum_impl.P90
 
 
 
