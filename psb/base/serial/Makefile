@@ -7,7 +7,6 @@ SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xspspmm.p90 Xrwextd.p90
 SRCI=Xi_serial_impl.P90
 
 
-
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
 FSRCI=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCI))))
