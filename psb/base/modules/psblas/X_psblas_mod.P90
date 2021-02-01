@@ -309,7 +309,7 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), intent(out)      :: info
       logical, intent(in), optional       :: global
     end function psb_@X@nrm2_vect
-    function psb_@X@nrm2_weight_vect(x,w, desc_a, info,global) result(res)
+    function psb_@X@nrm2_weight_vect(x,w, desc_a, info, global, aux) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                      :: res
@@ -318,8 +318,9 @@ module psb_@X@_psblas_mod
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)      :: info
       logical, intent(in), optional       :: global
+      type(psb_@X@_vect_type), intent (inout), optional :: aux
     end function psb_@X@nrm2_weight_vect
-    function psb_@X@nrm2_weightmask_vect(x,w,idv, desc_a, info,global) result(res)
+    function psb_@X@nrm2_weightmask_vect(x,w,idv, desc_a, info, global, aux) result(res)
       import :: psb_desc_type, @FKIND@, psb_ipk_, &
            & psb_@X@_vect_type, psb_@X@spmat_type
       @RTYPE@(@FKIND@)                      :: res
@@ -329,6 +330,7 @@ module psb_@X@_psblas_mod
       type(psb_desc_type), intent (in)    :: desc_a
       integer(psb_ipk_), intent(out)      :: info
       logical, intent(in), optional       :: global
+      type(psb_@X@_vect_type), intent (inout), optional :: aux
     end function psb_@X@nrm2_weightmask_vect
   end interface
 
