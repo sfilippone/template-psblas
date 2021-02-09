@@ -34,24 +34,6 @@ module psb_@X@_prec_mod
   use psb_@X@_prec_type
   use psb_@X@_base_prec_mod
 
-  interface psb_precset
-    subroutine psb_@X@precseti(prec,what,val,info)
-      import :: psb_ipk_, psb_desc_type, psb_@X@spmat_type, @FKIND@, psb_@X@prec_type
-      implicit none
-      type(psb_@X@prec_type), intent(inout)    :: prec
-      integer(psb_ipk_) :: what, val 
-      integer(psb_ipk_), intent(out)                   :: info
-    end subroutine psb_@X@precseti
-    subroutine psb_@X@precsetr(prec,what,val,info)
-      import :: psb_ipk_, psb_desc_type, psb_@X@spmat_type, @FKIND@, psb_@X@prec_type
-      implicit none
-      type(psb_@X@prec_type), intent(inout)    :: prec
-      integer(psb_ipk_) :: what
-      real(@FKIND@)                       :: val 
-      integer(psb_ipk_), intent(out)                   :: info
-    end subroutine psb_@X@precsetr
-  end interface
-
   interface psb_ilu_fct
     subroutine psb_@X@ilu_fct(a,l,u,d,info,blck)
       import :: psb_ipk_, psb_desc_type, psb_@X@spmat_type, &
