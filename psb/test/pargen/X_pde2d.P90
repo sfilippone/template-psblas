@@ -314,7 +314,11 @@ contains
 
       ! A nifty MPI function will split the process list
       npdims = 0
+#if defined(SERIAL_MPI)
+      npdims = 1
+#else
       call mpi_dims_create(np,2,npdims,info)
+#endif
       npx = npdims(1)
       npy = npdims(2)
 
