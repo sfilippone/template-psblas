@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_pde2d.p90 X_pde3d.p90
+SRC=X_pde2d.P90 X_pde3d.P90
 
 
 

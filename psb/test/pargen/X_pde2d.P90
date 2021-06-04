@@ -314,7 +314,11 @@ contains
 
       ! A nifty MPI function will split the process list
       npdims = 0
+#if defined(SERIAL_MPI)
+      npdims = 1
+#else
       call mpi_dims_create(np,2,npdims,info)
+#endif
       npx = npdims(1)
       npy = npdims(2)
 
@@ -712,7 +716,7 @@ program psb_@X@_pde2d
 
   if (iam == psb_root_) write(psb_out_unit,'("Preconditioner time : ",es12.5)')tprec
   if (iam == psb_root_) write(psb_out_unit,'(" ")')
-  call prec%descr()
+  call prec%descr(info)
   !
   ! iterative method parameters
   !
