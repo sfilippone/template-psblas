@@ -52,6 +52,7 @@ iclean:
 cpy: 
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/serial *.f90 *.F90)
 	cd impl && $(MAKE) cpy
+	cd sort && $(MAKE) cpy
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
