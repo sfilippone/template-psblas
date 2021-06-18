@@ -947,8 +947,8 @@ module psb_@X@_mat_mod
   interface
     subroutine psb_@X@_cp_from_lb(a,b)
       import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@LX@_base_sparse_mat
-      class(psb_@X@spmat_type), intent(out) :: a
-      class(psb_@LX@_base_sparse_mat), intent(in) :: b
+      class(psb_@X@spmat_type), intent(inout) :: a
+      class(psb_@LX@_base_sparse_mat), intent(inout) :: b
     end subroutine psb_@X@_cp_from_lb
   end interface
 
@@ -1731,8 +1731,8 @@ module psb_@X@_mat_mod
   interface
     subroutine psb_@LX@_cp_from_ib(a,b)
       import :: psb_ipk_, psb_lpk_, psb_@LX@spmat_type, @FKIND@, psb_@IX@_base_sparse_mat
-      class(psb_@LX@spmat_type), intent(out) :: a
-      class(psb_@IX@_base_sparse_mat), intent(in) :: b
+      class(psb_@LX@spmat_type), intent(inout) :: a
+      class(psb_@IX@_base_sparse_mat), intent(inout) :: b
     end subroutine psb_@LX@_cp_from_ib
   end interface
 
