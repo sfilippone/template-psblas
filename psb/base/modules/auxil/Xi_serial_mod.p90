@@ -133,7 +133,7 @@ module psi_@X@_serial_mod
       integer(psb_ipk_), intent(in)      :: m
       @TYPE@(@FKIND@), intent (in)       ::  x(:)
       @TYPE@(@FKIND@), intent (in)       ::  y(:)
-      @TYPE@(@FKIND@), intent (in)       ::  z(:)
+      @TYPE@(@FKIND@), intent (inout)    ::  z(:)
       @TYPE@(@FKIND@), intent (in)       :: alpha, beta
       integer(psb_ipk_), intent(out)     :: info
     end subroutine psi_@X@axpbyv2

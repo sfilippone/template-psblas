@@ -67,8 +67,8 @@ module psb_@X@_hsort_mod
 
       @TYPE@(@FKIND@), intent(in)     :: key
       @TYPE@(@FKIND@), intent(inout)  :: heap(:)
-      integer(psb_ipk_), intent(in)     :: dir
-      integer(psb_ipk_), intent(inout)  :: last
+      integer(@IXKIND@), intent(in)     :: dir
+      integer(@IXKIND@), intent(inout)  :: last
       integer(psb_ipk_), intent(out)    :: info
     end subroutine psi_@X@_insert_heap
   end interface psi_insert_heap
@@ -88,9 +88,9 @@ module psb_@X@_hsort_mod
       @TYPE@(@FKIND@), intent(in)     :: key
       @TYPE@(@FKIND@), intent(inout)  :: heap(:)
       integer(@IXKIND@), intent(in)     :: index
-      integer(psb_ipk_), intent(in)     :: dir
+      integer(@IXKIND@), intent(in)     :: dir
       integer(@IXKIND@), intent(inout)  :: idxs(:)
-      integer(psb_ipk_), intent(inout)  :: last
+      integer(@IXKIND@), intent(inout)  :: last
       integer(psb_ipk_), intent(out)    :: info
     end subroutine psi_@X@_idx_insert_heap
   end interface psi_idx_insert_heap
@@ -100,9 +100,9 @@ module psb_@X@_hsort_mod
     subroutine psi_@X@_heap_get_first(key,last,heap,dir,info)
       import 
       implicit none 
-      @TYPE@(@FKIND@), intent(inout)  :: key
-      integer(psb_ipk_), intent(inout)  :: last
-      integer(psb_ipk_), intent(in)     :: dir
+      @TYPE@(@FKIND@), intent(inout)   :: key
+      integer(@IXKIND@), intent(inout) :: last
+      integer(@IXKIND@), intent(in)     :: dir
       @TYPE@(@FKIND@), intent(inout)  :: heap(:)
       integer(psb_ipk_), intent(out)    :: info
     end subroutine psi_@X@_heap_get_first
@@ -114,8 +114,8 @@ module psb_@X@_hsort_mod
       @TYPE@(@FKIND@), intent(inout)    :: key
       integer(@IXKIND@), intent(out)    :: index
       @TYPE@(@FKIND@), intent(inout)    :: heap(:)
-      integer(psb_ipk_), intent(in)     :: dir
-      integer(psb_ipk_), intent(inout)  :: last
+      integer(@IXKIND@), intent(in)     :: dir
+      integer(@IXKIND@), intent(inout)  :: last
       integer(@IXKIND@), intent(inout)  :: idxs(:)
       integer(psb_ipk_), intent(out)    :: info
     end subroutine psi_@X@_idx_heap_get_first

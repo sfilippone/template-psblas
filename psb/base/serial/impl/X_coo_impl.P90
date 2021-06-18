@@ -4616,7 +4616,7 @@ function psb_@LX@_coo_csnm1(a) result(res)
   use psb_@X@_base_mat_mod, psb_protect_name => psb_@LX@_coo_csnm1
 
   implicit none
-  class(psb_@X@_coo_sparse_mat), intent(in) :: a
+  class(psb_@LX@_coo_sparse_mat), intent(in) :: a
   real(@FKIND@)         :: res
 
   integer(psb_lpk_) :: i,j,k,m,n, nnz, ir, jc, nc, info
