@@ -252,13 +252,13 @@ Module psb_@X@_tools_mod
 
 
   interface psb_spall
-    subroutine psb_@X@spalloc(a, desc_a, info, nnz)
+    subroutine psb_@X@spalloc(a, desc_a, info, nnz, bldmode)
       import
       implicit none
       type(psb_desc_type), intent(in) :: desc_a
       type(psb_@X@spmat_type), intent(inout) :: a
       integer(psb_ipk_), intent(out)               :: info
-      integer(psb_ipk_), optional, intent(in)      :: nnz
+      integer(psb_ipk_), optional, intent(in)      :: nnz, bldmode
     end subroutine psb_@X@spalloc
   end interface
 
