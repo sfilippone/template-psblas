@@ -122,7 +122,7 @@ subroutine psb_@X@spasb(a,desc_a, info, afmt, upd, dupl, mold)
         nzt = nz
         call psb_sum(ctxt,nzt)
         if (nzt>0) then
-          allocate(ivm, mold=desc_a%v_2halo_index%v)
+          allocate(ivm, mold=desc_a%v_halo_index%v)
           call psb_cd_reinit(desc_a, info)
         end if
         if (nz > 0) then
