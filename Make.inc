@@ -1,1 +1,1 @@
-TARGET=../psblas3
+TARGET=../psblas-3.8.0
