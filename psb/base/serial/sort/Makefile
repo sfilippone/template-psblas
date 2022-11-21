@@ -24,12 +24,12 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl sint lint i2int
+src: ssingle sdouble scomplex sdcompl mint eint #i2int
 i2int:
 	$(MAKE) bsrc ARITH=i2
-sint:
+mint:
 	$(MAKE) bsrc ARITH=m
-lint:
+eint:
 	$(MAKE) bsrc ARITH=e
 ssingle:
 	$(MAKE) bsrc ARITH=s
@@ -40,20 +40,8 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-all:  single double complex dcompl
-
-single:
-	$(MAKE) lib ARITH=s
-double:
-	$(MAKE) lib ARITH=d
-complex:
-	$(MAKE) lib ARITH=c
-dcompl:
-	$(MAKE) lib ARITH=z
-
 bsrc: $(FSRC)
 
-lib: $(FOBJS)
 
 cpy: 
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/serial/sort *.f90 *.F90)
