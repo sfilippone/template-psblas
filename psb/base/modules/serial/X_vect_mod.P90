@@ -41,6 +41,9 @@ module psb_@X@_vect_mod
 
   use psb_realloc_mod
   use psb_@X@_base_vect_mod
+  @CPLXS@
+  use psb_@RX@_vect_mod
+  @CPLXE@
   @NOTINTS@
   use psb_i_vect_mod
   @NOTINTE@
@@ -90,6 +93,13 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: set_vect => @X@_vect_set_vect
     generic, public    :: set      => set_vect, set_scal
     procedure, pass(x) :: clone    => @X@_vect_clone
+    @CPLXS@
+    !
+    ! Copy from/to real vectors
+    !
+    procedure, pass(y) :: copy_to_real    => @X@_vect_copy_to_real
+    procedure, pass(y) :: copy_from_real  => @X@_vect_copy_from_real
+    @CPLXE@
 
     procedure, pass(x) :: sync     => @X@_vect_sync
     procedure, pass(x) :: is_host  => @X@_vect_is_host
@@ -160,6 +170,8 @@ module psb_@X@_vect_mod
     generic, public    :: minquotient    => minquotient_v, minquotient_a2
     @NOTCPLXE@
     @NOTINTE@
+
+
 
   end type psb_@X@_vect_type
 
@@ -402,6 +414,49 @@ contains
     if (allocated(x%v)) call x%v%set(val,first,last)
 
   end subroutine @X@_vect_set_vect
+
+  @CPLXS@
+  subroutine @X@_vect_copy_to_real(x,y,info)
+    use psb_@RX@_vect_mod
+    implicit none
+    class(psb_@RX@_vect_type), intent(inout)  :: x
+    class(psb_@X@_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+
+    ! Local variables
+    integer(psb_ipk_)  :: err_act
+    character(len=20)  :: name='vec_to_real'
+
+    call psb_erractionsave(err_act)
+    info = psb_err_alloc_dealloc_
+
+    if( allocated(y%v) ) & 
+      & call y%v%copy_to_real(x%v,info)
+
+    return
+  end subroutine @X@_vect_copy_to_real
+
+  subroutine @X@_vect_copy_from_real(x,y,info)
+    use psb_@RX@_vect_mod
+    implicit none
+    class(psb_@RX@_vect_type), intent(inout)  :: x
+    class(psb_@X@_vect_type), intent(inout)  :: y
+    integer(psb_ipk_), intent(out)              :: info
+  
+    ! Local variables
+    integer(psb_ipk_)  :: err_act
+    character(len=20)  :: name='vec_to_real'
+
+    call psb_erractionsave(err_act)
+    info = psb_err_alloc_dealloc_
+
+    if( allocated(y%v) ) & 
+      & call y%v%copy_from_real(x%v,info)
+
+  return
+  
+  end subroutine @X@_vect_copy_from_real
+  @CPLXE@
 
 
   function constructor(x) result(this)
