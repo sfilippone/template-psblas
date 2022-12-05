@@ -1,5 +1,6 @@
 s/@X@/c/g
 s/@SX@/c/g
+s/@RX@/s/g
 s/@IX@/c/g
 s/@LX@/lc/g
 s/@S@//g
