@@ -9,12 +9,13 @@ VSRC=X_base_vect_mod.P90  X_vect_mod.P90
 SRC=X_base_mat_mod.P90 X_csc_mat_mod.p90 \
     X_csr_mat_mod.p90  X_mat_mod.P90  X_serial_mod.p90 
 SRCI=
-
+SRCCR=X_csrli_mat_mod.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
 FSRCI=$(patsubst %.p90, %.f90, $(subst Xi, psi_$(ARITH), $(filter %.p90, $(SRCI))))
+FSRCCR=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRCCR))))	
 FVSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(VSRC))))
 FVSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(VSRC))))
 FVSRC= $(FVSRC1) $(FVSRC2)
@@ -37,8 +38,10 @@ sdouble:
 	$(MAKE) bsrc ARITH=d
 scomplex:
 	$(MAKE) bsrc ARITH=c
+	$(MAKE) srccr ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
+	$(MAKE) srccr ARITH=z
 
 sint:
 	$(MAKE) vsrc isrc ARITH=i
@@ -61,6 +64,7 @@ bsrc: vsrc isrc fsrc
 vsrc: $(FVSRC)
 isrc: $(FSRCI)
 fsrc: $(FSRC)
+srccr: $(FSRCCR)
 
 lib: $(FOBJS)
 
@@ -86,6 +90,8 @@ $(FVSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FVSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90 
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRCCR): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 

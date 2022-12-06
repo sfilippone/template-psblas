@@ -9,11 +9,12 @@ SRC= X_base_mat_impl.P90  \
     X_coo_impl.P90 \
     X_csr_impl.p90  \
     X_csc_impl.p90  X_mat_impl.P90 
-
+SRCCR=X_csrli_impl.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
+FSRCCR=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRCCR))))
 FSRC=$(FSRC1) $(FSRC2) 
 FOBJS1=$(FSRC1:.f90=.o)
 FOBJS2=$(FSRC2:.F90=.o)
@@ -32,8 +33,10 @@ sdouble:
 	$(MAKE) bsrc ARITH=d
 scomplex:
 	$(MAKE) bsrc ARITH=c
+	$(MAKE) srccr ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
+	$(MAKE) srccr ARITH=z
 
 all:  single double complex dcompl
 
@@ -47,6 +50,7 @@ dcompl:
 	$(MAKE) lib ARITH=z
 
 bsrc: $(FSRC)
+srccr: $(FSRCCR)
 
 lib: $(FOBJS)
 
@@ -58,6 +62,8 @@ cpy:
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../../$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+	sed -f ../../../../$(ARITH).sed $< >$@
+$(FSRCCR): psb_$(ARITH)%.f90 : X%.p90
 	sed -f ../../../../$(ARITH).sed $< >$@
 
 clean:

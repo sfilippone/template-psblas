@@ -82,9 +82,7 @@ module psb_@X@_mat_mod
   use psb_@X@_csr_mat_mod,  only : psb_@X@_csr_sparse_mat, psb_@LX@_csr_sparse_mat
   use psb_@X@_csc_mat_mod,  only : psb_@X@_csc_sparse_mat, psb_@LX@_csc_sparse_mat
   @CPLXS@
-  @DPKS@
   use psb_@X@_csrli_mat_mod
-  @DPKE@
   @CPLXE@
   type :: psb_@X@spmat_type
 
