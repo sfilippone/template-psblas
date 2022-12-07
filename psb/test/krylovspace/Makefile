@@ -1,11 +1,11 @@
-TOP=../..
+TOP=../../..
 include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=
+SRC=Xf_sample.p90
 
 
 
@@ -17,18 +17,14 @@ FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
 
 LIBMOD=
+# OBJS= $(SFOBJS) $(DFOBJS) $(CFOBJS) $(ZFOBJS)
+# SRCS= $(SFSRC) $(DFSRC) $(CFSRC) $(ZFSRC)
 LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: sfileread spargen skrylovspace
-
-cpy:
-	cd fileread && $(MAKE) cpy
-	cd pargen && $(MAKE) cpy
-	cd krylovspace && $(MAKE) cpy
-
+src: ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -39,23 +35,24 @@ sdcompl:
 	$(MAKE) bsrc ARITH=z
 
 
-sfileread:
-	cd fileread && $(MAKE) src
-spargen:
-	cd pargen && $(MAKE) src
-skrylovspace:
-	cd krylovspace && $(MAKE) src
+all:  single double complex dcompl
 
-cfileread:
-	cd fileread && $(MAKE) clean
-cpargen:
-	cd pargen && $(MAKE) clean
-ckrylovspace:
-	cd krylovspace && $(MAKE) clean
+single:
+	$(MAKE) lib ARITH=s
+double:
+	$(MAKE) lib ARITH=d
+complex:
+	$(MAKE) lib ARITH=c
+dcompl:
+	$(MAKE) lib ARITH=z
 
 
 bsrc: $(FSRC)
 
+lib: $(FOBJS)
+
+cpy:
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/test/krylovspace *.f90 *.F90)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
@@ -63,5 +60,5 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: cfileread cpargen ckrylovspace
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
