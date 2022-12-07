@@ -7,7 +7,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=X_krylov_conv_mod.p90 Xcg.P90 Xbicg.p90 Xcgs.p90 \
     Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90 \
-    Xfcg.P90 Xgcr.p90
+    Xfcg.P90 Xgcr.p90 Xkrylovsubspace_mod.P90
 
 
 
@@ -24,7 +24,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl 
+src: ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -59,10 +59,8 @@ lib: $(FOBJS)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: 
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
-
-
