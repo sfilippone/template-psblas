@@ -628,7 +628,7 @@ module psb_@X@_psblas_mod
          & psb_@X@_vect_type, @FKIND@
     type(psb_@X@_vect_type), intent (inout) :: x
     type(psb_@X@_vect_type), intent (inout) :: z
-    @RTYPE@(@FKIND@), intent(in)            :: c
+    @TYPE@(@FKIND@), intent(in)            :: c
     type(psb_desc_type), intent (in)        :: desc_a
     integer(psb_ipk_), intent(out)          :: info
   end subroutine psb_@X@scal_vect

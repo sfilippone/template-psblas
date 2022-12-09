@@ -1140,7 +1140,7 @@ contains
   subroutine @X@_vect_scal_a2(x,c,z,info)
   use psi_serial_mod
   implicit none
-  @RTYPE@(@FKIND@), intent(in)             :: c
+  @TYPE@(@FKIND@), intent(in)             :: c
   @TYPE@(@FKIND@), intent(inout)           :: x(:)
   class(psb_@X@_vect_type), intent(inout)  :: z
   integer(psb_ipk_), intent(out)           :: info
@@ -1154,7 +1154,7 @@ end subroutine @X@_vect_scal_a2
 subroutine @X@_vect_scal_v2(x,c,z,info)
   use psi_serial_mod
   implicit none
-  @RTYPE@(@FKIND@), intent(in)             :: c
+  @TYPE@(@FKIND@), intent(in)             :: c
   class(psb_@X@_vect_type), intent(inout)  :: x
   class(psb_@X@_vect_type), intent(inout)  :: z
   integer(psb_ipk_), intent(out)           :: info

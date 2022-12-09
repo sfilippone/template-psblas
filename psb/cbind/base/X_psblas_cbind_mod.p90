@@ -580,7 +580,7 @@ contains
   type(psb_desc_type), pointer :: descp
   type(psb_@X@_vect_type), pointer :: xp,zp
   integer(psb_c_ipk_)          :: info
-  @RTYPE@(@FCKIND@) :: ch
+  @TYPE@(@FCKIND@) :: ch
 
   res = -1
 
