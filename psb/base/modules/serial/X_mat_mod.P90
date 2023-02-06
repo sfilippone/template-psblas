@@ -84,7 +84,9 @@ module psb_@X@_mat_mod
 
   type :: psb_@X@spmat_type
 
-    class(psb_@X@_base_sparse_mat), allocatable  :: a
+    class(psb_@X@_base_sparse_mat), allocatable  :: a   
+    integer(psb_ipk_) :: remote_build=psb_matbld_noremote_
+    type(psb_@LX@_coo_sparse_mat), allocatable  :: rmta
 
   contains
     ! Getters
@@ -109,6 +111,8 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: is_repeatable_updates => psb_@X@_is_repeatable_updates
     procedure, pass(a) :: get_fmt     => psb_@X@_get_fmt
     procedure, pass(a) :: sizeof      => psb_@X@_sizeof
+    procedure, pass(a) :: is_remote_build => psb_@X@_is_remote_build
+    
 
     ! Setters
     procedure, pass(a) :: set_nrows    => psb_@X@_set_nrows
@@ -125,6 +129,7 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: set_symmetric => psb_@X@_set_symmetric
     procedure, pass(a) :: set_unit     => psb_@X@_set_unit
     procedure, pass(a) :: set_repeatable_updates => psb_@X@_set_repeatable_updates
+    procedure, pass(a) :: set_remote_build => psb_@X@_set_remote_build
 
     ! Memory/data management
     procedure, pass(a) :: csall       => psb_@X@_csall
@@ -2292,7 +2297,25 @@ contains
 
   end function @X@_mat_is_sync
 
+  function psb_@X@_is_remote_build(a) result(res)
+    implicit none
+    class(psb_@X@spmat_type), intent(in) :: a
+    logical :: res
+    res = (a%remote_build == psb_matbld_remote_)
+  end function psb_@X@_is_remote_build
 
+  subroutine psb_@X@_set_remote_build(a,val)
+    implicit none
+    class(psb_@X@spmat_type), intent(inout) :: a
+    integer(psb_ipk_), intent(in), optional :: val
+
+    if (present(val)) then
+      a%remote_build = val
+    else
+      a%remote_build = psb_matbld_remote_
+    end if
+  end subroutine psb_@X@_set_remote_build
+        
   function psb_@X@_is_repeatable_updates(a) result(res)
     implicit none
     class(psb_@X@spmat_type), intent(in) :: a
