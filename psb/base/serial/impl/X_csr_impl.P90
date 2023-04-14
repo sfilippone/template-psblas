@@ -3133,10 +3133,6 @@ subroutine psb_@X@_mv_csr_from_coo(a,b,info)
   integer(psb_ipk_) :: first_idx,last_idx,work,ithread,nthreads,s
   integer(psb_ipk_) :: nxt_val,old_val,saved_elem
 #endif
-<<<<<<< HEAD
-=======
-
->>>>>>> d27c75ba4a27e5d232536f208e0a155186671c68
 
   info = psb_success_
   debug_unit  = psb_get_debug_unit()
@@ -3231,10 +3227,6 @@ subroutine psb_@X@_mv_csr_from_coo(a,b,info)
 
   !$OMP END PARALLEL
 #else
-<<<<<<< HEAD
-
-=======
->>>>>>> d27c75ba4a27e5d232536f208e0a155186671c68
     do k=1,nza
       i = itemp(k)
       a%irp(i) = a%irp(i) + 1
