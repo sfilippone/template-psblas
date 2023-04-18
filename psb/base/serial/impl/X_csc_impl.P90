@@ -2189,6 +2189,9 @@ subroutine psb_@X@_mv_csc_from_coo(a,b,info)
   use psb_error_mod
   use psb_@X@_base_mat_mod
   use psb_@X@_csc_mat_mod, psb_protect_name => psb_@X@_mv_csc_from_coo
+#if defined(OPENMP)
+  use omp_lib 
+#endif  
   implicit none
 
   class(psb_@X@_csc_sparse_mat), intent(inout) :: a
@@ -2223,18 +2226,35 @@ subroutine psb_@X@_mv_csc_from_coo(a,b,info)
   call psb_realloc(nc+1,a%icp,info)
   call b%free()
 
+#if defined(OPENMP)
+
+  !$OMP PARALLEL default(none) &
+  !$OMP shared(nr,a,itemp,nza) &
+  !$OMP private(i,info)
+
+  !$OMP WORKSHARE
+  a%icp(:) = 0
+  !$OMP END WORKSHARE
+
+  !$OMP DO schedule(STATIC) &
+  !$OMP private(k)
+  do k=1,nza
+    i = itemp(k)
+    !$OMP ATOMIC UPDATE 
+    a%icp(i+1) = a%icp(i+1) + 1
+    !$OMP END ATOMIC
+  end do
+  !$OMP END DO
+  !$OMP END PARALLEL
+
+#else
   a%icp(:) = 0
   do k=1,nza
     i = itemp(k)
     a%icp(i) = a%icp(i) + 1
   end do
-  ip = 1
-  do i=1,nc
-    nrl = a%icp(i)
-    a%icp(i) = ip
-    ip = ip + nrl
-  end do
-  a%icp(nc+1) = ip
+#endif
+  call psi_exscan(nc+1,a%icp,info,shift=ione,ibase=ione) 
   call a%set_host()
 
 

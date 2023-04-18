@@ -236,4 +236,21 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@sctv
   end interface psi_sct
 
+  interface psi_exscan
+    subroutine psi_@X@_exscanv(n,x,info,shift,ibase)
+      @INTS@
+      import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
+      @INTE@
+      @NOTINTS@
+      import :: psb_ipk_, @FKIND@
+      @NOTINTE@
+      implicit none
+      integer(psb_ipk_), intent(in)      :: n
+      @TYPE@(@FKIND@), intent (inout)    :: x(:)
+      integer(psb_ipk_), intent(out)     :: info
+      @TYPE@(@FKIND@), intent(in), optional :: shift
+      integer(psb_ipk_), intent(in), optional :: ibase
+    end subroutine psi_@X@_exscanv
+  end interface psi_exscan
+  
 end module psi_@X@_serial_mod
