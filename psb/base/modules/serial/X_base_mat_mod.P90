@@ -1867,18 +1867,6 @@ module psb_@SX@_base_mat_mod
   end interface
 
   interface
-    subroutine psb_@IX@_fix_coo_inner_colmajor(nr,nc,nzin,dupl,&
-         & ia,ja,val,iaux,nzout,info)
-      import
-      integer(@IXKIND@), intent(in)           :: nr,nc,nzin,dupl
-      integer(@IXKIND@), intent(inout)        :: ia(:), ja(:), iaux(:)
-      @TYPE@(@FKIND@), intent(inout) :: val(:)
-      integer(@IXKIND@), intent(out)          :: nzout
-      integer(psb_ipk_), intent(out)          :: info
-    end subroutine psb_@IX@_fix_coo_inner_colmajor
-  end interface
-
-  interface
     subroutine psb_@IX@_fix_coo_inner_rowmajor(nr,nc,nzin,dupl,&
          & ia,ja,val,iaux,nzout,info)
       import
