@@ -43,15 +43,14 @@
 module psb_@X@_qsort_mod
   use psb_const_mod
 
-
-  @REALS@
-
+@NOTCPLXS@
   interface psb_bsrch
-    function  psb_@X@bsrch(key,n,v) result(ipos)
+    function  psb_@X@bsrch(key,n,v,dir,find) result(ipos)
       import 
       integer(psb_ipk_) :: ipos, n
       @TYPE@(@FKIND@) :: key
       @TYPE@(@FKIND@) :: v(:)
+      integer(psb_ipk_), optional :: dir, find
     end function psb_@X@bsrch
   end interface psb_bsrch
 
@@ -64,7 +63,7 @@ module psb_@X@_qsort_mod
       @TYPE@(@FKIND@) :: v(:)
     end function psb_@X@ssrch
   end interface psb_ssrch
-@REALE@
+@NOTCPLXE@
 
   interface psb_qsort
     subroutine psb_@X@qsort(x,ix,dir,flag)
