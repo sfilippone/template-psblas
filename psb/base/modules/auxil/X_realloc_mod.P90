@@ -790,7 +790,9 @@ Contains
         call psb_errpush(info,name,a_err=char_err)
         goto 9999
       else
+        !$omp workshare
         vout(:) = vin(:)
+        !$omp end workshare
       endif
     endif
 
@@ -836,7 +838,9 @@ Contains
         call psb_errpush(info,name,a_err=char_err)
         goto 9999
       else
+        !$omp workshare
         vout(:,:) = vin(:,:)
+        !$omp end workshare
       endif
     endif
 
