@@ -185,7 +185,7 @@ Module psb_@X@_tools_mod
       logical, intent(in), optional        :: local
     end subroutine psb_@X@ins_multivect
   end interface
-  
+
   @NOTINTS@
   interface psb_cdbldext
     Subroutine psb_@X@cdbldext(a,desc_a,novr,desc_ov,info,extype)
@@ -287,7 +287,7 @@ Module psb_@X@_tools_mod
       integer(psb_ipk_), intent(out)            :: info
     end subroutine psb_@LX@_remote_mat
   end interface psb_remote_mat
-  
+
   interface psb_spfree
     subroutine psb_@X@spfree(a, desc_a,info)
       import
@@ -455,6 +455,14 @@ Module psb_@X@_tools_mod
       integer(psb_ipk_), intent(out)         :: info
       @TYPE@(@FKIND@)                        :: res
     end function
+    function psb_@X@_getelem_vec(x,index,desc_a,info) result(res)
+      import
+      type(psb_@X@_vect_type), intent(inout) :: x
+      integer(psb_lpk_), intent(in), dimension(:) :: index
+      type(psb_desc_type), intent(inout)     :: desc_a
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@), allocatable, dimension(:) :: res
+    end function
   end interface
 
   interface psb_remap
@@ -468,7 +476,7 @@ Module psb_@X@_tools_mod
       type(psb_@X@spmat_type), intent(inout) :: a_in
       type(psb_@X@spmat_type), intent(out)   :: a_out
       type(psb_desc_type), intent(out)     :: desc_out
-      integer(psb_ipk_), intent(out)       :: ipd 
+      integer(psb_ipk_), intent(out)       :: ipd
       integer(psb_ipk_), allocatable, intent(out) :: isrc(:), nrsrc(:), naggr(:)
       integer(psb_ipk_), intent(out)       :: info
     end subroutine psb_@X@_remap
