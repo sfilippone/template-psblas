@@ -5,6 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
+SRC=X_rb_idx_tree_mod.p90
 VSRC=X_hsort_x_mod.p90
 ESRC=X_ip_reord_mod.P90 X_hsort_mod.p90 X_isort_mod.p90 X_qsort_mod.p90 \
 	X_msort_mod.p90 X_realloc_mod.P90
