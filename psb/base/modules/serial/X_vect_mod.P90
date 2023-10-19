@@ -1423,6 +1423,8 @@ module psb_@X@_multivect_mod
 !!$    procedure, pass(x) :: asum     => @X@_vect_asum
        procedure, pass(y) :: axpby_vv => @X@_vect_axpby_vv
        generic, public :: axpby => axpby_vv
+       procedure, pass(y) :: mlt_av   => @X@_vect_mltav
+       generic, public :: mlt => mlt_av
     @NOTINTE@
   end type psb_@X@_multivect_type
 
@@ -2061,6 +2063,23 @@ contains
 !!$    end if
 !!$
 !!$  end function @X@_vect_asum
+  subroutine @X@_vect_mltav(y,a,v,info)
+    use psb_@X@_vect_mod
+    implicit none
+    class(psb_@X@_multivect_type), intent(inout) :: y
+    @TYPE@(@FKIND@), dimension(:), allocatable :: a
+    type(psb_@X@_vect_type), intent(inout) :: v
+    integer(psb_ipk_), intent(out) :: info
+
+    info = 0
+
+    if (allocated(y%v).and.allocated(a)) then
+      call y%v%mlt(a,v%v,info)
+    else
+      info = -1
+    end if
+
+  end subroutine @X@_vect_mltav
   @NOTINTE@
 
 end module psb_@X@_multivect_mod
