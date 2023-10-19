@@ -64,7 +64,7 @@ module psb_@X@_vect_mod
     procedure, pass(x) :: is_remote_build => @X@_vect_is_remote_build
     procedure, pass(x) :: set_remote_build => @X@_vect_set_remote_build
     procedure, pass(x) :: get_dupl => @X@_vect_get_dupl
-    procedure, pass(x) :: set_dupl => @X@_vect_set_dupl 
+    procedure, pass(x) :: set_dupl => @X@_vect_set_dupl
     procedure, pass(x) :: get_nrmv => @X@_vect_get_nrmv
     procedure, pass(x) :: set_nrmv => @X@_vect_set_nrmv
     procedure, pass(x) :: all      => @X@_vect_all
@@ -236,7 +236,7 @@ contains
 
     x%nrmv = val
   end subroutine @X@_vect_set_nrmv
-        
+
 
   function @X@_vect_is_remote_build(x) result(res)
     implicit none
@@ -256,7 +256,7 @@ contains
       x%remote_build = psb_matbld_remote_
     end if
   end subroutine @X@_vect_set_remote_build
-        
+
   subroutine  psb_@X@_set_vect_default(v)
     implicit none
     class(psb_@X@_base_vect_type), intent(in) :: v
@@ -614,7 +614,7 @@ contains
       allocate(tmp,stat=info,mold=psb_@X@_get_base_vect_default())
     end if
     if (allocated(x%v)) then
-      if (allocated(x%v%v)) then 
+      if (allocated(x%v%v)) then
         call x%v%sync()
         if (info == psb_success_) call tmp%bld(x%v%v)
         call x%v%free(info)
@@ -1172,7 +1172,7 @@ contains
     ! Temp vectors
     type(psb_@X@_vect_type) :: wtemp
 
-    info = 0 
+    info = 0
     if( allocated(w%v) ) then
       if (.not.present(aux)) then
         allocate(wtemp%v, mold=w%v)
@@ -1421,6 +1421,8 @@ module psb_@X@_multivect_mod
 !!$    procedure, pass(x) :: nrm2     => @X@_vect_nrm2
 !!$    procedure, pass(x) :: amax     => @X@_vect_amax
 !!$    procedure, pass(x) :: asum     => @X@_vect_asum
+       procedure, pass(y) :: axpby_vv => @X@_vect_axpby_vv
+       generic, public :: axpby => axpby_vv
     @NOTINTE@
   end type psb_@X@_multivect_type
 
@@ -1447,7 +1449,7 @@ module psb_@X@_multivect_mod
 
 contains
 
-  
+
   function @X@_mvect_get_dupl(x) result(res)
     implicit none
     class(psb_@X@_multivect_type), intent(in) :: x
@@ -1466,7 +1468,7 @@ contains
       x%dupl = psb_dupl_def_
     end if
   end subroutine @X@_mvect_set_dupl
-        
+
 
   function @X@_mvect_is_remote_build(x) result(res)
     implicit none
@@ -1486,7 +1488,7 @@ contains
       x%remote_build = psb_matbld_remote_
     end if
   end subroutine @X@_mvect_set_remote_build
-        
+
 
   subroutine  psb_@X@_set_multivect_default(v)
     implicit none
@@ -1876,6 +1878,24 @@ contains
 !!$
 !!$  end subroutine @X@_vect_axpby_v
 !!$
+    subroutine @X@_vect_axpby_vv(m,alpha, x, beta, y, j, info)
+      use psi_serial_mod
+      use psb_@X@_vect_mod
+      implicit none
+      integer(psb_ipk_), intent(in)            :: m
+      type(psb_@X@_vect_type), intent(inout)  :: x
+      class(psb_@X@_multivect_type), intent(inout)  :: y
+      @TYPE@(@FKIND@), intent (in)       :: alpha, beta
+      integer(psb_ipk_), intent(in)      :: j
+      integer(psb_ipk_), intent(out)           :: info
+
+      if (allocated(x%v).and.allocated(y%v)) then
+         call y%v%axpby(m,alpha,x%v,beta,j,info)
+      else
+         info = psb_err_invalid_vect_state_
+      end if
+
+    end subroutine @X@_vect_axpby_vv
 !!$  subroutine @X@_vect_axpby_a(m,alpha, x, beta, y, info)
 !!$    use psi_serial_mod
 !!$    implicit none

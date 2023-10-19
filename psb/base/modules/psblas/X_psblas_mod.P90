@@ -33,6 +33,7 @@ module psb_@X@_psblas_mod
   use psb_desc_mod, only : psb_desc_type, @FKIND@, psb_ipk_, psb_lpk_
   use psb_@X@_vect_mod, only : psb_@X@_vect_type
   use psb_@X@_mat_mod, only : psb_@X@spmat_type
+  use psb_@X@_multivect_mod, only: psb_@X@_multivect_type
 
   interface psb_gedot
     function psb_@X@dot_vect(x, y, desc_a,info,global) result(res)
@@ -141,6 +142,17 @@ module psb_@X@_psblas_mod
       integer(psb_ipk_), optional, intent(in) :: n, jx, jy
       integer(psb_ipk_), intent(out)      :: info
     end subroutine psb_@X@axpby
+    subroutine psb_@X@axpby_multivect_vect(alpha, x, beta, y,&
+         & j, desc_a, info)
+      import :: psb_desc_type, @FKIND@, psb_ipk_, &
+              & psb_@X@_vect_type, psb_@X@spmat_type, psb_@X@_multivect_type
+      type(psb_@X@_vect_type), intent (inout) ::  x
+      type(psb_@X@_multivect_type), intent (inout) ::  y
+      @TYPE@(@FKIND@), intent (in)        :: alpha, beta
+      integer(psb_ipk_), intent(in)        :: j
+      type(psb_desc_type), intent (in)      :: desc_a
+      integer(psb_ipk_), intent(out)                  :: info
+    end subroutine psb_@X@axpby_multivect_vect
   end interface
 
   interface psb_geamax
