@@ -66,7 +66,7 @@ bsrc: $(FSRC)
 lib: $(FOBJS)
 
 cpy: 
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/gpu *.f90 *.F90)
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/cuda *.f90 *.F90)
 	cd impl && $(MAKE) cpy
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
