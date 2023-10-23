@@ -143,6 +143,7 @@ subroutine psb_@X@ilut_fact(fill_in,thres,a,l,u,d,info,blck,iscale,shft)
   !     Local Variables
   integer(psb_ipk_)   ::  l1, l2, m, err_act, iscale_
 
+  @TYPE@(@FKIND@) :: shft_
   type(psb_@X@spmat_type), pointer  :: blck_
   type(psb_@X@_csr_sparse_mat)       :: ll, uu
   real(@FKIND@)      :: scale
@@ -177,6 +178,11 @@ subroutine psb_@X@ilut_fact(fill_in,thres,a,l,u,d,info,blck,iscale,shft)
     iscale_ = iscale
   else
     iscale_ = psb_ilu_scale_none_
+  end if
+  if (present(shft)) then
+    shft_ = shft
+  else
+    shft_ = @XZERO@
   end if
 
   select case(iscale_)
