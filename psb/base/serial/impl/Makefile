@@ -7,8 +7,9 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC= X_base_mat_impl.P90  \
     X_coo_impl.P90 \
-    X_csr_impl.p90  \
-    X_csc_impl.p90  X_mat_impl.P90 
+    X_csr_impl.P90  \
+    X_csc_impl.P90  X_mat_impl.P90 \
+    X_rb_idx_tree_impl.P90
 
 
 

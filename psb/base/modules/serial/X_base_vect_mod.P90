@@ -505,7 +505,11 @@ contains
     implicit none
     class(psb_@X@_base_vect_type), intent(inout)    :: x
 
-    if (allocated(x%v)) x%v=@XZERO@
+    if (allocated(x%v)) then
+      !$omp workshare
+      x%v(:)=@XZERO@
+      !$omp end workshare
+    end if
     call x%set_host()
   end subroutine @X@_base_zero
 
@@ -1233,7 +1237,7 @@ contains
       if (beta == @XONE@) then
         return
       else
-        !$omp parallel do private(i)    
+        !$omp parallel do private(i)     shared(beta)
         do i=1, n
           z%v(i) = beta*z%v(i)
         end do
@@ -1251,7 +1255,7 @@ contains
             z%v(i) = z%v(i) + y(i)*x(i)
           end do
         else
-          !$omp parallel do private(i)
+          !$omp parallel do private(i)     shared(beta)
           do i=1, n
             z%v(i) = beta*z%v(i) + y(i)*x(i)
           end do
@@ -1268,24 +1272,24 @@ contains
             z%v(i) = z%v(i) - y(i)*x(i)
           end do
         else
-          !$omp parallel do private(i)
+          !$omp parallel do private(i)    shared(beta)
           do i=1, n
             z%v(i) = beta*z%v(i) - y(i)*x(i)
           end do
         end if
       else
         if (beta == @XZERO@) then
-          !$omp parallel do private(i)
+          !$omp parallel do private(i)    shared(alpha)
           do i=1, n
             z%v(i) = alpha*y(i)*x(i)
           end do
         else if (beta == @XONE@) then
-          !$omp parallel do private(i)
+          !$omp parallel do private(i)  shared(alpha)
           do i=1, n
             z%v(i) = z%v(i) + alpha*y(i)*x(i)
           end do
         else
-          !$omp parallel do private(i)
+          !$omp parallel do private(i)  shared(alpha, beta)
           do i=1, n
             z%v(i) = beta*z%v(i) + alpha*y(i)*x(i)
           end do
