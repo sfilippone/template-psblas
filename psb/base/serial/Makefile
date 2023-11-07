@@ -35,7 +35,7 @@ sint:
 
 bsrc: $(FSRC)
 
-isrc: $(FSRCI)
+isrc: $(FSRCI) $(FSRCI2)
 
 ssort:
 	cd sort && $(MAKE) src

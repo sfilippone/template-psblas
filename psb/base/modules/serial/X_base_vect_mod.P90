@@ -505,7 +505,11 @@ contains
     implicit none
     class(psb_@X@_base_vect_type), intent(inout)    :: x
 
-    if (allocated(x%v)) x%v=@XZERO@
+    if (allocated(x%v)) then
+      !$omp workshare
+      x%v(:)=@XZERO@
+      !$omp end workshare
+    end if
     call x%set_host()
   end subroutine @X@_base_zero
 
