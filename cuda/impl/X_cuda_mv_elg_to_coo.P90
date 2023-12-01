@@ -28,18 +28,12 @@
 !    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 !    POSSIBILITY OF SUCH DAMAGE.
 !   
-  
-
 subroutine psb_@X@_cuda_mv_elg_to_coo(a,b,info) 
   
   use psb_base_mod
-#ifdef HAVE_SPGPU
   use elldev_mod
   use psb_vectordev_mod
   use psb_@X@_cuda_elg_mat_mod, psb_protect_name => psb_@X@_cuda_mv_elg_to_coo
-#else 
-  use psb_@X@_cuda_elg_mat_mod
-#endif
   implicit none 
 
   class(psb_@X@_cuda_elg_sparse_mat), intent(inout) :: a
@@ -49,9 +43,7 @@ subroutine psb_@X@_cuda_mv_elg_to_coo(a,b,info)
   !locals
   Integer(Psb_ipk_)  :: nza, nr, i,j,k, idl,err_act, nc, nzm, ir, ic, ld
   character(len=20)  :: name
-#ifdef HAVE_SPGPU
   type(elldev_parms) :: gpu_parms
-#endif
 
   info = psb_success_
 
@@ -79,13 +71,9 @@ subroutine psb_@X@_cuda_mv_elg_to_coo(a,b,info)
     end do
     ! Second: copy the column indices.
     call psb_realloc(nr,a%idiag,info) 
-#ifdef HAVE_SPGPU
     gpu_parms = FgetEllDeviceParams(nr,nzm,nza,nc,spgpu_type_double,1)
     ld  = gpu_parms%pitch
     nzm = gpu_parms%maxRowSize
-#else
-    ld = nr
-#endif
 
     if (info == 0) call psb_realloc(ld,nzm,a%ja,info) 
     if (info /= 0) goto 9999
@@ -124,16 +112,13 @@ subroutine psb_@X@_cuda_mv_elg_to_coo(a,b,info)
 
   call b%free()
 
-#ifdef HAVE_SPGPU
   call a%to_gpu(info)
   if (info /= 0) goto 9999
-#endif
 
   return
 
 9999 continue
   info = psb_err_alloc_dealloc_
   return
-
 
 end subroutine psb_@X@_cuda_mv_elg_to_coo
