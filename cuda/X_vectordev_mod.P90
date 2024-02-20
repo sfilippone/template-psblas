@@ -305,7 +305,6 @@ module psb_@X@_vectordev_mod
     end function asumMultiVecDevice@CTYPE@
   end interface
 
-
   interface axpbyMultiVecDevice
     function axpbyMultiVecDevice@CTYPE@(n,alpha,deviceVecA,beta,deviceVecB) &
          & result(res) bind(c,name='axpbyMultiVecDevice@CTYPE@')
@@ -315,6 +314,18 @@ module psb_@X@_vectordev_mod
       @TYPE@(@FCKIND@), value :: alpha, beta
       type(c_ptr), value  :: deviceVecA, deviceVecB
     end function axpbyMultiVecDevice@CTYPE@
+  end interface
+
+  interface abgdxyzMultiVecDevice
+    function abgdxyzMultiVecDevice@CTYPE@(n,alpha,beta,gamma,delta,deviceVecX,&
+         & deviceVecY,deviceVecZ) &
+         & result(res) bind(c,name='abgdxyzMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)      :: res
+      integer(c_int), value :: n
+      type(@FCKIND@), value :: alpha, beta,gamma,delta
+      type(c_ptr), value  :: deviceVecX, deviceVecY, deviceVecZ
+    end function abgdxyzMultiVecDevice@CTYPE@
   end interface
 
   interface axyMultiVecDevice
