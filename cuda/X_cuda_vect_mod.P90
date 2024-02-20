@@ -672,9 +672,9 @@ contains
     use psi_serial_mod
     implicit none 
     class(psb_@X@_vect_cuda), intent(inout) :: x
-    
-    if (allocated(x%v)) x%v=@XZERO@
-    call x%set_host()
+
+    call x%set_scal(@XZERO@)
+
   end subroutine @X@_cuda_zero
 
   subroutine @X@_cuda_asb_m(n, x, info)
