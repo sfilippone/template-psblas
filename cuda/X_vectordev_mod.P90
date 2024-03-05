@@ -28,8 +28,6 @@
 !    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 !    POSSIBILITY OF SUCH DAMAGE.
 !   
-  
-
 module psb_@X@_vectordev_mod
 
   use psb_base_vectordev_mod
@@ -305,7 +303,6 @@ module psb_@X@_vectordev_mod
     end function asumMultiVecDevice@CTYPE@
   end interface
 
-
   interface axpbyMultiVecDevice
     function axpbyMultiVecDevice@CTYPE@(n,alpha,deviceVecA,beta,deviceVecB) &
          & result(res) bind(c,name='axpbyMultiVecDevice@CTYPE@')
@@ -315,6 +312,30 @@ module psb_@X@_vectordev_mod
       @TYPE@(@FCKIND@), value :: alpha, beta
       type(c_ptr), value  :: deviceVecA, deviceVecB
     end function axpbyMultiVecDevice@CTYPE@
+  end interface
+
+  interface abgdxyzMultiVecDevice
+    function abgdxyzMultiVecDevice@CTYPE@(n,alpha,beta,gamma,delta,deviceVecX,&
+         & deviceVecY,deviceVecZ) &
+         & result(res) bind(c,name='abgdxyzMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)      :: res
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@), value :: alpha, beta,gamma,delta
+      type(c_ptr), value  :: deviceVecX, deviceVecY, deviceVecZ
+    end function abgdxyzMultiVecDevice@CTYPE@
+  end interface
+
+  interface xyzwMultiVecDevice
+    function xyzwMultiVecDevice@CTYPE@(n,a,b,c,d,e,f,deviceVecX,&
+         & deviceVecY,deviceVecZ,deviceVecW) &
+         & result(res) bind(c,name='xyzwMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)      :: res
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@), value :: a,b,c,d,e,f
+      type(c_ptr), value  :: deviceVecX, deviceVecY, deviceVecZ, deviceVecW
+    end function xyzwMultiVecDevice@CTYPE@
   end interface
 
   interface axyMultiVecDevice

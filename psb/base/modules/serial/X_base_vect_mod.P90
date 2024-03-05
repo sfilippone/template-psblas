@@ -165,6 +165,9 @@ module psb_@X@_base_vect_mod
     procedure, pass(z) :: axpby_v2  => @X@_base_axpby_v2
     procedure, pass(z) :: axpby_a2  => @X@_base_axpby_a2
     generic, public    :: axpby    => axpby_v, axpby_a, axpby_v2, axpby_a2
+    procedure, pass(z) :: abgdxyz  => @X@_base_abgdxyz
+    procedure, pass(w) :: xyzw     => @X@_base_xyzw
+    
     !
     ! Vector by vector multiplication. Need all variants
     ! to handle multiple requirements from preconditioners
@@ -1043,7 +1046,7 @@ contains
   !! \param m    Number of entries to be considered
   !! \param alpha scalar alpha
   !! \param x     The class(base_vect) to be added
-  !! \param beta scalar alpha
+  !! \param beta scalar beta
   !! \param info   return code
   !!
   subroutine @X@_base_axpby_v(m,alpha, x, beta, y, info)
@@ -1072,7 +1075,7 @@ contains
   !! \param m    Number of entries to be considered
   !! \param alpha scalar alpha
   !! \param x     The class(base_vect) to be added
-  !! \param beta scalar alpha
+  !! \param beta scalar beta
   !! \param y     The class(base_vect) to be added
   !! \param z     The class(base_vect) to be returned
   !! \param info   return code
@@ -1103,7 +1106,7 @@ contains
   !! \param m    Number of entries to be considered
   !! \param alpha scalar alpha
   !! \param x(:) The array to be added
-  !! \param beta scalar alpha
+  !! \param beta scalar beta
   !! \param info   return code
   !!
   subroutine @X@_base_axpby_a(m,alpha, x, beta, y, info)
@@ -1150,6 +1153,64 @@ contains
     call z%set_host()
 
   end subroutine @X@_base_axpby_a2
+
+  !
+  ! ABGDXYZ is invoked via Z, hence the structure below.
+  !
+  !
+  !> Function  base_abgdxyz
+  !! \memberof  psb_@X@_base_vect_type
+  !! \brief ABGDXYZ combines two AXPBYS y=alpha*x+beta*y, z=gamma*y+delta*zeta
+  !! \param m    Number of entries to be considered
+  !! \param alpha scalar alpha
+  !! \param beta scalar beta 
+  !! \param gamma scalar gamma
+  !! \param delta scalar delta
+  !! \param x     The class(base_vect) to be added
+  !! \param y     The class(base_vect) to be added
+  !! \param z     The class(base_vect) to be added
+  !! \param info   return code
+  !!
+  subroutine @X@_base_abgdxyz(m,alpha, beta, gamma,delta,x, y, z, info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: m
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    @TYPE@(@FKIND@), intent (in)       :: alpha, beta, gamma, delta
+    integer(psb_ipk_), intent(out)              :: info
+
+    if (x%is_dev().and.(alpha/=@XZERO@)) call x%sync()
+    if (y%is_dev().and.(beta/=@XZERO@))   call y%sync()
+    if (z%is_dev().and.(delta/=@XZERO@))  call z%sync()
+    call psi_abgdxyz(m,alpha, beta, gamma,delta,x%v, y%v, z%v, info)
+    call y%set_host()
+    call z%set_host()
+        
+  end subroutine @X@_base_abgdxyz
+
+  subroutine @X@_base_xyzw(m,a,b,c,d,e,f,x, y, z, w,info)
+    use psi_serial_mod
+    implicit none
+    integer(psb_ipk_), intent(in)               :: m
+    class(psb_@X@_base_vect_type), intent(inout)  :: x
+    class(psb_@X@_base_vect_type), intent(inout)  :: y
+    class(psb_@X@_base_vect_type), intent(inout)  :: z
+    class(psb_@X@_base_vect_type), intent(inout)  :: w
+    @TYPE@(@FKIND@), intent (in)                :: a,b,c,d,e,f
+    integer(psb_ipk_), intent(out)              :: info
+
+    if (x%is_dev().and.(a/=@XZERO@)) call x%sync()
+    if (y%is_dev().and.(b/=@XZERO@)) call y%sync()
+    if (z%is_dev().and.(d/=@XZERO@)) call z%sync()
+    if (w%is_dev().and.(f/=@XZERO@)) call w%sync()
+    call psi_xyzw(m,a,b,c,d,e,f,x%v, y%v, z%v, w%v, info)
+    call y%set_host()
+    call z%set_host()
+    call w%set_host()
+    
+  end subroutine @X@_base_xyzw
 
 
   !
