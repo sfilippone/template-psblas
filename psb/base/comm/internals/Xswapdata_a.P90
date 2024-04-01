@@ -191,7 +191,9 @@ subroutine psi_@X@swapidxm(ctxt,icomm,flag,n,beta,y,idx, &
   logical, parameter :: usersend=.false.
 
   @TYPE@(@FKIND@), pointer, dimension(:) :: sndbuf, rcvbuf
-  !volatile :: sndbuf, rcvbuf
+#if !defined(FLANG)
+  volatile :: sndbuf, rcvbuf
+#endif
   character(len=20)  :: name
 
   info=psb_success_
@@ -676,7 +678,9 @@ subroutine psi_@X@swapidxv(ctxt,icomm,flag,beta,y,idx, &
   logical, parameter :: usersend=.false.
 
   @TYPE@(@FKIND@), pointer, dimension(:) :: sndbuf, rcvbuf
-  !volatile :: sndbuf, rcvbuf
+#if !defined(FLANG)
+  volatile :: sndbuf, rcvbuf
+#endif
   character(len=20)  :: name
 
   info=psb_success_
