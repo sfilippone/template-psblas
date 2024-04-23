@@ -84,7 +84,7 @@ module psb_@X@_ilu_fact_mod
       import psb_@X@spmat_type, @FKIND@, psb_ipk_
       integer(psb_ipk_), intent(in)         :: ialg
       integer(psb_ipk_), intent(out)        :: info
-      type(psb_@X@spmat_type),intent(in)      :: a
+      type(psb_@X@spmat_type),intent(inout)   :: a
       type(psb_@X@spmat_type),intent(inout)   :: l,u
       type(psb_@X@spmat_type),intent(in), optional, target :: blck
       character, intent(in), optional       :: upd
@@ -98,7 +98,7 @@ module psb_@X@_ilu_fact_mod
       import psb_@X@spmat_type, @FKIND@, psb_ipk_
       integer(psb_ipk_), intent(in)        :: fill_in,ialg
       integer(psb_ipk_), intent(out)       :: info
-      type(psb_@X@spmat_type),intent(in)     :: a
+      type(psb_@X@spmat_type),intent(inout)  :: a
       type(psb_@X@spmat_type),intent(inout)  :: l,u
       type(psb_@X@spmat_type),intent(in), optional, target :: blck
       @TYPE@(@FKIND@), intent(inout)     ::  d(:)
@@ -112,7 +112,7 @@ module psb_@X@_ilu_fact_mod
       integer(psb_ipk_), intent(in)        :: fill_in
       real(@FKIND@), intent(in)           :: thres
       integer(psb_ipk_), intent(out)       :: info
-      type(psb_@X@spmat_type),intent(in)     :: a
+      type(psb_@X@spmat_type),intent(inout)  :: a
       type(psb_@X@spmat_type),intent(inout)  :: l,u
       @TYPE@(@FKIND@), intent(inout)     :: d(:)
       type(psb_@X@spmat_type),intent(in), optional, target :: blck
