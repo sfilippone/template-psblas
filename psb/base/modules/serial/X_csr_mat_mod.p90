@@ -461,26 +461,28 @@ module psb_@X@_csr_mat_mod
   !> \memberof psb_@X@_csr_sparse_mat
   !! \see psb_@X@_base_mat_mod::psb_@X@_base_csmv
   interface
-    subroutine psb_@X@_csr_csmv(alpha,a,x,beta,y,info,trans)
+    subroutine psb_@X@_csr_csmv(alpha,a,x,beta,y,info,trans,ivshft)
       import
       class(psb_@X@_csr_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:)
       @TYPE@(@FKIND@), intent(inout)       :: y(:)
       integer(psb_ipk_), intent(out)                :: info
       character, optional, intent(in)     :: trans
+      integer(psb_ipk_), optional, intent(in) :: ivshft
     end subroutine psb_@X@_csr_csmv
   end interface
 
   !> \memberof psb_@X@_csr_sparse_mat
   !! \see psb_@X@_base_mat_mod::psb_@X@_base_csmm
   interface
-    subroutine psb_@X@_csr_csmm(alpha,a,x,beta,y,info,trans)
+    subroutine psb_@X@_csr_csmm(alpha,a,x,beta,y,info,trans,ivshft)
       import
       class(psb_@X@_csr_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:,:)
       @TYPE@(@FKIND@), intent(inout)       :: y(:,:)
       integer(psb_ipk_), intent(out)                :: info
       character, optional, intent(in)     :: trans
+      integer(psb_ipk_), optional, intent(in) :: ivshft
     end subroutine psb_@X@_csr_csmm
   end interface
 
@@ -606,13 +608,14 @@ module psb_@X@_csr_mat_mod
   !> \memberof psb_@X@_ecsr_sparse_mat
   !! \see psb_@X@_base_mat_mod::psb_@X@_base_csmv
   interface
-    subroutine psb_@X@_ecsr_csmv(alpha,a,x,beta,y,info,trans)
+    subroutine psb_@X@_ecsr_csmv(alpha,a,x,beta,y,info,trans,ivshft)
       import
       class(psb_@X@_ecsr_sparse_mat), intent(in) :: a
       @TYPE@(@FKIND@), intent(in)          :: alpha, beta, x(:)
       @TYPE@(@FKIND@), intent(inout)       :: y(:)
       integer(psb_ipk_), intent(out)                :: info
       character, optional, intent(in)     :: trans
+      integer(psb_ipk_), optional, intent(in) :: ivshft
     end subroutine psb_@X@_ecsr_csmv
   end interface
 
