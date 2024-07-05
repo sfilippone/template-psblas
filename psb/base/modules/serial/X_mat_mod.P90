@@ -79,12 +79,14 @@
 module psb_@X@_mat_mod
 
   use psb_@X@_base_mat_mod
-  use psb_@X@_csr_mat_mod,  only : psb_@X@_csr_sparse_mat, psb_@LX@_csr_sparse_mat
+  use psb_@X@_csr_mat_mod,  only : psb_@X@_csr_sparse_mat, psb_@LX@_csr_sparse_mat,&
+       & psb_@X@_ecsr_sparse_mat
   use psb_@X@_csc_mat_mod,  only : psb_@X@_csc_sparse_mat, psb_@LX@_csc_sparse_mat
 
   type :: psb_@X@spmat_type
 
     class(psb_@X@_base_sparse_mat), allocatable  :: a   
+    class(psb_@X@_base_sparse_mat), allocatable  :: ad, and    
     integer(psb_ipk_) :: remote_build=psb_matbld_noremote_
     type(psb_@LX@_coo_sparse_mat), allocatable  :: rmta
 
@@ -202,6 +204,8 @@ module psb_@X@_mat_mod
     procedure, pass(a) :: cscnv_ip    => psb_@X@_cscnv_ip
     procedure, pass(a) :: cscnv_base  => psb_@X@_cscnv_base
     generic, public    :: cscnv       => cscnv_np, cscnv_ip, cscnv_base
+    procedure, pass(a) :: split_nd    => psb_@X@_split_nd
+    procedure, pass(a) :: merge_nd    => psb_@X@_merge_nd
     procedure, pass(a) :: clone       => psb_@X@spmat_clone
     procedure, pass(a) :: move_alloc  => psb_@X@spmat_type_move
     !
@@ -840,6 +844,24 @@ module psb_@X@_mat_mod
   !
   !
 
+  interface
+    subroutine psb_@X@_split_nd(a,n_rows,n_cols,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in)           :: n_rows, n_cols
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@_split_nd
+  end interface
+  
+  interface
+    subroutine psb_@X@_merge_nd(a,n_rows,n_cols,info)
+      import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
+      class(psb_@X@spmat_type), intent(inout) :: a
+      integer(psb_ipk_), intent(in)           :: n_rows, n_cols
+      integer(psb_ipk_), intent(out)          :: info
+    end subroutine psb_@X@_merge_nd
+  end interface
+
   !
   ! CSCNV: switches to a different internal derived type.
   !   3 versions: copying to target
@@ -859,7 +881,6 @@ module psb_@X@_mat_mod
     end subroutine psb_@X@_cscnv
   end interface
 
-
   interface
     subroutine psb_@X@_cscnv_ip(a,iinfo,type,mold,dupl)
       import :: psb_ipk_, psb_lpk_, psb_@X@spmat_type, @FKIND@, psb_@X@_base_sparse_mat
@@ -870,7 +891,6 @@ module psb_@X@_mat_mod
       class(psb_@X@_base_sparse_mat), intent(in), optional :: mold
     end subroutine psb_@X@_cscnv_ip
   end interface
-
 
   interface
     subroutine psb_@X@_cscnv_base(a,b,info,dupl)
