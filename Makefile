@@ -8,7 +8,7 @@ src:
 	cd psb && $(MAKE) src
 	cd ext && $(MAKE) src
 	cd cuda && $(MAKE) src
-	cd opeancc && $(MAKE) src
+	cd openacc && $(MAKE) src
 
 cpy: src
 	cd psb && $(MAKE) cpy 
