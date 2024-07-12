@@ -4,9 +4,22 @@ BASIC_MODS=
 UTIL_MODS =
 
 SRC= \
-X_oacc_csr_vect_mv.P90 \
 X_oacc_mlt_v_2.p90 \
-X_oacc_mlt_v.p90
+X_oacc_mlt_v.p90 \
+X_oacc_csr_allocate_mnnz.P90 \
+X_oacc_csr_cp_from_coo.P90 \
+X_oacc_csr_cp_from_fmt.P90 \
+X_oacc_csr_csmm.P90 \
+X_oacc_csr_csmv.P90 \
+X_oacc_csr_inner_vect_sv.P90 \
+X_oacc_csr_mold.P90 \
+X_oacc_csr_mv_from_coo.P90 \
+X_oacc_csr_mv_from_fmt.P90 \
+X_oacc_csr_reallocate_nz.P90 \
+X_oacc_csr_scal.P90 \
+X_oacc_csr_scals.P90 \
+X_oacc_csr_vect_mv.P90
+
 
 SRCI=
 
