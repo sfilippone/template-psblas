@@ -142,16 +142,16 @@ contains
     implicit none
     class(psb_@X@_vect_oacc), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: n
-    @TYPE@(@FKIND@)                       :: res
+    @RTYPE@(@FKIND@)                       :: res
     integer(psb_ipk_) :: info
-    @TYPE@(@FKIND@) :: sum
+    @RTYPE@(@FKIND@) :: sum
     integer(psb_ipk_) :: i
 
     if (x%is_host()) call x%sync_space()
     sum = 0.0
     !$acc parallel loop reduction(+:sum)
     do i = 1, n
-        sum = sum + x%v(i) * x%v(i)
+        sum = sum + abs(x%v(i))**2
     end do
     res = sqrt(sum)
   end function @X@_oacc_nrm2
@@ -160,16 +160,16 @@ contains
     implicit none
     class(psb_@X@_vect_oacc), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: n
-    @TYPE@(@FKIND@)                       :: res
+    @RTYPE@(@FKIND@)                       :: res
     integer(psb_ipk_) :: info
-    @TYPE@(@FKIND@) :: max_val
+    @RTYPE@(@FKIND@) :: max_val
     integer(psb_ipk_) :: i
 
     if (x%is_host()) call x%sync_space()
     max_val = -huge(0.0)
     !$acc parallel loop reduction(max:max_val)
     do i = 1, n
-        if (x%v(i) > max_val) max_val = x%v(i)
+        if (abs(x%v(i)) > max_val) max_val = abs(x%v(i))
     end do
     res = max_val
   end function @X@_oacc_amax
@@ -178,7 +178,7 @@ contains
     implicit none
     class(psb_@X@_vect_oacc), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: n
-    @TYPE@(@FKIND@)                       :: res
+    @RTYPE@(@FKIND@)                       :: res
     integer(psb_ipk_) :: info
     @TYPE@(@FKIND@) :: sum
     integer(psb_ipk_) :: i

@@ -35,7 +35,7 @@ subroutine @X@_oacc_mlt_v_2(alpha, x, y, beta, z, info, conjgx, conjgy)
         do i = 1, n
           z%v(i) = alpha * @CONJG@(xx%v(i)) * (yy%v(i)) + beta * z%v(i)
         end do
-      else if ((.not.)conjgx_.and.(conjgy_)) then 
+      else if ((.not.conjgx_).and.(conjgy_)) then 
         !$acc parallel loop
         do i = 1, n
           z%v(i) = alpha * (xx%v(i)) * @CONJG@(yy%v(i)) + beta * z%v(i)
@@ -60,7 +60,7 @@ subroutine @X@_oacc_mlt_v_2(alpha, x, y, beta, z, info, conjgx, conjgy)
         do i = 1, n
           z%v(i) = alpha * @CONJG@(xx%v(i)) * (yy%v(i)) + beta * z%v(i)
         end do
-      else if ((.not.)conjgx_.and.(conjgy_)) then 
+      else if ((.not.conjgx_).and.(conjgy_)) then 
         do i = 1, n
           z%v(i) = alpha * (xx%v(i)) * @CONJG@(yy%v(i)) + beta * z%v(i)
         end do
@@ -83,7 +83,7 @@ subroutine @X@_oacc_mlt_v_2(alpha, x, y, beta, z, info, conjgx, conjgy)
         do i = 1, n
           z%v(i) = alpha * @CONJG@(x%v(i)) * (y%v(i)) + beta * z%v(i)
         end do
-      else if ((.not.)conjgx_.and.(conjgy_)) then 
+      else if ((.not.conjgx_).and.(conjgy_)) then 
         do i = 1, n
           z%v(i) = alpha * (x%v(i)) * @CONJG@(y%v(i)) + beta * z%v(i)
         end do
