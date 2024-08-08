@@ -3,8 +3,16 @@ module psb_@X@_oacc_vect_mod
   use psb_const_mod
   use psb_error_mod
   use psb_@X@_vect_mod
+  @NOTINTS@
   use psb_i_vect_mod
   use psb_i_oacc_vect_mod
+  @NOTINTE@
+  @INTS@
+  @LINTS@
+  use psb_i_vect_mod
+  use psb_i_oacc_vect_mod
+  @LINTE@
+  @INTE@
 
   integer(psb_ipk_), parameter, private :: is_host = -1
   integer(psb_ipk_), parameter, private :: is_sync = 0 
@@ -42,6 +50,8 @@ module psb_@X@_oacc_vect_mod
     procedure, pass(y) :: sctb_buf    => @X@_oacc_sctb_buf
 
     procedure, pass(x) :: get_size    => @X@_oacc_get_size
+
+    @NOTINTS@
     procedure, pass(x) :: dot_v       => @X@_oacc_vect_dot
     procedure, pass(x) :: dot_a       => @X@_oacc_dot_a
     procedure, pass(y) :: axpby_v     => @X@_oacc_axpby_v
@@ -57,9 +67,11 @@ module psb_@X@_oacc_vect_mod
     procedure, pass(x) :: asum        => @X@_oacc_asum
     procedure, pass(x) :: absval1     => @X@_oacc_absval1
     procedure, pass(x) :: absval2     => @X@_oacc_absval2
+    @NOTINTE@
 
   end type psb_@X@_vect_oacc
 
+  @NOTINTS@
   interface
     subroutine @X@_oacc_mlt_v(x, y, info)
       import
@@ -70,7 +82,6 @@ module psb_@X@_oacc_vect_mod
     end subroutine @X@_oacc_mlt_v
   end interface
   
-
   interface
     subroutine @X@_oacc_mlt_v_2(alpha, x, y, beta, z, info, conjgx, conjgy)
       import
@@ -83,9 +94,11 @@ module psb_@X@_oacc_vect_mod
       character(len=1), intent(in), optional     :: conjgx, conjgy
     end subroutine @X@_oacc_mlt_v_2
   end interface
-  
+  @NOTINTE@
+
 contains
 
+  @NOTINTS@
   subroutine @X@_oacc_absval1(x)
     implicit none
     class(psb_@X@_vect_oacc), intent(inout) :: x
@@ -415,6 +428,7 @@ contains
         call z%axpby(m, gamma, y, delta, info)
     end if
   end subroutine @X@_oacc_abgdxyz
+  @NOTINTE@
 
   subroutine @X@_oacc_sctb_buf(i, n, idx, beta, y)
     use psb_base_mod
@@ -432,7 +446,7 @@ contains
 
     select type(ii => idx)
     class is (psb_i_vect_oacc)
-      if (ii%is_host()) call ii%sync_space(info)
+      if (ii%is_host()) call ii%sync_space()
       if (y%is_host()) call y%sync_space()
 
       !$acc parallel loop
@@ -459,7 +473,7 @@ contains
 
     select type(ii => idx)
     class is (psb_i_vect_oacc)
-      if (ii%is_host()) call ii%sync_space(info)
+      if (ii%is_host()) call ii%sync_space()
     class default
       call psb_errpush(info, '@X@_oacc_sctb_x')
       return
@@ -474,8 +488,6 @@ contains
 
     call y%set_dev()
   end subroutine @X@_oacc_sctb_x
-
-
 
   subroutine @X@_oacc_sctb(n, idx, x, beta, y)
     use psb_base_mod
@@ -498,7 +510,6 @@ contains
     call y%set_host()
   end subroutine @X@_oacc_sctb
 
-
   subroutine @X@_oacc_gthzbuf(i, n, idx, x)
     use psb_base_mod
     implicit none
@@ -515,7 +526,7 @@ contains
 
     select type(ii => idx)
     class is (psb_i_vect_oacc)
-      if (ii%is_host()) call ii%sync_space(info)
+      if (ii%is_host()) call ii%sync_space()
     class default
       call psb_errpush(info, '@X@_oacc_gthzbuf')
       return
@@ -542,7 +553,7 @@ contains
 
     select type(ii => idx)
     class is (psb_i_vect_oacc)
-      if (ii%is_host()) call ii%sync_space(info)
+      if (ii%is_host()) call ii%sync_space()
     class default
       call psb_errpush(info, '@X@_oacc_gthzv_x')
       return
@@ -577,7 +588,7 @@ contains
       select type(vval => val)
       type is (psb_@X@_vect_oacc)
         if (vval%is_host()) call vval%sync_space()
-        if (virl%is_host()) call virl%sync_space(info)
+        if (virl%is_host()) call virl%sync_space()
         if (x%is_host()) call x%sync_space()
         !$acc parallel loop
         do i = 1, n
@@ -591,7 +602,7 @@ contains
     if (.not.done_oacc) then
       select type(virl => irl)
       type is (psb_i_vect_oacc)
-        if (virl%is_dev()) call virl%sync_space(info)
+        if (virl%is_dev()) call virl%sync_space()
       end select
       select type(vval => val)
       type is (psb_@X@_vect_oacc)
@@ -606,8 +617,6 @@ contains
     end if
 
   end subroutine @X@_oacc_ins_v
-
-
 
   subroutine @X@_oacc_ins_a(n, irl, val, dupl, x, info)
     use psi_serial_mod
@@ -627,8 +636,6 @@ contains
     !$acc update device(x%v)
 
   end subroutine @X@_oacc_ins_a
-
-
 
   subroutine @X@_oacc_bld_mn(x, n)
     use psb_base_mod
@@ -668,7 +675,6 @@ contains
 
   end subroutine @X@_oacc_bld_x
 
-
   subroutine @X@_oacc_asb_m(n, x, info)
     use psb_base_mod
     implicit none 
@@ -696,8 +702,6 @@ contains
     end if
   end subroutine @X@_oacc_asb_m
 
-
-
   subroutine @X@_oacc_set_scal(x, val, first, last)
     class(psb_@X@_vect_oacc), intent(inout) :: x
     @TYPE@(@FKIND@), intent(in)           :: val
@@ -717,8 +721,6 @@ contains
 
     call x%set_dev()
   end subroutine @X@_oacc_set_scal
-
-
 
   subroutine @X@_oacc_zero(x)
     use psi_serial_mod
@@ -742,6 +744,8 @@ contains
     res = "@X@OACC"
 
   end function @X@_oacc_get_fmt
+
+  @NOTINTS@
 
   function @X@_oacc_vect_dot(n, x, y) result(res)
     implicit none
@@ -776,9 +780,6 @@ contains
 
   end function @X@_oacc_vect_dot
 
-
-
-
   function @X@_oacc_dot_a(n, x, y) result(res)
     implicit none 
     class(psb_@X@_vect_oacc), intent(inout) :: x
@@ -792,6 +793,7 @@ contains
 
   end function @X@_oacc_dot_a
 
+  @NOTINTE@
   ! subroutine @X@_oacc_set_vect(x,y)
   !   implicit none 
   !   class(psb_@X@_vect_oacc), intent(inout) :: x
@@ -909,7 +911,6 @@ contains
            i_err=(/n, n, n, n, n/))
     end if
   end subroutine @X@_oacc_vect_all
-
 
   subroutine @X@_oacc_vect_free(x, info)
     implicit none 

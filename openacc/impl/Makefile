@@ -18,7 +18,33 @@ X_oacc_csr_mv_from_fmt.P90 \
 X_oacc_csr_reallocate_nz.P90 \
 X_oacc_csr_scal.P90 \
 X_oacc_csr_scals.P90 \
-X_oacc_csr_vect_mv.P90
+X_oacc_csr_vect_mv.P90 \
+X_oacc_ell_allocate_mnnz.P90 \
+X_oacc_ell_cp_from_coo.P90 \
+X_oacc_ell_cp_from_fmt.P90 \
+X_oacc_ell_csmm.P90 \
+X_oacc_ell_csmv.P90 \
+X_oacc_ell_inner_vect_sv.P90 \
+X_oacc_ell_mold.P90 \
+X_oacc_ell_mv_from_coo.P90 \
+X_oacc_ell_mv_from_fmt.P90 \
+X_oacc_ell_reallocate_nz.P90 \
+X_oacc_ell_scal.P90 \
+X_oacc_ell_scals.P90 \
+X_oacc_ell_vect_mv.P90 \
+X_oacc_hll_allocate_mnnz.P90 \
+X_oacc_hll_cp_from_coo.P90 \
+X_oacc_hll_cp_from_fmt.P90 \
+X_oacc_hll_csmm.P90 \
+X_oacc_hll_csmv.P90 \
+X_oacc_hll_inner_vect_sv.P90 \
+X_oacc_hll_mold.P90 \
+X_oacc_hll_mv_from_coo.P90 \
+X_oacc_hll_mv_from_fmt.P90 \
+X_oacc_hll_reallocate_nz.P90 \
+X_oacc_hll_scal.P90 \
+X_oacc_hll_scals.P90 \
+X_oacc_hll_vect_mv.P90 
 
 
 SRCI=
