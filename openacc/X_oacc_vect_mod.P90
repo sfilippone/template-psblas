@@ -56,7 +56,7 @@ module psb_@X@_oacc_vect_mod
     procedure, pass(x) :: dot_a       => @X@_oacc_dot_a
     procedure, pass(y) :: axpby_v     => @X@_oacc_axpby_v
     procedure, pass(y) :: axpby_a     => @X@_oacc_axpby_a
-    procedure, pass(z) :: abgdxyz     => @X@_oacc_abgdxyz
+    procedure, pass(z) :: upd_xyz     => @X@_oacc_upd_xyz
     procedure, pass(y) :: mlt_a       => @X@_oacc_mlt_a
     procedure, pass(z) :: mlt_a_2     => @X@_oacc_mlt_a_2
     procedure, pass(y) :: mlt_v       => @X@_oacc_mlt_v
@@ -377,7 +377,7 @@ contains
     call y%set_host()
   end subroutine @X@_oacc_axpby_a
 
-  subroutine @X@_oacc_abgdxyz(m, alpha, beta, gamma, delta, x, y, z, info)
+  subroutine @X@_oacc_upd_xyz(m, alpha, beta, gamma, delta, x, y, z, info)
     use psi_serial_mod
     implicit none
     integer(psb_ipk_), intent(in) :: m
@@ -427,7 +427,7 @@ contains
         call y%axpby(m, alpha, x, beta, info)
         call z%axpby(m, gamma, y, delta, info)
     end if
-  end subroutine @X@_oacc_abgdxyz
+  end subroutine @X@_oacc_upd_xyz
   @NOTINTE@
 
   subroutine @X@_oacc_sctb_buf(i, n, idx, beta, y)
