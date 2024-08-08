@@ -112,7 +112,6 @@ module psb_@X@_vect_mod
     generic, public    :: axpby    => axpby_v, axpby_a, axpby_v2, axpby_a2
     procedure, pass(z) :: upd_xyz  => @X@_vect_upd_xyz
     procedure, pass(z) :: xyzw     => @X@_vect_xyzw
-    
     procedure, pass(y) :: mlt_v    => @X@_vect_mlt_v
     procedure, pass(y) :: mlt_a    => @X@_vect_mlt_a
     procedure, pass(z) :: mlt_a_2  => @X@_vect_mlt_a_2
