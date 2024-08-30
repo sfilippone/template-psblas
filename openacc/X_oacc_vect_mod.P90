@@ -23,51 +23,51 @@ module psb_@X@_oacc_vect_mod
     integer     :: state = is_host
 
   contains
-    procedure, pass(x) :: get_nrows   => @X@_oacc_get_nrows
-    procedure, nopass :: get_fmt      => @X@_oacc_get_fmt
+    procedure, pass(x) :: get_nrows    => @X@_oacc_get_nrows
+    procedure, nopass :: get_fmt       => @X@_oacc_get_fmt
 
-    procedure, pass(x) :: all         => @X@_oacc_vect_all
-    procedure, pass(x) :: zero        => @X@_oacc_zero
-    procedure, pass(x) :: asb_m       => @X@_oacc_asb_m
-    procedure, pass(x) :: sync        => @X@_oacc_sync
-    procedure, pass(x) :: sync_space  => @X@_oacc_sync_space
-    procedure, pass(x) :: bld_x       => @X@_oacc_bld_x
-    procedure, pass(x) :: bld_mn      => @X@_oacc_bld_mn
-    procedure, pass(x) :: free        => @X@_oacc_vect_free
-    procedure, pass(x) :: ins_a       => @X@_oacc_ins_a
-    procedure, pass(x) :: ins_v       => @X@_oacc_ins_v
-    procedure, pass(x) :: is_host     => @X@_oacc_is_host
-    procedure, pass(x) :: is_dev      => @X@_oacc_is_dev
-    procedure, pass(x) :: is_sync     => @X@_oacc_is_sync
-    procedure, pass(x) :: set_host    => @X@_oacc_set_host
-    procedure, pass(x) :: set_dev     => @X@_oacc_set_dev
-    procedure, pass(x) :: set_sync    => @X@_oacc_set_sync
-    procedure, pass(x) :: set_scal    => @X@_oacc_set_scal
+    procedure, pass(x) :: all          => @X@_oacc_vect_all
+    procedure, pass(x) :: zero         => @X@_oacc_zero
+    procedure, pass(x) :: asb_m        => @X@_oacc_asb_m
+    procedure, pass(x) :: sync         => @X@_oacc_sync
+    procedure, pass(x) :: sync_dev_space   => @X@_oacc_sync_dev_space
+    procedure, pass(x) :: bld_x        => @X@_oacc_bld_x
+    procedure, pass(x) :: bld_mn       => @X@_oacc_bld_mn
+    procedure, pass(x) :: free         => @X@_oacc_vect_free
+    procedure, pass(x) :: ins_a        => @X@_oacc_ins_a
+    procedure, pass(x) :: ins_v        => @X@_oacc_ins_v
+    procedure, pass(x) :: is_host      => @X@_oacc_is_host
+    procedure, pass(x) :: is_dev       => @X@_oacc_is_dev
+    procedure, pass(x) :: is_sync      => @X@_oacc_is_sync
+    procedure, pass(x) :: set_host     => @X@_oacc_set_host
+    procedure, pass(x) :: set_dev      => @X@_oacc_set_dev
+    procedure, pass(x) :: set_sync     => @X@_oacc_set_sync
+    procedure, pass(x) :: set_scal     => @X@_oacc_set_scal
 
-    procedure, pass(x) :: gthzv_x     => @X@_oacc_gthzv_x
-    procedure, pass(x) :: gthzbuf_x   => @X@_oacc_gthzbuf
-    procedure, pass(y) :: sctb        => @X@_oacc_sctb
-    procedure, pass(y) :: sctb_x      => @X@_oacc_sctb_x
-    procedure, pass(y) :: sctb_buf    => @X@_oacc_sctb_buf
+    procedure, pass(x) :: gthzv_x      => @X@_oacc_gthzv_x
+    procedure, pass(x) :: gthzbuf_x    => @X@_oacc_gthzbuf
+    procedure, pass(y) :: sctb         => @X@_oacc_sctb
+    procedure, pass(y) :: sctb_x       => @X@_oacc_sctb_x
+    procedure, pass(y) :: sctb_buf     => @X@_oacc_sctb_buf
 
-    procedure, pass(x) :: get_size    => @X@_oacc_get_size
+    procedure, pass(x) :: get_size     => @X@_oacc_get_size
 
     @NOTINTS@
-    procedure, pass(x) :: dot_v       => @X@_oacc_vect_dot
-    procedure, pass(x) :: dot_a       => @X@_oacc_dot_a
-    procedure, pass(y) :: axpby_v     => @X@_oacc_axpby_v
-    procedure, pass(y) :: axpby_a     => @X@_oacc_axpby_a
-    procedure, pass(z) :: upd_xyz     => @X@_oacc_upd_xyz
-    procedure, pass(y) :: mlt_a       => @X@_oacc_mlt_a
-    procedure, pass(z) :: mlt_a_2     => @X@_oacc_mlt_a_2
-    procedure, pass(y) :: mlt_v       => psb_@X@_oacc_mlt_v
-    procedure, pass(z) :: mlt_v_2     => psb_@X@_oacc_mlt_v_2
-    procedure, pass(x) :: scal        => @X@_oacc_scal 
-    procedure, pass(x) :: nrm2        => @X@_oacc_nrm2
-    procedure, pass(x) :: amax        => @X@_oacc_amax
-    procedure, pass(x) :: asum        => @X@_oacc_asum
-    procedure, pass(x) :: absval1     => @X@_oacc_absval1
-    procedure, pass(x) :: absval2     => @X@_oacc_absval2
+    procedure, pass(x) :: dot_v        => @X@_oacc_vect_dot
+    procedure, pass(x) :: dot_a        => @X@_oacc_dot_a
+    procedure, pass(y) :: axpby_v      => @X@_oacc_axpby_v
+    procedure, pass(y) :: axpby_a      => @X@_oacc_axpby_a
+    procedure, pass(z) :: upd_xyz      => @X@_oacc_upd_xyz
+    procedure, pass(y) :: mlt_a        => @X@_oacc_mlt_a
+    procedure, pass(z) :: mlt_a_2      => @X@_oacc_mlt_a_2
+    procedure, pass(y) :: mlt_v        => psb_@X@_oacc_mlt_v
+    procedure, pass(z) :: mlt_v_2      => psb_@X@_oacc_mlt_v_2
+    procedure, pass(x) :: scal         => @X@_oacc_scal 
+    procedure, pass(x) :: nrm2         => @X@_oacc_nrm2
+    procedure, pass(x) :: amax         => @X@_oacc_amax
+    procedure, pass(x) :: asum         => @X@_oacc_asum
+    procedure, pass(x) :: absval1      => @X@_oacc_absval1
+    procedure, pass(x) :: absval2      => @X@_oacc_absval2
     @NOTINTE@
     final ::  @X@_oacc_final_vect_free
   end type psb_@X@_vect_oacc
@@ -130,7 +130,7 @@ contains
     integer(psb_ipk_) :: i
 
     n = min(size(x%v), size(y%v))
-    select type (yy => y)
+    select type (yy  => y)
     class is (psb_@X@_vect_oacc)
         if (x%is_host()) call x%sync()
         if (yy%is_host()) call yy%sync()
@@ -300,7 +300,7 @@ contains
 
     info = psb_success_
 
-    select type(xx => x)
+    select type(xx  => x)
     type is (psb_@X@_vect_oacc)
         if ((beta /= @XZERO@) .and. y%is_host()) call y%sync()
         if (xx%is_host()) call xx%sync()
@@ -367,11 +367,11 @@ contains
     info = psb_success_
     gpu_done = .false.
 
-    select type(xx => x)
+    select type(xx  => x)
     class is (psb_@X@_vect_oacc)
-      select type(yy => y)
+      select type(yy  => y)
       class is (psb_@X@_vect_oacc)
-        select type(zz => z)
+        select type(zz  => z)
         class is (psb_@X@_vect_oacc)
           if ((beta /= @XZERO@) .and. yy%is_host()) call yy%sync()
           if ((delta /= @XZERO@) .and. zz%is_host()) call zz%sync()
@@ -419,7 +419,7 @@ contains
       return
     end if
 
-    select type(ii => idx)
+    select type(ii  => idx)
     class is (psb_i_vect_oacc)
       if (ii%is_host()) call ii%sync()
       if (y%is_host()) call y%sync()
@@ -446,7 +446,7 @@ contains
     class(psb_@X@_vect_oacc) :: y
     integer(psb_ipk_) :: info, ni
 
-    select type(ii => idx)
+    select type(ii  => idx)
     class is (psb_i_vect_oacc)
       if (ii%is_host()) call ii%sync()
     class default
@@ -499,7 +499,7 @@ contains
       return
     end if
 
-    select type(ii => idx)
+    select type(ii  => idx)
     class is (psb_i_vect_oacc)
       if (ii%is_host()) call ii%sync()
     class default
@@ -526,7 +526,7 @@ contains
 
     info = 0
 
-    select type(ii => idx)
+    select type(ii  => idx)
     class is (psb_i_vect_oacc)
       if (ii%is_host()) call ii%sync()
     class default
@@ -558,9 +558,9 @@ contains
     if (psb_errstatus_fatal()) return
 
     done_oacc = .false.
-    select type(virl => irl)
+    select type(virl  => irl)
     type is (psb_i_vect_oacc)
-      select type(vval => val)
+      select type(vval  => val)
       type is (psb_@X@_vect_oacc)
         if (vval%is_host()) call vval%sync()
         if (virl%is_host()) call virl%sync()
@@ -575,11 +575,11 @@ contains
     end select
 
     if (.not.done_oacc) then
-      select type(virl => irl)
+      select type(virl  => irl)
       type is (psb_i_vect_oacc)
         if (virl%is_dev()) call virl%sync()
       end select
-      select type(vval => val)
+      select type(vval  => val)
       type is (psb_@X@_vect_oacc)
         if (vval%is_dev()) call vval%sync()
       end select
@@ -625,7 +625,7 @@ contains
       call psb_errpush(info, '@X@_oacc_bld_mn', i_err=(/n, n, n, n, n/))
     end if
     call x%set_host()
-    call x%sync_space()
+    call x%sync_dev_space()
     
   end subroutine @X@_oacc_bld_mn
 
@@ -647,7 +647,7 @@ contains
     end if
     x%v(:) = this(:)
     call x%set_host()
-    call x%sync_space()
+    call x%sync_dev_space()
 
   end subroutine @X@_oacc_bld_x
 
@@ -734,7 +734,7 @@ contains
 
     res = @XZERO@
     !write(0,*) 'dot_v'
-    select type(yy => y)
+    select type(yy  => y)
     type is (psb_@X@_base_vect_type)
         if (x%is_dev()) call x%sync()
         res = ddot(n, x%v, 1, yy%v, 1)
@@ -778,11 +778,11 @@ contains
 
   @NOTINTE@
 
-  subroutine @X@_oacc_sync_space(x)
+  subroutine @X@_oacc_sync_dev_space(x)
     implicit none 
     class(psb_@X@_vect_oacc), intent(inout) :: x
     if (allocated(x%v)) call acc_create(x%v)
-  end subroutine @X@_oacc_sync_space
+  end subroutine @X@_oacc_sync_dev_space
 
   subroutine @X@_oacc_sync(x)
     implicit none 
@@ -856,7 +856,7 @@ contains
            i_err=(/n, n, n, n, n/))
     end if
     call x%set_host()
-    call x%sync_space()
+    call x%sync_dev_space()
   end subroutine @X@_oacc_vect_all
 
   subroutine @X@_oacc_final_vect_free(x)
