@@ -1385,14 +1385,14 @@ module psb_@X@_cuda_multivect_mod
   end type psb_@X@_multivect_cuda
 
   public  :: psb_@X@_multivect_cuda
-  private :: constructor
+  private :: mconstructor
   interface psb_@X@_multivect_cuda
-    module procedure constructor
+    module procedure mconstructor
   end interface
 
 contains
   
-  function constructor(x) result(this)
+  function mconstructor(x) result(this)
     @TYPE@(@FKIND@)       :: x(:,:)
     type(psb_@X@_multivect_cuda) :: this
     integer(psb_ipk_) :: info
@@ -1400,7 +1400,7 @@ contains
     this%v = x
     call this%asb(size(x,1),size(x,2),info)
 
-  end function constructor
+  end function mconstructor
     
 
 !!$  subroutine @X@_cuda_multi_gthzv_x(i,n,idx,x,y)
