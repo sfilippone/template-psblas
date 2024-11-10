@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_krylov_conv_mod.p90 Xcg.P90 Xbicg.p90 Xcgs.p90 \
+SRC=X_linsolve_conv_mod.p90 Xcg.P90 Xbicg.p90 Xcgs.p90 \
     Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90 \
     Xfcg.P90 Xgcr.p90 Xrichardson.p90
 
