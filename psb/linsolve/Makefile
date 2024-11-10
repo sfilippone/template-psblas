@@ -35,7 +35,7 @@ sdcompl:
 	$(MAKE) bsrc ARITH=z
 
 cpy:
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/krylov *.f90 *.F90)
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/linsolve *.f90 *.F90)
 
 
 
