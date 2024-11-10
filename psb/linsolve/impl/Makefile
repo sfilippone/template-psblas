@@ -1,12 +1,13 @@
-TOP=../..
+TOP=../../..
 include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_linsolve_conv_mod.p90 
-
+SRC=Xcg.P90 Xbicg.p90 Xcgs.p90 \
+    Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90 \
+    Xfcg.P90 Xgcr.p90 Xrichardson.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
@@ -22,7 +23,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl simpl
+src: ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -32,16 +33,6 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-
-simpl:
-	cd impl && $(MAKE) src
-
-iclean:
-	cd impl && $(MAKE) clean
-
-cpy:
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/linsolve *.f90 *.F90)
-	cd impl && $(MAKE) cpy
 
 
 all:  single double complex dcompl
@@ -60,14 +51,14 @@ bsrc: $(FSRC)
 
 lib: $(FOBJS)
 
+cpy:
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/linsolve/impl *.f90 *.F90)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: iclean
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
-
-
