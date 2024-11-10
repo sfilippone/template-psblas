@@ -74,7 +74,7 @@ Subroutine psb_@X@richardson_vect(a,prec,b,x,eps,desc_a,info,&
   use psb_base_mod
   use psb_prec_mod
   use psb_@X@_linsolve_conv_mod
-  use psb_krylov_mod, psb_protect_name => psb_@X@richardson_vect
+  use psb_linsolve_mod, psb_protect_name => psb_@X@richardson_vect
 
   Type(psb_@X@spmat_type), Intent(in)    :: a
   Type(psb_desc_type), Intent(in)      :: desc_a
