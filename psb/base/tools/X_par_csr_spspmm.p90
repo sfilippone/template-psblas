@@ -63,6 +63,8 @@
 !
 Subroutine psb_@X@_par_csr_spspmm(acsr,desc_a,bcsr,ccsr,desc_c,info,data)
   use psb_mat_mod
+  use psb_comm_mod
+  use psb_penv_mod
   use psb_@X@_tools_mod, psb_protect_name => psb_@X@_par_csr_spspmm
   use psb_@X@_serial_mod, only : psb_@X@csrspspmm, psb_@X@base_rwextd
   Implicit None
@@ -161,6 +163,8 @@ End Subroutine psb_@X@_par_csr_spspmm
 
 Subroutine psb_@LX@_par_csr_spspmm(acsr,desc_a,bcsr,ccsr,desc_c,info,data)
   use psb_mat_mod
+  use psb_comm_mod
+  use psb_penv_mod
   use psb_@X@_tools_mod, psb_protect_name => psb_@LX@_par_csr_spspmm
   use psb_@X@_serial_mod, only : psb_@LX@csrspspmm, psb_@LX@base_rwextd
   Implicit None
