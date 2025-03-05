@@ -37,7 +37,7 @@
 !
 subroutine psb_@X@spspmm(a,b,c,info)
   use psb_mat_mod
-  use psb_@X@_serial_mod, only : psb_@X@cscspspmm, psb_@X@csrspspmm
+  use psb_@X@_serial_mod, psb_protect_name => psb_@X@spspmm
   implicit none 
 
   type(psb_@X@spmat_type), intent(in)    :: a,b
@@ -118,7 +118,7 @@ end subroutine psb_@X@spspmm
 
 subroutine psb_@LX@spspmm(a,b,c,info)
   use psb_mat_mod
-  use psb_@X@_serial_mod, only : psb_@LX@cscspspmm, psb_@LX@csrspspmm
+  use psb_@X@_serial_mod, psb_protect_name => psb_@LX@spspmm
   implicit none 
 
   type(psb_@LX@spmat_type), intent(in)    :: a,b
