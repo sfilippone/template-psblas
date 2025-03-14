@@ -300,7 +300,7 @@ subroutine psb_@X@cg_vect(a,prec,b,x,eps,desc_a,info,&
   if (do_cond) then 
 @REALS@
     if (me == psb_root_) then 
-#if defined(HAVE_LAPACK) 
+#if defined(PSB_HAVE_LAPACK) 
       call @X@stebz('A','E',istebz,@RZERO@,@RZERO@,0,0,-@RONE@,td,tu,&
            & ieg,nspl,eig,ibl,ispl,ewrk,iwrk,info)
       if (info < 0) then 
