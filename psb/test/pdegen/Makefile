@@ -52,7 +52,7 @@ bsrc: $(FSRC)
 lib: $(FOBJS)
 
 cpy: 
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/test/pargen *.f90 *.F90)
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/test/pdegen *.f90 *.F90)
 
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
