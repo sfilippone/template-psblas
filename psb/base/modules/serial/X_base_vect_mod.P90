@@ -3005,7 +3005,7 @@ contains
     class(psb_@X@_base_vect_type), intent(inout) :: y
     integer(psb_ipk_), intent(in)           :: n
     @TYPE@(@FKIND@), allocatable   :: res(:)
-    @TYPE@(@FKIND@), external      :: @X@dot
+    @TYPE@(@FKIND@), external      :: @DOT@
     integer(psb_ipk_) :: j,nc
 
     if (x%is_dev()) call x%sync()
@@ -3015,7 +3015,7 @@ contains
       nc = psb_size(x%v,2_psb_ipk_)
       allocate(res(nc))
       do j=1,nc
-        res(j) = @X@dot(n,x%v(:,j),1,y%v,1)
+        res(j) = @DOT@(n,x%v(:,j),1,y%v,1)
       end do
     class default
       res = y%dot(n,x%v)
