@@ -910,7 +910,8 @@ subroutine psi_@X@gthmv(n,k,idx,alpha,x,beta,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, k, idx(:)
+  integer(psb_mpk_) :: n, k
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: x(:,:), y(:),alpha,beta
 
   ! Locals
@@ -995,7 +996,8 @@ subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, idx(:)
+  integer(psb_mpk_) :: n
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: x(:), y(:),alpha,beta
 
   ! Locals
@@ -1051,7 +1053,8 @@ subroutine psi_@X@gthzmm(n,k,idx,x,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, k, idx(:)
+  integer(psb_mpk_) :: n, k
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: x(:,:), y(:,:)
 
   ! Locals
@@ -1069,7 +1072,8 @@ subroutine psi_@X@gthzmv(n,k,idx,x,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, k, idx(:)
+  integer(psb_mpk_) :: n, k
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: x(:,:), y(:)
 
   ! Locals
@@ -1090,7 +1094,8 @@ subroutine psi_@X@gthzv(n,idx,x,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, idx(:)
+  integer(psb_mpk_) :: n
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: x(:), y(:)
 
   ! Locals
@@ -1107,7 +1112,8 @@ subroutine psi_@X@sctmm(n,k,idx,x,beta,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, k, idx(:)
+  integer(psb_mpk_) :: n, k
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: beta, x(:,:), y(:,:)
 
   ! Locals
@@ -1133,7 +1139,8 @@ subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, k, idx(:)
+  integer(psb_mpk_) :: n, k
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: beta, x(:), y(:,:)
 
   ! Locals
@@ -1171,7 +1178,8 @@ subroutine psi_@X@sctv(n,idx,x,beta,y)
   use psb_const_mod
   implicit none
 
-  integer(psb_ipk_) :: n, idx(:)
+  integer(psb_mpk_) :: n
+  integer(psb_ipk_) :: idx(:)
   @TYPE@(@FKIND@) :: beta, x(:), y(:)
 
   ! Locals

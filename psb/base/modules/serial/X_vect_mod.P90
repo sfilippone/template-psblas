@@ -513,7 +513,8 @@ contains
 
   subroutine @X@_vect_gthab(n,idx,alpha,x,beta,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) :: alpha, beta, y(:)
     class(psb_@X@_vect_type) :: x
 
@@ -524,7 +525,8 @@ contains
 
   subroutine @X@_vect_gthzv(n,idx,x,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) ::  y(:)
     class(psb_@X@_vect_type) :: x
 
@@ -535,7 +537,8 @@ contains
 
   subroutine @X@_vect_sctb(n,idx,x,beta,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) :: beta, x(:)
     class(psb_@X@_vect_type) :: y
 
@@ -1755,7 +1758,8 @@ contains
 
   subroutine @X@_mvect_gthab(n,idx,alpha,x,beta,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) :: alpha, beta, y(:)
     class(psb_@X@_multivect_type) :: x
 
@@ -1766,7 +1770,8 @@ contains
 
   subroutine @X@_mvect_gthzv(n,idx,x,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) ::  y(:)
     class(psb_@X@_multivect_type) :: x
 
@@ -1777,7 +1782,8 @@ contains
 
   subroutine @X@_mvect_gthzv_x(i,n,idx,x,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: i,n
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: i
     class(psb_i_base_vect_type) :: idx
     @TYPE@(@FKIND@) ::  y(:)
     class(psb_@X@_multivect_type) :: x
@@ -1789,7 +1795,8 @@ contains
 
   subroutine @X@_mvect_sctb(n,idx,x,beta,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: n, idx(:)
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
     @TYPE@(@FKIND@) :: beta, x(:)
     class(psb_@X@_multivect_type) :: y
 
@@ -1800,7 +1807,8 @@ contains
 
   subroutine @X@_mvect_sctb_x(i,n,idx,x,beta,y)
     use psi_serial_mod
-    integer(psb_ipk_) :: i, n
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: i
     class(psb_i_base_vect_type) :: idx
     @TYPE@(@FKIND@) :: beta, x(:)
     class(psb_@X@_multivect_type) :: y
