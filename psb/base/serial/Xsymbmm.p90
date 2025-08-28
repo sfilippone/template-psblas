@@ -40,7 +40,8 @@
 !
 
 subroutine psb_@X@symbmm(a,b,c,info)
-  use psb_base_mod, psb_protect_name => psb_@X@symbmm
+  use psb_mat_mod
+  use psb_@X@_serial_mod, only :  psb_@X@base_symbmm
   implicit none 
 
   type(psb_@X@spmat_type), intent(in)    :: a,b
@@ -61,7 +62,7 @@ subroutine psb_@X@symbmm(a,b,c,info)
   allocate(ccsr,stat=info)    
 
   if (info == psb_success_) then 
-      call psb_symbmm(a%a,b%a,ccsr,info)
+      call psb_@X@base_symbmm(a%a,b%a,ccsr,info)
   else
     info = psb_err_alloc_dealloc_
   end if
@@ -83,7 +84,8 @@ end subroutine psb_@X@symbmm
 
 subroutine psb_@X@base_symbmm(a,b,c,info)
   use psb_mat_mod
-  use psb_serial_mod, psb_protect_name => psb_@X@base_symbmm
+  use psb_sort_mod
+  use psb_serial_mod, only : symbmm
   implicit none 
 
   class(psb_@X@_base_sparse_mat), intent(in) :: a,b
@@ -256,10 +258,9 @@ contains
 
 end subroutine psb_@X@base_symbmm
 
-
-
 subroutine psb_@LX@symbmm(a,b,c,info)
-  use psb_base_mod, psb_protect_name => psb_@LX@symbmm
+  use psb_mat_mod
+  use psb_@X@_serial_mod, only :  psb_@LX@base_symbmm
   implicit none 
 
   type(psb_@LX@spmat_type), intent(in)    :: a,b
@@ -280,7 +281,7 @@ subroutine psb_@LX@symbmm(a,b,c,info)
   allocate(ccsr,stat=info)    
 
   if (info == psb_success_) then 
-      call psb_symbmm(a%a,b%a,ccsr,info)
+      call psb_@LX@base_symbmm(a%a,b%a,ccsr,info)
   else
     info = psb_err_alloc_dealloc_
   end if
@@ -302,7 +303,7 @@ end subroutine psb_@LX@symbmm
 
 subroutine psb_@LX@base_symbmm(a,b,c,info)
   use psb_mat_mod
-  use psb_serial_mod, psb_protect_name => psb_@LX@base_symbmm
+  use psb_sort_mod
   implicit none 
 
   class(psb_@LX@_base_sparse_mat), intent(in) :: a,b

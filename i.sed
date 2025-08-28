@@ -35,3 +35,9 @@ s/@NRM2@/inrm2/g
 s/@MPI_TYPE@/psb_mpi_ipk_/g
 s/@PSB_TAG@/psb_int_tag/g
 s/@PSB_SWAP_TAG@/psb_int_swap_tag/g
+s/@SPGPU_TYPE@/spgpu_type_int/g
+
+s/@CTYPE@/Int/g
+s/@FLAG_COMPLEX@//g
+s/@FCKIND@/c_int/g
+s/@FRCKIND@/c_int/g

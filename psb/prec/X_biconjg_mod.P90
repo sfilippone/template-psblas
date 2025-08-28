@@ -128,10 +128,10 @@ module psb_@X@_biconjg_mod
        & psb_@X@sparse_biconjg_s_llk,  psb_@X@sparse_biconjg_s_ft_llk,&
        &  psb_@X@sparse_biconjg_llk_noth, psb_@X@sparse_biconjg_mlk
 
-#if defined(HAVE_TUMA_SAINV)
-  procedure(psb_@X@sparse_biconjg_variant)  ::  psb_@X@sparse_tuma_sainv,&
-       & psb_@X@sparse_tuma_lainv
-#endif
+!#if defined(PSB_HAVE_TUMA_SAINV)
+!  procedure(psb_@X@sparse_biconjg_variant)  ::  psb_@X@sparse_tuma_sainv,&
+!       & psb_@X@sparse_tuma_lainv
+!#endif
 
 contains
 
@@ -179,7 +179,7 @@ contains
       call psb_@X@sparse_biconjg_s_ft_llk(n,acsr,p,zcsc,wcsc,nzrmax,sp_thresh,info)
     case (psb_ainv_llk_noth_)
       call psb_@X@sparse_biconjg_llk_noth(n,acsr,p,zcsc,wcsc,nzrmax,sp_thresh,info)
-!#if defined(HAVE_TUMA_SAINV)
+!#if defined(PSB_HAVE_TUMA_SAINV)
 !    case (psb_ainv_s_tuma_)
 !      call psb_@X@sparse_tuma_sainv(n,acsr,p,zcsc,wcsc,nzrmax,sp_thresh,info)
 !    case (psb_ainv_l_tuma_)

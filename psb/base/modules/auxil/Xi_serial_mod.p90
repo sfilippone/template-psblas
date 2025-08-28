@@ -139,8 +139,8 @@ module psi_@X@_serial_mod
     end subroutine psi_@X@axpbyv2
   end interface psb_geaxpby
 
-  interface psi_gth
-    subroutine psi_@X@gthmv(n,k,idx,alpha,x,beta,y)
+  interface psi_upd_xyz
+    subroutine psi_@X@_upd_xyz(m,alpha, beta, gamma,delta,x, y, z, info)
       @INTS@
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
@@ -148,7 +148,45 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, k, idx(:)
+      integer(psb_ipk_), intent(in)      :: m
+      @TYPE@(@FKIND@), intent (in)       ::  x(:)
+      @TYPE@(@FKIND@), intent (inout)    ::  y(:)
+      @TYPE@(@FKIND@), intent (inout)    ::  z(:)
+      @TYPE@(@FKIND@), intent (in)       :: alpha, beta,gamma,delta
+      integer(psb_ipk_), intent(out)     :: info
+    end subroutine psi_@X@_upd_xyz
+  end interface psi_upd_xyz
+  
+  interface psi_xyzw
+    subroutine psi_@X@xyzw(m,a,b,c,d,e,f,x, y, z,w, info)
+      @INTS@
+      import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
+      @INTE@
+      @NOTINTS@
+      import :: psb_ipk_, @FKIND@
+      @NOTINTE@
+      implicit none
+      integer(psb_ipk_), intent(in)      :: m
+      @TYPE@(@FKIND@), intent (in)       :: x(:)
+      @TYPE@(@FKIND@), intent (inout)    :: y(:)
+      @TYPE@(@FKIND@), intent (inout)    :: z(:)
+      @TYPE@(@FKIND@), intent (inout)    :: w(:)
+      @TYPE@(@FKIND@), intent (in)       :: a,b,c,d,e,f
+      integer(psb_ipk_), intent(out)     :: info
+    end subroutine psi_@X@xyzw
+  end interface psi_xyzw
+  
+  interface psi_gth
+    subroutine psi_@X@gthmv(n,k,idx,alpha,x,beta,y)
+      @INTS@
+      import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
+      @INTE@
+      @NOTINTS@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
+      @NOTINTE@
+      implicit none
+      integer(psb_mpk_) :: n, k
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: x(:,:), y(:),alpha,beta
     end subroutine psi_@X@gthmv
     subroutine psi_@X@gthv(n,idx,alpha,x,beta,y)
@@ -156,10 +194,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, idx(:)
+      integer(psb_mpk_) :: n
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: x(:), y(:),alpha,beta
     end subroutine psi_@X@gthv
     subroutine psi_@X@gthzmv(n,k,idx,x,y)
@@ -167,10 +206,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, k, idx(:)
+      integer(psb_mpk_) :: n, k
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: x(:,:), y(:)
 
     end subroutine psi_@X@gthzmv
@@ -179,10 +219,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, k, idx(:)
+      integer(psb_mpk_) :: n, k
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: x(:,:), y(:,:)
 
     end subroutine psi_@X@gthzmm
@@ -191,10 +232,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, idx(:)
+      integer(psb_mpk_) :: n
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: x(:), y(:)
     end subroutine psi_@X@gthzv
   end interface psi_gth
@@ -205,10 +247,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, k, idx(:)
+      integer(psb_mpk_) :: n, k
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: beta, x(:,:), y(:,:)
     end subroutine psi_@X@sctmm
     subroutine psi_@X@sctmv(n,k,idx,x,beta,y)
@@ -216,10 +259,11 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
-      integer(psb_ipk_) :: n, k, idx(:)
+      integer(psb_mpk_) :: n, k
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: beta, x(:), y(:,:)
     end subroutine psi_@X@sctmv
     subroutine psi_@X@sctv(n,idx,x,beta,y)
@@ -227,11 +271,12 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
 
-      integer(psb_ipk_) :: n, idx(:)
+      integer(psb_mpk_) :: n
+      integer(psb_ipk_) :: idx(:)
       @TYPE@(@FKIND@) :: beta, x(:), y(:)
     end subroutine psi_@X@sctv
   end interface psi_sct
@@ -242,7 +287,7 @@ module psi_@X@_serial_mod
       import :: psb_ipk_, psb_lpk_,psb_mpk_, psb_epk_
       @INTE@
       @NOTINTS@
-      import :: psb_ipk_, @FKIND@
+      import :: psb_ipk_, psb_mpk_, @FKIND@
       @NOTINTE@
       implicit none
       integer(psb_ipk_), intent(in)      :: n

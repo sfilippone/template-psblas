@@ -22,11 +22,11 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: sfileread spargen
+src: sfileread spdegen
 
 cpy: 
 	cd fileread && $(MAKE) cpy
-	cd pargen && $(MAKE) cpy
+	cd pdegen && $(MAKE) cpy
 
 ssingle:
 	$(MAKE) bsrc ARITH=s
@@ -40,13 +40,13 @@ sdcompl:
 
 sfileread:
 	cd fileread && $(MAKE) src
-spargen:
-	cd pargen && $(MAKE) src
+spdegen:
+	cd pdegen && $(MAKE) src
 
 cfileread:
 	cd fileread && $(MAKE) clean
-cpargen:
-	cd pargen && $(MAKE) clean
+cpdegen:
+	cd pdegen && $(MAKE) clean
 
 
 
@@ -59,7 +59,7 @@ $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: cfileread cpargen
+clean: cfileread cpdegen
 	/bin/rm -f *.f90 *.F90 *.o
 
 

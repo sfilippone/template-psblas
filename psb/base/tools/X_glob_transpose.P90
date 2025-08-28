@@ -94,12 +94,12 @@
 !
 !
 subroutine psb_@LX@_coo_glob_transpose(ain,desc_r,info,atrans,desc_c,desc_rx)
-#ifdef MPI_MOD
+#ifdef PSB_MPI_MOD
   use mpi
 #endif
   use psb_base_mod, psb_protect_name => psb_@LX@_coo_glob_transpose
   Implicit None
-#ifdef MPI_H
+#ifdef PSB_MPI_H
   include 'mpif.h'
 #endif
   type(psb_@LX@_coo_sparse_mat), intent(inout) :: ain
@@ -392,12 +392,12 @@ subroutine psb_@LX@_coo_glob_transpose(ain,desc_r,info,atrans,desc_c,desc_rx)
 end subroutine psb_@LX@_coo_glob_transpose
 
 subroutine psb_@X@_coo_glob_transpose(ain,desc_r,info,atrans,desc_c,desc_rx)
-#ifdef MPI_MOD
+#ifdef PSB_MPI_MOD
   use mpi
 #endif
   use psb_base_mod, psb_protect_name => psb_@X@_coo_glob_transpose
   Implicit None
-#ifdef MPI_H
+#ifdef PSB_MPI_H
   include 'mpif.h'
 #endif
   type(psb_@X@_coo_sparse_mat), intent(inout) :: ain

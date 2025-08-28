@@ -3,7 +3,7 @@ include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
-SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xspspmm.p90 Xrwextd.p90
+SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xspspmm.p90 Xrwextd.p90 Xgeprt.p90
 SRCI=Xi_serial_impl.P90
 
 
