@@ -3,8 +3,8 @@ include $(TOP)/Make.inc
 BASIC_MODS=
 UTIL_MODS =
 
-SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xrwextd.p90 Xgeprt.p90
-SRCI=Xi_serial_impl.P90 Xspspmm.P90 
+SRC= Xsymbmm.p90 Xnumbmm.p90 Xamax_s.p90 Xasum_s.p90 Xrwextd.p90 Xgeprt.p90  Xspspmm.P90 
+SRCI=Xi_serial_impl.P90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
