@@ -844,9 +844,10 @@ contains
       @TYPE@(@FKIND@)  :: res
       integer(psb_ipk_) :: i
       
+      res = @XZERO@
       !$acc parallel loop reduction(+:res) present(x, y)
       do i = 1, n
-        res = res + x(i) * y(i)
+        res = res + @CONJG@(x(i)) * y(i)
       end do
       !$acc end parallel loop
     end function @X@_inner_oacc_dot
@@ -858,10 +859,10 @@ contains
     @TYPE@(@FKIND@), intent(in) :: y(:)
     integer(psb_ipk_), intent(in) :: n
     @TYPE@(@FKIND@)  :: res
-    @TYPE@(@FKIND@), external :: @X@dot
+    @TYPE@(@FKIND@), external :: @DOT@
 
     if (x%is_dev()) call x%sync()
-    res = @X@dot(n, y, 1, x%v, 1)
+    res = @DOT@(n, y, 1, x%v, 1)
 
   end function @X@_oacc_dot_a
 
@@ -959,6 +960,7 @@ contains
     class(psb_@X@_vect_oacc), intent(out) :: x
     integer(psb_ipk_), intent(out)     :: info
 
+    call x%free(info)
     call psb_realloc(n, x%v, info)
     if (info /= 0) then 
       info = psb_err_alloc_request_
