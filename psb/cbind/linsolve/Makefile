@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=Xkrylov_cbind_mod.p90
+SRC=Xlinsolve_cbind_mod.p90
 
 
 
@@ -40,7 +40,7 @@ bsrc: $(FSRC)
 lib: $(FOBJS)
 
 cpy: 
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/cbind/krylov *.f90 *.F90)
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/cbind/linsolve *.f90 *.F90)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@

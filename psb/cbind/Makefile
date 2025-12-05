@@ -5,7 +5,7 @@ BASIC_MODS=
 UTIL_MODS =
 
 
-src: sbase sprec skrylov sutil
+src: sbase sprec slinsolve sutil
 
 
 sbase:
@@ -14,8 +14,8 @@ sbase:
 sprec:
 	cd prec && $(MAKE) src
 
-skrylov:
-	cd krylov && $(MAKE) src
+slinsolve:
+	cd linsolve && $(MAKE) src
 
 sutil:
 	cd util && $(MAKE) src
@@ -23,12 +23,12 @@ sutil:
 cpy:
 	cd base && $(MAKE) cpy
 	cd prec && $(MAKE) cpy
-	cd krylov && $(MAKE) cpy
+	cd linsolve && $(MAKE) cpy
 	cd util && $(MAKE) cpy
 
 
 clean:
 	cd base && $(MAKE) clean
 	cd prec && $(MAKE) clean
-	cd krylov && $(MAKE) clean
+	cd linsolve && $(MAKE) clean
 	cd util && $(MAKE) clean
