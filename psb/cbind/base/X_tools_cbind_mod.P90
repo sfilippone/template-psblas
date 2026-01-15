@@ -473,54 +473,52 @@ contains
     ! Set the mold variable based on afmt
     select case (psb_toupper(fafmt))
 #if defined(PSB_HAVE_CUDA)
-  case('ELG')
-    amold => aelg
-  case('HLG')
-    call psi_set_hksz(hksz)
-    amold => ahlg
+    case('ELG')
+      amold => aelg
+    case('HLG')
+      call psi_set_hksz(hksz)
+      amold => ahlg
 @NOTCPLXS@
-  case('HDIAG')
-    amold => ahdiag
+    case('HDIAG')
+      amold => ahdiag
 @NOTCPLXE@
-  case('CSRG')
-    amold => acsrg
-  case('ELL')
-    amold => aell
-  case('HLL')
-    call psi_set_hksz(hksz)
-    amold => ahll
+    case('CSRG')
+      amold => acsrg
+    case('ELL')
+      amold => aell
+    case('HLL')
+      call psi_set_hksz(hksz)
+      amold => ahll
 @NOTCPLXS@
-  case('HDIA')
-    amold => ahdia
+    case('HDIA')
+      amold => ahdia
 @NOTCPLXE@
-  case('CSR')
-    amold => acsr
-  case('DNS')
-    amold => adns
-  case default
-    write(*,*) 'Unknown format defaulting to HLG'
-    amold => ahlg
-  end select
+    case('CSR')
+      amold => acsr
+    case('DNS')
+      amold => adns
+    case default
+      write(*,*) 'Unknown format defaulting to HLG'
+      amold => ahlg
 #else
-  select case(psb_toupper(fafmt))
-  case('ELL')
-    amold => aell
-  case('HLL')
-    call psi_set_hksz(hksz)
-    amold => ahll
+    case('ELL')
+      amold => aell
+    case('HLL')
+      call psi_set_hksz(hksz)
+      amold => ahll
 @NOTCPLXS@
-  case('HDIA')
+    case('HDIA')
 @NOTCPLXE@
-    amold => ahdia
-  case('CSR')
-    amold => acsr
-  case('DNS')
-    amold => adns
-  case default
-    write(*,*) 'Unknown format defaulting to CSR'
-    amold => acsr
-  end select
+      amold => ahdia
+    case('CSR')
+      amold => acsr
+    case('DNS')
+      amold => adns
+    case default
+      write(*,*) 'Unknown format defaulting to CSR'
+      amold => acsr
 #endif
+  end select
 
     select case(fafmt)
 #if 0
