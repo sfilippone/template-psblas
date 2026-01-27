@@ -44,6 +44,15 @@ module psb_@X@_vectordev_mod
     end function registerMapped@CTYPE@
   end interface
 
+  interface 
+    function checkMultiVecDevice@CTYPE@(deviceVec) &
+         & result(res) bind(c,name='checkMultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)             :: res
+      type(c_ptr), value         :: deviceVec
+    end function checkMultiVecDevice@CTYPE@
+  end interface
+  
   interface writeMultiVecDevice 
     function writeMultiVecDevice@CTYPE@(deviceVec,hostVec) &
          & result(res) bind(c,name='writeMultiVecDevice@CTYPE@')

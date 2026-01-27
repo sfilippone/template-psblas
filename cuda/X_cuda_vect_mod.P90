@@ -88,6 +88,7 @@ module psb_@X@_cuda_vect_mod
     procedure, nopass  :: device_wait  => @X@_cuda_device_wait
     procedure, pass(x) :: free_buffer  => @X@_cuda_free_buffer
     procedure, pass(x) :: maybe_free_buffer  => @X@_cuda_maybe_free_buffer
+    procedure, pass(x) :: check_addr  => @X@_cuda_check_addr
     @NOTINTS@
     procedure, pass(x) :: dot_v    => @X@_cuda_dot_v
     procedure, pass(x) :: dot_a    => @X@_cuda_dot_a
@@ -222,6 +223,17 @@ contains
     x%i_buf_sz=0
 
   end subroutine @X@_cuda_free_buffer
+
+  subroutine @X@_cuda_check_addr(x)
+    class(psb_@X@_vect_cuda), intent(inout) :: x
+    integer(psb_ipk_) info;
+    select type(ii=> x) 
+    class is (psb_@X@_vect_cuda) 
+      info = checkMultiVecDevice@CTYPE@(x%deviceVect)      
+    class default
+      write(0,*) 'Check addr: cuda  version, why am I here? '
+    end select
+  end subroutine @X@_cuda_check_addr
 
   subroutine @X@_cuda_gthzv_x(i,n,idx,x,y)
     use psb_cuda_env_mod

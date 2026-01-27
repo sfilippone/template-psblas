@@ -180,6 +180,9 @@ module psb_@X@_base_vect_mod
     procedure, pass(y) :: sctb_buf => @X@_base_sctb_buf
     generic, public    :: sct      => sctb, sctb_x, sctb_buf
 
+    procedure, pass(x) :: check_addr  => @X@_base_check_addr
+
+
 
 @NOTINTS@
     !
@@ -1267,6 +1270,13 @@ contains
     call x%set_host()
 
   end subroutine @X@_base_set_vect
+
+  subroutine @X@_base_check_addr(x)
+    class(psb_@X@_base_vect_type), intent(inout) :: x
+
+    write(0,*) 'Check addr: base version, do nothing'
+
+  end subroutine @X@_base_check_addr
 
 @NOTINTS@
 
