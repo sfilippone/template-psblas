@@ -1,6 +1,8 @@
 This documents the logic of the substitution. Shows Z to be clear
 1. The single letter distinguishing the various basic types S/D/C/Z
 s/@X@/z/g
+   For long indices:
+s/@LX@/z/g
 
 2. The type REAL COMPLEX and the kind PSB_SPK_ PSB_DPK_
 s/@TYPE@/complex/g
