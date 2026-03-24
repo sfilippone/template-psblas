@@ -18,8 +18,11 @@ s/@RONE@/i2one/g
 
 /^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
 /^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
+/^ *@IINTS@ *$/,/^ *@IINTE@ *$/d
 /^ *@INTS@ *$/d
 /^ *@INTE@ *$/d
+/^ *@I2INTS@ *$/d
+/^ *@I2INTE@ *$/d
 /^ *@CPLXS@ *$/,/^ *@CPLXE@ *$/d
 /^ *@NOTCPLXS@ *$/d
 /^ *@NOTCPLXE@ *$/d

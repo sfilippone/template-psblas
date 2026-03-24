@@ -21,6 +21,7 @@ s/@RONE@/sone/g
 
 s/@DOT@/sdot/g
 s/@NRM2@/snrm2/g
+/^ *@I2INTS@ *$/,/^ *@I2INTE@ *$/d
 /^ *@INTS@ *$/,/^ *@INTE@ *$/d
 /^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@NOTINTS@ *$/d

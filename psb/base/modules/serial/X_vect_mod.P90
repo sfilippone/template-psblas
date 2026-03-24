@@ -48,6 +48,9 @@ module psb_@X@_vect_mod
   @LINTS@
   use psb_i_vect_mod
   @LINTE@
+  @I2INTS@
+  use psb_i_vect_mod
+  @I2INTE@
   @INTE@
 
   type psb_@X@_vect_type

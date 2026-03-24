@@ -43,9 +43,10 @@ sdcompl:
 sint:
 	$(MAKE) vsrc isrc ARITH=i
 	$(MAKE) vsrc isrc ARITH=l
+	$(MAKE) vsrc isrc ARITH=i2
 	$(MAKE) esrc ARITH=m
 	$(MAKE) esrc ARITH=e
-	$(MAKE) esrc ARITH=i2
+#	$(MAKE) esrc ARITH=i2
 
 sauxil:
 	cd auxil && $(MAKE) src

@@ -24,7 +24,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl mint eint #i2int
+src: ssingle sdouble scomplex sdcompl mint eint i2int
 i2int:
 	$(MAKE) bsrc ARITH=i2
 mint:

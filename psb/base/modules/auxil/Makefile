@@ -48,7 +48,7 @@ smpk:
 sepk:
 	$(MAKE) esrc ARITH=e
 si2pk:
-	$(MAKE) esrc ARITH=i2
+	$(MAKE) vsrc esrc ARITH=i2
 
 
 bsrc: vsrc esrc $(FSRC)

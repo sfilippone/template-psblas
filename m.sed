@@ -17,6 +17,7 @@ s/@RZERO@/mzero/g
 s/@RONE@/mone/g
 
 /^ *@NOTINTS@ *$/,/^ *@NOTINTE@ *$/d
+/^ *@I2INTS@ *$/,/^ *@I2INTE@ *$/d
 /^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
 /^ *@INTS@ *$/d
 /^ *@INTE@ *$/d

@@ -42,6 +42,7 @@ sdcompl:
 sint:
 	$(MAKE) vsrc isrc ARITH=i
 	$(MAKE) vsrc isrc ARITH=l
+	$(MAKE) vsrc isrc ARITH=i2
 sldbl:
 	$(MAKE) fsrc vsrc ARITH=ld
 
