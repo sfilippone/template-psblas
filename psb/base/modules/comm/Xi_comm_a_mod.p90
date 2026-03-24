@@ -32,10 +32,12 @@
 module psi_@X@_comm_a_mod
   use psi_penv_mod, only : psb_ctxt_type
   @INTS@
-  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, psb_epk_
+  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, &
+       & psb_epk_, psb_i2pk_
   @INTE@
   @NOTINTS@
-  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, @FKIND@, psb_i_base_vect_type
+  use psb_desc_mod, only : psb_desc_type, psb_mpk_, psb_ipk_, &
+       & @FKIND@, psb_i_base_vect_type
   @NOTINTE@
 
   interface psi_swapdata
