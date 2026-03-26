@@ -440,6 +440,7 @@ contains
 #endif
     type(psb_@X@_ell_sparse_mat), target    :: aell
     type(psb_@X@_csr_sparse_mat), target   :: acsr
+    type(psb_@X@_csc_sparse_mat), target   :: acsc
     type(psb_@X@_coo_sparse_mat), target   :: acoo
     type(psb_@X@_hll_sparse_mat), target    :: ahll
     type(psb_@X@_hdia_sparse_mat), target  :: ahdia
@@ -495,6 +496,8 @@ contains
 @NOTCPLXE@
     case('CSR')
       amold => acsr
+    case('CSC')
+      amold => acsc
     case('DNS')
       amold => adns
     case default
@@ -512,6 +515,8 @@ contains
       amold => ahdia
     case('CSR')
       amold => acsr
+    case('CSC')
+      amold => acsc
     case('DNS')
       amold => adns
     case default
@@ -528,7 +533,7 @@ contains
            & upd=upd,mold=arsb)
 #endif
 #endif
-    case('ELL','HLL','CSR','DNS')
+    case('ELL','HLL','CSR','DNS','CSC')
       call psb_spasb(ap,descp,info,upd=upd,mold=amold)
 @NOTCPLXS@
     case('HDIA')
