@@ -37,6 +37,7 @@ Module psb_@X@_tools_mod
        & psb_@LX@_csr_sparse_mat, psb_@LX@_coo_sparse_mat, &
        & psb_@X@_csr_sparse_mat, psb_@X@_coo_sparse_mat
   use psb_l_vect_mod, only : psb_l_vect_type
+  use psb_@X@_linmap_mod, only : psb_@X@linmap_type
   @NOTINTE@
   @INTS@
   use psb_desc_mod, only : psb_desc_type, psb_ipk_, psb_lpk_, psb_success_
@@ -52,7 +53,7 @@ Module psb_@X@_tools_mod
   @INTE@
   use psb_@X@_multivect_mod, only : psb_@X@_base_multivect_type, psb_@X@_multivect_type
   use psi_mod, only : psb_snd, psb_rcv ! Needed only for psb_getelem
-
+  
   interface  psb_geall
     subroutine psb_@X@alloc_vect(x, desc_a,info, dupl, bldmode)
       import
@@ -484,6 +485,16 @@ Module psb_@X@_tools_mod
       integer(psb_ipk_), allocatable, intent(out) :: isrc(:), nrsrc(:), naggr(:)
       integer(psb_ipk_), intent(out)       :: info
     end subroutine psb_@X@_remap
+    subroutine psb_@X@_remap2(map_in, desc_new, map_out, flag, info)
+      import
+      implicit none
+      !....parameters...
+      type(psb_desc_type), intent(inout)   :: desc_new
+      type(psb_@X@linmap_type), intent(inout) :: map_in
+      type(psb_@X@linmap_type), intent(out)   :: map_out
+      integer(psb_ipk_), intent(in)       :: flag
+      integer(psb_ipk_), intent(out)       :: info
+    end subroutine psb_@X@_remap2
   end interface psb_remap
 
   @NOTINTE@
