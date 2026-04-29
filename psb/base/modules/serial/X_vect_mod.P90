@@ -1769,19 +1769,20 @@ contains
   end subroutine @X@_mvect_bld_x
 
 
-  subroutine @X@_mvect_bld_n(x,m,n,mold)
+  subroutine @X@_mvect_bld_n(x,m,n,mold,scratch)
     integer(psb_ipk_), intent(in) :: m,n
     class(psb_@X@_multivect_type), intent(out) :: x
     class(psb_@X@_base_multivect_type), intent(in), optional :: mold
     integer(psb_ipk_) :: info
-
+    logical, intent(in), optional        :: scratch
+    
     info = psb_success_
     if (present(mold)) then
       allocate(x%v,stat=info,mold=mold)
     else
       allocate(x%v,stat=info, mold=psb_@X@_get_base_multivect_default())
     endif
-    if (info == psb_success_) call x%v%bld(m,n)
+    if (info == psb_success_) call x%v%bld(m,n,scratch=scratch)
 
   end subroutine @X@_mvect_bld_n
 
@@ -2264,3 +2265,4 @@ contains
   @NOTINTE@
 
 end module psb_@X@_multivect_mod
+
