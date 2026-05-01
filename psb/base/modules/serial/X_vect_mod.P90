@@ -101,6 +101,7 @@ module psb_@X@_vect_mod
 
     @NOTINTS@
     procedure, pass(x) :: get_entry => @X@_vect_get_entry
+    procedure, pass(x) :: set_entry => @X@_vect_set_entry
 
     procedure, pass(x) :: dot_v    => @X@_vect_dot_v
     procedure, pass(x) :: dot_a    => @X@_vect_dot_a
@@ -703,12 +704,21 @@ contains
 
   function @X@_vect_get_entry(x,index) result(res)
     implicit none
-    class(psb_@X@_vect_type), intent(in) :: x
+    class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: index
     @TYPE@(@FKIND@) :: res
-    res = 0
+    res = @XZERO@
     if (allocated(x%v)) res = x%v%get_entry(index)
   end function @X@_vect_get_entry
+
+  subroutine @X@_vect_set_entry(x,index,val) 
+    implicit none
+    class(psb_@X@_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)        :: index
+    @TYPE@(@FKIND@) :: val
+
+    if (allocated(x%v)) call x%v%set_entry(index,val)
+  end subroutine @X@_vect_set_entry
 
   function @X@_vect_dot_v(n,x,y) result(res)
     implicit none
@@ -1272,7 +1282,7 @@ contains
     if (allocated(x%v)) then
       res = x%v%minreal(n)
     else
-      res = @RZERO@
+      res = HUGE(@RZERO@)
     end if
 
   end function @X@_vect_min
