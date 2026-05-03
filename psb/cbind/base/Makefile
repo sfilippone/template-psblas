@@ -5,7 +5,10 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_psblas_cbind_mod.p90 X_serial_cbind_mod.P90 X_tools_cbind_mod.P90 X_comm_cbind_mod.p90
+SRC=X_psblas_cbind_mod.p90 X_serial_cbind_mod.P90 \
+    X_tools_cbind_mod.P90 X_comm_cbind_mod.p90 \
+    X_serial_cbind_impl.P90 X_comm_cbind_impl.p90 \
+    X_psblas_cbind_impl.p90 X_tools_cbind_impl.P90
 
 
 
