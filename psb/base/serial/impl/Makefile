@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=  X_base_vect_impl.P90
+VSRC=X_base_vect_impl.P90 X_vect_impl.P90
 SRC= X_base_mat_impl.P90 \
     X_coo_impl.P90 \
     X_csr_impl.P90  \
@@ -56,7 +56,7 @@ complex:
 dcompl:
 	$(MAKE) lib ARITH=z
 
-bsrc: $(FSRC)
+bsrc: $(FSRC) $(FVSRC)
 vsrc: $(FVSRC)
 
 lib: $(FOBJS)
