@@ -21,7 +21,7 @@ psb_i_t    @psb_c_t@vect_get_nrows(@psb_c_t@vector *xh);
 @psb_t_t@   *@psb_c_t@vect_get_cpy(@psb_c_t@vector *xh);
 psb_i_t    @psb_c_t@vect_f_get_cpy(@psb_t_t@  *v, @psb_c_t@vector *xh);
 psb_i_t    @psb_c_t@vect_zero(@psb_c_t@vector *xh);
-psb_i_t   *@psb_c_t@vect_f_get_pnt(@psb_c_t@vector *xh);
+@psb_t_t@   *@psb_c_t@vect_f_get_pnt(@psb_c_t@vector *xh);
 psb_i_t    @psb_c_t@vect_clone(@psb_c_t@vector *xh, @psb_c_t@vector *yh);
 
 psb_i_t    @psb_c_t@geall(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
@@ -35,13 +35,13 @@ psb_i_t    @psb_c_t@geins_add(psb_i_t nz, const psb_l_t *irw, const @psb_t_t@ *v
 psb_i_t    @psb_c_t@geasb(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
 psb_i_t    @psb_c_t@geasb_options(@psb_c_t@vector *xh, psb_c_descriptor *cdh, psb_i_t dupl);
 psb_i_t	   @psb_c_t@geasb_options_format(@psb_c_t@vector *xh, psb_c_descriptor *cdh,
-	    				const char *fmt, psb_i_t dupl);	
+	    				psb_i_t dupl, const char *fmt);	
 
 psb_i_t    @psb_c_t@gefree(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
 psb_i_t    @psb_c_t@gereinit(@psb_c_t@vector *xh, psb_c_descriptor *cdh, bool clear);
 @psb_t_t@    @psb_c_t@getelem(@psb_c_t@vector *xh,psb_l_t index,psb_c_descriptor *cd);
 @psb_t_t@	   @psb_c_t@matgetelem(@psb_c_t@spmat *ah,psb_l_t rowindex,psb_l_t colindex,psb_c_descriptor *cdh);	
-psb_i_t    @psb_c_t@setelem(psb_l_t index, psb_c_t val,
+psb_i_t    @psb_c_t@setelem(psb_l_t index, @psb_t_t@ val,
 			  @psb_c_t@vector *xh, psb_c_descriptor *cd);
 
 
@@ -69,18 +69,18 @@ psb_i_t	   @psb_c_t@copy_mat(@psb_c_t@spmat *ah,@psb_c_t@spmat *bh,psb_c_descrip
 psb_i_t    @psb_c_t@sprn(@psb_c_t@spmat *mh, psb_c_descriptor *cdh, _Bool clear);
 psb_i_t    @psb_c_t@mat_name_print(@psb_c_t@spmat *mh, char *name);
 psb_i_t	   @psb_c_t@vect_set_scal(@psb_c_t@vector *xh, @psb_t_t@ val);
-psb_i_t	   @psb_c_t@vect_set_scal_bound(@psb_c_t@vector *xh, psb_c_t val,
+psb_i_t	   @psb_c_t@vect_set_scal_bound(@psb_c_t@vector *xh, @psb_t_t@ val,
 				      psb_i_t ifirst, psb_i_t ilast);
 psb_i_t	   @psb_c_t@vect_set_vect(@psb_c_t@vector *xh, @psb_t_t@ *val, psb_i_t n);
 @psb_t_t@    @psb_c_t@vect_get_entry(@psb_c_t@vector *xh, psb_i_t index);
-psb_i_t    @psb_c_t@vect_set_entry(@psb_c_t@vector *xh, psb_i_t index, psb_c_t val);
+psb_i_t    @psb_c_t@vect_set_entry(@psb_c_t@vector *xh, psb_i_t index, @psb_t_t@ val);
 
 /* psblas computational routines */
 @psb_t_t@ @psb_c_t@gedot(@psb_c_t@vector *xh, @psb_c_t@vector *yh, psb_c_descriptor *cdh);
 @psb_rt_t@ @psb_c_t@genrm2(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
 @psb_rt_t@ @psb_c_t@geamax(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
 @psb_rt_t@ @psb_c_t@geasum(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
-@psb_rt_t@ @psb_c_t@genrmi(@psb_c_t@spmat *ah, psb_c_descriptor *cdh);
+@psb_rt_t@ @psb_c_t@genrmi(@psb_c_t@vector *ah, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@geaxpby(@psb_t_t@ alpha, @psb_c_t@vector *xh,
 		       @psb_t_t@ beta, @psb_c_t@vector *yh, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@geaxpbyz(@psb_t_t@ alpha, @psb_c_t@vector *xh,
@@ -101,13 +101,16 @@ psb_i_t @psb_c_t@gediv2(@psb_c_t@vector *xh,@psb_c_t@vector *yh,@psb_c_t@vector 
 psb_i_t @psb_c_t@gediv2_check(@psb_c_t@vector *xh,@psb_c_t@vector *yh,@psb_c_t@vector *zh,psb_c_descriptor *cdh, bool flag);
 psb_i_t @psb_c_t@geinv(@psb_c_t@vector *xh,@psb_c_t@vector *yh,psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@geinv_check(@psb_c_t@vector *xh,@psb_c_t@vector *yh,psb_c_descriptor *cdh, bool flag);
-psb_i_t @psb_c_t@geabs(@psb_c_t@vector *xh,@psb_c_t@vector *yh,@psb_c_t@vector *cdh);
+psb_i_t @psb_c_t@geabs(@psb_c_t@vector *xh,@psb_c_t@vector *yh, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@gecmp(@psb_c_t@vector *xh,@psb_rt_t@ ch,@psb_c_t@vector *zh,psb_c_descriptor *cdh);
 bool    @psb_c_t@gecmpmat(@psb_c_t@spmat *ah,@psb_c_t@spmat *bh,@psb_rt_t@ tol,psb_c_descriptor *cdh);
 bool    @psb_c_t@gecmpmat_val(@psb_c_t@spmat *ah,@psb_t_t@ val,@psb_rt_t@ tol,psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@geaddconst(@psb_c_t@vector *xh,@psb_t_t@ bh,@psb_c_t@vector *zh,psb_c_descriptor *cdh);
 @psb_rt_t@ @psb_c_t@genrm2_weight(@psb_c_t@vector *xh,@psb_c_t@vector *wh,psb_c_descriptor *cdh);
 @psb_rt_t@ @psb_c_t@genrm2_weightmask(@psb_c_t@vector *xh,@psb_c_t@vector *wh,@psb_c_t@vector *idvh,psb_c_descriptor *cdh);
+psb_i_t @psb_c_t@mask(@psb_c_t@vector *ch,@psb_c_t@vector *xh,@psb_c_t@vector *mh, bool *t, psb_c_descriptor *cdh);
+@psb_t_t@ @psb_c_t@gemin(@psb_c_t@vector *xh,psb_c_descriptor *cdh);
+@psb_t_t@ @psb_c_t@minquotient(@psb_c_t@vector *xh,@psb_c_t@vector *yh, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@spscal(@psb_t_t@ alpha, @psb_c_t@spmat *ah, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@spscalpid(@psb_t_t@ alpha, @psb_c_t@spmat *ah, psb_c_descriptor *cdh);
 psb_i_t @psb_c_t@spaxpby(@psb_t_t@ alpha, @psb_c_t@spmat *ah, @psb_t_t@ beta, @psb_c_t@spmat *bh, psb_c_descriptor *cdh);
