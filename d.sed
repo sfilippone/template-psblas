@@ -50,8 +50,8 @@ s/@FRCKIND@/c_double/g
 
 
 s/@PSB_C_T@/PSB_C_D/g
-s/@psb_t_t@/psb_d_t/g
-s/@psb_rt_t@/psb_d_t/g
+s/@psb_c_t_t@/psb_c_d_t/g
+s/@psb_rt_t@/psb_c_d_t/g
 s/@psb_c_t@/psb_c_d/g
 s/@tvector@/dvector/gi
 s/@tspmat@/dspmat/gi
