@@ -1,0 +1,34 @@
+#include <stdlib.h>
+#include "@psb_c_t@comm.h"
+#include "@psb_c_t@base.h"
+
+
+@psb_t_t@* @psb_c_t@vgather(@psb_c_t@vector *xh, psb_c_descriptor *cdh)
+{ 
+  @psb_t_t@ *temp=NULL;
+  psb_l_t vsize=0; 
+  
+  if ((vsize=psb_c_cd_get_global_rows(cdh))<0) 
+    return(temp);
+  
+  if (vsize==0) 
+    vsize=1;
+  
+  if ((temp=(@psb_t_t@ *)malloc(vsize*sizeof(@psb_t_t@)))!=NULL)
+    @psb_c_t@vgather_f(temp,xh,cdh);
+ 
+ return(temp);
+
+}
+
+
+@psb_c_t@spmat* @psb_c_t@spgather(@psb_c_t@spmat *ah, psb_c_descriptor *cdh)
+{
+  @psb_c_t@spmat* temp=psb_c_new_@tspmat@();
+
+  if (temp != NULL) 
+    @psb_c_t@spgather_f(temp, ah, cdh);
+  return(temp);
+}
+
+

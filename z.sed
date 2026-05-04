@@ -44,3 +44,10 @@ s/@CTYPE@/DoubleComplex/g
 s/@FLAG_COMPLEX@/Complex/g
 s/@FCKIND@/c_double_complex/g
 s/@FRCKIND@/c_double/g
+
+s/@PSB_C_T@/PSB_C_Z/g
+s/@psb_t_t@/psb_z_t/g
+s/@psb_rt_t@/psb_d_t/g
+s/@psb_c_t@/psb_c_z/g
+s/@tvector@/zvector/gi
+s/@tspmat@/zspmat/gi

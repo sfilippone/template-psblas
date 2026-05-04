@@ -1,0 +1,39 @@
+#include <stdlib.h>
+#include "@psb_c_t@base.h"
+
+@psb_c_t@vector* psb_c_new_@tvector@()
+{
+  @psb_c_t@vector* temp;
+  
+  temp=(@psb_c_t@vector *) malloc(sizeof(@psb_c_t@vector));
+  temp->@tvector@=NULL;
+  return(temp);
+}
+
+@psb_t_t@* @psb_c_t@vect_get_cpy(@psb_c_t@vector *xh)
+{ 
+  @psb_t_t@ *temp=NULL;
+  psb_i_t vsize=0; 
+  
+  if ((vsize=@psb_c_t@vect_get_nrows(xh))<0) 
+    return(temp);
+  
+  if (vsize==0) 
+    vsize=1;
+  
+  if ((temp=(@psb_t_t@ *)malloc(vsize*sizeof(@psb_t_t@)))!=NULL)
+    @psb_c_t@vect_f_get_cpy(temp,xh);
+ 
+ return(temp);
+
+}
+
+
+@psb_c_t@spmat* psb_c_new_@tspmat@()
+{
+  @psb_c_t@spmat* temp;
+  
+  temp=(@psb_c_t@spmat *) malloc(sizeof(@psb_c_t@spmat));
+  temp->@tspmat@=NULL;
+  return(temp);
+}

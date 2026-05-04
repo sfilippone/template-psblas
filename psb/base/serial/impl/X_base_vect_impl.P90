@@ -65,8 +65,6 @@ contains
     this%v = x
     call this%asb(size(x,kind=psb_ipk_),info)
   end function constructor
-  
-
 
   !> Function  constructor:
   !! \brief     Constructor from size

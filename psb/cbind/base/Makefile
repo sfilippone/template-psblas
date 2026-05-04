@@ -9,6 +9,8 @@ SRC=X_psblas_cbind_mod.p90 X_serial_cbind_mod.P90 \
     X_tools_cbind_mod.P90 X_comm_cbind_mod.p90 \
     X_serial_cbind_impl.P90 X_comm_cbind_impl.p90 \
     X_psblas_cbind_impl.p90 X_tools_cbind_impl.P90
+CSRC=Xbase.pc Xcomm.pc
+HSRC=Xbase.ph Xcomm.ph
 
 
 
@@ -18,7 +20,9 @@ FSRC=$(FSRC1) $(FSRC2)
 FOBJS1=$(FSRC1:.f90=.o)
 FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
-
+CSRC1=$(patsubst %.pc, %.c, $(subst X, psb_c_$(ARITH), $(CSRC)))
+HSRC1=$(patsubst %.ph, %.h, $(subst X, psb_c_$(ARITH), $(HSRC)))
+CHSRC=$(CSRC1) $(HSRC1)
 LIBMOD=
 LIBDIR=..
 CINCLUDES=-I.
@@ -38,19 +42,24 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-bsrc: $(FSRC)
+bsrc: $(FSRC) $(CHSRC)
 
 lib: $(FOBJS)
 
 cpy: 
-	($(TOP)/cpy.sh $(TOP) $(TARGET)/cbind/base *.f90 *.F90)
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/cbind/base *.f90 *.F90 *.c *.h)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
+$(CSRC1): psb_c_$(ARITH)%.c : X%.pc
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(HSRC1): psb_c_$(ARITH)%.h : X%.ph
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+
 clean:
-	/bin/rm -f *.f90 *.F90 *.o 
+	/bin/rm -f *.f90 *.F90 *.o *.c *.h 
 
 

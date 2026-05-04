@@ -44,3 +44,10 @@ s/@CTYPE@/FloatComplex/g
 s/@FLAG_COMPLEX@/Complex/g
 s/@FCKIND@/c_float_complex/g
 s/@FRCKIND@/c_float/g
+
+s/@PSB_C_T@/PSB_C_C/g
+s/@psb_t_t@/psb_c_t/g
+s/@psb_rt_t@/psb_s_t/g
+s/@psb_c_t@/psb_c_c/g
+s/@tvector@/cvector/gi
+s/@tspmat@/cspmat/gi
