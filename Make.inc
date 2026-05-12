@@ -1,1 +1,1 @@
-TARGET=../psblas3
+TARGET=../psblas-maint-3.9.0
