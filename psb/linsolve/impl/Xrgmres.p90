@@ -273,8 +273,7 @@ subroutine psb_@X@rgmres_vect(a,prec,b,x,eps,desc_a,info,&
     ani = psb_spnrmi(a,desc_a,info)
     bni = psb_geamax(b,desc_a,info)
   case(psb_istop_bn2_)
-    bn2 = psb_genrm2(b,desc_a,info)
-    
+    bn2 = psb_genrm2(b,desc_a,info)    
   case(psb_istop_rn2_abs_)
     ! do nothing
   case(psb_istop_rrn2_)
@@ -327,7 +326,8 @@ subroutine psb_@X@rgmres_vect(a,prec,b,x,eps,desc_a,info,&
       call psb_errpush(info,name)
       goto 9999
     end if
-
+    if (present(s1)) call psb_gemlt(s1,v(1),desc_a,info)
+    
     rs(1) = psb_genrm2(v(1),desc_a,info)
     rs(2:) = @XZERO@
     if (info /= psb_success_) then 
