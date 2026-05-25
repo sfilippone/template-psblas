@@ -5,6 +5,7 @@ s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g
 s/@FKIND@/psb_epk_/g
+s/@XKIND@/epk/g
 s/@IXKIND@/psb_epk_/g	
 s/@RT@/e/g
 
@@ -32,5 +33,6 @@ s/@NRM2@/enrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_epk_/g
+s/@RMPI_TYPE@/psb_mpi_epk_/g
 s/@PSB_TAG@/psb_int8_tag/g
 s/@PSB_SWAP_TAG@/psb_int8_swap_tag/g	

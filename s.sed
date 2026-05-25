@@ -7,6 +7,7 @@ s/@CONJG@//g
 s/@TYPE@/real/g
 s/@RTYPE@/real/g
 s/@FKIND@/psb_spk_/g
+s/@XKIND@/spk/g
 s/@IXKIND@/psb_ipk_/g	
 s/@LXKIND@/psb_lpk_/g	
 s/@RT@/s/g
@@ -36,6 +37,7 @@ s/@NRM2@/snrm2/g
 /^ *@SPKE@ *$/d
 
 s/@MPI_TYPE@/psb_mpi_r_spk_/g
+s/@RMPI_TYPE@/psb_mpi_r_spk_/g
 s/@PSB_TAG@/psb_real_tag/g
 s/@PSB_SWAP_TAG@/psb_real_swap_tag/g
 

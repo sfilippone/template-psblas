@@ -73,11 +73,13 @@ $(FSRCI): psi_$(ARITH)%.f90 : Xi%.p90
 $(FSRCE): psi_$(ARITH)%.f90 : Xi%.p90 
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-cpy: 
+cpy:
 	($(TOP)/cpy.sh $(TOP) $(TARGET)/base/modules/comm *.f90 *.F90)
+	cd comm_schemes && $(MAKE) cpy
 
 
 clean:
-	/bin/rm -f *.f90 *.F90 *.o 
+	cd comm_schemes && $(MAKE) clean
+	/bin/rm -f *.f90 *.F90 *.o
 
 

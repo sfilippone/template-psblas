@@ -42,46 +42,42 @@ module psb_@X@_comm_mod
   use psb_@X@_multivect_mod, only : psb_@X@_multivect_type, psb_@X@_base_multivect_type
 
   interface psb_ovrl
-    subroutine psb_@X@ovrl_vect(x,desc_a,info,work,update,mode)
+    subroutine psb_@X@ovrl_vect(x,desc_a,info,update,mode)
       import
       implicit none
-      type(psb_@X@_vect_type), intent(inout)    :: x
+      type(psb_@X@_vect_type), intent(inout)  :: x
       type(psb_desc_type), intent(in)         :: desc_a
-      integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
-      integer(psb_ipk_), intent(in), optional           :: update,mode
+      integer(psb_ipk_), intent(out)          :: info
+      integer(psb_ipk_), intent(in), optional :: update,mode
     end subroutine psb_@X@ovrl_vect
-    subroutine psb_@X@ovrl_multivect(x,desc_a,info,work,update,mode)
+    subroutine psb_@X@ovrl_multivect(x,desc_a,info,update,mode)
       import
       implicit none
-      type(psb_@X@_multivect_type), intent(inout)    :: x
-      type(psb_desc_type), intent(in)         :: desc_a
-      integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), intent(inout), optional, target :: work(:)
-      integer(psb_ipk_), intent(in), optional           :: update,mode
+      type(psb_@X@_multivect_type), intent(inout) :: x
+      type(psb_desc_type), intent(in)             :: desc_a
+      integer(psb_ipk_), intent(out)              :: info
+      integer(psb_ipk_), intent(in), optional     :: update,mode
     end subroutine psb_@X@ovrl_multivect
   end interface psb_ovrl
 
   interface psb_halo
-    subroutine psb_@X@halo_vect(x,desc_a,info,work,tran,mode,data)
+    subroutine psb_@X@halo_vect(x,desc_a,info,tran,mode,data)
       import
       implicit none
-      type(psb_@X@_vect_type), intent(inout)   :: x
+      type(psb_@X@_vect_type), intent(inout)  :: x
       type(psb_desc_type), intent(in)         :: desc_a
-      integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
-      integer(psb_ipk_), intent(in), optional           :: mode,data
+      integer(psb_ipk_), intent(out)          :: info
+      integer(psb_ipk_), intent(in), optional :: mode,data
       character, intent(in), optional         :: tran
     end subroutine psb_@X@halo_vect
-    subroutine psb_@X@halo_multivect(x,desc_a,info,work,tran,mode,data)
+    subroutine psb_@X@halo_multivect(x,desc_a,info,tran,mode,data)
       import
       implicit none
-      type(psb_@X@_multivect_type), intent(inout)   :: x
-      type(psb_desc_type), intent(in)         :: desc_a
-      integer(psb_ipk_), intent(out)                    :: info
-      @TYPE@(@FKIND@), target, optional, intent(inout) :: work(:)
-      integer(psb_ipk_), intent(in), optional           :: mode,data
-      character, intent(in), optional         :: tran
+      type(psb_@X@_multivect_type), intent(inout) :: x
+      type(psb_desc_type), intent(in)             :: desc_a
+      integer(psb_ipk_), intent(out)              :: info
+      integer(psb_ipk_), intent(in), optional     :: mode,data
+      character, intent(in), optional             :: tran
     end subroutine psb_@X@halo_multivect
   end interface psb_halo
 

@@ -5,6 +5,7 @@ s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g
 s/@FKIND@/psb_lpk_/g
+s/@XKIND@/lpk/g
 s/@IXKIND@/psb_lpk_/g	
 s/@RT@/l/g
 
@@ -34,5 +35,6 @@ s/@NRM2@/lnrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_lpk_/g
+s/@RMPI_TYPE@/psb_mpi_lpk_/g
 s/@PSB_TAG@/psb_long_tag/g
 s/@PSB_SWAP_TAG@/psb_long_swap_tag/g

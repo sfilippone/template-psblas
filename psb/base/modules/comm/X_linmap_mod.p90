@@ -73,15 +73,14 @@ module psb_@X@_linmap_mod
       integer(psb_ipk_), intent(out)           :: info 
       @TYPE@(@FKIND@), optional       :: work(:)
     end subroutine psb_@X@_map_U2V_a
-    subroutine psb_@X@_map_U2V_v(alpha,x,beta,y,map,info,work,vtx,vty)
+    subroutine psb_@X@_map_U2V_v(alpha,x,beta,y,map,info,vtx,vty)
       use psb_@X@_vect_mod, only : psb_@X@_vect_type
       import :: psb_ipk_, @FKIND@, psb_@X@linmap_type
-      implicit none 
+      implicit none
       class(psb_@X@linmap_type), intent(in) :: map
       @TYPE@(@FKIND@), intent(in)     :: alpha,beta
       type(psb_@X@_vect_type), intent(inout)  :: x,y
-      integer(psb_ipk_), intent(out)           :: info 
-      @TYPE@(@FKIND@), optional       :: work(:)
+      integer(psb_ipk_), intent(out)           :: info
       type(psb_@X@_vect_type), optional, target, intent(inout)  :: vtx,vty
     end subroutine psb_@X@_map_U2V_v
   end interface
@@ -97,15 +96,14 @@ module psb_@X@_linmap_mod
       integer(psb_ipk_), intent(out)           :: info 
       @TYPE@(@FKIND@), optional       :: work(:)
     end subroutine psb_@X@_map_V2U_a
-    subroutine psb_@X@_map_V2U_v(alpha,x,beta,y,map,info,work,vtx,vty)
+    subroutine psb_@X@_map_V2U_v(alpha,x,beta,y,map,info,vtx,vty)
       use psb_@X@_vect_mod, only : psb_@X@_vect_type
       import :: psb_ipk_, @FKIND@, psb_@X@linmap_type
-      implicit none 
+      implicit none
       class(psb_@X@linmap_type), intent(in) :: map
       @TYPE@(@FKIND@), intent(in)     :: alpha,beta
       type(psb_@X@_vect_type), intent(inout)  :: x,y
-      integer(psb_ipk_), intent(out)           :: info 
-      @TYPE@(@FKIND@), optional       :: work(:)
+      integer(psb_ipk_), intent(out)           :: info
       type(psb_@X@_vect_type), optional, target, intent(inout)  :: vtx,vty
     end subroutine psb_@X@_map_V2U_v
   end interface

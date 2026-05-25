@@ -78,20 +78,18 @@ module psb_@X@_base_prec_mod
        & psb_@X@_base_get_nzeros
 
   abstract interface 
-    subroutine psb_@X@_base_apply_vect(alpha,prec,x,beta,y,desc_data,info,trans,work)
+    subroutine psb_@X@_base_apply_vect(alpha,prec,x,beta,y,desc_data,info,trans)
       import psb_ipk_, @FKIND@, psb_desc_type, psb_@X@_vect_type, &
            & psb_@X@_base_vect_type, psb_@X@spmat_type, psb_@X@_base_prec_type,&
            & psb_@X@_base_sparse_mat
       implicit none 
-      type(psb_desc_type),intent(in)        :: desc_data
+      type(psb_desc_type),intent(in)                :: desc_data
       class(psb_@X@_base_prec_type), intent(inout)  :: prec
-      @TYPE@(@FKIND@),intent(in)          :: alpha, beta
-      type(psb_@X@_vect_type),intent(inout)   :: x
-      type(psb_@X@_vect_type),intent(inout)   :: y
-      integer(psb_ipk_), intent(out)                  :: info
-      character(len=1), optional            :: trans
-      @TYPE@(@FKIND@),intent(inout), optional, target :: work(:)
-
+      @TYPE@(@FKIND@),intent(in)                    :: alpha, beta
+      type(psb_@X@_vect_type),intent(inout)         :: x
+      type(psb_@X@_vect_type),intent(inout)         :: y
+      integer(psb_ipk_), intent(out)                :: info
+      character(len=1), optional                    :: trans
     end subroutine psb_@X@_base_apply_vect
   end interface
 

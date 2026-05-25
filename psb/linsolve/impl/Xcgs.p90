@@ -110,11 +110,10 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
   integer(psb_ipk_), Optional, Intent(out)       :: iter
   Real(@FKIND@), Optional, Intent(out) :: err
 ! =   local data
-  @TYPE@(@FKIND@), allocatable, target   :: aux(:)
   type(psb_@X@_vect_type), allocatable, target :: wwrk(:)
   type(psb_@X@_vect_type), pointer  :: ww, q, r, p, v,&
        & s, z, f, rt, qt, uv
-  integer(psb_ipk_) :: itmax_, naux, it, itrace_,&
+  integer(psb_ipk_) :: itmax_, it, itrace_,&
        & n_row, n_col,istop_, itx, err_act
   integer(psb_lpk_) :: mglob
   type(psb_ctxt_type) :: ctxt
@@ -165,8 +164,7 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
     goto 9999
   end if
 
-  naux=4*n_col 
-  Allocate(aux(naux),stat=info)
+
   if (info == psb_success_) Call psb_geall(wwrk,desc_a,info,n=11_psb_ipk_)
   if (info == psb_success_) Call psb_geasb(wwrk,desc_a,info,mold=x%v)  
   if (info /= psb_success_) Then 
@@ -215,7 +213,7 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
     if (itx >= itmax_) exit restart  
     it = 0      
     call psb_geaxpby(@XONE@,b,@XZERO@,r,desc_a,info)
-    if (info == psb_success_) call psb_spmm(-@XONE@,a,x,@XONE@,r,desc_a,info,work=aux)
+    if (info == psb_success_) call psb_spmm(-@XONE@,a,x,@XONE@,r,desc_a,info)
     if (info == psb_success_) call psb_geaxpby(@XONE@,r,@XZERO@,rt,desc_a,info)
     if (info /= psb_success_) then
        info=psb_err_from_subroutine_non_
@@ -260,10 +258,9 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
         if (info == psb_success_) call psb_geaxpby(@XONE@,uv,beta,p,desc_a,info)
       end if
 
-      if (info == psb_success_) call prec%apply(p,f,desc_a,info,work=aux)
+      if (info == psb_success_) call prec%apply(p,f,desc_a,info)
 
-      if (info == psb_success_) call psb_spmm(@XONE@,a,f,@XZERO@,v,desc_a,info,&
-           & work=aux)
+      if (info == psb_success_) call psb_spmm(@XONE@,a,f,@XZERO@,v,desc_a,info)
       
       if (info /= psb_success_) then
          call psb_errpush(psb_err_from_subroutine_,name,a_err='First loop part ')
@@ -285,12 +282,11 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
       if (info == psb_success_) call psb_geaxpby(@XONE@,uv,@XZERO@,s,desc_a,info)
       if (info == psb_success_) call psb_geaxpby(@XONE@,q,@XONE@,s,desc_a,info)
       
-      if (info == psb_success_) call prec%apply(s,z,desc_a,info,work=aux)
+      if (info == psb_success_) call prec%apply(s,z,desc_a,info)
 
       if (info == psb_success_) call psb_geaxpby(alpha,z,@XONE@,x,desc_a,info)
 
-      if (info == psb_success_) call psb_spmm(@XONE@,a,z,@XZERO@,qt,desc_a,info,&
-           & work=aux)
+      if (info == psb_success_) call psb_spmm(@XONE@,a,z,@XZERO@,qt,desc_a,info)
       
       if (info == psb_success_) call psb_geaxpby(-alpha,qt,@XONE@,r,desc_a,info)
       
@@ -312,11 +308,6 @@ Subroutine psb_@X@cgs_vect(a,prec,b,x,eps,desc_a,info,&
   if (present(err)) err = derr
 
   if (info == psb_success_) call psb_gefree(wwrk,desc_a,info)
-  if (info == psb_success_) deallocate(aux,stat=info)
-  if (info /= psb_success_) then
-    call psb_errpush(info,name)
-    goto 9999
-  end if
 
   call psb_erractionrestore(err_act)
   return

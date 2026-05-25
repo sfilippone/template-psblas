@@ -5,6 +5,7 @@ s/@CONJG@//g
 s/@TYPE@/integer/g
 s/@RTYPE@/integer/g
 s/@FKIND@/psb_ipk_/g
+s/@XKIND@/ipk/g
 s/@IXKIND@/psb_ipk_/g	
 s/@RT@/i/g
 
@@ -34,6 +35,7 @@ s/@NRM2@/inrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_ipk_/g
+s/@RMPI_TYPE@/psb_mpi_ipk_/g
 s/@PSB_TAG@/psb_int_tag/g
 s/@PSB_SWAP_TAG@/psb_int_swap_tag/g
 s/@SPGPU_TYPE@/spgpu_type_int/g

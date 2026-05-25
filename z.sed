@@ -7,6 +7,7 @@ s/@CONJG@/conjg/g
 s/@TYPE@/complex/g
 s/@RTYPE@/real/g
 s/@FKIND@/psb_dpk_/g
+s/@XKIND@/dpk/g
 s/@IXKIND@/psb_ipk_/g	
 s/@LXKIND@/psb_lpk_/g	
 s/@RT@/d/g
@@ -36,6 +37,7 @@ s/@NRM2@/dznrm2/g
 
 
 s/@MPI_TYPE@/psb_mpi_c_dpk_/g
+s/@RMPI_TYPE@/psb_mpi_r_dpk_/g
 s/@PSB_TAG@/psb_dcomplex_tag/g
 s/@PSB_SWAP_TAG@/psb_dcomplex_swap_tag/g
 

@@ -45,7 +45,8 @@ module psi_@X@_comm_a_mod
       integer(psb_mpk_), intent(in)         :: n
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
-      @TYPE@(@FKIND@)           :: y(:,:), beta
+      @TYPE@(@FKIND@), intent(in)           :: beta
+      @TYPE@(@FKIND@), intent(inout)        :: y(:,:)
       @TYPE@(@FKIND@),target    :: work(:)
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
@@ -53,7 +54,8 @@ module psi_@X@_comm_a_mod
     module subroutine psi_@X@swapdatav(flag,beta,y,desc_a,work,info,data)
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
-      @TYPE@(@FKIND@)           :: y(:), beta 
+      @TYPE@(@FKIND@), intent(in)           :: beta
+      @TYPE@(@FKIND@), intent(inout)        :: y(:)
       @TYPE@(@FKIND@),target    :: work(:)
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
@@ -64,7 +66,8 @@ module psi_@X@_comm_a_mod
       integer(psb_mpk_), intent(in)   :: n
       integer(psb_ipk_), intent(in)   :: flag
       integer(psb_ipk_), intent(out)  :: info
-      @TYPE@(@FKIND@)        :: y(:,:), beta
+      @TYPE@(@FKIND@), intent(in)     :: beta
+      @TYPE@(@FKIND@), intent(inout)  :: y(:,:)
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@swapidxm
@@ -73,7 +76,8 @@ module psi_@X@_comm_a_mod
       type(psb_ctxt_type), intent(in) :: ctxt
       integer(psb_ipk_), intent(in)   :: flag
       integer(psb_ipk_), intent(out)  :: info
-      @TYPE@(@FKIND@)        :: y(:), beta
+      @TYPE@(@FKIND@), intent(in)     :: beta
+      @TYPE@(@FKIND@), intent(inout)  :: y(:)
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@swapidxv
@@ -85,7 +89,8 @@ module psi_@X@_comm_a_mod
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_Mpk_), intent(in)         :: n
       integer(psb_ipk_), intent(out)        :: info
-      @TYPE@(@FKIND@)           :: y(:,:), beta
+      @TYPE@(@FKIND@), intent(in)           :: beta
+      @TYPE@(@FKIND@), intent(inout)        :: y(:,:)
       @TYPE@(@FKIND@),target    :: work(:)
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
@@ -93,7 +98,8 @@ module psi_@X@_comm_a_mod
     module subroutine psi_@X@swaptranv(flag,beta,y,desc_a,work,info,data)
       integer(psb_ipk_), intent(in)         :: flag
       integer(psb_ipk_), intent(out)        :: info
-      @TYPE@(@FKIND@)           :: y(:), beta
+      @TYPE@(@FKIND@), intent(in)           :: beta
+      @TYPE@(@FKIND@), intent(inout)        :: y(:)
       @TYPE@(@FKIND@),target    :: work(:)
       type(psb_desc_type), target :: desc_a
       integer(psb_ipk_), optional           :: data
@@ -104,7 +110,8 @@ module psi_@X@_comm_a_mod
       integer(psb_mpk_), intent(in)   :: n
       integer(psb_ipk_), intent(in)   :: flag
       integer(psb_ipk_), intent(out)  :: info
-      @TYPE@(@FKIND@)        :: y(:,:), beta
+      @TYPE@(@FKIND@), intent(in)     :: beta
+      @TYPE@(@FKIND@), intent(inout)  :: y(:,:)
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)       :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@tranidxm
@@ -113,7 +120,8 @@ module psi_@X@_comm_a_mod
       type(psb_ctxt_type), intent(in) :: ctxt
       integer(psb_ipk_), intent(in)   :: flag
       integer(psb_ipk_), intent(out)  :: info
-      @TYPE@(@FKIND@)        :: y(:), beta
+      @TYPE@(@FKIND@), intent(in)     :: beta
+      @TYPE@(@FKIND@), intent(inout)  :: y(:)
       @TYPE@(@FKIND@),target :: work(:)
       integer(psb_ipk_), intent(in)      :: idx(:),totxch,totsnd,totrcv
     end subroutine psi_@X@tranidxv
