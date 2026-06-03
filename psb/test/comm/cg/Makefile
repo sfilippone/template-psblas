@@ -1,13 +1,11 @@
-TOP=../..
+TOP=../../../..
 include $(TOP)/Make.inc
 BASIC_MODS=
-UTIL_MODS =
+UTIL_MODS=
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=
-
-
+SRC=X_comm_cg_test.P90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
@@ -21,14 +19,7 @@ LIBDIR=..
 CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
-
-src: sfileread spdegen scomm
-
-cpy: 
-	cd fileread && $(MAKE) cpy
-	cd pdegen && $(MAKE) cpy
-	cd comm && $(MAKE) cpy
-
+src: ssingle sdouble scomplex sdcompl
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -38,33 +29,15 @@ scomplex:
 sdcompl:
 	$(MAKE) bsrc ARITH=z
 
-
-sfileread:
-	cd fileread && $(MAKE) src
-spdegen:
-	cd pdegen && $(MAKE) src
-scomm:
-	cd comm && $(MAKE) src
-
-cfileread:
-	cd fileread && $(MAKE) clean
-cpdegen:
-	cd pdegen && $(MAKE) clean
-ccomm:
-	cd comm && $(MAKE) clean
-
-
-
 bsrc: $(FSRC)
 
-
+cpy:
+	($(TOP)/cpy.sh $(TOP) $(TARGET)/test/comm/cg *.f90 *.F90)
 
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
-$(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+$(FSRC2): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
-clean: cfileread cpdegen ccomm
+clean:
 	/bin/rm -f *.f90 *.F90 *.o
-
-
