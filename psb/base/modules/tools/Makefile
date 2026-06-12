@@ -5,7 +5,8 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-VSRC=X_tools_mod.P90 
+VSRC=X_tools_mod.P90
+SRC=X_nest_tools_mod.P90 X_nest_builder_mod.P90
 SRCE=X_tools_a_mod.p90 
 
 
