@@ -889,7 +889,7 @@ contains
     if (allocated(x%v)) res = x%v%get_entry(index)
   end function @X@_vect_get_entry
 
-  subroutine @X@_vect_set_entry(x,index,val)
+  subroutine @X@_vect_set_entry(x,index,val) 
     implicit none
     class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: index
