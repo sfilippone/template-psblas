@@ -5,7 +5,7 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_linsolve_conv_mod.p90 
+SRC=X_linsolve_conv_mod.p90 X_linsolve_mod.p90 
 
 
 
