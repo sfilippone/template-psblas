@@ -469,6 +469,17 @@ Module psb_@X@_tools_mod
     end function
   end interface
 
+  interface psb_setelem
+    subroutine psb_@X@_setelem(index,val,x,desc_a,info)
+      import
+      type(psb_@X@_vect_type), intent(inout) :: x
+      integer(psb_lpk_), intent(in)          :: index
+      type(psb_desc_type), intent(inout)     :: desc_a
+      integer(psb_ipk_), intent(out)         :: info
+      @TYPE@(@FKIND@)                        ::val
+    end subroutine psb_@X@_setelem
+  end interface
+
   interface psb_remap
     subroutine psb_@X@_remap(np_remap, desc_in, a_in, &
          & ipd, isrc, nrsrc, naggr, desc_out, a_out, info)
