@@ -150,7 +150,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
   procedure(psb_@X@kryl_vect) :: psb_@X@bicg_vect, psb_@X@cgstab_vect,&
        & psb_@X@cgs_vect
   procedure(psb_@X@kryl_rest_vect) :: psb_@X@rgmres_vect, psb_@X@cgstabl_vect, psb_@X@gcr_vect
-  procedure(psb_@X@kryl_cond_vect) :: psb_@X@cg_vect, psb_@X@fcg_vect
+  procedure(psb_@X@kryl_cond_vect) :: psb_@X@cg_vect, psb_@X@fcg_vect, psb_@X@minres_vect
 
   logical           :: do_alloc_wrk
   type(psb_ctxt_type) :: ctxt
@@ -199,6 +199,9 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
   case('RGMRES','GMRES')
     call  psb_@X@rgmres_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace=itrace_,irst=irst,istop=istop)
+  case('MINRES','PMINRES')
+    call  psb_@X@minres_vect(a,prec,b,x,eps,desc_a,info,&
+         &itmax,iter,err,itrace=itrace_,istop=istop)
   case('BICGSTABL')
     call  psb_@X@cgstabl_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace=itrace_,irst=irst,istop=istop)

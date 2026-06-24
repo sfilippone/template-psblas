@@ -119,6 +119,7 @@ module psb_@X@_vect_mod
 
     @NOTINTS@
     procedure, pass(x) :: get_entry => @X@_vect_get_entry
+    procedure, pass(x) :: set_entry => @X@_vect_set_entry
 
     procedure, pass(x) :: dot_v    => @X@_vect_dot_v
     procedure, pass(x) :: dot_a    => @X@_vect_dot_a
@@ -881,12 +882,20 @@ contains
 
   function @X@_vect_get_entry(x,index) result(res)
     implicit none
-    class(psb_@X@_vect_type), intent(in) :: x
+    class(psb_@X@_vect_type), intent(inout) :: x
     integer(psb_ipk_), intent(in)        :: index
     @TYPE@(@FKIND@) :: res
-    res = 0
+    res = @XZERO@
     if (allocated(x%v)) res = x%v%get_entry(index)
   end function @X@_vect_get_entry
+
+  subroutine @X@_vect_set_entry(x,index,val)
+    implicit none
+    class(psb_@X@_vect_type), intent(inout) :: x
+    integer(psb_ipk_), intent(in)        :: index
+    @TYPE@(@FKIND@) :: val
+    if (allocated(x%v)) call x%v%set_entry(index,val)
+  end subroutine @X@_vect_set_entry
 
   function @X@_vect_dot_v(n,x,y) result(res)
     implicit none
@@ -1450,7 +1459,7 @@ contains
     if (allocated(x%v)) then
       res = x%v%minreal(n)
     else
-      res = @RZERO@
+      res = HUGE(@RONE@)
     end if
 
   end function @X@_vect_min
@@ -1769,19 +1778,20 @@ contains
   end subroutine @X@_mvect_bld_x
 
 
-  subroutine @X@_mvect_bld_n(x,m,n,mold)
+  subroutine @X@_mvect_bld_n(x,m,n,mold,scratch)
     integer(psb_ipk_), intent(in) :: m,n
     class(psb_@X@_multivect_type), intent(out) :: x
     class(psb_@X@_base_multivect_type), intent(in), optional :: mold
     integer(psb_ipk_) :: info
-
+    logical, intent(in), optional        :: scratch
+    
     info = psb_success_
     if (present(mold)) then
       allocate(x%v,stat=info,mold=mold)
     else
       allocate(x%v,stat=info, mold=psb_@X@_get_base_multivect_default())
     endif
-    if (info == psb_success_) call x%v%bld(m,n)
+    if (info == psb_success_) call x%v%bld(m,n,scratch=scratch)
 
   end subroutine @X@_mvect_bld_n
 
@@ -2264,3 +2274,4 @@ contains
   @NOTINTE@
 
 end module psb_@X@_multivect_mod
+

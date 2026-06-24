@@ -5,13 +5,15 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=X_mat_dist_impl.p90 X_mat_dist_mod.p90 X_renum_mod.p90 X_renum_impl.P90
-
+SRC=X_mat_dist_impl.p90 X_mat_dist_mod.p90 X_renum_mod.p90 X_renum_impl.P90 
+IMMSRC=X_mmio_impl.p90 X_mmio_mod.P90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
-FSRC=$(FSRC1) $(FSRC2)
+FSRC3=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(IMMSRC))))
+FSRC4=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(IMMSRC))))
+FSRC=$(FSRC1) $(FSRC2) $(FSRC3) $(FSRC4)
 FOBJS1=$(FSRC1:.f90=.o)
 FOBJS2=$(FSRC2:.F90=.o)
 FOBJS=$(FOBJS1) $(FOBJS2)
@@ -24,7 +26,7 @@ CINCLUDES=-I.
 FINCLUDES=$(FMFLAG)$(LIBDIR) $(FMFLAG). $(FIFLAG).
 
 
-src: ssingle sdouble scomplex sdcompl 
+src: ssingle sdouble scomplex sdcompl sint 
 ssingle:
 	$(MAKE) bsrc ARITH=s
 sdouble:
@@ -33,7 +35,8 @@ scomplex:
 	$(MAKE) bsrc ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
-
+sint:
+	$(MAKE) immsrc ARITH=i
 
 
 all:  single double complex dcompl
@@ -48,7 +51,9 @@ dcompl:
 	$(MAKE) lib ARITH=z
 
 
-bsrc: $(FSRC)
+bsrc: fsrc immsrc
+fsrc: $(FSRC1) $(FSRC2)
+immsrc: $(FSRC3) $(FSRC4)
 
 lib: $(FOBJS)
 
@@ -59,6 +64,10 @@ cpy:
 $(FSRC1): psb_$(ARITH)%.f90 : X%.p90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 $(FSRC2): psb_$(ARITH)%.F90 : X%.P90 
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRC3): psb_$(ARITH)%.f90 : X%.p90
+	sed -f $(TOP)/$(ARITH).sed $< >$@
+$(FSRC4): psb_$(ARITH)%.F90 : X%.P90
 	sed -f $(TOP)/$(ARITH).sed $< >$@
 
 clean: 

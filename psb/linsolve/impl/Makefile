@@ -7,7 +7,7 @@ MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
 SRC=Xcg.P90 Xbicg.p90 Xcgs.p90 \
     Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90 \
-    Xfcg.P90 Xgcr.p90 Xrichardson.p90
+    Xfcg.P90 Xgcr.p90 Xrichardson.p90 Xminres.p90
 
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
