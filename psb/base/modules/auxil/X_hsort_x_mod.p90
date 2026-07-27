@@ -50,10 +50,12 @@ module psb_@X@_hsort_x_mod
 @NOTINTS@
   use psb_@X@_hsort_mod
 @NOTINTE@
+  use psb_realloc_mod
 
   type psb_@X@_heap
     integer(@IXKIND@) :: dir
     integer(@IXKIND@) :: last    
+    integer(psb_ipk_) :: size
     @TYPE@(@FKIND@), allocatable    :: keys(:)
   contains
     procedure, pass(heap) :: init       => psb_@X@_init_heap
@@ -62,11 +64,14 @@ module psb_@X@_hsort_x_mod
     procedure, pass(heap) :: get_first  => psb_@X@_heap_get_first
     procedure, pass(heap) :: dump       => psb_@X@_dump_heap
     procedure, pass(heap) :: free       => psb_@X@_free_heap   
+    procedure, pass(heap) :: get_size   => psb_@X@_heap_get_size
+    procedure, pass(heap) :: set_size   => psb_@X@_heap_set_size
   end type psb_@X@_heap
 
   type psb_@X@_idx_heap
     integer(@IXKIND@) :: dir
     integer(@IXKIND@) :: last
+    integer(psb_ipk_) :: size
     @TYPE@(@FKIND@), allocatable    :: keys(:)
     integer(@IXKIND@), allocatable :: idxs(:)
   contains
@@ -76,13 +81,26 @@ module psb_@X@_hsort_x_mod
     procedure, pass(heap) :: get_first  => psb_@X@_idx_heap_get_first
     procedure, pass(heap) :: dump       => psb_@X@_idx_dump_heap
     procedure, pass(heap) :: free       => psb_@X@_idx_free_heap   
+    procedure, pass(heap) :: get_size   => psb_@X@_idx_heap_get_size
+    procedure, pass(heap) :: set_size   => psb_@X@_idx_heap_set_size
   end type psb_@X@_idx_heap
 
 
 contains
+  
+  subroutine psb_@X@_heap_set_size(heap,size)
+    class(psb_@X@_heap), intent(inout) :: heap
+    integer(psb_ipk_), intent(in)   :: size
+    heap%size = size
+  end subroutine psb_@X@_heap_set_size
+  
+  function psb_@X@_heap_get_size(heap) result(size)
+    class(psb_@X@_heap), intent(inout) :: heap
+    integer(psb_ipk_)  :: size
+    size = heap%size 
+  end function psb_@X@_heap_get_size
 
   subroutine psb_@X@_init_heap(heap,info,dir)
-    use psb_realloc_mod, only : psb_ensure_size
     implicit none 
     class(psb_@X@_heap), intent(inout) :: heap
     integer(psb_ipk_), intent(out)            :: info
@@ -117,7 +135,7 @@ contains
       @REALE@
     end select
     call psb_ensure_size(psb_heap_resize,heap%keys,info)
-
+    call heap%set_size(psb_heap_resize)
     return
   end subroutine psb_@X@_init_heap
 
@@ -144,7 +162,10 @@ contains
       return
     endif
 
-    call psb_ensure_size(heap%last+1,heap%keys,info)
+    if ((heap%last+1) > heap%size) then
+      call psb_ensure_size(heap%last+1,heap%keys,info)
+      heap%size = size(heap%keys)
+    end if
     if (info /= psb_success_) then 
       write(psb_err_unit,*) 'Memory allocation failure in heap_insert'
       info = -5
@@ -203,8 +224,22 @@ contains
 
     info=psb_success_
     if (allocated(heap%keys)) deallocate(heap%keys,stat=info)
+    heap%last = -1
+    call heap%set_size(-1)
 
   end subroutine psb_@X@_free_heap
+
+  subroutine psb_@X@_idx_heap_set_size(heap,size)
+    class(psb_@X@_idx_heap), intent(inout) :: heap
+    integer(psb_ipk_), intent(in)   :: size
+    heap%size = size
+  end subroutine psb_@X@_idx_heap_set_size
+  
+  function psb_@X@_idx_heap_get_size(heap) result(size)
+    class(psb_@X@_idx_heap), intent(inout) :: heap
+    integer(psb_ipk_)  :: size
+    size = heap%size 
+  end function psb_@X@_idx_heap_get_size
 
   subroutine psb_@X@_idx_init_heap(heap,info,dir)
     use psb_realloc_mod, only : psb_ensure_size
@@ -244,6 +279,7 @@ contains
 
     call psb_ensure_size(psb_heap_resize,heap%keys,info)
     call psb_ensure_size(psb_heap_resize,heap%idxs,info)
+    call heap%set_size(psb_heap_resize)
     return
   end subroutine psb_@X@_idx_init_heap
 
@@ -271,9 +307,12 @@ contains
       return
     endif
 
-    call psb_ensure_size(heap%last+1,heap%keys,info)
-    if (info == psb_success_) &
-         & call psb_ensure_size(heap%last+1,heap%idxs,info)
+    if ((heap%last+1) > heap%size) then
+      call psb_ensure_size(heap%last+1,heap%keys,info)
+      if (info == psb_success_) &
+           & call psb_ensure_size(heap%last+1,heap%idxs,info)
+      heap%size = size(heap%keys)
+    end if
     if (info /= psb_success_) then 
       write(psb_err_unit,*) 'Memory allocation failure in heap_insert'
       info = -5
@@ -339,7 +378,8 @@ contains
     if (allocated(heap%keys)) deallocate(heap%keys,stat=info)
     if ((info == psb_success_).and.(allocated(heap%idxs))) &
          & deallocate(heap%idxs,stat=info)
-
+    heap%last = -1
+    call heap%set_size(-1)
   end subroutine psb_@X@_idx_free_heap
 
 end module psb_@X@_hsort_x_mod
