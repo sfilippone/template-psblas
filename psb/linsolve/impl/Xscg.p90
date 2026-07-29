@@ -39,7 +39,7 @@ subroutine psb_@X@scg_vect(a, prec, b, x, s, eps, desc_a, info, &
   integer(psb_ipk_)           :: itidx
   
   type(psb_itconv_type)         :: stopdat
-  @TYPE@(@FKIND@)                :: derr
+  real(psb_dpk_)                :: derr
 
   type(psb_@X@_multivect_type), target  :: aux_mv
   @TYPE@(@FKIND@), allocatable, target :: aux_fa(:)
@@ -297,6 +297,18 @@ contains
       return
     end if
 
+    @CPLXS@
+    if((aimag(lambda_min) /= @RZERO@) .or. (aimag(lambda_max) /= @RZERO@)) then
+      info = psb_err_fatal_ ! TODO: set the correct error
+      return
+    end if
+
+    if((real(lambda_min) < 0) .or. (real(lambda_max) < real(lambda_min))) then 
+      info = psb_err_fatal_ ! TODO: set the correct error
+      return
+    end if
+    @CPLXE@
+    @NOTCPLXS@
     if(lambda_min < 0) then 
       info = psb_err_fatal_ ! TODO: set the correct error
       return
@@ -306,6 +318,7 @@ contains
       info = psb_err_fatal_ ! TODO: set the correct error
       return
     end if
+    @NOTCPLXE@
 
     coeff(1) = 2_@FKIND@ / (lambda_max - lambda_min)
     coeff(2) = (lambda_max + lambda_min) / (lambda_max - lambda_min)
@@ -400,7 +413,7 @@ subroutine psb_@X@scg2_vect(a, prec, b, x, s, eps, desc_a, info, &
   integer(psb_ipk_)           :: itidx
   
   type(psb_itconv_type)         :: stopdat
-  @TYPE@(@FKIND@)                :: derr 
+  real(psb_dpk_)                :: derr 
 
   type(psb_@X@_multivect_type), target  :: aux_mv
   @TYPE@(@FKIND@), allocatable, target :: aux_fa(:)
@@ -672,6 +685,18 @@ contains
       return
     end if
 
+    @CPLXS@
+    if((aimag(lambda_min) /= @RZERO@) .or. (aimag(lambda_max) /= @RZERO@)) then
+      info = psb_err_fatal_ ! TODO: set the correct error
+      return
+    end if
+
+    if((real(lambda_min) < 0) .or. (real(lambda_max) < real(lambda_min))) then 
+      info = psb_err_fatal_ ! TODO: set the correct error
+      return
+    end if
+    @CPLXE@
+    @NOTCPLXS@
     if(lambda_min < 0) then 
       info = psb_err_fatal_ ! TODO: set the correct error
       return
@@ -681,6 +706,7 @@ contains
       info = psb_err_fatal_ ! TODO: set the correct error
       return
     end if
+    @NOTCPLXE@
 
     coeff(1) = 2_@FKIND@ / (lambda_max - lambda_min)
     coeff(2) = (lambda_max + lambda_min) / (lambda_max - lambda_min)
