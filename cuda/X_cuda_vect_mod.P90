@@ -79,6 +79,7 @@ module psb_@X@_cuda_vect_mod
     procedure, pass(x) :: set_sync => @X@_cuda_set_sync
     procedure, pass(x) :: set_scal => @X@_cuda_set_scal
 !!$    procedure, pass(x) :: set_vect => @X@_cuda_set_vect
+    procedure, pass(x) :: gthzv    => @X@_cuda_gthzv
     procedure, pass(x) :: gthzv_x  => @X@_cuda_gthzv_x
     procedure, pass(y) :: sctb     => @X@_cuda_sctb
     procedure, pass(y) :: sctb_x   => @X@_cuda_sctb_x
@@ -234,6 +235,45 @@ contains
       write(0,*) 'Check addr: cuda  version, why am I here? '
     end select
   end subroutine @X@_cuda_check_addr
+
+  subroutine @X@_cuda_gthzv(n,idx,x,y)
+    ! GPU override of the plain-array-index gather  y(1:n) = x(idx(1:n)).
+    ! Without it the generic gth(n,idx(:),buf) -- used ONLY by the RMA swap path
+    ! (psi_@X@_swapdata, rma_pull/push) -- fell back to the host @X@_base_gthzv, which
+    ! calls x%sync() and copies the WHOLE vector device->host on EVERY swap. Here
+    ! we gather on the device straight from x%deviceVect (mirrors the class-default
+    ! branch of @X@_cuda_gthzv_x): only the n boundary indices move H2D, no full D2H.
+    use psb_cuda_env_mod
+    use psi_serial_mod
+    implicit none
+    integer(psb_mpk_) :: n
+    integer(psb_ipk_) :: idx(:)
+    @TYPE@(@FKIND@)    :: y(:)
+    class(psb_@X@_vect_cuda) :: x
+    integer :: info, ni
+
+    info = 0
+    if (x%is_host()) call x%sync()          ! ensure device copy is current (no D2H of the whole vector)
+    ni = size(idx)
+
+    if (x%i_buf_sz < ni) then
+      if (c_associated(x%i_buf)) then
+        call freeInt(x%i_buf); x%i_buf = c_null_ptr
+      end if
+      info = allocateInt(x%i_buf,ni); x%i_buf_sz = ni
+    end if
+    if (x%dt_buf_sz < n) then
+      if (c_associated(x%dt_buf)) then
+        call free@CTYPE@(x%dt_buf); x%dt_buf = c_null_ptr
+      end if
+      info = allocate@CTYPE@(x%dt_buf,n); x%dt_buf_sz = n
+    end if
+
+    if (info == 0) info = writeInt(x%i_buf,idx,ni)
+    if (info == 0) info = igathMultiVecDevice@CTYPE@(x%deviceVect, 0, n, 1, x%i_buf, 1, x%dt_buf, 1)
+    if (info == 0) info = read@CTYPE@(x%dt_buf,y,n)
+
+  end subroutine @X@_cuda_gthzv
 
   subroutine @X@_cuda_gthzv_x(i,n,idx,x,y)
     use psb_cuda_env_mod
