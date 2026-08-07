@@ -1507,7 +1507,7 @@ contains
 !!$        allocate(x%buffer(n),stat=info)
 !!$        if (info == 0) info = inner_register(x%buffer,x%dt_buf)        
 !!$      endif
-!!$      info = igathMultiVecDeviceDouble(x%deviceVect,&
+!!$      info = igathMultiVecDevice@CTYPE@(x%deviceVect,&
 !!$           & 0, i, n, ii%deviceVect, x%dt_buf, 1)
 !!$      call psb_cudaSync()
 !!$      y(1:n) = x%buffer(1:n)
@@ -1562,7 +1562,7 @@ contains
 !!$        if (info == 0) info = inner_register(y%buffer,y%dt_buf)        
 !!$      endif
 !!$      y%buffer(1:n) = x(1:n) 
-!!$      info = iscatMultiVecDeviceDouble(y%deviceVect,&
+!!$      info = iscatMultiVecDevice@CTYPE@(y%deviceVect,&
 !!$           & 0, i, n, ii%deviceVect, y%dt_buf, 1,beta)
 !!$
 !!$      call y%set_dev()
