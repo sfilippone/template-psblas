@@ -14,7 +14,7 @@
 !         documentation and/or other materials provided with the distribution.
 !      3. The name of the PSBLAS group or the names of its contributors may
 !         not be used to endorse or promote products derived from this
-!         software without specific written permission.
+!         software without specific prior written permission.
 !   
 !    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 !    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -295,8 +295,8 @@ contains
 
       ! swap elements using mpi_alltoallv
       call mpi_alltoallv(sndbuf,sdsz,bsdidx,&
-           & @RMPI_TYPE@,rcvbuf,rvsz,&
-           & brvidx,@RMPI_TYPE@,icomm,iret)
+           & @MPI_TYPE@,rcvbuf,rvsz,&
+           & brvidx,@MPI_TYPE@,icomm,iret)
       if(iret /= mpi_success) then
         info=psb_err_mpi_error_
         call psb_errpush(info,name,m_err=(/iret/))
@@ -352,7 +352,7 @@ contains
         if ((nerv>0).and.(proc_to_comm /= me)) then 
           p2ptag = psb_double_swap_tag
           call mpi_irecv(rcvbuf(rcv_pt),n*nerv,&
-               & @RMPI_TYPE@,prcid(i),&
+               & @MPI_TYPE@,prcid(i),&
                & p2ptag, icomm,rvhd(i),iret)
         end if
         rcv_pt = rcv_pt + n*nerv
@@ -376,11 +376,11 @@ contains
         if ((nesd>0).and.(proc_to_comm /= me)) then 
           if (usersend) then 
             call mpi_rsend(sndbuf(snd_pt),n*nesd,&
-                 & @RMPI_TYPE@,prcid(i),&
+                 & @MPI_TYPE@,prcid(i),&
                  & p2ptag,icomm,iret)
           else
             call mpi_send(sndbuf(snd_pt),n*nesd,&
-                 & @RMPI_TYPE@,prcid(i),&
+                 & @MPI_TYPE@,prcid(i),&
                  & p2ptag,icomm,iret)
           end if
 
@@ -779,8 +779,8 @@ contains
 
       ! swap elements using mpi_alltoallv
       call mpi_alltoallv(sndbuf,sdsz,bsdidx,&
-           & @RMPI_TYPE@,rcvbuf,rvsz,&
-           & brvidx,@RMPI_TYPE@,icomm,iret)
+           & @MPI_TYPE@,rcvbuf,rvsz,&
+           & brvidx,@MPI_TYPE@,icomm,iret)
       if(iret /= mpi_success) then
         info=psb_err_mpi_error_
         call psb_errpush(info,name,m_err=(/iret/))
@@ -836,7 +836,7 @@ contains
         if ((nerv>0).and.(proc_to_comm /= me)) then 
           p2ptag = psb_double_swap_tag
           call mpi_irecv(rcvbuf(rcv_pt),nerv,&
-               & @RMPI_TYPE@,prcid(i),&
+               & @MPI_TYPE@,prcid(i),&
                & p2ptag, icomm,rvhd(i),iret)
         end if
         rcv_pt = rcv_pt + nerv
@@ -861,11 +861,11 @@ contains
         if ((nesd>0).and.(proc_to_comm /= me)) then 
           if (usersend) then 
             call mpi_rsend(sndbuf(snd_pt),nesd,&
-                 & @RMPI_TYPE@,prcid(i),&
+                 & @MPI_TYPE@,prcid(i),&
                  & p2ptag,icomm,iret)
           else
             call mpi_send(sndbuf(snd_pt),nesd,&
-                 & @RMPI_TYPE@,prcid(i),&
+                 & @MPI_TYPE@,prcid(i),&
                  & p2ptag,icomm,iret)
           end if
 

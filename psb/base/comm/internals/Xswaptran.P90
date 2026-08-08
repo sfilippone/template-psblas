@@ -14,7 +14,7 @@
 !         documentation and/or other materials provided with the distribution.
 !      3. The name of the PSBLAS group or the names of its contributors may
 !         not be used to endorse or promote products derived from this
-!         software without specific written permission.
+!         software without specific prior written permission.
 !   
 !    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 !    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -1602,7 +1602,7 @@ contains
                 goto 9999
               end if
               remote_disp = int(remote_base - 1, kind=MPI_ADDRESS_KIND)
-              call mpi_get(y%combuf(recv_pos), recv_count, @RMPI_TYPE@, prc_rank, remote_disp, recv_count, @RMPI_TYPE@, &
+              call mpi_get(y%combuf(recv_pos), recv_count, @MPI_TYPE@, prc_rank, remote_disp, recv_count, @MPI_TYPE@, &
                    & rma_handle%win, iret)
               if (iret /= mpi_success) then
                 info = psb_err_mpi_error_
@@ -1824,7 +1824,7 @@ contains
             end if
             if (send_count > 0) then
               remote_disp = int(remote_base - 1, kind=MPI_ADDRESS_KIND)
-              call mpi_put(y%combuf(send_pos), send_count, @RMPI_TYPE@, prc_rank, remote_disp, send_count, @RMPI_TYPE@, &
+              call mpi_put(y%combuf(send_pos), send_count, @MPI_TYPE@, prc_rank, remote_disp, send_count, @MPI_TYPE@, &
                    & rma_handle%win, iret)
               if (iret /= mpi_success) then
                 info = psb_err_mpi_error_
@@ -2268,7 +2268,7 @@ contains
                 goto 9999
               end if
               remote_disp = int((remote_base - 1)*n, kind=MPI_ADDRESS_KIND)
-              call mpi_get(y%combuf(recv_pos), recv_count*n, @RMPI_TYPE@, prc_rank, remote_disp, recv_count*n, @RMPI_TYPE@, &
+              call mpi_get(y%combuf(recv_pos), recv_count*n, @MPI_TYPE@, prc_rank, remote_disp, recv_count*n, @MPI_TYPE@, &
                    & rma_handle%win, iret)
               if (iret /= mpi_success) then
                 info = psb_err_mpi_error_
@@ -2491,7 +2491,7 @@ contains
             end if
             if (send_count > 0) then
               remote_disp = int((remote_base - 1)*n, kind=MPI_ADDRESS_KIND)
-              call mpi_put(y%combuf(send_pos), send_count*n, @RMPI_TYPE@, prc_rank, remote_disp, send_count*n, @RMPI_TYPE@, &
+              call mpi_put(y%combuf(send_pos), send_count*n, @MPI_TYPE@, prc_rank, remote_disp, send_count*n, @MPI_TYPE@, &
                    & rma_handle%win, iret)
               if (iret /= mpi_success) then
                 info = psb_err_mpi_error_
