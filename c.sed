@@ -21,6 +21,8 @@ s/@RONE@/sone/g
 
 s/@DOT@/cdotc/g
 s/@NRM2@/scnrm2/g
+s/@GER@/cgerc/g
+s/@SCAL@/cscal/g
 /^ *@INTS@ *$/,/^ *@INTE@ *$/d
 /^ *@I2INTS@ *$/,/^ *@I2INTE@ *$/d
 /^ *@LINTS@ *$/,/^ *@LINTE@ *$/d
