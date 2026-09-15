@@ -5,10 +5,10 @@ UTIL_MODS =
 
 MODULES=$(BASIC_MODS) $(UTIL_MODS)
 
-SRC=Xcg.P90 Xbicg.p90 Xcgs.p90 \
+SRC=Xcg.P90 Xbicg.p90 Xcgs.p90 Xscg.p90 \
     Xcgstab.p90 Xcgstabl.p90 Xrgmres.p90 Xkrylov.p90 \
-    Xfcg.P90 Xgcr.p90 Xrichardson.p90 Xminres.p90
-
+    Xfcg.P90 Xgcr.p90 Xrichardson.p90 Xminres.p90 \
+	X_pMPK.p90 X_powermethod.p90
 
 FSRC1=$(patsubst %.p90, %.f90, $(subst X, psb_$(ARITH), $(filter %.p90, $(SRC))))
 FSRC2=$(patsubst %.P90, %.F90, $(subst X, psb_$(ARITH), $(filter %.P90, $(SRC))))
@@ -32,7 +32,6 @@ scomplex:
 	$(MAKE) bsrc ARITH=c
 sdcompl:
 	$(MAKE) bsrc ARITH=z
-
 
 
 all:  single double complex dcompl

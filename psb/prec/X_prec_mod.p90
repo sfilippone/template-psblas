@@ -35,16 +35,14 @@ module psb_@X@_prec_mod
   use psb_@X@_base_prec_mod
 
   interface psb_ilu_fct
-    subroutine psb_@X@ilu_fct(a,l,u,d,info,blck)
+    subroutine psb_@X@ilu_fct(a, l, u, d, info, blck)
       import :: psb_ipk_, psb_desc_type, psb_@X@spmat_type, &
-           & psb_@X@_csr_sparse_mat, @FKIND@
-      integer(psb_ipk_), intent(out)                ::     info
-      type(psb_@X@spmat_type),intent(in)    :: a
-      type(psb_@X@_csr_sparse_mat),intent(inout) :: l,u
-      type(psb_@X@spmat_type),intent(in), optional, target :: blck
-      @TYPE@(@FKIND@), intent(inout)     ::  d(:)
+              & psb_@X@_csr_sparse_mat, @FKIND@
+      type(psb_@X@spmat_type), intent(in)         :: a
+      type(psb_@X@_csr_sparse_mat), intent(inout) :: l, u
+      @TYPE@(@FKIND@), intent(inout)             :: d(:)
+      integer(psb_ipk_), intent(out)            :: info
+      type(psb_@X@spmat_type), intent(in), optional, target :: blck
     end subroutine psb_@X@ilu_fct
   end interface
-
-
 end module psb_@X@_prec_mod
