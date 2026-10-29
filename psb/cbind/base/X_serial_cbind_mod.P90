@@ -9,12 +9,12 @@ module psb_@X@_serial_cbind_mod
     module function psb_c_@X@vect_get_nrows(xh) bind(c) result(res)
       integer(psb_c_ipk_) :: res
       type(psb_c_@X@vector) :: xh
-      
+
       type(psb_@X@_vect_type), pointer :: vp
       integer(psb_c_ipk_)               :: info
     end function psb_c_@X@vect_get_nrows
   end interface
-  
+
   interface
     module function psb_c_@X@vect_f_get_cpy(v,xh) bind(c) result(res)
       integer(psb_c_ipk_)    :: res
@@ -22,7 +22,7 @@ module psb_@X@_serial_cbind_mod
       type(psb_c_@X@vector) :: xh
     end function psb_c_@X@vect_f_get_cpy
   end interface
-  
+
 
   interface
     module function psb_c_@X@vect_zero(xh) bind(c) result(res)
@@ -30,7 +30,7 @@ module psb_@X@_serial_cbind_mod
       type(psb_c_@X@vector) :: xh
     end function psb_c_@X@vect_zero
   end interface
-  
+
   interface
     module function psb_c_@X@vect_f_get_pnt(xh) bind(c) result(res)
       type(c_ptr)        :: res
@@ -69,7 +69,8 @@ module psb_@X@_serial_cbind_mod
   end interface
 
   interface
-    module function psb_c_@X@vect_set_scal_bound(x,val,ifirst,ilast) bind(c) result(info)
+    module function psb_c_@X@vect_set_scal_bound(x,val,ifirst,ilast) &
+         & bind(c) result(info)
       type(psb_c_@X@vector) :: x
       integer(psb_c_ipk_) :: info
       integer(psb_c_ipk_), value :: ifirst, ilast 
@@ -94,7 +95,7 @@ module psb_@X@_serial_cbind_mod
       @TYPE@(@FCKIND@), value :: val
     end function psb_c_@X@vect_set_entry
   end interface
- 
+
   interface
     module function psb_c_@X@vect_get_entry(x,index) bind(c) result(res)
       type(psb_c_@X@vector) :: x
@@ -108,6 +109,73 @@ module psb_@X@_serial_cbind_mod
       integer(psb_c_ipk_) :: info
       type(psb_c_@X@vector) :: xh,yh
     end function psb_c_@X@vect_clone
+  end interface
+
+  interface 
+    module function psb_c_@X@nnz(ah,cdh) bind(c) result(res)
+      integer(psb_c_ipk_) :: res
+
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+
+    end function psb_c_@X@nnz
+  end interface
+
+  interface
+    module function psb_c_@X@is_matupd(ah,cdh) bind(c) result(res)
+      logical(c_bool) :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+
+  interface
+    module function psb_c_@X@is_matasb(ah,cdh) bind(c) result(res)
+      logical(c_bool) :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+  interface 
+    module function psb_c_@X@is_matbld(ah,cdh) bind(c) result(res)
+      logical(c_bool) :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+  interface 
+    module function psb_c_@X@set_matupd(ah,cdh) bind(c) result(res)
+      integer(psb_c_ipk_) :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+  interface 
+    module function psb_c_@X@set_matasb(ah,cdh) bind(c) result(res)
+      integer(psb_c_ipk_)    :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+  interface 
+    module function psb_c_@X@set_matbld(ah,cdh) bind(c) result(res)
+      integer(psb_c_ipk_)    :: res
+      type(psb_c_@X@spmat)   :: ah
+      type(psb_c_descriptor) :: cdh
+    end function
+  end interface
+
+  interface 
+    module function psb_c_@X@copy_mat(ah,bh,cdh) bind(c) result(res)
+      integer(psb_c_ipk_)    :: res
+      type(psb_c_@X@spmat)   :: ah,bh
+      type(psb_c_descriptor) :: cdh
+    end function
   end interface
 
 end module psb_@X@_serial_cbind_mod
