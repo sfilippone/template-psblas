@@ -1,0 +1,340 @@
+!                Parallel Sparse BLAS   GPU plugin 
+!      (C) Copyright 2013
+!  
+!                         Salvatore Filippone
+!                         Alessandro Fanfarillo
+!   
+!    Redistribution and use in source and binary forms, with or without
+!    modification, are permitted provided that the following conditions
+!    are met:
+!      1. Redistributions of source code must retain the above copyright
+!         notice, this list of conditions and the following disclaimer.
+!      2. Redistributions in binary form must reproduce the above copyright
+!         notice, this list of conditions, and the following disclaimer in the
+!         documentation and/or other materials provided with the distribution.
+!      3. The name of the PSBLAS group or the names of its contributors may
+!         not be used to endorse or promote products derived from this
+!         software without specific prior written permission.
+!   
+!    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+!    ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+!    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+!    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE PSBLAS GROUP OR ITS CONTRIBUTORS
+!    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+!    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+!    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+!    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+!    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+!    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+!    POSSIBILITY OF SUCH DAMAGE.
+!   
+
+module @X@_cusparse_mod
+  use base_cusparse_mod
+  
+  type, bind(c) :: @X@_Cmat
+    type(c_ptr) :: Mat = c_null_ptr
+  end type @X@_Cmat
+  
+#if PSB_CUDA_SHORT_VERSION <= 10 
+  type, bind(c) :: @X@_Hmat
+    type(c_ptr) :: Mat = c_null_ptr
+  end type @X@_Hmat
+#endif
+  
+  interface CSRGDeviceFree
+    function @X@_CSRGDeviceFree(Mat) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceFree")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)   :: Mat
+      integer(c_int) :: res
+    end function @X@_CSRGDeviceFree
+  end interface
+  
+  interface CSRGDeviceSetMatType
+    function @X@_CSRGDeviceSetMatType(Mat, type) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceSetMatType")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceSetMatType
+  end interface
+  
+  interface CSRGDeviceSetMatFillMode
+    function @X@_CSRGDeviceSetMatFillMode(Mat, type) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceSetMatFillMode")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceSetMatFillMode
+  end interface
+  
+  interface CSRGDeviceSetMatDiagType
+    function @X@_CSRGDeviceSetMatDiagType(Mat, type) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceSetMatDiagType")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceSetMatDiagType
+  end interface
+  
+  interface CSRGDeviceSetMatIndexBase
+    function @X@_CSRGDeviceSetMatIndexBase(Mat, type) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceSetMatIndexBase")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceSetMatIndexBase
+  end interface
+  
+#if PSB_CUDA_SHORT_VERSION <= 10  
+  interface CSRGDeviceCsrsmAnalysis
+    function @X@_CSRGDeviceCsrsmAnalysis(Mat) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceCsrsmAnalysis")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)    :: Mat
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceCsrsmAnalysis
+  end interface
+#else
+  interface CSRGIsNullSvBuffer
+    function @X@_CSRGIsNullSvBuffer(Mat) result(res) &
+        & bind(c, name = "@X@_CSRGIsNullSvBuffer")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)    :: Mat
+      integer(c_int)  :: res
+    end function @X@_CSRGIsNullSvBuffer
+  end interface
+#endif
+
+  interface CSRGDeviceAlloc
+    function @X@_CSRGDeviceAlloc(Mat, nr, nc, nz) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceAlloc")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: nr, nc, nz
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceAlloc
+  end interface
+
+  interface CSRGDeviceGetParms
+    function @X@_CSRGDeviceGetParms(Mat, nr, nc, nz) result(res) &
+        & bind(c, name = "@X@_CSRGDeviceGetParms")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)    :: Mat
+      integer(c_int)  :: nr, nc, nz
+      integer(c_int)  :: res
+    end function @X@_CSRGDeviceGetParms
+  end interface
+  
+  interface spsvCSRGDevice
+    function @X@_spsvCSRGDevice(Mat, alpha, x, beta, y) result(res) &
+        & bind(c, name = "@X@_spsvCSRGDevice")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      type(c_ptr), value    :: x
+      type(c_ptr), value    :: y
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      integer(c_int)  :: res
+    end function @X@_spsvCSRGDevice
+  end interface
+  
+  interface spmvCSRGDevice
+    function @X@_spmvCSRGDeviceF(mat, alpha, x, beta, y) result(res) &
+        & bind(c, name = "@X@_spmvCSRGDeviceF")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int)  :: res
+    end function @X@_spmvCSRGDeviceF
+
+    function @X@_spmvCSRGDeviceMV(mat, alpha, x, beta, y, idx_y) result(res) &
+        & bind(c, name = "@X@_spmvCSRGDeviceMV")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int), value :: idx_y
+      integer(c_int)  :: res
+    end function @X@_spmvCSRGDeviceMV
+
+    function @X@_spmvCSRGDeviceVM(mat, alpha, x, idx_x, beta, y) result(res) &
+        & bind(c, name = "@X@_spmvCSRGDeviceVM")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int), value :: idx_x
+      integer(c_int)  :: res
+    end function @X@_spmvCSRGDeviceVM
+    
+    function @X@_spmvCSRGDeviceMMi(mat, alpha, x, idx_x, beta, y, idx_y) result(res) &
+        & bind(c, name = "@X@_spmvCSRGDeviceMMi")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int), value :: idx_x, idx_y
+      integer(c_int)  :: res
+    end function @X@_spmvCSRGDeviceMMi
+  end interface
+  
+  interface CSRGHost2Device
+    function @X@_CSRGHost2Device(Mat, m, n, nz, irp, ja, val) result(res) &
+        & bind(c, name = "@X@_CSRGHost2Device")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: m, n, nz
+      integer(c_int)        :: irp(*), ja(*)
+      @TYPE@(@FCKIND@)        :: val(*)
+      integer(c_int)  :: res
+    end function @X@_CSRGHost2Device
+  end interface
+  
+  interface CSRGDevice2Host
+    function @X@_CSRGDevice2Host(Mat, m, n, nz, irp, ja, val) result(res) &
+        & bind(c, name = "@X@_CSRGDevice2Host")
+      use iso_c_binding
+      import @X@_Cmat
+      type(@X@_Cmat)          :: Mat
+      integer(c_int), value :: m, n, nz
+      integer(c_int)        :: irp(*), ja(*)
+      @TYPE@(@FCKIND@)        :: val(*)
+      integer(c_int)  :: res
+    end function @X@_CSRGDevice2Host
+  end interface
+  
+#if PSB_CUDA_SHORT_VERSION <= 10
+  interface HYBGDeviceAlloc
+    function @X@_HYBGDeviceAlloc(Mat, nr, nc, nz) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceAlloc")
+      use iso_c_binding
+      import @X@_hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: nr, nc, nz
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceAlloc
+  end interface
+  
+  interface HYBGDeviceFree
+    function @X@_HYBGDeviceFree(Mat) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceFree")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)   :: Mat
+      integer(c_int) :: res
+    end function @X@_HYBGDeviceFree
+  end interface
+  
+  interface HYBGDeviceSetMatType 
+    function @X@_HYBGDeviceSetMatType(Mat, type) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceSetMatType")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceSetMatType
+  end interface
+  
+  interface HYBGDeviceSetMatFillMode
+    function @X@_HYBGDeviceSetMatFillMode(Mat, type) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceSetMatFillMode")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceSetMatFillMode
+  end interface
+  
+  interface HYBGDeviceSetMatDiagType
+    function @X@_HYBGDeviceSetMatDiagType(Mat, type) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceSetMatDiagType")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceSetMatDiagType
+  end interface
+  
+  interface HYBGDeviceSetMatIndexBase
+    function @X@_HYBGDeviceSetMatIndexBase(Mat, type) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceSetMatIndexBase")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: type
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceSetMatIndexBase
+  end interface
+  
+  interface HYBGDeviceHybsmAnalysis
+    function @X@_HYBGDeviceHybsmAnalysis(Mat) result(res) &
+        & bind(c, name = "@X@_HYBGDeviceHybsmAnalysis")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)  :: Mat
+      integer(c_int)  :: res
+    end function @X@_HYBGDeviceHybsmAnalysis
+  end interface
+  
+  interface spsvHYBGDevice
+    function @X@_spsvHYBGDevice(Mat, alpha, x, beta, y) result(res) &
+        & bind(c, name = "@X@_spsvHYBGDevice")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int)  :: res
+    end function @X@_spsvHYBGDevice
+  end interface
+  
+  interface spmvHYBGDevice
+    function @X@_spmvHYBGDevice(Mat, alpha, x, beta, y) result(res) &
+        & bind(c, name = "@X@_spmvHYBGDevice")
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      @TYPE@(@FCKIND@), value :: alpha, beta
+      type(c_ptr), value    :: x, y
+      integer(c_int)  :: res
+    end function @X@_spmvHYBGDevice
+  end interface
+  
+  interface HYBGHost2Device
+    function @X@_HYBGHost2Device(Mat, m, n, nz, irp, ja, val) &
+        & bind(c, name = "@X@_HYBGHost2Device") result(res)
+      use iso_c_binding
+      import @X@_Hmat
+      type(@X@_Hmat)          :: Mat
+      integer(c_int), value :: m, n, nz
+      integer(c_int)        :: irp(*), ja(*)
+      @TYPE@(@FCKIND@)        :: val(*)
+      integer(c_int)  :: res
+    end function @X@_HYBGHost2Device
+  end interface
+#endif
+end module @X@_cusparse_mod
