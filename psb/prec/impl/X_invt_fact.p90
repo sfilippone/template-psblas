@@ -134,9 +134,6 @@ subroutine psb_@X@_invt_bld(a,fillin,invfill,thresh,invthresh,&
   nzrmax    = fillin
   sp_thresh = thresh
 
-  call lmat%allocate(n_row,n_row,info,nz=nztota)
-  if (info == psb_success_) call umat%allocate(n_row,n_row,info,nz=nztota)
-
   if (info == 0) call psb_ilut_fact(nzrmax,sp_thresh,&
        & a,lmat,umat,pd,info,blck=blck,iscale=psb_ilu_scale_maxval_)
 
@@ -602,7 +599,7 @@ subroutine psb_@X@_invt_copyout(fill_in,thres,i,m,nlw,nup,jmaxup,nrmi,row, &
       !
       ! Figure out a good reallocation size!
       !
-      isz  = max(int(1.5*l2),l2+100)
+      isz  = max(int(1.2*l2),l2+100)
       call psb_realloc(isz,val,info)
       if (info == psb_success_) call psb_realloc(isz,ja,info)
       if (info /= psb_success_) then
