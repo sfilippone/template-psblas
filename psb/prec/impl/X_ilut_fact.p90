@@ -563,7 +563,7 @@ contains
     integer(psb_ipk_)               :: k,j,irb,kin,nz
     integer(psb_ipk_), parameter    :: nrb=40
     real(@FKIND@)        :: dmaxup
-    real(@FKIND@), external    :: dnrm2
+    real(@FKIND@), external    :: @NRM2@
     character(len=20), parameter  :: name='psb_@X@ilut_factint'
 
     info = psb_success_
@@ -622,7 +622,7 @@ contains
       end if
 
       nz   = aa%irp(i+1) - aa%irp(i)
-      nrmi = weight*dnrm2(nz,aa%val(aa%irp(i)),ione)
+      nrmi = weight*@NRM2@(nz,aa%val(aa%irp(i)),ione)
 
 
     class default
@@ -669,7 +669,7 @@ contains
         ktrw       = ktrw + 1
       enddo
       nz = ktrw - kin
-      nrmi = weight*dnrm2(nz,trw%val(kin),ione)
+      nrmi = weight*@NRM2@(nz,trw%val(kin),ione)
     end select
 
     call psb_erractionrestore(err_act)
