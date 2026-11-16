@@ -89,6 +89,18 @@ module psb_@X@_tools_cbind_mod
     end function psb_c_@X@geins
   end interface
 
+  interface
+    module function psb_c_@X@geins_options(nz,irw,val,xh,cdh,mode) bind(c) result(res)
+      integer(psb_c_ipk_) :: res
+      integer(psb_c_ipk_), value :: nz
+      integer(psb_c_lpk_) :: irw(*)
+      @TYPE@(@FCKIND@) :: val(*)
+      type(psb_c_@X@vector) :: xh
+      type(psb_c_descriptor) :: cdh
+      integer(psb_c_ipk_), value :: mode
+    end function psb_c_@X@geins_options
+  end interface
+
   interface 
     module function psb_c_@X@spall(mh,cdh) bind(c) result(res)
       integer(psb_c_ipk_) :: res

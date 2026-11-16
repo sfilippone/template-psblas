@@ -32,6 +32,11 @@ psb_c_i_t    @psb_c_t@geins(psb_c_i_t nz, const psb_c_l_t *irw, const @psb_c_t_t
 		    @psb_c_t@vector *xh, psb_c_descriptor *cdh);
 psb_c_i_t    @psb_c_t@geins_add(psb_c_i_t nz, const psb_c_l_t *irw, const @psb_c_t_t@ *val,
 			@psb_c_t@vector *xh, psb_c_descriptor *cdh);
+/* Select duplicate handling, including a zero-length transition to update
+ * state before collective assembly on a process with no outgoing entries. */
+psb_c_i_t @psb_c_t@geins_options(psb_c_i_t nz, const psb_c_l_t *irw,
+                             const @psb_c_t_t@ *val, @psb_c_t@vector *xh,
+                             psb_c_descriptor *cdh, psb_c_i_t mode);
 psb_c_i_t    @psb_c_t@geasb(@psb_c_t@vector *xh, psb_c_descriptor *cdh);
 psb_c_i_t    @psb_c_t@geasb_options(@psb_c_t@vector *xh, psb_c_descriptor *cdh, psb_c_i_t dupl);
 psb_c_i_t	   @psb_c_t@geasb_options_format(@psb_c_t@vector *xh, psb_c_descriptor *cdh,
@@ -66,7 +71,7 @@ psb_c_i_t	   @psb_c_t@copy_mat(@psb_c_t@spmat *ah,@psb_c_t@spmat *bh,psb_c_descr
 
 /* psb_c_i_t    @psb_c_t@spasb_opt(@psb_c_t@spmat *mh, psb_c_descriptor *cdh,  */
 /* 			const char *afmt, psb_c_i_t upd, psb_c_i_t dupl); */
-psb_c_i_t    @psb_c_t@sprn(@psb_c_t@spmat *mh, psb_c_descriptor *cdh, _Bool clear);
+psb_c_i_t    @psb_c_t@sprn(@psb_c_t@spmat *mh, psb_c_descriptor *cdh, bool clear);
 psb_c_i_t    @psb_c_t@mat_name_print(@psb_c_t@spmat *mh, char *name);
 psb_c_i_t	   @psb_c_t@vect_set_scal(@psb_c_t@vector *xh, @psb_c_t_t@ val);
 psb_c_i_t	   @psb_c_t@vect_set_scal_bound(@psb_c_t@vector *xh, @psb_c_t_t@ val,
@@ -74,6 +79,39 @@ psb_c_i_t	   @psb_c_t@vect_set_scal_bound(@psb_c_t@vector *xh, @psb_c_t_t@ val,
 psb_c_i_t	   @psb_c_t@vect_set_vect(@psb_c_t@vector *xh, @psb_c_t_t@ *val, psb_c_i_t n);
 @psb_c_t_t@    @psb_c_t@vect_get_entry(@psb_c_t@vector *xh, psb_c_i_t index);
 psb_c_i_t    @psb_c_t@vect_set_entry(@psb_c_t@vector *xh, psb_c_i_t index, @psb_c_t_t@ val);
+
+/* Distributed sparse operators.
+ * Descriptors and all outer handle pointers must be valid. New output
+ * handles must be zero-initialized; inputs retain their storage/layouts.
+ * _2desc insertion accepts locally owned rows only, using global indices
+ * in the base selected by psb_c_set_index_base(). */
+psb_c_i_t @psb_c_t@spall_2desc(@psb_c_t@spmat *ah,
+                              psb_c_descriptor *dr, psb_c_descriptor *dc);
+psb_c_i_t @psb_c_t@spins_2desc(psb_c_i_t nz,
+                              const psb_c_l_t *rows, const psb_c_l_t *cols,
+                              const @psb_c_t_t@ *values, @psb_c_t@spmat *ah,
+                              psb_c_descriptor *dr, psb_c_descriptor *dc);
+psb_c_i_t @psb_c_t@spasb_2desc(@psb_c_t@spmat *ah,
+                              psb_c_descriptor *dr, psb_c_descriptor *dc);
+psb_c_i_t @psb_c_t@glob_transpose(@psb_c_t@spmat *ah,
+                                 psb_c_descriptor *dr, psb_c_descriptor *dc,
+                                 @psb_c_t@spmat *bh, psb_c_descriptor *dbcols,
+                                 const char *trans);
+psb_c_i_t @psb_c_t@par_spspmm(@psb_c_t@spmat *ah,
+                             psb_c_descriptor *dar, psb_c_descriptor *dac,
+                             @psb_c_t@spmat *bh,
+                             psb_c_descriptor *dbr, psb_c_descriptor *dbc,
+                             @psb_c_t@spmat *ch, psb_c_descriptor *dcc);
+psb_c_i_t @psb_c_t@spmm_2desc(@psb_c_t_t@ alpha, @psb_c_t@spmat *ah,
+                             @psb_c_t@vector *xh, @psb_c_t_t@ beta, @psb_c_t@vector *yh,
+                             psb_c_descriptor *dr, psb_c_descriptor *dc,
+                             const char *trans);
+psb_c_i_t @psb_c_t@spget_coo(@psb_c_t@spmat *ah,
+                            psb_c_descriptor *dr, psb_c_descriptor *dc,
+                            psb_c_i_t capacity, psb_c_i_t *nz,
+                            psb_c_l_t *rows, psb_c_l_t *cols, @psb_c_t_t@ *values);
+psb_c_i_t @psb_c_t@sprowscl(@psb_c_t@spmat *ah, psb_c_i_t nr,
+                           const @psb_c_t_t@ *values);
 
 /* psblas computational routines */
 @psb_c_t_t@ @psb_c_t@gedot(@psb_c_t@vector *xh, @psb_c_t@vector *yh, psb_c_descriptor *cdh);
