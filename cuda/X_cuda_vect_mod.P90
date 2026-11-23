@@ -105,11 +105,7 @@ module psb_@X@_cuda_vect_mod
     @NOTINTS@
     procedure, pass(x) :: dot_v    => @X@_cuda_dot_v
     procedure, pass(x) :: dot_a    => @X@_cuda_dot_a
-@REALS@
-@DPKS@
     procedure, pass(x) :: dot3v    => @X@_cuda_dot3v
-@DPKE@
-@REALE@
     procedure, pass(y) :: axpby_v  => @X@_cuda_axpby_v
     procedure, pass(y) :: axpby_a  => @X@_cuda_axpby_a
     procedure, pass(z) :: upd_xyz  => @X@_cuda_upd_xyz
@@ -1015,12 +1011,11 @@ contains
 
   end function @X@_cuda_dot_v
 
-@REALS@
-@DPKS@
   !
   ! Fused local dot products y1.x, y2.x [, y3.x] in one kernel and one
-  ! device->host transfer (same meaning as the base dot3v). Falls back to
-  ! the base implementation when an operand is not a CUDA vector.
+  ! device->host transfer (same meaning as the base dot3v: the y's are
+  ! conjugated in the complex case). Falls back to the base implementation
+  ! when an operand is not a CUDA vector.
   !
   subroutine @X@_cuda_dot3v(n,x,y1,y2,res,y3)
     implicit none
@@ -1075,8 +1070,6 @@ contains
     end if
 
   end subroutine @X@_cuda_dot3v
-@DPKE@
-@REALE@
 
   function @X@_cuda_dot_a(n,x,y) result(res)
     implicit none 
