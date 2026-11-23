@@ -1077,10 +1077,10 @@ contains
     @TYPE@(@FKIND@), intent(in)           :: y(:)
     integer(psb_ipk_), intent(in)        :: n
     @TYPE@(@FKIND@)                :: res
-    @TYPE@(@FKIND@), external      :: @X@dot
-    
+    @TYPE@(@FKIND@), external      :: @DOT@
+
     if (x%is_dev()) call x%sync()
-    res = @X@dot(n,y,1,x%v,1)
+    res = @DOT@(n,y,1,x%v,1)
 
   end function @X@_cuda_dot_a
     
