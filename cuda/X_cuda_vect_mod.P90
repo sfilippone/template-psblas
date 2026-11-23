@@ -713,6 +713,9 @@ contains
         end if
       end if
     end select
+    ! The scatter wrote on the device: the device copy is now the valid one
+    ! (without this a vector that was in sync state kept a stale host copy)
+    call y%set_dev()
 !!$    write(0,*) 'Done sctb_buf'
 
   end subroutine @X@_cuda_sctb_buf
