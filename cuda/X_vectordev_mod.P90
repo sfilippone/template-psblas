@@ -269,6 +269,19 @@ module psb_@X@_vectordev_mod
       type(c_ptr), value    :: deviceVecA, deviceVecB
     end function dotMultiVecDevice@CTYPE@
   end interface
+
+  ! Fused y1.x, y2.x [, y3.x] (deviceVecY3 may be null), conjugating the
+  ! y's in the complex case, as y%dot(n,x): one kernel, one transfer
+  interface dot3MultiVecDevice
+    function dot3MultiVecDevice@CTYPE@(res,n,deviceVecX,deviceVecY1,deviceVecY2,deviceVecY3) &
+         & result(val) bind(c,name='dot3MultiVecDevice@CTYPE@')
+      use iso_c_binding
+      integer(c_int)        :: val
+      integer(c_int), value :: n
+      @TYPE@(@FCKIND@)        :: res(3)
+      type(c_ptr), value    :: deviceVecX, deviceVecY1, deviceVecY2, deviceVecY3
+    end function dot3MultiVecDevice@CTYPE@
+  end interface
     
   interface nrm2MultiVecDevice@FLAG_COMPLEX@
     function nrm2MultiVecDevice@CTYPE@(res,n,deviceVecA) &

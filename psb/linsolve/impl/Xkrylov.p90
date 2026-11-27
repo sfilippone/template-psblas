@@ -80,7 +80,7 @@
 !                                           estimate of) residual 
 ! 
 Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
-     & itmax,iter,err,itrace,irst,istop,cond,s1,s2)
+     & itmax,iter,err,itrace,irst,istop,cond,s1,s2,wrk)
 
   use psb_base_mod
   use psb_prec_mod,only : psb_@X@prec_type
@@ -98,6 +98,8 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
   integer(psb_ipk_), Optional, Intent(out)       :: iter
   Real(@FKIND@), Optional, Intent(out) :: err,cond
   type(psb_@X@_vect_type), intent(inout), optional   :: s1, s2
+  ! Optional persistent workspace, currently used by FCG only (see psb_@X@fcg)
+  type(psb_@X@_vect_type), intent(inout), optional, target :: wrk(:)
 
 
   abstract interface
@@ -149,12 +151,30 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
       Real(@FKIND@), Optional, Intent(out) :: err, cond
       type(psb_@X@_vect_type), intent(inout), optional   :: s1, s2
     end subroutine psb_@X@kryl_cond_vect
+    Subroutine psb_@X@kryl_cond_wrk_vect(a,prec,b,x,eps,desc_a,info,&
+         &itmax,iter,err, itrace,istop,cond,s1,s2,wrk)
+      import :: psb_ipk_, @FKIND@, psb_desc_type, &
+           & psb_@X@spmat_type, psb_@X@prec_type, psb_@X@_vect_type
+      Type(psb_@X@spmat_type), Intent(in)    :: a
+      Type(psb_desc_type), Intent(in)      :: desc_a
+      class(psb_@X@prec_type), intent(inout) :: prec
+      type(psb_@X@_vect_type), Intent(inout) :: b
+      type(psb_@X@_vect_type), Intent(inout) :: x
+      Real(@FKIND@), Intent(in)           :: eps
+      integer(psb_ipk_), intent(out)                 :: info
+      integer(psb_ipk_), Optional, Intent(in)        :: itmax, itrace,istop
+      integer(psb_ipk_), Optional, Intent(out)       :: iter
+      Real(@FKIND@), Optional, Intent(out) :: err, cond
+      type(psb_@X@_vect_type), intent(inout), optional   :: s1, s2
+      type(psb_@X@_vect_type), intent(inout), optional, target :: wrk(:)
+    end subroutine psb_@X@kryl_cond_wrk_vect
   end interface
 
   procedure(psb_@X@kryl_vect) :: psb_@X@bicg_vect, psb_@X@cgstab_vect,&
        & psb_@X@cgs_vect
   procedure(psb_@X@kryl_rest_vect) :: psb_@X@rgmres_vect, psb_@X@cgstabl_vect, psb_@X@gcr_vect
-  procedure(psb_@X@kryl_cond_vect) :: psb_@X@cg_vect, psb_@X@fcg_vect
+  procedure(psb_@X@kryl_cond_vect) :: psb_@X@cg_vect
+  procedure(psb_@X@kryl_cond_wrk_vect) :: psb_@X@fcg_vect
 
   logical           :: do_alloc_wrk
   type(psb_ctxt_type) :: ctxt
@@ -187,7 +207,7 @@ Subroutine psb_@X@krylov_vect(method,a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace=itrace_,istop=istop,cond=cond,s1=s1,s2=s2)
   case('FCG') 
     call  psb_@X@fcg_vect(a,prec,b,x,eps,desc_a,info,&
-         &itmax,iter,err,itrace=itrace_,istop=istop,cond=cond,s1=s1,s2=s2)
+         &itmax,iter,err,itrace=itrace_,istop=istop,cond=cond,s1=s1,s2=s2,wrk=wrk)
   case('GCR') 
     call  psb_@X@gcr_vect(a,prec,b,x,eps,desc_a,info,&
          &itmax,iter,err,itrace=itrace_,irst=irst,istop=istop,s1=s1,s2=s2)
